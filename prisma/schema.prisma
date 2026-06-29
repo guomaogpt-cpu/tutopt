@@ -1,0 +1,514 @@
+// Tutopt Database Schema
+// Source of truth: docs/04_DATABASE.md + MVP revision
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  BUYER
+  SELLER
+  MODERATOR
+  ADMIN
+}
+
+enum ListingStatus {
+  DRAFT
+  PENDING_MODERATION
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum ListingUnit {
+  PIECE
+  PACK
+  BOX
+  KG
+  LITER
+  PALLET
+}
+
+enum LeadStatus {
+  NEW
+  VIEWED
+  CLOSED
+}
+
+enum ReportReason {
+  SPAM
+  FRAUD
+  WRONG_CATEGORY
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+enum DocumentType {
+  REGISTRATION
+  LICENSE
+  OTHER
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ContactEventType {
+  PHONE
+  WHATSAPP
+  TELEGRAM
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model Region {
+  id         String @id @default(uuid()) @db.Uuid
+  name       String @db.VarChar(100)
+  slug       String @unique @db.VarChar(120)
+  sort_order Int    @default(0) @map("sort_order")
+
+  cities         City[]
+  users          User[]
+  sellerProfiles SellerProfile[]
+  listings       Listing[]
+
+  @@index([sort_order])
+  @@map("regions")
+}
+
+model City {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String   @db.VarChar(100)
+  slug       String   @unique @db.VarChar(120)
+  region_id  String   @map("region_id") @db.Uuid
+  is_active  Boolean  @default(true) @map("is_active")
+  sort_order Int      @default(0) @map("sort_order")
+  created_at DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updated_at DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  region         Region          @relation(fields: [region_id], references: [id], onDelete: Restrict)
+  sellerProfiles SellerProfile[]
+  listings       Listing[]
+
+  @@index([region_id])
+  @@map("cities")
+}
+
+model Brand {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String   @db.VarChar(150)
+  slug       String   @unique @db.VarChar(170)
+  logo_url   String?  @map("logo_url") @db.Text
+  is_active  Boolean  @default(true) @map("is_active")
+  created_at DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updated_at DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  listings Listing[]
+
+  @@map("brands")
+}
+
+model User {
+  id                String    @id @default(uuid()) @db.Uuid
+  email             String?   @unique @db.VarChar(255)
+  phone             String?   @unique @db.VarChar(20)
+  password_hash     String    @map("password_hash") @db.VarChar(255)
+  role              UserRole  @default(BUYER)
+  name              String    @db.VarChar(100)
+  avatar_url        String?   @map("avatar_url") @db.Text
+  city              String?   @db.VarChar(100)
+  region_id         String?   @map("region_id") @db.Uuid
+  email_verified_at DateTime? @map("email_verified_at") @db.Timestamptz
+  phone_verified_at DateTime? @map("phone_verified_at") @db.Timestamptz
+  is_blocked        Boolean   @default(false) @map("is_blocked")
+  last_login_at     DateTime? @map("last_login_at") @db.Timestamptz
+  created_at        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updated_at        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  region                   Region?                   @relation(fields: [region_id], references: [id], onDelete: SetNull)
+  sellerProfile            SellerProfile?
+  favorites                Favorite[]
+  leadsAsBuyer             Lead[]                    @relation("LeadBuyer")
+  reportsAsReporter        Report[]                  @relation("ReportReporter")
+  reportsResolved          Report[]                  @relation("ReportResolver")
+  sessions                 Session[]
+  passwordResetTokens      PasswordResetToken[]
+  emailVerificationTokens  EmailVerificationToken[]
+  auditLogs                AuditLog[]                @relation("AuditActor")
+  reviewedDocuments        SellerDocument[]          @relation("DocumentReviewer")
+  listingViews             UserListingView[]
+  categorySubscriptions    CategorySubscription[]
+  listingContactEvents     ListingContactEvent[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([role])
+  @@index([created_at])
+  @@map("users")
+}
+
+model SellerProfile {
+  id            String    @id @default(uuid()) @db.Uuid
+  user_id       String    @unique @map("user_id") @db.Uuid
+  company_name  String    @map("company_name") @db.VarChar(200)
+  slug          String    @unique @db.VarChar(220)
+  description   String?   @db.Text
+  logo_url      String?   @map("logo_url") @db.Text
+  inn           String?   @db.VarChar(20)
+  legal_address String?   @map("legal_address") @db.Text
+  contact_phone String    @map("contact_phone") @db.VarChar(20)
+  contact_email String?   @map("contact_email") @db.VarChar(255)
+  whatsapp      String?   @db.VarChar(50)
+  telegram      String?   @db.VarChar(100)
+  website       String?   @db.VarChar(255)
+  region_id     String    @map("region_id") @db.Uuid
+  city_id       String?   @map("city_id") @db.Uuid
+  is_verified   Boolean   @default(false) @map("is_verified")
+  is_pro        Boolean   @default(false) @map("is_pro")
+  verified_at   DateTime? @map("verified_at") @db.Timestamptz
+  rating_avg    Decimal   @default(0) @map("rating_avg") @db.Decimal(3, 2)
+  rating_count  Int       @default(0) @map("rating_count")
+  created_at    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updated_at    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  user       User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  region     Region           @relation(fields: [region_id], references: [id], onDelete: Restrict)
+  city       City?            @relation(fields: [city_id], references: [id], onDelete: SetNull)
+  documents  SellerDocument[]
+  listings   Listing[]
+  leads      Lead[]
+
+  @@index([slug])
+  @@index([region_id])
+  @@index([city_id])
+  @@index([is_verified])
+  @@map("seller_profiles")
+}
+
+model SellerDocument {
+  id                String         @id @default(uuid()) @db.Uuid
+  seller_profile_id String         @map("seller_profile_id") @db.Uuid
+  file_url          String         @map("file_url") @db.Text
+  doc_type          DocumentType   @map("doc_type")
+  status            DocumentStatus @default(PENDING)
+  reviewed_by       String?        @map("reviewed_by") @db.Uuid
+  review_note       String?        @map("review_note") @db.Text
+  created_at        DateTime       @default(now()) @map("created_at") @db.Timestamptz
+
+  sellerProfile SellerProfile @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
+  reviewer      User?         @relation("DocumentReviewer", fields: [reviewed_by], references: [id], onDelete: SetNull)
+
+  @@index([seller_profile_id])
+  @@index([status])
+  @@map("seller_documents")
+}
+
+model Category {
+  id             String   @id @default(uuid()) @db.Uuid
+  parent_id      String?  @map("parent_id") @db.Uuid
+  name           String   @db.VarChar(150)
+  slug           String   @unique @db.VarChar(170)
+  description    String?  @db.Text
+  icon           String?  @db.VarChar(50)
+  sort_order     Int      @default(0) @map("sort_order")
+  is_active      Boolean  @default(true) @map("is_active")
+  listings_count Int      @default(0) @map("listings_count")
+  created_at     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updated_at     DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  parent        Category?              @relation("CategoryHierarchy", fields: [parent_id], references: [id], onDelete: SetNull)
+  children      Category[]             @relation("CategoryHierarchy")
+  listings      Listing[]
+  subscriptions CategorySubscription[]
+
+  @@index([parent_id])
+  @@index([slug])
+  @@index([sort_order])
+  @@map("categories")
+}
+
+model Listing {
+  id                 String        @id @default(uuid()) @db.Uuid
+  seller_profile_id  String        @map("seller_profile_id") @db.Uuid
+  category_id        String        @map("category_id") @db.Uuid
+  region_id          String        @map("region_id") @db.Uuid
+  city_id            String?       @map("city_id") @db.Uuid
+  brand_id           String?       @map("brand_id") @db.Uuid
+  title              String        @db.VarChar(200)
+  slug               String        @db.VarChar(250)
+  short_id           String        @map("short_id") @db.VarChar(8)
+  description        String        @db.Text
+  price              Decimal       @db.Decimal(12, 2)
+  currency           String        @default("KGS") @db.VarChar(3)
+  price_negotiable   Boolean       @default(false) @map("price_negotiable")
+  unit               ListingUnit
+  moq                Int           @default(1)
+  stock_quantity     Int?          @map("stock_quantity")
+  status             ListingStatus @default(DRAFT)
+  rejection_reason   String?       @map("rejection_reason") @db.Text
+  view_count         Int           @default(0) @map("view_count")
+  contact_count      Int           @default(0) @map("contact_count")
+  published_at       DateTime?     @map("published_at") @db.Timestamptz
+  expires_at         DateTime?     @map("expires_at") @db.Timestamptz
+  created_at         DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updated_at         DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  sellerProfile  SellerProfile         @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
+  category       Category              @relation(fields: [category_id], references: [id], onDelete: Restrict)
+  region         Region                @relation(fields: [region_id], references: [id], onDelete: Restrict)
+  city           City?                 @relation(fields: [city_id], references: [id], onDelete: SetNull)
+  brand          Brand?                @relation(fields: [brand_id], references: [id], onDelete: SetNull)
+  images         ListingImage[]
+  attributes     ListingAttribute[]
+  favorites      Favorite[]
+  leads          Lead[]
+  reports        Report[]
+  views          ListingView[]
+  userViews      UserListingView[]
+  contactEvents  ListingContactEvent[]
+
+  @@unique([slug, short_id])
+  @@index([status, published_at(sort: Desc)])
+  @@index([category_id, status])
+  @@index([seller_profile_id])
+  @@index([region_id, status])
+  @@index([city_id])
+  @@index([brand_id])
+  @@index([price])
+  @@map("listings")
+}
+
+model ListingImage {
+  id            String   @id @default(uuid()) @db.Uuid
+  listing_id    String   @map("listing_id") @db.Uuid
+  url           String   @db.Text
+  thumbnail_url String?  @map("thumbnail_url") @db.Text
+  sort_order    Int      @default(0) @map("sort_order")
+  created_at    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  listing Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+
+  @@index([listing_id])
+  @@map("listing_images")
+}
+
+model ListingAttribute {
+  id         String @id @default(uuid()) @db.Uuid
+  listing_id String @map("listing_id") @db.Uuid
+  key        String @db.VarChar(100)
+  value      String @db.VarChar(500)
+
+  listing Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+
+  @@index([listing_id])
+  @@map("listing_attributes")
+}
+
+model Favorite {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @map("user_id") @db.Uuid
+  listing_id String   @map("listing_id") @db.Uuid
+  created_at DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, listing_id])
+  @@index([user_id])
+  @@index([listing_id])
+  @@map("favorites")
+}
+
+model Lead {
+  id                String     @id @default(uuid()) @db.Uuid
+  listing_id        String     @map("listing_id") @db.Uuid
+  buyer_id          String     @map("buyer_id") @db.Uuid
+  seller_profile_id String     @map("seller_profile_id") @db.Uuid
+  quantity          Int
+  message           String?    @db.Text
+  status            LeadStatus @default(NEW)
+  created_at        DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  viewed_at         DateTime?  @map("viewed_at") @db.Timestamptz
+
+  listing       Listing       @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+  buyer         User          @relation("LeadBuyer", fields: [buyer_id], references: [id], onDelete: Cascade)
+  sellerProfile SellerProfile @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
+
+  @@index([seller_profile_id, status])
+  @@index([buyer_id])
+  @@index([listing_id])
+  @@map("leads")
+}
+
+model Report {
+  id          String       @id @default(uuid()) @db.Uuid
+  listing_id  String       @map("listing_id") @db.Uuid
+  reporter_id String       @map("reporter_id") @db.Uuid
+  reason      ReportReason
+  comment     String?      @db.Text
+  status      ReportStatus @default(OPEN)
+  resolved_by String?      @map("resolved_by") @db.Uuid
+  created_at  DateTime     @default(now()) @map("created_at") @db.Timestamptz
+
+  listing  Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+  reporter User    @relation("ReportReporter", fields: [reporter_id], references: [id], onDelete: Cascade)
+  resolver User?   @relation("ReportResolver", fields: [resolved_by], references: [id], onDelete: SetNull)
+
+  @@index([listing_id])
+  @@index([reporter_id])
+  @@index([status])
+  @@map("reports")
+}
+
+model ListingView {
+  id         String   @id @default(uuid()) @db.Uuid
+  listing_id String   @map("listing_id") @db.Uuid
+  viewed_at  DateTime @map("viewed_at") @db.Date
+  count      Int      @default(1)
+
+  listing Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+
+  @@unique([listing_id, viewed_at])
+  @@index([listing_id])
+  @@map("listing_views")
+}
+
+model UserListingView {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @map("user_id") @db.Uuid
+  listing_id String   @map("listing_id") @db.Uuid
+  viewed_at  DateTime @default(now()) @map("viewed_at") @db.Timestamptz
+
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([listing_id])
+  @@map("user_listing_views")
+}
+
+model CategorySubscription {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @map("user_id") @db.Uuid
+  category_id String   @map("category_id") @db.Uuid
+  created_at  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, category_id])
+  @@index([user_id])
+  @@index([category_id])
+  @@map("category_subscriptions")
+}
+
+model Session {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @map("user_id") @db.Uuid
+  token_hash String   @map("token_hash") @db.VarChar(255)
+  expires_at DateTime @map("expires_at") @db.Timestamptz
+  created_at DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([expires_at])
+  @@map("sessions")
+}
+
+model PasswordResetToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  user_id    String    @map("user_id") @db.Uuid
+  token_hash String    @map("token_hash") @db.VarChar(255)
+  expires_at DateTime  @map("expires_at") @db.Timestamptz
+  used_at    DateTime? @map("used_at") @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([expires_at])
+  @@map("password_reset_tokens")
+}
+
+model EmailVerificationToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  user_id    String    @map("user_id") @db.Uuid
+  token      String    @unique @db.VarChar(255)
+  expires_at DateTime  @map("expires_at") @db.Timestamptz
+  created_at DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  used_at    DateTime? @map("used_at") @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([expires_at])
+  @@map("email_verification_tokens")
+}
+
+model ListingContactEvent {
+  id         String           @id @default(uuid()) @db.Uuid
+  listing_id String           @map("listing_id") @db.Uuid
+  user_id    String?          @map("user_id") @db.Uuid
+  type       ContactEventType
+  ip_hash    String?          @map("ip_hash") @db.VarChar(64)
+  user_agent String?          @map("user_agent") @db.VarChar(500)
+  created_at DateTime         @default(now()) @map("created_at") @db.Timestamptz
+
+  listing Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([listing_id])
+  @@index([type])
+  @@index([created_at])
+  @@map("listing_contact_events")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  actor_id    String   @map("actor_id") @db.Uuid
+  action      String   @db.VarChar(100)
+  entity_type String   @map("entity_type") @db.VarChar(50)
+  entity_id   String   @map("entity_id") @db.Uuid
+  metadata    Json?    @db.JsonB
+  created_at  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  actor User @relation("AuditActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@index([created_at(sort: Desc)])
+  @@index([entity_type, entity_id])
+  @@index([actor_id])
+  @@map("audit_logs")
+}
+
+model SeoPage {
+  id               String   @id @default(uuid()) @db.Uuid
+  slug             String   @unique @db.VarChar(200)
+  title            String   @db.VarChar(200)
+  meta_title       String   @map("meta_title") @db.VarChar(70)
+  meta_description String   @map("meta_description") @db.VarChar(160)
+  content          String   @db.Text
+  is_published     Boolean  @default(false) @map("is_published")
+  created_at       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updated_at       DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([is_published])
+  @@map("seo_pages")
+}

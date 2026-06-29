@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: tutopt-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: tutopt
+      POSTGRES_PASSWORD: tutopt
+      POSTGRES_DB: tutopt
+    volumes:
+      - tutopt_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tutopt -d tutopt"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tutopt_pgdata:
