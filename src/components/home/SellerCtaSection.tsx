@@ -1,37 +1,26 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 
+const focusRingClassName =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2";
+
 export function SellerCtaSection() {
   return (
-    <section className="bg-white py-14 sm:py-20">
+    <section className="bg-white py-12 sm:py-16">
       <Container>
-        <div className="overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-600 to-blue-700 px-6 py-12 sm:px-10 sm:py-14 lg:px-14">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-medium uppercase tracking-wider text-blue-100">
-              Для продавцов
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Разместите оптовое объявление
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-blue-100 sm:text-lg">
-              Покажите свой ассортимент оптовым покупателям по всей стране. Бесплатная публикация,
-              модерация и прямые заявки от заинтересованных клиентов.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
-                href="/listings/new"
-                className="w-full rounded-xl bg-white px-6 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 sm:w-auto"
-              >
-                Разместить объявление
-              </Link>
-              <Link
-                href="/sellers"
-                className="w-full rounded-xl border border-white/30 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10 sm:w-auto"
-              >
-                Узнать больше
-              </Link>
-            </div>
-          </div>
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-6 py-10 text-center sm:px-10 sm:py-12">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Продаёте оптом?
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
+            Разместите предложение и получайте заявки от магазинов, HoReCa и закупщиков.
+          </p>
+          <Link
+            href="/listings/new"
+            className={`mt-6 inline-flex rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 ${focusRingClassName}`}
+          >
+            Подать объявление
+          </Link>
         </div>
       </Container>
     </section>

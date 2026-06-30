@@ -1,19 +1,20 @@
-import { ForWhomSection } from "@/components/home/ForWhomSection";
+import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { HeroSection } from "@/components/home/HeroSection";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
-import { PopularListings } from "@/components/home/PopularListings";
-import { QuickCategories } from "@/components/home/QuickCategories";
+import { RecentListingsSection } from "@/components/home/RecentListingsSection";
 import { SellerCtaSection } from "@/components/home/SellerCtaSection";
+import { getHomePageData } from "@/features/home/lib/home-data";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { categories, listings } = await getHomePageData();
+
   return (
-    <main>
+    <main className="bg-white">
       <HeroSection />
-      <QuickCategories />
-      <PopularListings />
-      <ForWhomSection />
-      <HowItWorksSection />
+      <CategoryGrid categories={categories} />
+      <RecentListingsSection listings={listings} />
       <SellerCtaSection />
+      <HowItWorksSection />
     </main>
   );
 }

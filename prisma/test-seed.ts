@@ -173,9 +173,7 @@ async function ensureBaseSeed(): Promise<void> {
   const regionCount = await prisma.region.count();
   const cityCount = await prisma.city.count();
   const brandCount = await prisma.brand.count();
-  const adminCount = await prisma.user.count({ where: { role: UserRole.ADMIN } });
-
-  if (regionCount === 0 || cityCount === 0 || brandCount === 0 || adminCount === 0) {
+  if (regionCount === 0 || cityCount === 0 || brandCount === 0) {
     throw new Error("Base seed required. Run `npm run db:seed` before test seed.");
   }
 }

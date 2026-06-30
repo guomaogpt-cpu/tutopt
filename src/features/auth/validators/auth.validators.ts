@@ -1,5 +1,7 @@
-import { z } from "zod";
 import { UserRole } from "@prisma/client";
+import { z } from "zod";
+
+const publicRegisterRoleSchema = z.enum([UserRole.BUYER, UserRole.SELLER]);
 
 const phoneSchema = z
   .string()
@@ -16,7 +18,7 @@ export const registerSchema = z
     phone: phoneSchema.optional(),
     password: passwordSchema,
     name: z.string().min(2, "Name is too short").max(100, "Name is too long"),
-    role: z.nativeEnum(UserRole).default(UserRole.BUYER),
+    role: publicRegisterRoleSchema.default(UserRole.BUYER),
     company_name: z.string().min(2).max(200).optional(),
   })
   .refine((data) => Boolean(data.email ?? data.phone), {

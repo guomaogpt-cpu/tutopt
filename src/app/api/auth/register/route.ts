@@ -1,19 +1,14 @@
-import { UserRole } from "@prisma/client";
 import { hashPassword } from "@/features/auth/lib/password";
 import { createSession, publicUserSelect } from "@/features/auth/lib/session";
 import { registerSchema } from "@/features/auth/validators/auth.validators";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
-import { ConflictError, ForbiddenError } from "@/shared/lib/errors";
+import { ConflictError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
 
 export async function POST(request: Request) {
   return withApiHandler(async () => {
     const input = await parseJsonBody(request, registerSchema);
-
-    if (input.role === UserRole.ADMIN || input.role === UserRole.MODERATOR) {
-      throw new ForbiddenError("This role cannot be registered publicly");
-    }
 
     if (input.email) {
       const existingEmail = await prisma.user.findUnique({ where: { email: input.email } });

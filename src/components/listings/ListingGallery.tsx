@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ImageIcon } from "lucide-react";
 import { useState } from "react";
 
 type ListingGalleryProps = {
@@ -13,39 +14,57 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <div className="flex h-[280px] max-h-[340px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sm text-slate-500 shadow-sm sm:max-h-[380px] md:h-[320px] md:max-h-[520px]">
-        Фото товара
-      </div>
+      <section
+        aria-label="Галерея товара"
+        className="flex h-[280px] flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-500 sm:h-[360px] lg:h-[480px]"
+      >
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-slate-300">
+          <ImageIcon className="h-8 w-8" aria-hidden="true" />
+        </div>
+        <p className="text-sm font-medium text-slate-600">Фотографии не добавлены</p>
+        <p className="text-xs text-slate-400">Изображение товара появится здесь</p>
+      </section>
     );
   }
 
   const activeImage = images[activeIndex] ?? images[0];
+  const useThumbnailScroll = images.length > 5;
 
   return (
-    <section>
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
-        <div className="relative mx-auto h-[320px] w-full max-h-[340px] sm:max-h-[380px] md:h-[520px] md:max-h-[520px]">
+    <section aria-label="Галерея товара">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+        <div className="relative mx-auto h-[280px] w-full sm:h-[360px] lg:h-[480px]">
           <Image
             src={activeImage.url}
             alt={title}
             fill
             unoptimized
-            className="object-contain p-2 sm:p-3"
+            className="object-contain p-4"
             priority
-            sizes="(max-width: 768px) 100vw, 768px"
+            sizes="(max-width: 1024px) 100vw, 720px"
           />
         </div>
       </div>
 
       {images.length > 1 ? (
-        <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6">
+        <div
+          className={`mt-4 flex gap-2 ${
+            useThumbnailScroll
+              ? "overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300"
+              : "flex-wrap"
+          }`}
+        >
           {images.map((image, index) => (
             <button
               key={image.id}
               type="button"
               onClick={() => setActiveIndex(index)}
-              className={`relative aspect-square overflow-hidden rounded-lg border bg-slate-50 transition hover:border-blue-300 ${
-                index === activeIndex ? "border-blue-600 ring-2 ring-blue-100" : "border-slate-200"
+              aria-label={`Фото ${index + 1}`}
+              aria-current={index === activeIndex ? "true" : undefined}
+              className={`relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-xl border-2 bg-slate-50 transition hover:border-blue-300 ${
+                index === activeIndex
+                  ? "border-blue-600 ring-2 ring-blue-100"
+                  : "border-slate-200"
               }`}
             >
               <Image
@@ -54,7 +73,7 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
                 fill
                 unoptimized
                 className="object-cover"
-                sizes="80px"
+                sizes="72px"
               />
             </button>
           ))}

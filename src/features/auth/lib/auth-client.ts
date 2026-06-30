@@ -127,6 +127,16 @@ export async function registerRequest(input: RegisterInput): Promise<AuthSuccess
   return parseAuthResponse(response);
 }
 
+export async function logoutRequest(): Promise<void> {
+  const response = await fetch("/api/auth/logout", {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error("Logout failed");
+  }
+}
+
 export function getFieldError(
   errors: AuthFormErrors,
   field: string,

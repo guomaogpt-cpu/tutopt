@@ -1,18 +1,22 @@
 import Link from "next/link";
+import type { ListingStatus } from "@prisma/client";
 import { UserRole } from "@prisma/client";
 import { Container } from "@/components/layout/Container";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { PublicPageHeader } from "@/components/public/PublicPageHeader";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { listingStatusBadgeClass, listingStatusLabels } from "@/features/listings/lib/listing-status";
 import { prisma } from "@/shared/lib/prisma";
 
-const statusLabels: Record<string, string> = {
-  DRAFT: "Черновик",
-  PENDING_MODERATION: "На модерации",
-  PUBLISHED: "Опубликовано",
-  REJECTED: "Отклонено",
-  ARCHIVED: "В архиве",
-};
+function ListingStatusBadge({ status }: { status: ListingStatus }) {
+  return (
+    <span
+      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${listingStatusBadgeClass[status]}`}
+    >
+      {listingStatusLabels[status]}
+    </span>
+  );
+}
 
 export default async function SellerDashboardPage() {
   const user = await getCurrentUser();
@@ -56,7 +60,6 @@ export default async function SellerDashboardPage() {
     include: {
       listings: {
         orderBy: { created_at: "desc" },
-        take: 20,
         select: {
           id: true,
           title: true,
@@ -110,15 +113,17 @@ export default async function SellerDashboardPage() {
                     key={listing.id}
                     className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
                   >
-                    <div>
-                      <Link
-                        href={`/listings/${listing.id}`}
-                        className="font-medium text-slate-900 transition hover:text-blue-600"
-                      >
-                        {listing.title}
-                      </Link>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Link
+                          href={`/listings/${listing.id}`}
+                          className="font-medium text-slate-900 transition hover:text-blue-600"
+                        >
+                          {listing.title}
+                        </Link>
+                        <ListingStatusBadge status={listing.status} />
+                      </div>
                       <p className="mt-1 text-sm text-slate-500">
-                        {statusLabels[listing.status] ?? listing.status} ·{" "}
                         {new Date(listing.created_at).toLocaleDateString("ru-RU")}
                       </p>
                     </div>
