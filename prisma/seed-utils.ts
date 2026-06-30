@@ -112,9 +112,7 @@ export async function getBrandMap(): Promise<BrandMap> {
 
 export async function getLeafCategories(): Promise<Category[]> {
   const all = await prisma.category.findMany({ where: { is_active: true } });
-  const parentIds = new Set(
-    all.filter((c) => c.parent_id).map((c) => c.parent_id as string),
-  );
+  const parentIds = new Set(all.filter((c) => c.parent_id).map((c) => c.parent_id as string));
   return all.filter((c) => !parentIds.has(c.id));
 }
 

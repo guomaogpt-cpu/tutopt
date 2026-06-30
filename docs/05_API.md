@@ -36,27 +36,25 @@
   "error": {
     "code": "VALIDATION_ERROR",
     "message": "Некорректные данные",
-    "details": [
-      { "field": "price", "message": "Цена должна быть больше 0" }
-    ]
+    "details": [{ "field": "price", "message": "Цена должна быть больше 0" }]
   }
 }
 ```
 
 ### 2.2 HTTP-коды
 
-| Код | Использование |
-|-----|---------------|
-| 200 | Успешный GET, PATCH |
-| 201 | Создание ресурса |
-| 204 | Удаление без тела |
-| 400 | Ошибка валидации |
-| 401 | Не авторизован |
-| 403 | Нет прав |
-| 404 | Не найдено |
+| Код | Использование            |
+| --- | ------------------------ |
+| 200 | Успешный GET, PATCH      |
+| 201 | Создание ресурса         |
+| 204 | Удаление без тела        |
+| 400 | Ошибка валидации         |
+| 401 | Не авторизован           |
+| 403 | Нет прав                 |
+| 404 | Не найдено               |
 | 409 | Конфликт (дубликат slug) |
-| 429 | Rate limit |
-| 500 | Внутренняя ошибка |
+| 429 | Rate limit               |
+| 500 | Внутренняя ошибка        |
 
 ### 2.3 Пагинация
 
@@ -64,12 +62,12 @@ Query: `?page=1&per_page=20` (max `per_page=100`)
 
 ### 2.4 Rate limiting
 
-| Группа | Лимит |
-|--------|-------|
-| Публичные GET | 100 req/min/IP |
-| Auth (login, register) | 10 req/min/IP |
-| Создание объявлений | 20 req/hour/user |
-| Upload | 30 req/hour/user |
+| Группа                 | Лимит            |
+| ---------------------- | ---------------- |
+| Публичные GET          | 100 req/min/IP   |
+| Auth (login, register) | 10 req/min/IP    |
+| Создание объявлений    | 20 req/hour/user |
+| Upload                 | 30 req/hour/user |
 
 ---
 
@@ -81,14 +79,14 @@ Query: `?page=1&per_page=20` (max `per_page=100`)
 
 **Body:**
 
-| Поле | Тип | Обязательно |
-|------|-----|-------------|
-| email | string | email или phone |
-| phone | string | email или phone |
-| password | string | да |
-| name | string | да |
-| role | `BUYER` \| `SELLER` | да |
-| company_name | string | если SELLER |
+| Поле         | Тип                 | Обязательно     |
+| ------------ | ------------------- | --------------- |
+| email        | string              | email или phone |
+| phone        | string              | email или phone |
+| password     | string              | да              |
+| name         | string              | да              |
+| role         | `BUYER` \| `SELLER` | да              |
+| company_name | string              | если SELLER     |
 
 **Response 201:** `{ data: { user, token } }`
 
@@ -198,20 +196,20 @@ Autocomplete.
 
 **Body:**
 
-| Поле | Тип |
-|------|-----|
-| category_id | uuid |
-| region_id | uuid |
-| title | string |
-| description | string |
-| price | number |
-| unit | enum |
-| moq | int |
-| stock_quantity | int? |
-| price_negotiable | bool |
-| attributes | `{ key, value }[]` |
-| images | string[] (urls после upload) |
-| submit | bool — true → статус PENDING |
+| Поле             | Тип                          |
+| ---------------- | ---------------------------- |
+| category_id      | uuid                         |
+| region_id        | uuid                         |
+| title            | string                       |
+| description      | string                       |
+| price            | number                       |
+| unit             | enum                         |
+| moq              | int                          |
+| stock_quantity   | int?                         |
+| price_negotiable | bool                         |
+| attributes       | `{ key, value }[]`           |
+| images           | string[] (urls после upload) |
+| submit           | bool — true → статус PENDING |
 
 ---
 
@@ -309,11 +307,11 @@ PUBLISHED → ARCHIVED
 
 **Body:**
 
-| Поле | Тип |
-|------|-----|
-| listing_id | uuid |
-| quantity | int |
-| message | string? |
+| Поле       | Тип     |
+| ---------- | ------- |
+| listing_id | uuid    |
+| quantity   | int     |
+| message    | string? |
 
 **Response 201**
 
@@ -351,26 +349,26 @@ PUBLISHED → ARCHIVED
 
 ### Модерация
 
-| Метод | Путь | Описание |
-|-------|------|----------|
-| GET | `/moderation/listings?status=PENDING` | Очередь |
-| POST | `/moderation/listings/[id]/approve` | Одобрить |
-| POST | `/moderation/listings/[id]/reject` | `{ reason }` |
-| GET | `/moderation/sellers?status=PENDING` | Верификация |
-| POST | `/moderation/sellers/[id]/approve` | |
-| POST | `/moderation/sellers/[id]/reject` | |
-| GET | `/moderation/reports` | Жалобы |
-| PATCH | `/moderation/reports/[id]` | Resolve/dismiss |
+| Метод | Путь                                  | Описание        |
+| ----- | ------------------------------------- | --------------- |
+| GET   | `/moderation/listings?status=PENDING` | Очередь         |
+| POST  | `/moderation/listings/[id]/approve`   | Одобрить        |
+| POST  | `/moderation/listings/[id]/reject`    | `{ reason }`    |
+| GET   | `/moderation/sellers?status=PENDING`  | Верификация     |
+| POST  | `/moderation/sellers/[id]/approve`    |                 |
+| POST  | `/moderation/sellers/[id]/reject`     |                 |
+| GET   | `/moderation/reports`                 | Жалобы          |
+| PATCH | `/moderation/reports/[id]`            | Resolve/dismiss |
 
 ### Управление
 
-| Метод | Путь | Роль |
-|-------|------|------|
-| CRUD | `/categories` | ADMIN |
-| CRUD | `/users` | ADMIN |
-| CRUD | `/banners` | ADMIN |
-| CRUD | `/seo-pages` | ADMIN |
-| GET | `/analytics/overview` | ADMIN |
+| Метод | Путь                  | Роль  |
+| ----- | --------------------- | ----- |
+| CRUD  | `/categories`         | ADMIN |
+| CRUD  | `/users`              | ADMIN |
+| CRUD  | `/banners`            | ADMIN |
+| CRUD  | `/seo-pages`          | ADMIN |
+| GET   | `/analytics/overview` | ADMIN |
 
 ---
 
@@ -386,9 +384,9 @@ PUBLISHED → ARCHIVED
 
 ## 12. Webhooks (фаза 3)
 
-| Событие | Описание |
-|---------|----------|
-| `lead.created` | Новая заявка продавцу |
+| Событие             | Описание                |
+| ------------------- | ----------------------- |
+| `lead.created`      | Новая заявка продавцу   |
 | `listing.published` | Объявление опубликовано |
 
 ---

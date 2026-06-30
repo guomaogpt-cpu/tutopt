@@ -2,11 +2,11 @@
 
 ## 1. Обзор окружений
 
-| Окружение | Домен | Назначение |
-|-----------|-------|------------|
-| local | `localhost:3000` | Разработка |
-| staging | `staging.tutopt.kg` | QA, демо |
-| production | `tutopt.kg` | Боевой трафик |
+| Окружение  | Домен               | Назначение    |
+| ---------- | ------------------- | ------------- |
+| local      | `localhost:3000`    | Разработка    |
+| staging    | `staging.tutopt.kg` | QA, демо      |
+| production | `tutopt.kg`         | Боевой трафик |
 
 ---
 
@@ -43,12 +43,12 @@
 
 ### 3.1 Сервисы (docker-compose.yml)
 
-| Сервис | Образ | Порт |
-|--------|-------|------|
-| `app` | Dockerfile (multi-stage) | 3000 |
-| `db` | postgres:16-alpine | 5432 |
-| `redis` | redis:7-alpine (фаза 2) | 6379 |
-| `minio` | minio (dev/staging) | 9000 |
+| Сервис  | Образ                    | Порт |
+| ------- | ------------------------ | ---- |
+| `app`   | Dockerfile (multi-stage) | 3000 |
+| `db`    | postgres:16-alpine       | 5432 |
+| `redis` | redis:7-alpine (фаза 2)  | 6379 |
+| `minio` | minio (dev/staging)      | 9000 |
 
 ### 3.2 Dockerfile (multi-stage)
 
@@ -85,23 +85,23 @@ services:
 
 ### 4.1 `.env.example`
 
-| Переменная | Описание | Пример |
-|------------|----------|--------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://tutopt:pass@db:5432/tutopt` |
-| `NEXTAUTH_SECRET` / `JWT_SECRET` | Секрет сессий | random 32+ chars |
-| `NEXT_PUBLIC_APP_URL` | Публичный URL | `https://tutopt.kg` |
-| `UPLOAD_PROVIDER` | `local` \| `s3` | `s3` |
-| `S3_BUCKET` | Bucket для изображений | `tutopt-uploads` |
-| `S3_REGION` | | `eu-central-1` |
-| `S3_ACCESS_KEY` | | |
-| `S3_SECRET_KEY` | | |
-| `SMTP_HOST` | Email | |
-| `SMTP_PORT` | | `587` |
-| `SMTP_USER` | | |
-| `SMTP_PASSWORD` | | |
-| `EMAIL_FROM` | | `noreply@tutopt.kg` |
-| `REDIS_URL` | (фаза 2) | `redis://redis:6379` |
-| `NODE_ENV` | | `production` |
+| Переменная                       | Описание                     | Пример                                    |
+| -------------------------------- | ---------------------------- | ----------------------------------------- |
+| `DATABASE_URL`                   | PostgreSQL connection string | `postgresql://tutopt:pass@db:5432/tutopt` |
+| `NEXTAUTH_SECRET` / `JWT_SECRET` | Секрет сессий                | random 32+ chars                          |
+| `NEXT_PUBLIC_APP_URL`            | Публичный URL                | `https://tutopt.kg`                       |
+| `UPLOAD_PROVIDER`                | `local` \| `s3`              | `s3`                                      |
+| `S3_BUCKET`                      | Bucket для изображений       | `tutopt-uploads`                          |
+| `S3_REGION`                      |                              | `eu-central-1`                            |
+| `S3_ACCESS_KEY`                  |                              |                                           |
+| `S3_SECRET_KEY`                  |                              |                                           |
+| `SMTP_HOST`                      | Email                        |                                           |
+| `SMTP_PORT`                      |                              | `587`                                     |
+| `SMTP_USER`                      |                              |                                           |
+| `SMTP_PASSWORD`                  |                              |                                           |
+| `EMAIL_FROM`                     |                              | `noreply@tutopt.kg`                       |
+| `REDIS_URL`                      | (фаза 2)                     | `redis://redis:6379`                      |
+| `NODE_ENV`                       |                              | `production`                              |
 
 **Правило:** секреты только в env, никогда в git.
 
@@ -113,22 +113,22 @@ services:
 
 **Trigger:** push to `main` → staging; tag `v*` → production
 
-| Stage | Действия |
-|-------|----------|
-| lint | ESLint, Prettier check |
-| typecheck | `tsc --noEmit` |
-| test | Unit tests (фаза 2) |
-| build | `next build` |
-| docker | Build & push image to registry |
-| deploy | SSH / K8s / Railway / VPS |
-| migrate | `prisma migrate deploy` |
+| Stage     | Действия                       |
+| --------- | ------------------------------ |
+| lint      | ESLint, Prettier check         |
+| typecheck | `tsc --noEmit`                 |
+| test      | Unit tests (фаза 2)            |
+| build     | `next build`                   |
+| docker    | Build & push image to registry |
+| deploy    | SSH / K8s / Railway / VPS      |
+| migrate   | `prisma migrate deploy`        |
 
 ### 5.2 Ветки
 
-| Ветка | Деплой |
-|-------|--------|
-| `main` | staging (auto) |
-| `release/*` | production (manual approve) |
+| Ветка            | Деплой                        |
+| ---------------- | ----------------------------- |
+| `main`           | staging (auto)                |
+| `release/*`      | production (manual approve)   |
 | feature branches | preview (опционально, Vercel) |
 
 ---
@@ -177,10 +177,10 @@ npx prisma migrate deploy
 
 ### 7.3 Бэкапы
 
-| Тип | Частота | Retention |
-|-----|---------|-----------|
-| pg_dump full | daily 03:00 Bishkek | 30 days |
-| WAL / PITR | continuous | 7 days |
+| Тип          | Частота             | Retention |
+| ------------ | ------------------- | --------- |
+| pg_dump full | daily 03:00 Bishkek | 30 days   |
+| WAL / PITR   | continuous          | 7 days    |
 
 Хранение: S3-compatible bucket, encryption at rest.
 
@@ -211,13 +211,13 @@ npx prisma migrate deploy
 
 ## 10. Мониторинг и логи
 
-| Компонент | Инструмент |
-|-----------|------------|
-| Uptime | UptimeRobot / Better Stack |
-| APM | Sentry (errors) |
-| Logs | Structured JSON → Loki / CloudWatch |
-| Metrics | Prometheus + Grafana (фаза 2) |
-| DB | pg_stat_statements, slow query log > 500ms |
+| Компонент | Инструмент                                 |
+| --------- | ------------------------------------------ |
+| Uptime    | UptimeRobot / Better Stack                 |
+| APM       | Sentry (errors)                            |
+| Logs      | Structured JSON → Loki / CloudWatch        |
+| Metrics   | Prometheus + Grafana (фаза 2)              |
+| DB        | pg_stat_statements, slow query log > 500ms |
 
 ### 10.1 Health checks
 

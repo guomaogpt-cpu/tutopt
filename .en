@@ -1,0 +1,7 @@
+DATABASE_URL="postgresql://tutopt:tutopt@localhost:5432/tutopt?schema=public"
+
+NODE_ENV=development
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+LOG_LEVEL=debug
+

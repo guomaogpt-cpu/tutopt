@@ -53,31 +53,31 @@
 
 ### 3.1 Список фильтров
 
-| Фильтр | Query param | Тип | Описание |
-|--------|-------------|-----|----------|
-| Текст | `q` | string | Поисковый запрос |
-| Категория | `category` | slug | Одна категория |
-| Подкатегории | `include_children` | bool | default true |
-| Регион | `region` | slug | |
-| Цена от | `price_min` | number | KGS |
-| Цена до | `price_max` | number | KGS |
-| MOQ до | `moq_max` | int | Макс. мин. заказ |
-| Только в наличии | `in_stock` | bool | stock_quantity > 0 |
-| Договорная цена | `negotiable` | bool | |
-| Проверенный продавец | `verified` | bool | |
-| Единица | `unit` | enum | PIECE, KG, ... |
-| Дата | `published_after` | date | За последние N дней |
-| Продавец | `seller` | slug | |
+| Фильтр               | Query param        | Тип    | Описание            |
+| -------------------- | ------------------ | ------ | ------------------- |
+| Текст                | `q`                | string | Поисковый запрос    |
+| Категория            | `category`         | slug   | Одна категория      |
+| Подкатегории         | `include_children` | bool   | default true        |
+| Регион               | `region`           | slug   |                     |
+| Цена от              | `price_min`        | number | KGS                 |
+| Цена до              | `price_max`        | number | KGS                 |
+| MOQ до               | `moq_max`          | int    | Макс. мин. заказ    |
+| Только в наличии     | `in_stock`         | bool   | stock_quantity > 0  |
+| Договорная цена      | `negotiable`       | bool   |                     |
+| Проверенный продавец | `verified`         | bool   |                     |
+| Единица              | `unit`             | enum   | PIECE, KG, ...      |
+| Дата                 | `published_after`  | date   | За последние N дней |
+| Продавец             | `seller`           | slug   |                     |
 
 ### 3.2 Сортировка
 
-| Query `sort` | Описание |
-|--------------|----------|
-| `relevance` | По умолчанию при наличии `q` |
-| `newest` | `published_at DESC` (default без q) |
-| `price_asc` | Цена по возрастанию |
-| `price_desc` | Цена по убыванию |
-| `popular` | `view_count DESC` |
+| Query `sort` | Описание                            |
+| ------------ | ----------------------------------- |
+| `relevance`  | По умолчанию при наличии `q`        |
+| `newest`     | `published_at DESC` (default без q) |
+| `price_asc`  | Цена по возрастанию                 |
+| `price_desc` | Цена по убыванию                    |
+| `popular`    | `view_count DESC`                   |
 
 ### 3.3 Пагинация
 
@@ -132,15 +132,15 @@
 
 ## 6. Карточка в выдаче
 
-| Элемент | Источник |
-|---------|----------|
-| Фото | listing_images[0].thumbnail_url |
-| Название | title (highlight match) |
-| Цена | price + unit + MOQ |
-| Регион | region.name |
-| Продавец | company_name + verified badge |
-| Дата | относительная (2 дня назад) |
-| Избранное | heart icon |
+| Элемент   | Источник                        |
+| --------- | ------------------------------- |
+| Фото      | listing_images[0].thumbnail_url |
+| Название  | title (highlight match)         |
+| Цена      | price + unit + MOQ              |
+| Регион    | region.name                     |
+| Продавец  | company_name + verified badge   |
+| Дата      | относительная (2 дня назад)     |
+| Избранное | heart icon                      |
 
 ---
 
@@ -189,11 +189,11 @@ score = ts_rank(search_vector, query) * 100
 
 ### 9.2 Кэш
 
-| Ключ | TTL |
-|------|-----|
-| `categories:tree` | 1 час |
-| `regions:list` | 24 часа |
-| `search:popular` | 1 час |
+| Ключ                         | TTL                   |
+| ---------------------------- | --------------------- |
+| `categories:tree`            | 1 час                 |
+| `regions:list`               | 24 часа               |
+| `search:popular`             | 1 час                 |
 | Результаты `?q=без+фильтров` | 5 мин (фаза 2, Redis) |
 
 ### 9.3 EXPLAIN-цели
@@ -218,12 +218,12 @@ score = ts_rank(search_vector, query) * 100
 
 ## 11. Ограничения и валидация
 
-| Правило | Значение |
-|---------|----------|
-| Мин. длина `q` | 2 символа |
-| Макс. длина `q` | 200 символов |
-| price_min ≤ price_max | иначе swap |
-| price_max | ≤ 99 999 999 |
+| Правило               | Значение     |
+| --------------------- | ------------ |
+| Мин. длина `q`        | 2 символа    |
+| Макс. длина `q`       | 200 символов |
+| price_min ≤ price_max | иначе swap   |
+| price_max             | ≤ 99 999 999 |
 
 ---
 

@@ -2,13 +2,7 @@ import bcrypt from "bcryptjs";
 import { PrismaClient, UserRole } from "@prisma/client";
 import { CATEGORIES } from "./seed-data/categories";
 import { REGIONS } from "./seed-data/regions";
-import {
-  CITIES,
-  getRegionMap,
-  seedBrands,
-  seedCategories,
-  seedCities,
-} from "./seed-utils";
+import { CITIES, getRegionMap, seedBrands, seedCategories, seedCities } from "./seed-utils";
 
 const prisma = new PrismaClient();
 

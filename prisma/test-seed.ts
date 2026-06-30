@@ -1,10 +1,5 @@
 import bcrypt from "bcryptjs";
-import {
-  ListingStatus,
-  ListingUnit,
-  PrismaClient,
-  UserRole,
-} from "@prisma/client";
+import { ListingStatus, ListingUnit, PrismaClient, UserRole } from "@prisma/client";
 import {
   generateShortId,
   getBrandMap,
@@ -69,26 +64,86 @@ const LISTING_TEMPLATES: Array<{
   moq: number;
   brandSlug?: string;
 }> = [
-  { title: "Молоко пастеризованное 3.2% оптом", unit: ListingUnit.LITER, price: 65, moq: 100, brandSlug: "nestle" },
-  { title: "Сыр Голландский 45% оптом", unit: ListingUnit.KG, price: 520, moq: 20, brandSlug: "kulikovskiy" },
+  {
+    title: "Молоко пастеризованное 3.2% оптом",
+    unit: ListingUnit.LITER,
+    price: 65,
+    moq: 100,
+    brandSlug: "nestle",
+  },
+  {
+    title: "Сыр Голландский 45% оптом",
+    unit: ListingUnit.KG,
+    price: 520,
+    moq: 20,
+    brandSlug: "kulikovskiy",
+  },
   { title: "Говядина охлаждённая оптом", unit: ListingUnit.KG, price: 480, moq: 50 },
-  { title: "Крупа рис басмати 25 кг", unit: ListingUnit.PACK, price: 2800, moq: 10, brandSlug: "lenta" },
-  { title: "Минеральная вода 0.5л оптом", unit: ListingUnit.PACK, price: 180, moq: 50, brandSlug: "shoro" },
+  {
+    title: "Крупа рис басмати 25 кг",
+    unit: ListingUnit.PACK,
+    price: 2800,
+    moq: 10,
+    brandSlug: "lenta",
+  },
+  {
+    title: "Минеральная вода 0.5л оптом",
+    unit: ListingUnit.PACK,
+    price: 180,
+    moq: 50,
+    brandSlug: "shoro",
+  },
   { title: "Мужские рубашки оптом", unit: ListingUnit.PIECE, price: 450, moq: 30 },
   { title: "Женские платья летние оптом", unit: ListingUnit.PIECE, price: 890, moq: 20 },
   { title: "Постельное бельё комплект оптом", unit: ListingUnit.PIECE, price: 1200, moq: 15 },
-  { title: "Цемент М500 50 кг оптом", unit: ListingUnit.PIECE, price: 420, moq: 100, brandSlug: "ak-tilek" },
+  {
+    title: "Цемент М500 50 кг оптом",
+    unit: ListingUnit.PIECE,
+    price: 420,
+    moq: 100,
+    brandSlug: "ak-tilek",
+  },
   { title: "Кирпич красный оптом", unit: ListingUnit.PIECE, price: 18, moq: 1000 },
   { title: "Арматура А500 12мм оптом", unit: ListingUnit.PIECE, price: 650, moq: 200 },
   { title: "Краска водоэмульсионная 15л", unit: ListingUnit.PIECE, price: 1850, moq: 10 },
-  { title: "Смартфоны Android оптом", unit: ListingUnit.PIECE, price: 8500, moq: 10, brandSlug: "xiaomi" },
-  { title: "Ноутбуки 15.6\" оптом", unit: ListingUnit.PIECE, price: 42000, moq: 5, brandSlug: "samsung" },
-  { title: "Холодильники двухкамерные оптом", unit: ListingUnit.PIECE, price: 28000, moq: 3, brandSlug: "samsung" },
+  {
+    title: "Смартфоны Android оптом",
+    unit: ListingUnit.PIECE,
+    price: 8500,
+    moq: 10,
+    brandSlug: "xiaomi",
+  },
+  {
+    title: 'Ноутбуки 15.6" оптом',
+    unit: ListingUnit.PIECE,
+    price: 42000,
+    moq: 5,
+    brandSlug: "samsung",
+  },
+  {
+    title: "Холодильники двухкамерные оптом",
+    unit: ListingUnit.PIECE,
+    price: 28000,
+    moq: 3,
+    brandSlug: "samsung",
+  },
   { title: "Моторное масло 5W-30 оптом", unit: ListingUnit.LITER, price: 520, moq: 24 },
   { title: "Летние шины R16 оптом", unit: ListingUnit.PIECE, price: 6500, moq: 8 },
-  { title: "Средство для стирки 5л", unit: ListingUnit.PIECE, price: 380, moq: 24, brandSlug: "aidar" },
+  {
+    title: "Средство для стирки 5л",
+    unit: ListingUnit.PIECE,
+    price: 380,
+    moq: 24,
+    brandSlug: "aidar",
+  },
   { title: "Офисные стулья оптом", unit: ListingUnit.PIECE, price: 3200, moq: 10 },
-  { title: "Газированный напиток 1л оптом", unit: ListingUnit.PACK, price: 95, moq: 48, brandSlug: "coca-cola" },
+  {
+    title: "Газированный напиток 1л оптом",
+    unit: ListingUnit.PACK,
+    price: 95,
+    moq: 48,
+    brandSlug: "coca-cola",
+  },
 ];
 
 const CITY_BY_LISTING_INDEX = [
@@ -121,9 +176,7 @@ async function ensureBaseSeed(): Promise<void> {
   const adminCount = await prisma.user.count({ where: { role: UserRole.ADMIN } });
 
   if (regionCount === 0 || cityCount === 0 || brandCount === 0 || adminCount === 0) {
-    throw new Error(
-      "Base seed required. Run `npm run db:seed` before test seed.",
-    );
+    throw new Error("Base seed required. Run `npm run db:seed` before test seed.");
   }
 }
 
@@ -223,8 +276,7 @@ async function seedTestListings(sellerProfileIds: string[]): Promise<void> {
     const template = LISTING_TEMPLATES[i];
     const sellerProfileId = sellerProfileIds[i % sellerProfileIds.length];
     const category = leafCategories[i % leafCategories.length];
-    const regionId =
-      i % 3 === 0 ? regionMap["osh"] : i % 3 === 1 ? regionMap["chuy"] : bishkekId;
+    const regionId = i % 3 === 0 ? regionMap["osh"] : i % 3 === 1 ? regionMap["chuy"] : bishkekId;
     const citySlug = CITY_BY_LISTING_INDEX[i];
     const cityId = cityMap[citySlug];
     const brandId = template.brandSlug ? brandMap[template.brandSlug] : null;
