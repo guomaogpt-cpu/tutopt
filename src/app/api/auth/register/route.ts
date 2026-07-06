@@ -13,14 +13,14 @@ export async function POST(request: Request) {
     if (input.email) {
       const existingEmail = await prisma.user.findUnique({ where: { email: input.email } });
       if (existingEmail) {
-        throw new ConflictError("Email is already registered");
+        throw new ConflictError("Этот email уже зарегистрирован");
       }
     }
 
     if (input.phone) {
       const existingPhone = await prisma.user.findUnique({ where: { phone: input.phone } });
       if (existingPhone) {
-        throw new ConflictError("Phone is already registered");
+        throw new ConflictError("Этот телефон уже зарегистрирован");
       }
     }
 

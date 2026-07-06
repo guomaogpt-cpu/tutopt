@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { ListingStatus } from "@prisma/client";
 import { UserRole } from "@prisma/client";
+import { redirect } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { PublicPageHeader } from "@/components/public/PublicPageHeader";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { listingStatusBadgeClass, listingStatusLabels } from "@/features/listings/lib/listing-status";
 import { prisma } from "@/shared/lib/prisma";
 
@@ -22,21 +24,7 @@ export default async function SellerDashboardPage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    return (
-      <main className="bg-slate-50 py-10 sm:py-14">
-        <Container>
-          <div className="mx-auto max-w-3xl">
-            <PublicPageHeader title="Кабинет продавца" />
-            <ListingAccessMessage
-              title="Нужно войти, чтобы подать объявление"
-              description="Войдите в аккаунт продавца, чтобы управлять объявлениями."
-              actionHref="/login"
-              actionLabel="Войти"
-            />
-          </div>
-        </Container>
-      </main>
-    );
+    redirect(buildLoginUrl("/seller/dashboard"));
   }
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {

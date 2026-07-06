@@ -7,11 +7,16 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { logoutRequest } from "@/features/auth/lib/auth-client";
 import {
+  getCreateListingHref,
+  shouldShowCreateListingCTA,
+} from "@/features/auth/lib/login-redirect";
+import {
   getHeaderMenuItems,
   type HeaderUser,
 } from "@/features/navigation/lib/header-menu";
 import { Logo } from "@/components/layout/Logo";
 import { HeaderSearch } from "@/components/layout/header/HeaderSearch";
+import { HeaderNotificationsBell } from "@/components/layout/header/HeaderNotificationsBell";
 import { UserMenu } from "@/components/layout/header/UserMenu";
 
 const focusRingClassName =
@@ -28,10 +33,12 @@ type MobileNavItem = {
 };
 
 function buildMobileNavItems(user: HeaderUser | null): MobileNavItem[] {
-  const items: MobileNavItem[] = [
-    { label: "Каталог", href: "/listings" },
-    { label: "Подать объявление", href: "/listings/new" },
-  ];
+  const items: MobileNavItem[] = [{ label: "Каталог", href: "/listings" }];
+
+  if (shouldShowCreateListingCTA(user)) {
+    items.push({ label: "Подать объявление", href: getCreateListingHref(user) });
+  }
+
   const seen = new Set(items.map((item) => `${item.label}:${item.href ?? ""}`));
 
   for (const item of getHeaderMenuItems(user)) {
@@ -63,6 +70,8 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const mobileItems = buildMobileNavItems(user);
+  const createListingHref = getCreateListingHref(user);
+  const showCreateListingCTA = shouldShowCreateListingCTA(user);
 
   useEffect(() => {
     if (!mobileOpen) {
@@ -123,16 +132,20 @@ export function HeaderClient({ user }: HeaderClientProps) {
               Каталог
             </Link>
 
-            <Link
-              href="/listings/new"
-              className={`inline-flex shrink-0 items-center gap-2 rounded-xl bg-blue-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 xl:px-4 ${focusRingClassName}`}
-            >
-              <PlusCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-              <span className="hidden xl:inline">Подать объявление</span>
-              <span className="xl:hidden">Подать</span>
-            </Link>
+            {showCreateListingCTA ? (
+              <Link
+                href={createListingHref}
+                className={`inline-flex shrink-0 items-center gap-2 rounded-xl bg-blue-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 xl:px-4 ${focusRingClassName}`}
+              >
+                <PlusCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className="hidden xl:inline">Подать объявление</span>
+                <span className="xl:hidden">Подать</span>
+              </Link>
+            ) : null}
 
             <FavoritesButton />
+
+            {user ? <HeaderNotificationsBell /> : null}
 
             {!user ? (
               <>
@@ -155,13 +168,17 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
-            <Link
-              href="/listings/new"
-              aria-label="Подать объявление"
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm transition hover:bg-blue-700 ${focusRingClassName}`}
-            >
-              <PlusCircle className="h-5 w-5" aria-hidden="true" />
-            </Link>
+            {user ? <HeaderNotificationsBell /> : null}
+
+            {showCreateListingCTA ? (
+              <Link
+                href={createListingHref}
+                aria-label="Подать объявление"
+                className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm transition hover:bg-blue-700 ${focusRingClassName}`}
+              >
+                <PlusCircle className="h-5 w-5" aria-hidden="true" />
+              </Link>
+            ) : null}
 
             <button
               type="button"
@@ -256,14 +273,13 @@ export function HeaderClient({ user }: HeaderClientProps) {
 
 function FavoritesButton() {
   return (
-    <button
-      type="button"
-      disabled
-      title="Избранное скоро"
-      aria-label="Избранное скоро"
-      className="inline-flex h-10 w-10 shrink-0 cursor-not-allowed items-center justify-center rounded-xl border border-slate-200 text-slate-400"
+    <Link
+      href="/favorites"
+      aria-label="Избранное"
+      title="Избранное"
+      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 ${focusRingClassName}`}
     >
       <Heart className="h-4 w-4" aria-hidden="true" />
-    </button>
+    </Link>
   );
 }

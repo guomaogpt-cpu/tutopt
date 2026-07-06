@@ -137,6 +137,56 @@ export async function logoutRequest(): Promise<void> {
   }
 }
 
+type ForgotPasswordResponse = {
+  message: string;
+};
+
+type ResetPasswordResponse = {
+  message: string;
+};
+
+type MessageSuccessBody = {
+  data: {
+    message: string;
+  };
+};
+
+async function parseMessageResponse(response: Response): Promise<string> {
+  const body = (await response.json()) as MessageSuccessBody | ApiErrorBody;
+
+  if (!response.ok) {
+    const errors = mapApiErrors(body as ApiErrorBody);
+    throw new AuthRequestError(errors.form[0] ?? "Не удалось выполнить запрос", errors);
+  }
+
+  return (body as MessageSuccessBody).data.message;
+}
+
+export async function forgotPasswordRequest(email: string): Promise<ForgotPasswordResponse> {
+  const response = await fetch("/api/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  const message = await parseMessageResponse(response);
+  return { message };
+}
+
+export async function resetPasswordRequest(
+  token: string,
+  password: string,
+): Promise<ResetPasswordResponse> {
+  const response = await fetch("/api/auth/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password }),
+  });
+
+  const message = await parseMessageResponse(response);
+  return { message };
+}
+
 export function getFieldError(
   errors: AuthFormErrors,
   field: string,

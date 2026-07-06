@@ -1,6 +1,7 @@
 import type { UserRole } from "@prisma/client";
 import {
   Heart,
+  Inbox,
   LayoutDashboard,
   LogOut,
   PlusCircle,
@@ -23,6 +24,12 @@ export type HeaderMenuItem = {
   disabled?: boolean;
 };
 
+const buyerDashboardItem: HeaderMenuItem = {
+  label: "Кабинет покупателя",
+  href: "/buyer/dashboard",
+  icon: User,
+};
+
 export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
   if (!user) {
     return [
@@ -34,19 +41,23 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
   switch (user.role) {
     case "BUYER":
       return [
+        buyerDashboardItem,
         { label: "Профиль", icon: User, disabled: true },
-        { label: "Избранное", icon: Heart, disabled: true },
+        { label: "Избранное", href: "/favorites", icon: Heart },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     case "SELLER":
       return [
+        buyerDashboardItem,
         { label: "Кабинет продавца", href: "/seller/dashboard", icon: LayoutDashboard },
+        { label: "Заявки", href: "/seller/leads", icon: Inbox },
         { label: "Мои объявления", href: "/seller/dashboard", icon: LayoutDashboard },
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     case "MODERATOR":
       return [
+        buyerDashboardItem,
         {
           label: "Модерация объявлений",
           href: "/admin/moderation/listings",
@@ -56,6 +67,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
       ];
     case "ADMIN":
       return [
+        buyerDashboardItem,
         { label: "Админка", href: "/admin/users", icon: Shield },
         { label: "Пользователи", href: "/admin/users", icon: User },
         {
@@ -66,6 +78,6 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     default:
-      return [{ label: "Выйти", icon: LogOut, action: "logout" }];
+      return [buyerDashboardItem, { label: "Выйти", icon: LogOut, action: "logout" }];
   }
 }

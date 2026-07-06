@@ -2,9 +2,13 @@ import Link from "next/link";
 
 type ListingsEmptyStateProps = {
   hasActiveFilters: boolean;
+  createListingHref: string;
 };
 
-export function ListingsEmptyState({ hasActiveFilters }: ListingsEmptyStateProps) {
+export function ListingsEmptyState({
+  hasActiveFilters,
+  createListingHref,
+}: ListingsEmptyStateProps) {
   return (
     <div className="mt-10 rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm sm:px-10">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-2xl">
@@ -18,7 +22,7 @@ export function ListingsEmptyState({ hasActiveFilters }: ListingsEmptyStateProps
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Link
-          href="/listings/new"
+          href={createListingHref}
           className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
         >
           Подать объявление

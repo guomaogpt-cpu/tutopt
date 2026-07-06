@@ -13,6 +13,15 @@ export function jsonData<T>(data: T, status = 200): NextResponse {
   return NextResponse.json({ data }, { status });
 }
 
+const noStoreHeaders = {
+  "Cache-Control": "no-store, no-cache, must-revalidate",
+  Pragma: "no-cache",
+} as const;
+
+export function jsonDataNoStore<T>(data: T, status = 200): NextResponse {
+  return NextResponse.json({ data }, { status, headers: noStoreHeaders });
+}
+
 export function jsonMessage(message: string, status = 200): NextResponse {
   return NextResponse.json({ data: { message } }, { status });
 }

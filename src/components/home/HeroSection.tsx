@@ -5,7 +5,11 @@ import { HomeSearchBar } from "@/components/home/HomeSearchBar";
 const focusRingClassName =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2";
 
-export function HeroSection() {
+type HeroSectionProps = {
+  createListingHref: string;
+};
+
+export function HeroSection({ createListingHref }: HeroSectionProps) {
   return (
     <section className="border-b border-slate-200 bg-gradient-to-b from-blue-50/40 to-white">
       <Container className="py-14 sm:py-16 lg:py-20">
@@ -30,7 +34,7 @@ export function HeroSection() {
             Смотреть каталог
           </Link>
           <Link
-            href="/listings/new"
+            href={createListingHref}
             className={`inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 sm:w-auto ${focusRingClassName}`}
           >
             Подать объявление

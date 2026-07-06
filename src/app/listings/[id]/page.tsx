@@ -6,7 +6,7 @@ import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
 import { ListingGallery } from "@/components/listings/ListingGallery";
 import { ListingSellerCard } from "@/components/listings/ListingSellerCard";
-import { ListingSellerMessage } from "@/components/listings/ListingSellerMessage";
+import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
 import { SimilarListings } from "@/components/listings/SimilarListings";
 import { listingUnitOptions } from "@/features/listings/constants";
 import { canViewListing } from "@/features/listings/lib/listing-access";
@@ -19,6 +19,8 @@ import {
   getSellerPublishedListingCount,
   getSimilarListings,
 } from "@/features/listings/lib/listing-detail-data";
+import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
+import { recordListingView } from "@/features/buyer/lib/listing-views";
 import { getCurrentUser } from "@/features/auth/lib/session";
 
 type ListingPageProps = {
@@ -35,10 +37,18 @@ export default async function ListingPage({ params }: ListingPageProps) {
     notFound();
   }
 
+  if (user) {
+    await recordListingView(user.id, listing.id);
+  }
+
   const [similarListings, sellerListingCount] = await Promise.all([
     getSimilarListings(listing.id, listing.category_id),
     getSellerPublishedListingCount(listing.sellerProfile.id),
   ]);
+
+  const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
+  const favoriteIds = new Set(favoriteListingIds);
+  const isFavorited = favoriteIds.has(listing.id);
 
   const unitLabel =
     listingUnitOptions.find((option) => option.value === listing.unit)?.label ?? listing.unit;
@@ -48,6 +58,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const publishedAtLabel = formatListingDate(publishedDate);
 
   const sellerProfile = listing.sellerProfile;
+  const isOwner = user?.id === sellerProfile.user_id;
   const sellerName = sellerProfile.user.name;
   const sellerAvatar = sellerProfile.logo_url ?? sellerProfile.user.avatar_url;
   const sellerCity = sellerProfile.city?.name ?? listing.city?.name ?? null;
@@ -67,6 +78,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const sidebar = (
     <>
       <ListingContactCard
+        listingId={listing.id}
+        isAuthenticated={user !== null}
+        isFavorited={isFavorited}
         priceLabel={priceLabel}
         moq={listing.moq}
         unitLabel={unitLabel}
@@ -141,10 +155,23 @@ export default async function ListingPage({ params }: ListingPageProps) {
         <div className="mt-10 space-y-8 lg:mt-12 lg:space-y-10">
           <ListingCharacteristics items={characteristicItems} />
           <ListingDescription text={listing.description} />
-          <ListingSellerMessage sellerName={sellerName} />
+          <ListingLeadForm
+            listingId={listing.id}
+            sellerName={sellerName}
+            moq={listing.moq}
+            unitLabel={unitLabel}
+            isAuthenticated={user !== null}
+            isOwner={isOwner}
+            defaultPhone={user?.phone}
+            defaultEmail={user?.email}
+          />
         </div>
 
-        <SimilarListings listings={similarListings} />
+        <SimilarListings
+          listings={similarListings}
+          isAuthenticated={user !== null}
+          favoriteListingIds={favoriteListingIds}
+        />
       </Container>
     </main>
   );

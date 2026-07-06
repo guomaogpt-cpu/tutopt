@@ -1,13 +1,17 @@
 "use client";
 
-import { Heart, MessageSquare, Phone } from "lucide-react";
+import { MessageSquare, Phone } from "lucide-react";
 import { ListingStatus, type ListingStatus as ListingStatusType } from "@prisma/client";
+import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import {
   listingStatusBadgeClass,
   listingStatusLabels,
 } from "@/features/listings/lib/listing-status";
 
 type ListingContactCardProps = {
+  listingId: string;
+  isAuthenticated: boolean;
+  isFavorited: boolean;
   priceLabel: string;
   moq: number;
   unitLabel: string;
@@ -19,6 +23,9 @@ type ListingContactCardProps = {
 };
 
 export function ListingContactCard({
+  listingId,
+  isAuthenticated,
+  isFavorited,
   priceLabel,
   moq,
   unitLabel,
@@ -95,18 +102,15 @@ export function ListingContactCard({
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-700"
         >
           <MessageSquare className="h-4 w-4" aria-hidden="true" />
-          Написать продавцу
+          Отправить заявку
         </button>
 
-        <button
-          type="button"
-          aria-pressed={false}
-          title="Избранное скоро будет доступно"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-slate-50"
-        >
-          <Heart className="h-4 w-4" aria-hidden="true" />
-          Добавить в избранное
-        </button>
+        <FavoriteButton
+          listingId={listingId}
+          isAuthenticated={isAuthenticated}
+          initialIsFavorited={isFavorited}
+          variant="button"
+        />
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5">
           <button

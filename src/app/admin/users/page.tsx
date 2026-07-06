@@ -2,13 +2,14 @@ import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { AdminUsersTable, type AdminUserRow } from "@/components/admin/AdminUsersTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { prisma } from "@/shared/lib/prisma";
 
 export default async function AdminUsersPage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect("/login");
+    redirect(buildLoginUrl("/admin/users"));
   }
 
   if (user.role !== UserRole.ADMIN) {

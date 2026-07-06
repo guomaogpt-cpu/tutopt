@@ -3,9 +3,17 @@ import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 
 type SimilarListingsProps = {
   listings: ListingCardData[];
+  isAuthenticated?: boolean;
+  favoriteListingIds?: string[];
 };
 
-export function SimilarListings({ listings }: SimilarListingsProps) {
+export function SimilarListings({
+  listings,
+  isAuthenticated = false,
+  favoriteListingIds = [],
+}: SimilarListingsProps) {
+  const favoriteIds = new Set(favoriteListingIds);
+
   if (listings.length === 0) {
     return null;
   }
@@ -15,7 +23,12 @@ export function SimilarListings({ listings }: SimilarListingsProps) {
       <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">Похожие товары</h2>
       <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {listings.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} />
+          <ListingCard
+            key={listing.id}
+            listing={listing}
+            isAuthenticated={isAuthenticated}
+            isFavorited={favoriteIds.has(listing.id)}
+          />
         ))}
       </div>
     </section>

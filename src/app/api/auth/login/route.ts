@@ -20,17 +20,17 @@ export async function POST(request: Request) {
     });
 
     if (!user) {
-      throw new UnauthorizedError("Invalid credentials");
+      throw new UnauthorizedError("Неверный email, телефон или пароль");
     }
 
     if (user.is_blocked) {
-      throw new ForbiddenError("Account is blocked");
+      throw new ForbiddenError("Аккаунт заблокирован");
     }
 
     const isValidPassword = await verifyPassword(input.password, user.password_hash);
 
     if (!isValidPassword) {
-      throw new UnauthorizedError("Invalid credentials");
+      throw new UnauthorizedError("Неверный email, телефон или пароль");
     }
 
     await prisma.user.update({

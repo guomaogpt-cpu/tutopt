@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     });
 
     if (!resetToken) {
-      throw new ValidationError("Invalid or expired reset token");
+      throw new ValidationError("Ссылка для сброса пароля недействительна или устарела");
     }
 
     const password_hash = await hashPassword(input.password);
@@ -41,6 +41,6 @@ export async function POST(request: Request) {
 
     logger.info("Password reset completed", { userId: resetToken.user_id });
 
-    return jsonMessage("Password has been reset successfully");
+    return jsonMessage("Пароль успешно изменён");
   });
 }

@@ -6,12 +6,21 @@ import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 
 type RecentListingsSectionProps = {
   listings: ListingCardData[];
+  isAuthenticated?: boolean;
+  favoriteListingIds?: string[];
+  createListingHref: string;
 };
 
 const focusRingClassName =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2";
 
-export function RecentListingsSection({ listings }: RecentListingsSectionProps) {
+export function RecentListingsSection({
+  listings,
+  isAuthenticated = false,
+  favoriteListingIds = [],
+  createListingHref,
+}: RecentListingsSectionProps) {
+  const favoriteIds = new Set(favoriteListingIds);
   return (
     <section className="border-y border-slate-200 bg-slate-50 py-12 sm:py-16">
       <Container>
@@ -39,7 +48,7 @@ export function RecentListingsSection({ listings }: RecentListingsSectionProps) 
               Станьте первым поставщиком на площадке — разместите предложение и дождитесь модерации.
             </p>
             <Link
-              href="/listings/new"
+              href={createListingHref}
               className={`mt-6 inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 ${focusRingClassName}`}
             >
               Подать объявление
@@ -49,7 +58,11 @@ export function RecentListingsSection({ listings }: RecentListingsSectionProps) 
           <div className="mt-8 grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {listings.map((listing) => (
               <div key={listing.id} className="h-full min-w-0">
-                <ListingCard listing={listing} />
+                <ListingCard
+                  listing={listing}
+                  isAuthenticated={isAuthenticated}
+                  isFavorited={favoriteIds.has(listing.id)}
+                />
               </div>
             ))}
           </div>

@@ -75,6 +75,10 @@ enum ContactEventType {
   TELEGRAM
 }
 
+enum NotificationType {
+  NEW_LEAD
+}
+
 // ---------------------------------------------------------------------------
 // Models
 // ---------------------------------------------------------------------------
@@ -157,6 +161,8 @@ model User {
   listingViews             UserListingView[]
   categorySubscriptions    CategorySubscription[]
   listingContactEvents     ListingContactEvent[]
+  notificationsReceived    Notification[]            @relation("NotificationRecipient")
+  notificationsSent        Notification[]            @relation("NotificationActor")
 
   @@index([email])
   @@index([phone])
@@ -511,4 +517,23 @@ model SeoPage {
 
   @@index([is_published])
   @@map("seo_pages")
+}
+
+model Notification {
+  id           String           @id @default(uuid()) @db.Uuid
+  recipient_id String           @map("recipient_id") @db.Uuid
+  actor_id     String?          @map("actor_id") @db.Uuid
+  type         NotificationType
+  title        String           @db.VarChar(200)
+  message      String           @db.Text
+  link         String?          @db.VarChar(500)
+  read_at      DateTime?        @map("read_at") @db.Timestamptz
+  created_at   DateTime         @default(now()) @map("created_at") @db.Timestamptz
+
+  recipient User  @relation("NotificationRecipient", fields: [recipient_id], references: [id], onDelete: Cascade)
+  actor     User? @relation("NotificationActor", fields: [actor_id], references: [id], onDelete: SetNull)
+
+  @@index([recipient_id, read_at])
+  @@index([recipient_id, created_at(sort: Desc)])
+  @@map("notifications")
 }

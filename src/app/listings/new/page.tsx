@@ -1,34 +1,21 @@
 import Link from "next/link";
 import { UserRole } from "@prisma/client";
+import { redirect } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { ListingAccessMessage, NewListingForm } from "@/components/listings/NewListingForm";
 import { PublicPageHeader } from "@/components/public/PublicPageHeader";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import {
+  buildLoginUrl,
+  buildRegisterUrl,
+} from "@/features/auth/lib/login-redirect";
 import { prisma } from "@/shared/lib/prisma";
 
 export default async function NewListingPage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    return (
-      <main className="bg-slate-50 py-10 sm:py-14">
-        <Container>
-          <div className="mx-auto max-w-2xl">
-            <PublicPageHeader
-              eyebrow="Продавцам"
-              title="Подать объявление"
-              description="Разместите оптовое предложение на платформе Tutopt."
-            />
-            <ListingAccessMessage
-              title="Нужно войти, чтобы подать объявление"
-              description="Авторизуйтесь как продавец, чтобы создавать и публиковать оптовые объявления."
-              actionHref="/login"
-              actionLabel="Войти"
-            />
-          </div>
-        </Container>
-      </main>
-    );
+    redirect(buildLoginUrl("/listings/new"));
   }
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
@@ -43,9 +30,9 @@ export default async function NewListingPage() {
             />
             <ListingAccessMessage
               title="Создание объявлений доступно только продавцам"
-              description="Зарегистрируйтесь с типом аккаунта «Продавец» или обратитесь в поддержку для смены роли."
-              actionHref="/register"
-              actionLabel="Регистрация"
+              description="Зарегистрируйтесь с типом аккаунта «Продавец» или войдите в аккаунт продавца."
+              actionHref={buildRegisterUrl({ role: "SELLER", returnPath: "/listings/new" })}
+              actionLabel="Стать продавцом"
             />
           </div>
         </Container>

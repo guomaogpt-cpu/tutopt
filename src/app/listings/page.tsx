@@ -10,6 +10,9 @@ import {
   hasActiveCatalogFilters,
   parseListingsCatalogParams,
 } from "@/features/listings/lib/listings-catalog";
+import { getCurrentUser } from "@/features/auth/lib/session";
+import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
+import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { prisma } from "@/shared/lib/prisma";
 
 type ListingsPageProps = {
@@ -43,6 +46,9 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const where = buildListingsCatalogWhere(filters);
   const orderBy = buildListingsCatalogOrderBy(filters.sort);
   const skip = (filters.page - 1) * LISTINGS_PER_PAGE;
+  const user = await getCurrentUser();
+  const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
+  const favoriteIds = new Set(favoriteListingIds);
 
   const [listings, totalCount, categories, cities, brands] = await Promise.all([
     prisma.listing.findMany({
@@ -81,6 +87,8 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   };
 
   const hasFilters = hasActiveCatalogFilters(filters);
+  const headerUser = user ? { id: user.id, name: user.name, role: user.role } : null;
+  const createListingHref = getCreateListingHref(headerUser);
 
   return (
     <main className="bg-white py-6 sm:py-8">
@@ -104,12 +112,20 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         />
 
         {listings.length === 0 ? (
-          <ListingsEmptyState hasActiveFilters={hasFilters} />
+          <ListingsEmptyState
+            hasActiveFilters={hasFilters}
+            createListingHref={createListingHref}
+          />
         ) : (
           <>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {listings.map((listing) => (
-                <ListingCard key={listing.id} listing={listing} />
+                <ListingCard
+                  key={listing.id}
+                  listing={listing}
+                  isAuthenticated={user !== null}
+                  isFavorited={favoriteIds.has(listing.id)}
+                />
               ))}
             </div>
 

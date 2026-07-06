@@ -4,13 +4,14 @@ import type { ReactNode } from "react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { Container } from "@/components/layout/Container";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { isStaffRole } from "@/features/admin/lib/require-admin";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect("/login");
+    redirect(buildLoginUrl("/admin/moderation/listings"));
   }
 
   if (!isStaffRole(user.role)) {

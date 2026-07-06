@@ -5,7 +5,8 @@ import { jsonMessage, parseJsonBody, withApiHandler } from "@/shared/lib/api-rou
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
 
-const GENERIC_MESSAGE = "If the account exists, password reset instructions have been sent";
+const GENERIC_MESSAGE =
+  "Если аккаунт с таким email существует, инструкции по сбросу пароля отправлены";
 
 export async function POST(request: Request) {
   return withApiHandler(async () => {
