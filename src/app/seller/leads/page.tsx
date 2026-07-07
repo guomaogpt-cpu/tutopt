@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { Container } from "@/components/layout/Container";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { SellerLeadsTable } from "@/components/seller/SellerLeadsTable";
-import { PublicPageHeader } from "@/components/public/PublicPageHeader";
 import { getCurrentUser } from "@/features/auth/lib/session";
-import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl, buildRegisterUrl } from "@/features/auth/lib/login-redirect";
 import { getSellerLeads } from "@/features/leads/lib/leads-data";
 import { prisma } from "@/shared/lib/prisma";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
+import {
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
+} from "@/components/ui/page-header";
+import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
+import { Section } from "@/components/ui/section";
 
 export const dynamic = "force-dynamic";
 
@@ -21,15 +29,19 @@ export default async function SellerLeadsPage() {
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
     return (
-      <main className="bg-slate-50 py-10 sm:py-14">
-        <Container>
-          <div className="mx-auto max-w-4xl">
-            <PublicPageHeader title="Заявки" />
-            <ListingAccessMessage
-              title="Раздел доступен только продавцам"
-              description="Заявки по объявлениям видят только аккаунты с ролью продавца."
-            />
-          </div>
+      <main className="bg-background py-10 sm:py-14">
+        <Container size="lg">
+          <PageHeader>
+            <PageHeaderContent>
+              <PageTitle className="text-2xl sm:text-3xl">Заявки</PageTitle>
+            </PageHeaderContent>
+          </PageHeader>
+          <ListingAccessMessage
+            title="Раздел доступен только продавцам"
+            description="Зарегистрируйтесь с типом аккаунта «Продавец» или войдите в аккаунт продавца."
+            actionHref={buildRegisterUrl({ role: "SELLER", returnPath: "/seller/leads" })}
+            actionLabel="Стать продавцом"
+          />
         </Container>
       </main>
     );
@@ -43,31 +55,30 @@ export default async function SellerLeadsPage() {
   const leads = sellerProfile ? await getSellerLeads(sellerProfile.id) : [];
 
   return (
-    <main className="bg-slate-50 py-10 sm:py-14">
-      <Container>
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <PublicPageHeader
-              eyebrow="Продавец"
-              title="Заявки"
-              description={
-                sellerProfile
-                  ? `Входящие заявки по объявлениям ${sellerProfile.company_name}`
-                  : "Создайте объявление, чтобы начать получать заявки от покупателей."
-              }
-            />
-            <Link
-              href="/seller/dashboard"
-              className="inline-flex shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-            >
-              Кабинет продавца
-            </Link>
-          </div>
+    <main className="bg-background py-10 sm:py-14">
+      <Container size="lg">
+        <PageHeader>
+          <PageHeaderContent>
+            <Badge variant="secondary" className="w-fit">
+              Продавец
+            </Badge>
+            <PageTitle className="text-2xl sm:text-3xl">Заявки</PageTitle>
+            <PageSubtitle className="text-sm sm:text-base">
+              {sellerProfile
+                ? `Входящие заявки по объявлениям ${sellerProfile.company_name}`
+                : "Создайте объявление, чтобы начать получать заявки от покупателей."}
+            </PageSubtitle>
+          </PageHeaderContent>
+          <PageHeaderActions>
+            <Button variant="outline" asChild>
+              <Link href="/seller/dashboard">Кабинет продавца</Link>
+            </Button>
+          </PageHeaderActions>
+        </PageHeader>
 
-          <div className="mt-10">
-            <SellerLeadsTable leads={leads} />
-          </div>
-        </div>
+        <Section spacing="none" className="mt-8">
+          <SellerLeadsTable leads={leads} />
+        </Section>
       </Container>
     </main>
   );

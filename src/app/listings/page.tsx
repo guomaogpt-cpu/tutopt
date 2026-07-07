@@ -1,4 +1,3 @@
-import { Container } from "@/components/layout/Container";
 import { ListingCard } from "@/components/listings/ListingCard";
 import { ListingsCatalogToolbar } from "@/components/listings/ListingsCatalogToolbar";
 import { ListingsEmptyState } from "@/components/listings/ListingsEmptyState";
@@ -14,6 +13,9 @@ import { getCurrentUser } from "@/features/auth/lib/session";
 import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { prisma } from "@/shared/lib/prisma";
+import { Container } from "@/components/ui/container";
+import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
+import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
 
 type ListingsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -91,16 +93,16 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const createListingHref = getCreateListingHref(headerUser);
 
   return (
-    <main className="bg-white py-6 sm:py-8">
+    <main className="bg-background py-6 sm:py-8">
       <Container>
-        <div className="mb-4">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Каталог объявлений
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Оптовые предложения от поставщиков Кыргызстана
-          </p>
-        </div>
+        <PageHeader className="pb-4">
+          <PageHeaderContent>
+            <PageTitle className="text-2xl sm:text-3xl">Каталог объявлений</PageTitle>
+            <PageSubtitle className="text-sm sm:text-base">
+              Оптовые предложения от поставщиков Кыргызстана
+            </PageSubtitle>
+          </PageHeaderContent>
+        </PageHeader>
 
         <ListingsCatalogToolbar
           filters={filters}

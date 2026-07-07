@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Globe, Mail, MessageCircle, Phone, Send } from "lucide-react";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 
@@ -43,11 +42,11 @@ export function SellerProfileContacts({
   telegram,
   website,
 }: SellerProfileContactsProps) {
-  const [loginHref, setLoginHref] = useState("/login");
+  const router = useRouter();
 
-  useEffect(() => {
-    setLoginHref(buildLoginUrl(getCurrentPathFromWindow()));
-  }, []);
+  function handleLoginRedirect() {
+    router.push(buildLoginUrl(getCurrentPathFromWindow()));
+  }
 
   if (!isAuthenticated) {
     return (
@@ -56,12 +55,13 @@ export function SellerProfileContacts({
         <p className="mt-3 text-sm leading-relaxed text-slate-600">
           Войдите, чтобы увидеть контакты поставщика.
         </p>
-        <Link
-          href={loginHref}
+        <button
+          type="button"
+          onClick={handleLoginRedirect}
           className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 sm:w-auto"
         >
           Войти
-        </Link>
+        </button>
       </section>
     );
   }

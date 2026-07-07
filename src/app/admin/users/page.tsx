@@ -1,9 +1,14 @@
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { Shield, Store, UserCog, Users } from "lucide-react";
 import { AdminUsersTable, type AdminUserRow } from "@/components/admin/AdminUsersTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { prisma } from "@/shared/lib/prisma";
+import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
+import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
+import { Section } from "@/components/ui/section";
+import { StatCard } from "@/components/ui/stat-card";
 
 export default async function AdminUsersPage() {
   const user = await getCurrentUser();
@@ -39,16 +44,50 @@ export default async function AdminUsersPage() {
     created_at: item.created_at.toISOString(),
   }));
 
+  const totalCount = users.length;
+  const sellersCount = users.filter((item) => item.role === UserRole.SELLER).length;
+  const moderatorsCount = users.filter((item) => item.role === UserRole.MODERATOR).length;
+  const adminsCount = users.filter((item) => item.role === UserRole.ADMIN).length;
+
   return (
     <section>
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <h2 className="text-xl font-semibold text-slate-900">Пользователи</h2>
-        <p className="mt-2 text-sm text-slate-600">
-          Назначайте и снимайте роль модератора. Продавцов и администраторов изменить нельзя.
-        </p>
-      </div>
+      <PageHeader className="pb-4">
+        <PageHeaderContent>
+          <PageTitle className="text-2xl sm:text-3xl">Пользователи</PageTitle>
+          <PageSubtitle className="text-sm sm:text-base">
+            Назначайте и снимайте роль модератора. Продавцов и администраторов изменить нельзя.
+          </PageSubtitle>
+        </PageHeaderContent>
+      </PageHeader>
 
-      <AdminUsersTable users={rows} />
+      <Section spacing="sm">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <StatCard
+            label="Всего пользователей"
+            value={totalCount}
+            icon={Users}
+          />
+          <StatCard
+            label="Продавцы"
+            value={sellersCount}
+            icon={Store}
+          />
+          <StatCard
+            label="Модераторы"
+            value={moderatorsCount}
+            icon={UserCog}
+          />
+          <StatCard
+            label="Администраторы"
+            value={adminsCount}
+            icon={Shield}
+          />
+        </div>
+      </Section>
+
+      <div className="mt-8">
+        <AdminUsersTable users={rows} currentUserId={user.id} />
+      </div>
     </section>
   );
 }

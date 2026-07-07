@@ -2,7 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { UserRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
+import { Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Section } from "@/components/ui/section";
 
 type AssignableRole = "BUYER" | "MODERATOR";
 
@@ -18,6 +24,7 @@ export type AdminUserRow = {
 
 type AdminUsersTableProps = {
   users: AdminUserRow[];
+  currentUserId: string;
 };
 
 type ApiErrorBody = {
@@ -42,7 +49,22 @@ const roleLabels: Record<UserRole, string> = {
   ADMIN: "Админ",
 };
 
-export function AdminUsersTable({ users }: AdminUsersTableProps) {
+function getRoleBadgeVariant(
+  role: UserRole,
+): "default" | "secondary" | "destructive" | "outline" | "success" | "warning" {
+  switch (role) {
+    case UserRole.ADMIN:
+      return "default";
+    case UserRole.MODERATOR:
+      return "warning";
+    case UserRole.SELLER:
+      return "secondary";
+    default:
+      return "outline";
+  }
+}
+
+export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) {
   const router = useRouter();
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -81,117 +103,125 @@ export function AdminUsersTable({ users }: AdminUsersTableProps) {
     }
   }
 
+  if (users.length === 0) {
+    return (
+      <EmptyState
+        icon={Users}
+        title="Пользователей пока нет"
+        description="Когда появятся зарегистрированные пользователи, они отобразятся здесь."
+      />
+    );
+  }
+
   return (
-    <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <Section spacing="none" className="space-y-4">
       {successMessage ? (
-        <div
-          role="status"
-          className="border-b border-green-100 bg-green-50 px-4 py-3 text-sm text-green-800"
-        >
-          {successMessage}
-        </div>
+        <Card className="border-green-200 bg-green-50" role="status">
+          <CardContent className="p-4 text-sm text-green-800">{successMessage}</CardContent>
+        </Card>
       ) : null}
 
       {errorMessage ? (
-        <div
-          role="alert"
-          className="border-b border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800"
-        >
-          {errorMessage}
-        </div>
+        <Card className="border-destructive/30 bg-destructive/5" role="alert">
+          <CardContent className="p-4 text-sm text-destructive">{errorMessage}</CardContent>
+        </Card>
       ) : null}
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-4 py-3 text-left font-medium text-slate-600">Имя</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-600">Email</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-600">Телефон</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-600">Роль</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-600">Статус</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-600">Дата регистрации</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-600">Действия</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {users.map((user) => {
-              const isPending = pendingUserId === user.id;
-              const canPromote = user.role === "BUYER";
-              const canDemote = user.role === "MODERATOR";
-              const isProtected = user.role === "ADMIN" || user.role === "SELLER";
+      <div className="space-y-4">
+        {users.map((user) => {
+          const isPending = pendingUserId === user.id;
+          const isSelf = user.id === currentUserId;
+          const canPromote = user.role === "BUYER" && !isSelf;
+          const canDemote = user.role === "MODERATOR" && !isSelf;
+          const isProtected =
+            user.role === "ADMIN" || user.role === "SELLER" || isSelf;
 
-              return (
-                <tr key={user.id} className="align-top">
-                  <td className="px-4 py-4 font-medium text-slate-900">{user.name}</td>
-                  <td className="px-4 py-4 text-slate-700">{user.email ?? "—"}</td>
-                  <td className="px-4 py-4 text-slate-700">{user.phone ?? "—"}</td>
-                  <td className="px-4 py-4">
-                    <RoleBadge role={user.role} />
-                  </td>
-                  <td className="px-4 py-4">
+          return (
+            <Card key={user.id}>
+              <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 p-4 pb-0 sm:p-5 sm:pb-0">
+                <div className="min-w-0">
+                  <CardTitle className="text-base">{user.name}</CardTitle>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {user.email ?? user.phone ?? "—"}
+                  </p>
+                </div>
+                <Badge variant={getRoleBadgeVariant(user.role)} className="shrink-0">
+                  {roleLabels[user.role]}
+                </Badge>
+              </CardHeader>
+
+              <CardContent className="grid gap-3 p-4 text-sm sm:grid-cols-2 sm:p-5">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Телефон
+                  </p>
+                  <p className="mt-1 text-foreground">{user.phone ?? "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Email
+                  </p>
+                  <p className="mt-1 text-foreground">{user.email ?? "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Статус
+                  </p>
+                  <div className="mt-1">
                     {user.is_blocked ? (
-                      <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700">
-                        Заблокирован
-                      </span>
+                      <Badge variant="destructive">Заблокирован</Badge>
                     ) : (
-                      <span className="rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700">
-                        Активен
-                      </span>
+                      <Badge variant="success">Активен</Badge>
                     )}
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-slate-600">
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Дата регистрации
+                  </p>
+                  <p className="mt-1 text-foreground">
                     {new Date(user.created_at).toLocaleDateString("ru-RU")}
-                  </td>
-                  <td className="px-4 py-4">
-                    {isProtected ? (
-                      <span className="text-xs text-slate-400">—</span>
-                    ) : (
-                      <div className="flex flex-col gap-2">
-                        {canPromote ? (
-                          <button
-                            type="button"
-                            disabled={isPending}
-                            onClick={() => changeRole(user.id, "MODERATOR")}
-                            className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700 disabled:opacity-60"
-                          >
-                            Назначить модератором
-                          </button>
-                        ) : null}
-                        {canDemote ? (
-                          <button
-                            type="button"
-                            disabled={isPending}
-                            onClick={() => changeRole(user.id, "BUYER")}
-                            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
-                          >
-                            Снять модератора
-                          </button>
-                        ) : null}
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                  </p>
+                </div>
+              </CardContent>
+
+              <CardFooter className="flex flex-wrap gap-2 border-t p-4 sm:px-5 sm:py-4">
+                {isProtected ? (
+                  <p className="text-xs text-muted-foreground">
+                    {isSelf
+                      ? "Нельзя изменить свою роль"
+                      : "Роль защищена от изменений"}
+                  </p>
+                ) : (
+                  <>
+                    {canPromote ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        disabled={isPending}
+                        onClick={() => changeRole(user.id, "MODERATOR")}
+                      >
+                        Назначить модератором
+                      </Button>
+                    ) : null}
+                    {canDemote ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        disabled={isPending}
+                        onClick={() => changeRole(user.id, "BUYER")}
+                      >
+                        Снять модератора
+                      </Button>
+                    ) : null}
+                  </>
+                )}
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
-    </div>
-  );
-}
-
-function RoleBadge({ role }: { role: UserRole }) {
-  const styles: Record<UserRole, string> = {
-    BUYER: "bg-slate-100 text-slate-700",
-    SELLER: "bg-purple-50 text-purple-700",
-    MODERATOR: "bg-amber-50 text-amber-800",
-    ADMIN: "bg-blue-50 text-blue-700",
-  };
-
-  return (
-    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${styles[role]}`}>
-      {roleLabels[role]}
-    </span>
+    </Section>
   );
 }

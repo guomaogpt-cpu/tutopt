@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Container } from "@/components/layout/Container";
 import { ListingCharacteristics } from "@/components/listings/ListingCharacteristics";
 import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
@@ -22,6 +20,17 @@ import {
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { recordListingView } from "@/features/buyer/lib/listing-views";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Container } from "@/components/ui/container";
+import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
+import { PageTitle } from "@/components/ui/page-title";
 
 type ListingPageProps = {
   params: Promise<{ id: string }>;
@@ -75,96 +84,100 @@ export default async function ListingPage({ params }: ListingPageProps) {
     { label: "Дата", value: publishedAtLabel },
   ];
 
-  const sidebar = (
-    <>
-      <ListingContactCard
-        listingId={listing.id}
-        isAuthenticated={user !== null}
-        isFavorited={isFavorited}
-        priceLabel={priceLabel}
-        moq={listing.moq}
-        unitLabel={unitLabel}
-        stockQuantity={listing.stock_quantity}
-        cityName={listing.city?.name ?? null}
-        status={listing.status}
-        publishedAtLabel={publishedAtLabel}
-      />
-      <ListingSellerCard
-        sellerName={sellerName}
-        companyName={sellerProfile.company_name}
-        avatarUrl={sellerAvatar}
-        isVerified={sellerProfile.is_verified}
-        sellerCity={sellerCity}
-        sellerSince={sellerProfile.created_at}
-        publishedListingCount={sellerListingCount}
-        sellerId={sellerProfile.id}
-      />
-    </>
+  const contactCard = (
+    <ListingContactCard
+      listingId={listing.id}
+      isAuthenticated={user !== null}
+      isFavorited={isFavorited}
+      priceLabel={priceLabel}
+      moq={listing.moq}
+      unitLabel={unitLabel}
+      stockQuantity={listing.stock_quantity}
+      cityName={listing.city?.name ?? null}
+      brandName={listing.brand?.name ?? null}
+      status={listing.status}
+      publishedAtLabel={publishedAtLabel}
+      contactPhone={sellerProfile.contact_phone}
+      whatsapp={sellerProfile.whatsapp}
+      telegram={sellerProfile.telegram}
+    />
+  );
+
+  const sellerCard = (
+    <ListingSellerCard
+      sellerName={sellerName}
+      companyName={sellerProfile.company_name}
+      avatarUrl={sellerAvatar}
+      isVerified={sellerProfile.is_verified}
+      sellerCity={sellerCity}
+      sellerSince={sellerProfile.created_at}
+      publishedListingCount={sellerListingCount}
+      sellerId={sellerProfile.id}
+    />
   );
 
   return (
-    <main className="bg-slate-50 py-6 sm:py-10">
+    <main className="bg-background py-6 sm:py-10">
       <Container className="max-w-[1280px]">
-        <nav aria-label="Хлебные крошки" className="text-sm text-slate-500">
-          <ol className="flex flex-wrap items-center gap-1.5">
-            <li>
-              <Link href="/" className="transition hover:text-blue-600">
-                Главная
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <Link href="/listings" className="transition hover:text-blue-600">
-                Каталог
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <Link
-                href={`/listings?category=${listing.category_id}`}
-                className="transition hover:text-blue-600"
-              >
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Главная</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/listings">Каталог</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/listings?category=${listing.category_id}`}>
                 {listing.category.name}
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li className="line-clamp-1 font-medium text-slate-700">{listing.title}</li>
-          </ol>
-        </nav>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="line-clamp-1">{listing.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-        <h1 className="mt-6 hidden text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:block">
-          {listing.title}
-        </h1>
+        <PageHeader className="mt-4 pb-0">
+          <PageHeaderContent>
+            <PageTitle className="hidden text-2xl sm:text-3xl lg:block">{listing.title}</PageTitle>
+          </PageHeaderContent>
+        </PageHeader>
 
-        <div className="mt-6 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-12">
-          <div className="min-w-0">
+        <div className="mt-6 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-8">
+          <div className="min-w-0 space-y-8">
             <ListingGallery images={listing.images} title={listing.title} />
 
-            <h1 className="mt-5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:hidden">
-              {listing.title}
-            </h1>
+            <PageTitle className="text-2xl sm:text-3xl lg:hidden">{listing.title}</PageTitle>
 
-            <div className="mt-6 space-y-4 lg:hidden">{sidebar}</div>
+            <div className="space-y-4 lg:hidden">
+              {contactCard}
+              {sellerCard}
+            </div>
+
+            <ListingCharacteristics items={characteristicItems} />
+            <ListingDescription text={listing.description} />
+            <ListingLeadForm
+              listingId={listing.id}
+              sellerName={sellerName}
+              moq={listing.moq}
+              unitLabel={unitLabel}
+              isAuthenticated={user !== null}
+              isOwner={isOwner}
+              defaultPhone={user?.phone}
+              defaultEmail={user?.email}
+            />
           </div>
 
           <aside className="hidden lg:block">
-            <div className="sticky top-24 space-y-4">{sidebar}</div>
+            <div className="sticky top-24 space-y-4">
+              {contactCard}
+              {sellerCard}
+            </div>
           </aside>
-        </div>
-
-        <div className="mt-10 space-y-8 lg:mt-12 lg:space-y-10">
-          <ListingCharacteristics items={characteristicItems} />
-          <ListingDescription text={listing.description} />
-          <ListingLeadForm
-            listingId={listing.id}
-            sellerName={sellerName}
-            moq={listing.moq}
-            unitLabel={unitLabel}
-            isAuthenticated={user !== null}
-            isOwner={isOwner}
-            defaultPhone={user?.phone}
-            defaultEmail={user?.email}
-          />
         </div>
 
         <SimilarListings

@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Package } from "lucide-react";
+import { formatListingDate } from "@/features/listings/lib/format-listing-price";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Section } from "@/components/ui/section";
 
 export type ModerationListingRow = {
   id: string;
@@ -56,101 +63,103 @@ export function ModerationListingsTable({ listings }: ModerationListingsTablePro
 
   if (listings.length === 0) {
     return (
-      <div className="mt-8 rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm">
-        <p className="text-sm text-slate-600">Нет объявлений на модерации.</p>
-      </div>
+      <EmptyState
+        icon={Package}
+        title="Нет объявлений на модерации"
+        description="Когда продавцы отправят объявления на проверку, они появятся здесь."
+      />
     );
   }
 
   return (
-    <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <Section spacing="none" className="space-y-4">
       {errorMessage ? (
-        <div
-          role="alert"
-          className="border-b border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800"
-        >
-          {errorMessage}
-        </div>
+        <Card className="border-destructive/30 bg-destructive/5" role="alert">
+          <CardContent className="p-4 text-sm text-destructive">{errorMessage}</CardContent>
+        </Card>
       ) : null}
 
-      <ul className="divide-y divide-slate-100">
+      <div className="space-y-4">
         {listings.map((listing) => {
           const isPending = pendingId === listing.id;
 
           return (
-            <li
-              key={listing.id}
-              className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5"
-            >
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                {listing.imageUrl ? (
-                  <Image
-                    src={listing.imageUrl}
-                    alt={listing.title}
-                    fill
-                    unoptimized
-                    className="object-cover"
-                    sizes="80px"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-xs text-slate-400">
-                    Нет фото
-                  </div>
-                )}
-              </div>
+            <Card key={listing.id}>
+              <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
+                <div className="relative size-20 shrink-0 overflow-hidden rounded-xl border bg-muted">
+                  {listing.imageUrl ? (
+                    <Image
+                      src={listing.imageUrl}
+                      alt={listing.title}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                      sizes="80px"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                      Нет фото
+                    </div>
+                  )}
+                </div>
 
-              <div className="min-w-0 flex-1">
-                <p className="font-medium text-slate-900">{listing.title}</p>
-                <dl className="mt-2 grid gap-1 text-sm text-slate-600 sm:grid-cols-2">
-                  <div>
-                    <dt className="inline text-slate-500">Продавец: </dt>
-                    <dd className="inline">{listing.sellerName}</dd>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <CardTitle className="text-base">{listing.title}</CardTitle>
+                    <Badge variant="warning">На модерации</Badge>
                   </div>
-                  <div>
-                    <dt className="inline text-slate-500">Город: </dt>
-                    <dd className="inline">{listing.cityName ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt className="inline text-slate-500">Категория: </dt>
-                    <dd className="inline">{listing.categoryName}</dd>
-                  </div>
-                  <div>
-                    <dt className="inline text-slate-500">Создано: </dt>
-                    <dd className="inline">
-                      {new Date(listing.created_at).toLocaleDateString("ru-RU")}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
 
-              <div className="flex flex-wrap gap-2 sm:flex-col sm:items-stretch">
-                <button
+                  <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="text-muted-foreground">Продавец</dt>
+                      <dd className="font-medium text-foreground">{listing.sellerName}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">Город</dt>
+                      <dd className="font-medium text-foreground">{listing.cityName ?? "—"}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">Категория</dt>
+                      <dd className="font-medium text-foreground">{listing.categoryName}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">Дата</dt>
+                      <dd className="font-medium text-foreground">
+                        {formatListingDate(new Date(listing.created_at))}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </CardContent>
+
+              <CardFooter className="flex flex-wrap gap-2 border-t p-4 sm:px-5 sm:py-4">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/listings/${listing.id}`}>Открыть</Link>
+                </Button>
+                <Button
                   type="button"
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700"
                   disabled={isPending}
                   onClick={() => moderateListing(listing.id, "approve")}
-                  className="rounded-xl bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700 disabled:opacity-60"
                 >
                   Одобрить
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  size="sm"
+                  variant="outline"
+                  className="border-destructive/30 text-destructive hover:bg-destructive/10"
                   disabled={isPending}
                   onClick={() => moderateListing(listing.id, "reject")}
-                  className="rounded-xl border border-red-200 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50 disabled:opacity-60"
                 >
                   Отклонить
-                </button>
-                <Link
-                  href={`/listings/${listing.id}`}
-                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-                >
-                  Открыть
-                </Link>
-              </div>
-            </li>
+                </Button>
+              </CardFooter>
+            </Card>
           );
         })}
-      </ul>
-    </div>
+      </div>
+    </Section>
   );
 }

@@ -1,8 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { ImageIcon, Plus, X } from "lucide-react";
 import { useRef, useState, type DragEvent } from "react";
 import { uploadListingImageRequest } from "@/features/listings/lib/upload-client";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Loading } from "@/components/ui/loading";
+import { cn } from "@/lib/utils";
 
 const MAX_IMAGES = 10;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -126,41 +132,44 @@ export function ListingImageUpload({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-slate-700">Фотографии товара</p>
-        <p className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-foreground">Фотографии товара</p>
+        <Badge variant="secondary">
           {value.length} / {MAX_IMAGES}
-        </p>
+        </Badge>
       </div>
 
       <div
         onDragOver={handleDropZoneDragOver}
         onDragLeave={handleDropZoneDragLeave}
         onDrop={(event) => void handleDropZoneDrop(event)}
-        className={`rounded-2xl border-2 border-dashed p-4 transition ${
-          isDragOver
-            ? "border-blue-400 bg-blue-50"
-            : "border-slate-200 bg-slate-50/80 hover:border-blue-200"
-        }`}
+        className={cn(
+          "rounded-2xl border-2 border-dashed p-4 transition",
+          isDragOver ? "border-primary bg-primary/5" : "border-border bg-muted/30",
+        )}
       >
-        {showEmptyState ? (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={disabled || isUploading}
-            className="flex min-h-40 w-full flex-col items-center justify-center rounded-xl bg-white/70 px-6 py-10 text-center transition hover:bg-white"
-          >
-            <span className="text-4xl">📷</span>
-            <span className="mt-4 text-base font-semibold text-slate-900">
-              Добавьте фотографии
-            </span>
-            <span className="mt-2 text-sm text-slate-500">или перетащите сюда</span>
-            <span className="mt-4 rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white">
-              Выбрать файлы
-            </span>
-          </button>
+        {isUploading ? (
+          <div className="flex min-h-40 items-center justify-center py-10">
+            <Loading label="Загрузка фото..." />
+          </div>
+        ) : showEmptyState ? (
+          <EmptyState
+            icon={ImageIcon}
+            title="Добавьте фотографии"
+            description="Перетащите файлы сюда или выберите с устройства"
+            className="min-h-40 border-0 bg-transparent py-8"
+            action={
+              <Button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                disabled={disabled}
+              >
+                Выбрать файлы
+              </Button>
+            }
+          />
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {value.map((url, index) => (
               <div
                 key={`${url}-${index}`}
@@ -168,9 +177,11 @@ export function ListingImageUpload({
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={(event) => handleDragOverItem(event, index)}
                 onDragEnd={() => setDraggedIndex(null)}
-                className={`relative aspect-square cursor-grab overflow-hidden rounded-xl border bg-white shadow-sm transition active:cursor-grabbing ${
-                  draggedIndex === index ? "border-blue-500 ring-2 ring-blue-200" : "border-slate-200"
-                }`}
+                className={cn(
+                  "relative aspect-square cursor-grab overflow-hidden rounded-xl border bg-background shadow-sm transition active:cursor-grabbing",
+                  draggedIndex === index ? "border-primary ring-2 ring-primary/20" : "border-border",
+                  index === 0 && "ring-2 ring-primary/30",
+                )}
               >
                 <Image
                   src={url}
@@ -180,23 +191,23 @@ export function ListingImageUpload({
                   className="object-cover"
                 />
                 {index === 0 ? (
-                  <span className="absolute left-2 top-2 rounded-md bg-blue-600 px-2 py-0.5 text-[10px] font-semibold text-white shadow">
-                    Главное фото
-                  </span>
+                  <Badge className="absolute left-2 top-2 text-[10px]">Главное фото</Badge>
                 ) : (
-                  <span className="absolute left-2 top-2 rounded-md bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white">
+                  <Badge variant="secondary" className="absolute left-2 top-2 bg-background/90 text-[10px]">
                     {index + 1} / {MAX_IMAGES}
-                  </span>
+                  </Badge>
                 )}
-                <button
+                <Button
                   type="button"
+                  size="icon"
+                  variant="secondary"
                   onClick={() => handleRemove(index)}
                   disabled={disabled || isUploading}
-                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-xs text-white hover:bg-black/80"
+                  className="absolute right-2 top-2 size-7 rounded-full bg-background/90"
                   aria-label="Удалить фото"
                 >
-                  ✕
-                </button>
+                  <X className="size-3.5" />
+                </Button>
               </div>
             ))}
 
@@ -205,9 +216,9 @@ export function ListingImageUpload({
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 disabled={disabled || isUploading}
-                className="flex aspect-square flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white text-center text-sm text-slate-500 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+                className="flex aspect-square flex-col items-center justify-center rounded-xl border border-dashed border-border bg-background text-center text-sm text-muted-foreground transition hover:border-primary/40 hover:bg-accent hover:text-foreground"
               >
-                <span className="text-2xl leading-none">+</span>
+                <Plus className="size-6" aria-hidden="true" />
                 <span className="mt-2 px-2 text-xs">Добавить</span>
               </button>
             ) : null}
@@ -215,9 +226,8 @@ export function ListingImageUpload({
         )}
       </div>
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-muted-foreground">
         Перетаскивайте фото, чтобы изменить порядок. Первое фото — главное на карточке.
-        {isUploading ? " Загрузка..." : ""}
       </p>
 
       <input
@@ -230,8 +240,8 @@ export function ListingImageUpload({
         disabled={disabled || isUploading}
       />
 
-      {uploadError ? <p className="text-xs text-red-600">{uploadError}</p> : null}
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {uploadError ? <p className="text-xs text-destructive">{uploadError}</p> : null}
+      {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </div>
   );
 }

@@ -1,3 +1,6 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Section, SectionHeader, SectionTitle } from "@/components/ui/section";
+
 export type ListingCharacteristicItem = {
   label: string;
   value: string;
@@ -15,22 +18,28 @@ export function ListingCharacteristics({ items }: ListingCharacteristicsProps) {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-6 lg:p-8">
-      <h2 className="text-xl font-semibold text-slate-900">Характеристики</h2>
+    <Section spacing="none" aria-labelledby="listing-characteristics-title">
+      <SectionHeader className="mb-4">
+        <SectionTitle id="listing-characteristics-title" className="text-xl">
+          Характеристики
+        </SectionTitle>
+      </SectionHeader>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-100">
-        <dl className="divide-y divide-slate-100">
-          {visibleItems.map((item) => (
-            <div
-              key={item.label}
-              className="grid grid-cols-1 gap-1 px-4 py-3.5 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-6 sm:px-5"
-            >
-              <dt className="text-sm text-slate-500">{item.label}</dt>
-              <dd className="text-sm font-medium text-slate-900">{item.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </section>
+      <Card>
+        <CardHeader className="sr-only">
+          <CardTitle>Характеристики</CardTitle>
+        </CardHeader>
+        <CardContent className="p-4 sm:p-6">
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {visibleItems.map((item) => (
+              <div key={item.label} className="rounded-xl border bg-muted/20 px-4 py-3">
+                <dt className="text-sm text-muted-foreground">{item.label}</dt>
+                <dd className="mt-1 text-sm font-medium text-foreground">{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </CardContent>
+      </Card>
+    </Section>
   );
 }

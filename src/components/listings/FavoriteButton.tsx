@@ -8,6 +8,8 @@ import {
   removeFavoriteRequest,
 } from "@/features/favorites/lib/favorites-client";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type FavoriteButtonProps = {
   listingId: string;
@@ -16,9 +18,6 @@ type FavoriteButtonProps = {
   variant?: "icon" | "button";
   className?: string;
 };
-
-const focusRingClassName =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2";
 
 export function FavoriteButton({
   listingId,
@@ -64,28 +63,30 @@ export function FavoriteButton({
 
   if (variant === "button") {
     return (
-      <button
+      <Button
         type="button"
+        variant="outline"
         onClick={() => void handleToggle()}
         disabled={isPending}
         aria-pressed={isFavorited}
         aria-label={label}
-        className={`inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm font-semibold transition hover:border-slate-300 hover:bg-slate-50 disabled:opacity-60 ${
-          isFavorited ? "border-rose-200 bg-rose-50 text-rose-700 hover:border-rose-300 hover:bg-rose-50" : "text-slate-800"
-        } ${focusRingClassName} ${className}`.trim()}
+        className={cn(
+          "w-full",
+          isFavorited && "border-rose-200 bg-rose-50 text-rose-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700",
+          className,
+        )}
       >
-        <Heart
-          className={`h-4 w-4 ${isFavorited ? "fill-current" : ""}`}
-          aria-hidden="true"
-        />
+        <Heart className={cn("size-4", isFavorited && "fill-current")} aria-hidden="true" />
         {isFavorited ? "В избранном" : "Добавить в избранное"}
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
+      size="icon"
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -94,14 +95,13 @@ export function FavoriteButton({
       disabled={isPending}
       aria-pressed={isFavorited}
       aria-label={label}
-      className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-600 shadow-sm backdrop-blur transition hover:border-rose-200 hover:text-rose-600 disabled:opacity-60 ${
-        isFavorited ? "border-rose-200 bg-rose-50 text-rose-600" : ""
-      } ${focusRingClassName} ${className}`.trim()}
+      className={cn(
+        "size-9 rounded-full border-border bg-background/95 shadow-sm backdrop-blur",
+        isFavorited && "border-rose-200 bg-rose-50 text-rose-600 hover:border-rose-300 hover:text-rose-600",
+        className,
+      )}
     >
-      <Heart
-        className={`h-4 w-4 ${isFavorited ? "fill-current" : ""}`}
-        aria-hidden="true"
-      />
-    </button>
+      <Heart className={cn("size-4", isFavorited && "fill-current")} aria-hidden="true" />
+    </Button>
   );
 }

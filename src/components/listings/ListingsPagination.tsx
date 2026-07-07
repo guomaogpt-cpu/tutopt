@@ -1,9 +1,16 @@
 import Link from "next/link";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import {
   LISTINGS_PER_PAGE,
   buildListingsCatalogQueryString,
   type ListingsCatalogFilters,
 } from "@/features/listings/lib/listings-catalog";
+import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+} from "@/components/ui/pagination";
 
 type ListingsPaginationProps = {
   filters: ListingsCatalogFilters;
@@ -20,62 +27,66 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
   const pages = getPaginationRange(filters.page, totalPages);
 
   return (
-    <nav
-      aria-label="Пагинация каталога"
-      className="mt-8 flex flex-wrap items-center justify-center gap-2"
-    >
-      {filters.page > 1 ? (
-        <PaginationLink filters={filters} page={filters.page - 1} label="Назад" />
-      ) : null}
+    <Pagination aria-label="Пагинация каталога" className="mt-8">
+      <PaginationContent>
+        {filters.page > 1 ? (
+          <PaginationItem>
+            <Button variant="outline" size="default" className="gap-1 pl-2.5" asChild>
+              <Link
+                href={`/listings${buildListingsCatalogQueryString(filters, { page: filters.page - 1 })}`}
+                aria-label="Предыдущая страница"
+              >
+                <ChevronLeft className="size-4" />
+                <span>Назад</span>
+              </Link>
+            </Button>
+          </PaginationItem>
+        ) : null}
 
-      {pages.map((page, index) =>
-        page === "ellipsis" ? (
-          <span key={`ellipsis-${index}`} className="px-2 text-sm text-slate-400">
-            …
-          </span>
-        ) : (
-          <PaginationLink
-            key={page}
-            filters={filters}
-            page={page}
-            label={String(page)}
-            isActive={page === filters.page}
-          />
-        ),
-      )}
+        {pages.map((page, index) =>
+          page === "ellipsis" ? (
+            <PaginationItem key={`ellipsis-${index}`}>
+              <span
+                aria-hidden
+                className="flex size-10 items-center justify-center text-muted-foreground"
+              >
+                <MoreHorizontal className="size-4" />
+              </span>
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={page}>
+              <Button
+                variant={page === filters.page ? "outline" : "ghost"}
+                size="icon"
+                className="min-w-10"
+                asChild
+              >
+                <Link
+                  href={`/listings${buildListingsCatalogQueryString(filters, { page })}`}
+                  aria-current={page === filters.page ? "page" : undefined}
+                >
+                  {page}
+                </Link>
+              </Button>
+            </PaginationItem>
+          ),
+        )}
 
-      {filters.page < totalPages ? (
-        <PaginationLink filters={filters} page={filters.page + 1} label="Вперёд" />
-      ) : null}
-    </nav>
-  );
-}
-
-function PaginationLink({
-  filters,
-  page,
-  label,
-  isActive = false,
-}: {
-  filters: ListingsCatalogFilters;
-  page: number;
-  label: string;
-  isActive?: boolean;
-}) {
-  const href = `/listings${buildListingsCatalogQueryString(filters, { page })}`;
-
-  return (
-    <Link
-      href={href}
-      aria-current={isActive ? "page" : undefined}
-      className={`inline-flex min-w-10 items-center justify-center rounded-xl border px-3 py-2 text-sm font-medium transition ${
-        isActive
-          ? "border-blue-600 bg-blue-600 text-white"
-          : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50"
-      }`}
-    >
-      {label}
-    </Link>
+        {filters.page < totalPages ? (
+          <PaginationItem>
+            <Button variant="outline" size="default" className="gap-1 pr-2.5" asChild>
+              <Link
+                href={`/listings${buildListingsCatalogQueryString(filters, { page: filters.page + 1 })}`}
+                aria-label="Следующая страница"
+              >
+                <span>Вперёд</span>
+                <ChevronRight className="size-4" />
+              </Link>
+            </Button>
+          </PaginationItem>
+        ) : null}
+      </PaginationContent>
+    </Pagination>
   );
 }
 

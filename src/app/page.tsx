@@ -1,7 +1,9 @@
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { HeroSection } from "@/components/home/HeroSection";
-import { HowItWorksSection } from "@/components/home/HowItWorksSection";
-import { RecentListingsSection } from "@/components/home/RecentListingsSection";
+import {
+  HomeMoreListingsSection,
+  RecentListingsSection,
+} from "@/components/home/HomeListingsSection";
 import { SellerCtaSection } from "@/components/home/SellerCtaSection";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
@@ -10,14 +12,14 @@ import { getHomePageData } from "@/features/home/lib/home-data";
 
 export default async function HomePage() {
   const user = await getCurrentUser();
-  const { categories, listings } = await getHomePageData();
+  const { categories, listings, moreListings, stats } = await getHomePageData();
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const headerUser = user ? { id: user.id, name: user.name, role: user.role } : null;
   const createListingHref = getCreateListingHref(headerUser);
 
   return (
-    <main className="bg-white">
-      <HeroSection createListingHref={createListingHref} />
+    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA]">
+      <HeroSection stats={stats} />
       <CategoryGrid categories={categories} />
       <RecentListingsSection
         listings={listings}
@@ -25,8 +27,12 @@ export default async function HomePage() {
         favoriteListingIds={favoriteListingIds}
         createListingHref={createListingHref}
       />
+      <HomeMoreListingsSection
+        listings={moreListings}
+        isAuthenticated={user !== null}
+        favoriteListingIds={favoriteListingIds}
+      />
       <SellerCtaSection createListingHref={createListingHref} />
-      <HowItWorksSection />
     </main>
   );
 }

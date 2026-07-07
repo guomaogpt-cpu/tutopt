@@ -2,9 +2,9 @@
 
 import { Suspense } from "react";
 import Link from "next/link";
-import { Heart, LogOut, Menu, PlusCircle, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Heart, LayoutGrid, LogOut, Menu, PlusCircle, X } from "lucide-react";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { logoutRequest } from "@/features/auth/lib/auth-client";
 import {
   getCreateListingHref,
@@ -18,9 +18,15 @@ import { Logo } from "@/components/layout/Logo";
 import { HeaderSearch } from "@/components/layout/header/HeaderSearch";
 import { HeaderNotificationsBell } from "@/components/layout/header/HeaderNotificationsBell";
 import { UserMenu } from "@/components/layout/header/UserMenu";
-
-const focusRingClassName =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 
 type HeaderClientProps = {
   user: HeaderUser | null;
@@ -33,7 +39,10 @@ type MobileNavItem = {
 };
 
 function buildMobileNavItems(user: HeaderUser | null): MobileNavItem[] {
-  const items: MobileNavItem[] = [{ label: "Каталог", href: "/listings" }];
+  const items: MobileNavItem[] = [
+    { label: "Категории", href: "/categories" },
+    { label: "Каталог", href: "/listings" },
+  ];
 
   if (shouldShowCreateListingCTA(user)) {
     items.push({ label: "Подать объявление", href: getCreateListingHref(user) });
@@ -66,32 +75,15 @@ function buildMobileNavItems(user: HeaderUser | null): MobileNavItem[] {
 
 export function HeaderClient({ user }: HeaderClientProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const isHomePage = pathname === "/";
 
   const mobileItems = buildMobileNavItems(user);
   const createListingHref = getCreateListingHref(user);
   const showCreateListingCTA = shouldShowCreateListingCTA(user);
-
-  useEffect(() => {
-    if (!mobileOpen) {
-      return;
-    }
-
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setMobileOpen(false);
-      }
-    }
-
-    document.addEventListener("keydown", handleEscape);
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
 
   async function handleMobileLogout() {
     setIsLoggingOut(true);
@@ -107,179 +99,184 @@ export function HeaderClient({ user }: HeaderClientProps) {
   }
 
   return (
-    <header className="relative z-40 border-b border-slate-200 bg-white">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-[72px] min-w-0 items-center gap-2 sm:gap-3 lg:gap-4">
+    <header className="relative z-40 border-b border-[#E5E7EB] bg-white shadow-sm">
+      <Container>
+        <div className="flex h-16 min-w-0 items-center gap-1.5 sm:gap-2 lg:gap-4">
           <div className="shrink-0">
             <Logo />
           </div>
 
-          <div className="hidden min-w-0 flex-1 lg:block">
+          <div className="hidden min-w-0 flex-1 items-center gap-2 lg:flex">
             <Suspense
               fallback={
-                <HeaderSearch className="mx-auto w-full max-w-2xl" syncDisabled />
+                <HeaderSearch className="mx-auto w-full max-w-3xl" syncDisabled />
               }
             >
-              <HeaderSearch className="mx-auto w-full max-w-2xl" />
+              <HeaderSearch className="mx-auto w-full max-w-3xl" />
             </Suspense>
+
+            <Button
+              variant="outline"
+              className="shrink-0 border-[#E5E7EB] bg-white"
+              asChild
+            >
+              <Link href="/categories">
+                <LayoutGrid className="size-4" aria-hidden="true" />
+                <span className="hidden xl:inline">Категории</span>
+              </Link>
+            </Button>
           </div>
 
           <div className="hidden min-w-0 items-center gap-1.5 lg:flex xl:gap-2">
-            <Link
-              href="/listings"
-              className={`shrink-0 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 ${focusRingClassName}`}
-            >
-              Каталог
-            </Link>
-
-            {showCreateListingCTA ? (
-              <Link
-                href={createListingHref}
-                className={`inline-flex shrink-0 items-center gap-2 rounded-xl bg-blue-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 xl:px-4 ${focusRingClassName}`}
-              >
-                <PlusCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-                <span className="hidden xl:inline">Подать объявление</span>
-                <span className="xl:hidden">Подать</span>
-              </Link>
-            ) : null}
-
             <FavoritesButton />
 
             {user ? <HeaderNotificationsBell /> : null}
 
             {!user ? (
               <>
-                <Link
-                  href="/login"
-                  className={`shrink-0 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 ${focusRingClassName}`}
+                <Button variant="ghost" className="shrink-0 font-medium" asChild>
+                  <Link href="/login">Войти</Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="shrink-0 border-[#E5E7EB] font-medium"
+                  asChild
                 >
-                  Войти
-                </Link>
-                <Link
-                  href="/register"
-                  className={`shrink-0 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 ${focusRingClassName}`}
-                >
-                  Регистрация
-                </Link>
+                  <Link href="/register">Регистрация</Link>
+                </Button>
               </>
             ) : null}
 
             <UserMenu user={user} />
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
+            <Button variant="outline" size="icon" className="shrink-0 border-[#E5E7EB]" asChild>
+              <Link href="/categories" aria-label="Категории" title="Категории">
+                <LayoutGrid className="size-5" aria-hidden="true" />
+              </Link>
+            </Button>
+
+            <FavoritesButton />
+
             {user ? <HeaderNotificationsBell /> : null}
 
             {showCreateListingCTA ? (
-              <Link
-                href={createListingHref}
-                aria-label="Подать объявление"
-                className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm transition hover:bg-blue-700 ${focusRingClassName}`}
+              <Button
+                size="icon"
+                className="shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8]"
+                asChild
               >
-                <PlusCircle className="h-5 w-5" aria-hidden="true" />
-              </Link>
+                <Link href={createListingHref} aria-label="Подать объявление">
+                  <PlusCircle className="size-5" aria-hidden="true" />
+                </Link>
+              </Button>
             ) : null}
 
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="icon"
+              className="border-[#E5E7EB]"
               aria-expanded={mobileOpen}
               aria-controls="mobile-header-menu"
               aria-label={mobileOpen ? "Закрыть меню" : "Открыть меню"}
               onClick={() => setMobileOpen((current) => !current)}
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:bg-slate-50 ${focusRingClassName}`}
             >
               {mobileOpen ? (
-                <X className="h-5 w-5" aria-hidden="true" />
+                <X className="size-5" aria-hidden="true" />
               ) : (
-                <Menu className="h-5 w-5" aria-hidden="true" />
+                <Menu className="size-5" aria-hidden="true" />
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
-        <div className="min-w-0 pb-3 lg:hidden">
-          <Suspense fallback={<HeaderSearch id="header-search-mobile" className="w-full" syncDisabled />}>
-            <HeaderSearch id="header-search-mobile" className="w-full" />
-          </Suspense>
-        </div>
-      </div>
+        {!isHomePage ? (
+          <div className="min-w-0 pb-3 lg:hidden">
+            <Suspense fallback={<HeaderSearch id="header-search-mobile" className="w-full" syncDisabled />}>
+              <HeaderSearch id="header-search-mobile" className="w-full" />
+            </Suspense>
+          </div>
+        ) : null}
+      </Container>
 
-      {mobileOpen ? (
-        <>
-          <button
-            type="button"
-            aria-label="Закрыть меню"
-            className="fixed inset-0 z-40 bg-slate-900/30 lg:hidden"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div
-            id="mobile-header-menu"
-            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l border-slate-200 bg-white shadow-xl lg:hidden"
-          >
-            <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-slate-100 px-4">
-              <p className="truncate pr-3 text-sm font-semibold text-slate-900">
-                {user ? user.name : "Меню"}
-              </p>
-              <button
-                type="button"
-                aria-label="Закрыть меню"
-                onClick={() => setMobileOpen(false)}
-                className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:bg-slate-50 ${focusRingClassName}`}
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
+      <Drawer open={mobileOpen} onOpenChange={setMobileOpen}>
+        <DrawerContent
+          id="mobile-header-menu"
+          side="right"
+          className="p-0 [&>button]:right-3 [&>button]:top-3"
+        >
+          <DrawerHeader className="flex h-16 shrink-0 flex-row items-center border-b px-4 pr-12 text-left">
+            <DrawerTitle className="truncate text-sm font-semibold">
+              {user ? user.name : "Меню"}
+            </DrawerTitle>
+          </DrawerHeader>
 
-            <nav className="flex-1 overflow-y-auto p-4">
-              <ul className="flex flex-col gap-1">
-                {mobileItems.map((item) => (
-                  <li key={`${item.label}:${item.href ?? "disabled"}`}>
-                    {item.disabled || !item.href ? (
-                      <span className="flex rounded-xl px-3 py-3 text-sm text-slate-400">
-                        {item.label}
-                        <span className="ml-auto text-xs">скоро</span>
-                      </span>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
-                        className={`block rounded-xl px-3 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 ${focusRingClassName}`}
-                      >
+          <nav className="flex-1 overflow-y-auto p-4">
+            <ul className="flex flex-col gap-1">
+              {mobileItems.map((item) => (
+                <li key={`${item.label}:${item.href ?? "disabled"}`}>
+                  {item.disabled || !item.href ? (
+                    <div className="flex items-center rounded-xl px-3 py-3 text-sm text-muted-foreground">
+                      {item.label}
+                      <Badge variant="secondary" className="ml-auto text-[10px]">
+                        скоро
+                      </Badge>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      className="h-auto w-full justify-start px-3 py-3 font-medium"
+                      asChild
+                    >
+                      <Link href={item.href} onClick={() => setMobileOpen(false)}>
                         {item.label}
                       </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                    </Button>
+                  )}
+                </li>
+              ))}
+            </ul>
 
-              {user ? (
-                <button
-                  type="button"
-                  disabled={isLoggingOut}
-                  onClick={() => void handleMobileLogout()}
-                  className={`mt-4 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-red-700 transition hover:bg-red-50 disabled:opacity-60 ${focusRingClassName}`}
-                >
-                  <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
-                  Выйти
-                </button>
-              ) : null}
-            </nav>
-          </div>
-        </>
-      ) : null}
+            {user ? (
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isLoggingOut}
+                onClick={() => void handleMobileLogout()}
+                className="mt-4 h-auto w-full justify-start gap-3 px-3 py-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              >
+                <LogOut className="size-4 shrink-0" aria-hidden="true" />
+                Выйти
+              </Button>
+            ) : (
+              <div className="mt-4 grid gap-2">
+                <Button variant="outline" asChild>
+                  <Link href="/login" onClick={() => setMobileOpen(false)}>
+                    Войти
+                  </Link>
+                </Button>
+                <Button className="bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
+                  <Link href="/register" onClick={() => setMobileOpen(false)}>
+                    Регистрация
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </nav>
+        </DrawerContent>
+      </Drawer>
     </header>
   );
 }
 
 function FavoritesButton() {
   return (
-    <Link
-      href="/favorites"
-      aria-label="Избранное"
-      title="Избранное"
-      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 ${focusRingClassName}`}
-    >
-      <Heart className="h-4 w-4" aria-hidden="true" />
-    </Link>
+    <Button variant="outline" size="icon" className="shrink-0 border-[#E5E7EB]" asChild>
+      <Link href="/favorites" aria-label="Избранное" title="Избранное">
+        <Heart className="size-4" aria-hidden="true" />
+      </Link>
+    </Button>
   );
 }

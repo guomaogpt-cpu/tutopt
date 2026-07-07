@@ -1,6 +1,12 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export type PickerOption = {
   id: string;
@@ -60,15 +66,11 @@ export function OptionPicker({
     setQuery("");
   }
 
-  function openPicker() {
-    onOpenPickerChange(pickerId);
-  }
-
   function togglePicker() {
     if (isOpen) {
       closePicker();
     } else {
-      openPicker();
+      onOpenPickerChange(pickerId);
     }
   }
 
@@ -113,41 +115,42 @@ export function OptionPicker({
   }, [isOpen, onOpenPickerChange]);
 
   return (
-    <div ref={rootRef} className={`space-y-2 ${isOpen ? "relative z-50" : ""}`}>
-      <p className="text-sm font-medium text-slate-700">{label}</p>
+    <div ref={rootRef} className={cn("space-y-2", isOpen && "relative z-50")}>
+      <p className="text-sm font-medium text-foreground">{label}</p>
 
       <div className="relative">
-        <button
+        <Button
           ref={triggerRef}
           type="button"
+          variant="outline"
           disabled={disabled}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           onClick={togglePicker}
-          className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-left text-sm shadow-sm transition hover:border-blue-300 hover:shadow-md disabled:opacity-60"
+          className="h-11 w-full justify-between px-4 font-normal"
         >
-          <span className={selected ? "font-medium text-slate-900" : "text-slate-400"}>
+          <span className={cn("truncate", selected ? "font-medium text-foreground" : "text-muted-foreground")}>
             {selected?.label ?? placeholder}
           </span>
-          <span className={`text-slate-400 transition ${isOpen ? "rotate-180" : ""}`}>▾</span>
-        </button>
+          <ChevronDown className={cn("size-4 shrink-0 transition", isOpen && "rotate-180")} />
+        </Button>
 
         {isOpen ? (
-          <div
+          <Card
             role="listbox"
-            className={`absolute z-50 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl animate-scale-in ${
-              dropUp ? "bottom-full mb-2" : "top-full mt-2"
-            }`}
+            className={cn(
+              "absolute z-50 w-full overflow-hidden shadow-lg animate-scale-in",
+              dropUp ? "bottom-full mb-2" : "top-full mt-2",
+            )}
           >
             {searchable ? (
-              <div className="border-b border-slate-100 p-3">
-                <input
+              <div className="border-b p-3">
+                <Input
                   type="search"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="Поиск..."
                   autoFocus
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
             ) : null}
@@ -155,43 +158,46 @@ export function OptionPicker({
             <ul className="max-h-60 overflow-y-auto overscroll-contain p-2">
               {optional ? (
                 <li>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     onClick={() => {
                       onChange("");
                       closePicker();
                     }}
-                    className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-slate-500 hover:bg-slate-50"
+                    className="h-auto w-full justify-start px-3 py-2.5 text-muted-foreground"
                   >
                     Не выбрано
-                  </button>
+                  </Button>
                 </li>
               ) : null}
               {filtered.map((option) => (
                 <li key={option.id}>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     onClick={() => {
                       onChange(option.id);
                       closePicker();
                     }}
-                    className={`w-full rounded-xl px-3 py-2.5 text-left text-sm transition hover:bg-blue-50 ${
-                      option.id === value ? "bg-blue-50 font-medium text-blue-700" : "text-slate-800"
-                    }`}
+                    className={cn(
+                      "h-auto w-full justify-start px-3 py-2.5",
+                      option.id === value && "bg-accent font-medium text-accent-foreground",
+                    )}
                   >
                     {option.label}
-                  </button>
+                  </Button>
                 </li>
               ))}
               {filtered.length === 0 ? (
-                <li className="px-3 py-4 text-center text-sm text-slate-500">Ничего не найдено</li>
+                <li className="px-3 py-4 text-center text-sm text-muted-foreground">Ничего не найдено</li>
               ) : null}
             </ul>
-          </div>
+          </Card>
         ) : null}
       </div>
 
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </div>
   );
 }
@@ -207,22 +213,28 @@ type ChipPickerProps = {
 export function ChipPicker({ label, value, options, onChange, disabled = false }: ChipPickerProps) {
   return (
     <div className="space-y-3">
-      <p className="text-sm font-medium text-slate-700">{label}</p>
+      <p className="text-sm font-medium text-foreground">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => (
-          <button
+          <Badge
             key={option.id}
-            type="button"
-            disabled={disabled}
-            onClick={() => onChange(option.id)}
-            className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-              value === option.id
-                ? "border-blue-600 bg-blue-600 text-white shadow-sm"
-                : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50"
-            }`}
+            variant={value === option.id ? "default" : "outline"}
+            className={cn(
+              "cursor-pointer px-4 py-2 text-sm font-medium transition",
+              disabled && "pointer-events-none opacity-60",
+            )}
+            onClick={() => !disabled && onChange(option.id)}
+            onKeyDown={(event) => {
+              if (!disabled && (event.key === "Enter" || event.key === " ")) {
+                event.preventDefault();
+                onChange(option.id);
+              }
+            }}
+            role="button"
+            tabIndex={disabled ? -1 : 0}
           >
             {option.label}
-          </button>
+          </Badge>
         ))}
       </div>
     </div>

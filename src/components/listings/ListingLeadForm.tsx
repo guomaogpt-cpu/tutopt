@@ -2,12 +2,18 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import {
   LeadRequestError,
   createLeadRequest,
 } from "@/features/leads/lib/leads-client";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Section, SectionHeader, SectionTitle } from "@/components/ui/section";
+import { Textarea } from "@/components/ui/textarea";
 
 const QUICK_TEMPLATES = [
   "Есть в наличии?",
@@ -26,9 +32,6 @@ type ListingLeadFormProps = {
   defaultPhone?: string | null;
   defaultEmail?: string | null;
 };
-
-const fieldClassName =
-  "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20";
 
 export function ListingLeadForm({
   listingId,
@@ -49,11 +52,10 @@ export function ListingLeadForm({
   const [isSuccess, setIsSuccess] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [loginHref, setLoginHref] = useState("/login");
 
-  useEffect(() => {
-    setLoginHref(buildLoginUrl(getCurrentPathFromWindow()));
-  }, []);
+  function handleLoginRedirect() {
+    router.push(buildLoginUrl(getCurrentPathFromWindow()));
+  }
 
   function applyTemplate(template: string) {
     setMessage((current) => {
@@ -115,175 +117,207 @@ export function ListingLeadForm({
 
   if (isSuccess) {
     return (
-      <section
+      <Section
+        spacing="none"
         id="listing-seller-message"
-        className="scroll-mt-28 rounded-2xl border border-green-200 bg-green-50 p-6 lg:p-8"
+        className="scroll-mt-28"
+        aria-labelledby="listing-lead-success-title"
       >
-        <h2 className="text-xl font-semibold text-green-900">Заявка отправлена</h2>
-        <p className="mt-3 text-sm leading-relaxed text-green-800">
-          Поставщик {sellerName} получит вашу заявку и сможет связаться с вами по указанным
-          контактам. Можно отправить ещё одну заявку по этому объявлению.
-        </p>
-        <button
-          type="button"
-          onClick={resetFormForAnotherLead}
-          className="mt-5 inline-flex rounded-xl border border-green-300 bg-white px-5 py-3 text-sm font-semibold text-green-900 transition hover:bg-green-100"
-        >
-          Отправить ещё заявку
-        </button>
-      </section>
+        <Card className="border-green-200 bg-green-50">
+          <CardHeader>
+            <CardTitle id="listing-lead-success-title" className="text-green-900">
+              Заявка отправлена
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm leading-relaxed text-green-800">
+              Поставщик {sellerName} получит вашу заявку и сможет связаться с вами по указанным
+              контактам. Можно отправить ещё одну заявку по этому объявлению.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-5 border-green-300 bg-white text-green-900 hover:bg-green-100"
+              onClick={resetFormForAnotherLead}
+            >
+              Отправить ещё заявку
+            </Button>
+          </CardContent>
+        </Card>
+      </Section>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <section
+      <Section
+        spacing="none"
         id="listing-seller-message"
-        className="scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 lg:p-8"
+        className="scroll-mt-28"
+        aria-labelledby="listing-lead-login-title"
       >
-        <h2 className="text-xl font-semibold text-slate-900">Отправить заявку</h2>
-        <p className="mt-2 text-sm text-slate-600">
-          Войдите, чтобы отправить заявку поставщику {sellerName}.
-        </p>
-        <Link
-          href={loginHref}
-          className="mt-5 inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-        >
-          Войти
-        </Link>
-      </section>
+        <Card>
+          <CardHeader>
+            <CardTitle id="listing-lead-login-title">Отправить заявку</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Войдите, чтобы отправить заявку поставщику {sellerName}.
+            </p>
+            <Button className="mt-5" onClick={handleLoginRedirect}>
+              Войти
+            </Button>
+          </CardContent>
+        </Card>
+      </Section>
     );
   }
 
   if (isOwner) {
     return (
-      <section
+      <Section
+        spacing="none"
         id="listing-seller-message"
-        className="scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 lg:p-8"
+        className="scroll-mt-28"
+        aria-labelledby="listing-lead-owner-title"
       >
-        <h2 className="text-xl font-semibold text-slate-900">Отправить заявку</h2>
-        <p className="mt-2 text-sm text-slate-600">
-          Это ваше объявление — заявки от покупателей появятся в разделе «Заявки».
-        </p>
-        <Link
-          href="/seller/leads"
-          className="mt-5 inline-flex rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-blue-300 hover:bg-blue-50/40"
-        >
-          Перейти к заявкам
-        </Link>
-      </section>
+        <Card>
+          <CardHeader>
+            <CardTitle id="listing-lead-owner-title">Отправить заявку</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Это ваше объявление — заявки от покупателей появятся в разделе «Заявки».
+            </p>
+            <Button variant="outline" className="mt-5" asChild>
+              <Link href="/seller/leads">Перейти к заявкам</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </Section>
     );
   }
 
   return (
-    <section
+    <Section
+      spacing="none"
       id="listing-seller-message"
-      className="scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 lg:p-8"
+      className="scroll-mt-28"
+      aria-labelledby="listing-lead-form-title"
     >
-      <h2 className="text-xl font-semibold text-slate-900">Отправить заявку</h2>
-      <p className="mt-2 text-sm text-slate-500">
-        Опишите интерес к товару — поставщик {sellerName} получит заявку и свяжется с вами.
-      </p>
+      <SectionHeader className="mb-4">
+        <SectionTitle id="listing-lead-form-title" className="text-xl">
+          Отправить заявку
+        </SectionTitle>
+      </SectionHeader>
 
-      <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label htmlFor="lead-quantity" className="text-sm font-medium text-slate-700">
-              Количество
-            </label>
-            <input
-              id="lead-quantity"
-              type="number"
-              min={1}
-              step={1}
-              value={quantity}
-              onChange={(event) => setQuantity(event.target.value)}
-              className={fieldClassName}
-              required
-            />
-            <p className="text-xs text-slate-500">
-              Мин. партия: {moq} {unitLabel.toLowerCase()}
-            </p>
-            {fieldErrors.quantity ? (
-              <p className="text-xs text-red-600">{fieldErrors.quantity}</p>
-            ) : null}
-          </div>
+      <Card>
+        <CardContent className="p-4 sm:p-6">
+          <p className="text-sm text-muted-foreground">
+            Опишите интерес к товару — поставщик {sellerName} получит заявку и свяжется с вами.
+          </p>
 
-          <div className="space-y-2">
-            <label htmlFor="lead-phone" className="text-sm font-medium text-slate-700">
-              Телефон
-            </label>
-            <input
-              id="lead-phone"
-              type="tel"
-              value={contactPhone}
-              onChange={(event) => setContactPhone(event.target.value)}
-              placeholder="+996700000000"
-              className={fieldClassName}
-            />
-            {fieldErrors.contact_phone ? (
-              <p className="text-xs text-red-600">{fieldErrors.contact_phone}</p>
-            ) : null}
-          </div>
-        </div>
+          <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <label htmlFor="lead-quantity" className="text-sm font-medium text-foreground">
+                  Количество
+                </label>
+                <Input
+                  id="lead-quantity"
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={quantity}
+                  onChange={(event) => setQuantity(event.target.value)}
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  Мин. партия: {moq} {unitLabel.toLowerCase()}
+                </p>
+                {fieldErrors.quantity ? (
+                  <p className="text-xs text-destructive">{fieldErrors.quantity}</p>
+                ) : null}
+              </div>
 
-        <div className="space-y-2">
-          <label htmlFor="lead-email" className="text-sm font-medium text-slate-700">
-            Email
-          </label>
-          <input
-            id="lead-email"
-            type="email"
-            value={contactEmail}
-            onChange={(event) => setContactEmail(event.target.value)}
-            placeholder="buyer@company.kg"
-            className={fieldClassName}
-          />
-          {fieldErrors.contact_email ? (
-            <p className="text-xs text-red-600">{fieldErrors.contact_email}</p>
-          ) : null}
-        </div>
+              <div className="space-y-2">
+                <label htmlFor="lead-phone" className="text-sm font-medium text-foreground">
+                  Телефон
+                </label>
+                <Input
+                  id="lead-phone"
+                  type="tel"
+                  value={contactPhone}
+                  onChange={(event) => setContactPhone(event.target.value)}
+                  placeholder="+996700000000"
+                />
+                {fieldErrors.contact_phone ? (
+                  <p className="text-xs text-destructive">{fieldErrors.contact_phone}</p>
+                ) : null}
+              </div>
+            </div>
 
-        <div className="space-y-2">
-          <label htmlFor="lead-message" className="text-sm font-medium text-slate-700">
-            Сообщение
-          </label>
-          <textarea
-            id="lead-message"
-            value={message}
-            onChange={(event) => setMessage(event.target.value)}
-            rows={4}
-            className={fieldClassName}
-            placeholder="Здравствуйте! Интересует товар..."
-          />
-          {fieldErrors.message ? (
-            <p className="text-xs text-red-600">{fieldErrors.message}</p>
-          ) : null}
-        </div>
+            <div className="space-y-2">
+              <label htmlFor="lead-email" className="text-sm font-medium text-foreground">
+                Email
+              </label>
+              <Input
+                id="lead-email"
+                type="email"
+                value={contactEmail}
+                onChange={(event) => setContactEmail(event.target.value)}
+                placeholder="buyer@company.kg"
+              />
+              {fieldErrors.contact_email ? (
+                <p className="text-xs text-destructive">{fieldErrors.contact_email}</p>
+              ) : null}
+            </div>
 
-        <div className="flex flex-wrap gap-2">
-          {QUICK_TEMPLATES.map((template) => (
-            <button
-              key={template}
-              type="button"
-              onClick={() => applyTemplate(template)}
-              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50/50"
-            >
-              {template}
-            </button>
-          ))}
-        </div>
+            <div className="space-y-2">
+              <label htmlFor="lead-message" className="text-sm font-medium text-foreground">
+                Сообщение
+              </label>
+              <Textarea
+                id="lead-message"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                rows={4}
+                placeholder="Здравствуйте! Интересует товар..."
+              />
+              {fieldErrors.message ? (
+                <p className="text-xs text-destructive">{fieldErrors.message}</p>
+              ) : null}
+            </div>
 
-        {formError ? <p className="text-sm text-red-600">{formError}</p> : null}
+            <div className="flex flex-wrap gap-2">
+              {QUICK_TEMPLATES.map((template) => (
+                <Badge
+                  key={template}
+                  variant="secondary"
+                  className="cursor-pointer px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                  onClick={() => applyTemplate(template)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      applyTemplate(template);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  {template}
+                </Badge>
+              ))}
+            </div>
 
-        <button
-          type="submit"
-          disabled={isPending}
-          className="inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
-        >
-          {isPending ? "Отправка..." : "Отправить заявку"}
-        </button>
-      </form>
-    </section>
+            {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
+
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Отправка..." : "Отправить заявку"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </Section>
   );
 }

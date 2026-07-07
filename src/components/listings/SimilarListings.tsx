@@ -1,5 +1,6 @@
 import { ListingCard } from "@/components/listings/ListingCard";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import { Section, SectionHeader, SectionTitle } from "@/components/ui/section";
 
 type SimilarListingsProps = {
   listings: ListingCardData[];
@@ -19,9 +20,12 @@ export function SimilarListings({
   }
 
   return (
-    <section className="mt-12 lg:mt-16">
-      <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">Похожие товары</h2>
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <Section spacing="none" className="mt-12 lg:mt-16" aria-labelledby="similar-listings-title">
+      <SectionHeader className="mb-6">
+        <SectionTitle id="similar-listings-title">Похожие товары</SectionTitle>
+      </SectionHeader>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {listings.map((listing) => (
           <ListingCard
             key={listing.id}
@@ -31,6 +35,6 @@ export function SimilarListings({
           />
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

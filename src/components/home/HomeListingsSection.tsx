@@ -1,0 +1,134 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { ListingCard } from "@/components/listings/ListingCard";
+import { Button } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
+import { EmptyState } from "@/components/ui/empty-state";
+import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+
+type HomeListingsGridProps = {
+  listings: ListingCardData[];
+  isAuthenticated?: boolean;
+  favoriteListingIds?: string[];
+};
+
+export function HomeListingsGrid({
+  listings,
+  isAuthenticated = false,
+  favoriteListingIds = [],
+}: HomeListingsGridProps) {
+  const favoriteIds = new Set(favoriteListingIds);
+
+  return (
+    <div className="grid w-full min-w-0 grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {listings.map((listing) => (
+        <div key={listing.id} className="min-w-0 w-full">
+          <ListingCard
+            listing={listing}
+            isAuthenticated={isAuthenticated}
+            isFavorited={favoriteIds.has(listing.id)}
+            variant="home"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+type RecentListingsSectionProps = {
+  listings: ListingCardData[];
+  isAuthenticated?: boolean;
+  favoriteListingIds?: string[];
+  createListingHref: string;
+};
+
+export function RecentListingsSection({
+  listings,
+  isAuthenticated = false,
+  favoriteListingIds = [],
+  createListingHref,
+}: RecentListingsSectionProps) {
+  return (
+    <section data-home-section="listings" className="bg-white pb-6 pt-8">
+      <Container size="lg">
+        <div className="mb-6 flex items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#2563EB]">
+              Витрина
+            </p>
+            <h2 className="mt-0.5 text-xl font-bold tracking-tight text-[#111827] sm:text-2xl">
+              Новые объявления
+            </h2>
+          </div>
+          {listings.length > 0 ? (
+            <Button variant="ghost" size="sm" className="w-fit text-[#2563EB] hover:text-[#1D4ED8]" asChild>
+              <Link href="/listings">
+                Смотреть все
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          ) : null}
+        </div>
+
+        {listings.length === 0 ? (
+          <EmptyState
+            title="Пока нет опубликованных объявлений"
+            description="Станьте первым поставщиком — разместите предложение и дождитесь модерации."
+            className="border-[#E5E7EB] bg-white"
+            action={
+              <Button className="bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
+                <Link href={createListingHref}>Подать объявление</Link>
+              </Button>
+            }
+          />
+        ) : (
+          <HomeListingsGrid
+            listings={listings}
+            isAuthenticated={isAuthenticated}
+            favoriteListingIds={favoriteListingIds}
+          />
+        )}
+      </Container>
+    </section>
+  );
+}
+
+type HomeMoreListingsSectionProps = {
+  listings: ListingCardData[];
+  isAuthenticated?: boolean;
+  favoriteListingIds?: string[];
+};
+
+export function HomeMoreListingsSection({
+  listings,
+  isAuthenticated = false,
+  favoriteListingIds = [],
+}: HomeMoreListingsSectionProps) {
+  if (listings.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="bg-white pb-8 pt-0">
+      <Container size="lg">
+        <div className="mb-6 flex items-end justify-between gap-3">
+          <h2 className="text-xl font-bold tracking-tight text-[#111827] sm:text-2xl">
+            Последние добавленные
+          </h2>
+          <Button variant="ghost" size="sm" className="w-fit text-[#2563EB] hover:text-[#1D4ED8]" asChild>
+            <Link href="/listings">
+              Смотреть все
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </Button>
+        </div>
+
+        <HomeListingsGrid
+          listings={listings}
+          isAuthenticated={isAuthenticated}
+          favoriteListingIds={favoriteListingIds}
+        />
+      </Container>
+    </section>
+  );
+}

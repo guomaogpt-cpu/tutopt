@@ -1,13 +1,12 @@
 import { ListingStatus } from "@prisma/client";
-import {
-  getDescendantIds,
-} from "@/features/listings/lib/category-search";
+import { getDescendantIds } from "@/features/listings/lib/category-search";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import type { CategoryItem } from "@/features/listings/types/category";
 import { prisma } from "@/shared/lib/prisma";
 
-export const HOME_CATEGORIES_LIMIT = 12;
-export const HOME_LISTINGS_LIMIT = 8;
+export const HOME_CATEGORIES_LIMIT = 10;
+export const HOME_LISTINGS_PRIMARY_LIMIT = 12;
+export const HOME_LISTINGS_SECONDARY_LIMIT = 8;
 
 const listingCardSelect = {
   id: true,
@@ -37,9 +36,17 @@ export type HomeCategoryCard = {
   listingsCount: number;
 };
 
+export type HomePageStats = {
+  listingsCount: number;
+  sellersCount: number;
+  leadsCount: number;
+};
+
 export type HomePageData = {
   categories: HomeCategoryCard[];
   listings: ListingCardData[];
+  moreListings: ListingCardData[];
+  stats: HomePageStats;
 };
 
 function countPublishedInTree(
@@ -56,7 +63,16 @@ function countPublishedInTree(
 }
 
 export async function getHomePageData(): Promise<HomePageData> {
-  const [allCategories, listings, publishedByCategory] = await Promise.all([
+  const totalListingsNeeded = HOME_LISTINGS_PRIMARY_LIMIT + HOME_LISTINGS_SECONDARY_LIMIT;
+
+  const [
+    allCategories,
+    listings,
+    publishedByCategory,
+    listingsCount,
+    sellersCount,
+    leadsCount,
+  ] = await Promise.all([
     prisma.category.findMany({
       where: { is_active: true },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
@@ -72,7 +88,7 @@ export async function getHomePageData(): Promise<HomePageData> {
     prisma.listing.findMany({
       where: { status: ListingStatus.PUBLISHED },
       orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
-      take: HOME_LISTINGS_LIMIT,
+      take: totalListingsNeeded,
       select: listingCardSelect,
     }),
     prisma.listing.groupBy({
@@ -80,6 +96,17 @@ export async function getHomePageData(): Promise<HomePageData> {
       where: { status: ListingStatus.PUBLISHED },
       _count: { _all: true },
     }),
+    prisma.listing.count({
+      where: { status: ListingStatus.PUBLISHED },
+    }),
+    prisma.sellerProfile.count({
+      where: {
+        listings: {
+          some: { status: ListingStatus.PUBLISHED },
+        },
+      },
+    }),
+    prisma.lead.count(),
   ]);
 
   const countByCategory = new Map(
@@ -109,5 +136,23 @@ export async function getHomePageData(): Promise<HomePageData> {
     };
   });
 
-  return { categories, listings };
+  const primaryListings = listings.slice(0, HOME_LISTINGS_PRIMARY_LIMIT);
+  const moreListings =
+    listings.length > HOME_LISTINGS_PRIMARY_LIMIT
+      ? listings.slice(
+          HOME_LISTINGS_PRIMARY_LIMIT,
+          HOME_LISTINGS_PRIMARY_LIMIT + HOME_LISTINGS_SECONDARY_LIMIT,
+        )
+      : [];
+
+  return {
+    categories,
+    listings: primaryListings,
+    moreListings,
+    stats: {
+      listingsCount,
+      sellersCount,
+      leadsCount,
+    },
+  };
 }

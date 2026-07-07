@@ -1,112 +1,76 @@
 import Link from "next/link";
-import {
-  Car,
-  FlaskConical,
-  Hammer,
-  Package,
-  Shirt,
-  Sofa,
-  Sparkles,
-  UtensilsCrossed,
-  Wheat,
-  type LucideIcon,
-} from "lucide-react";
-import { Container } from "@/components/layout/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ArrowRight } from "lucide-react";
+import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
 import type { HomeCategoryCard } from "@/features/home/lib/home-data";
+import { cn } from "@/lib/utils";
+import { CategoryCarouselCard } from "@/components/home/CategoryCarouselCard";
+
+const HOME_CATEGORIES_DISPLAY_LIMIT = 8;
 
 type CategoryGridProps = {
   categories: HomeCategoryCard[];
 };
 
-const focusRingClassName =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2";
-
-const CATEGORY_ICON_RULES: { match: RegExp; icon: LucideIcon }[] = [
-  { match: /авто|запчаст/i, icon: Car },
-  { match: /строит|цемент/i, icon: Hammer },
-  { match: /продукт|питан/i, icon: UtensilsCrossed },
-  { match: /одежд|текстил/i, icon: Shirt },
-  { match: /мебел/i, icon: Sofa },
-  { match: /электрон/i, icon: Sparkles },
-  { match: /хими|бытов/i, icon: FlaskConical },
-  { match: /сель|сельхоз/i, icon: Wheat },
-];
-
-function getCategoryIcon(name: string, slug: string): LucideIcon {
-  for (const rule of CATEGORY_ICON_RULES) {
-    if (rule.match.test(name) || rule.match.test(slug)) {
-      return rule.icon;
-    }
-  }
-
-  return Package;
-}
-
-function formatListingsCount(count: number): string {
-  if (count === 0) {
-    return "Пока нет объявлений";
-  }
-
-  const mod10 = count % 10;
-  const mod100 = count % 100;
-
-  if (mod10 === 1 && mod100 !== 11) {
-    return `${count} объявление`;
-  }
-
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-    return `${count} объявления`;
-  }
-
-  return `${count} объявлений`;
-}
-
 export function CategoryGrid({ categories }: CategoryGridProps) {
-  return (
-    <section className="bg-white py-12 sm:py-16">
-      <Container>
-        <SectionHeading
-          title="Основные категории"
-          description="Популярные направления оптовых закупок."
-        />
+  const visibleCategories = categories.slice(0, HOME_CATEGORIES_DISPLAY_LIMIT);
 
-        {categories.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-10 text-center">
-            <p className="text-sm text-slate-600">Категории пока не добавлены.</p>
-            <Link
-              href="/listings"
-              className={`mt-4 inline-flex text-sm font-medium text-blue-600 transition hover:text-blue-700 ${focusRingClassName}`}
-            >
-              Перейти в каталог →
+  return (
+    <section
+      data-home-section="categories"
+      className="overflow-x-clip bg-[#F5F7FA] py-12"
+      id="categories"
+    >
+      <Container size="lg">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <h2 className="text-base font-bold tracking-tight text-[#334155] sm:text-lg">
+            Популярные категории
+          </h2>
+          <Button
+            variant="outline"
+            className={cn(
+              "h-9 shrink-0 rounded-full border-[rgba(148,163,184,0.18)] bg-[rgba(255,255,255,0.72)] px-3.5 text-sm font-medium text-[#475569] shadow-none backdrop-blur-sm",
+              "hover:border-[rgba(148,163,184,0.18)] hover:bg-white hover:text-[#2563EB]",
+            )}
+            asChild
+          >
+            <Link href="/listings">
+              Все категории
+              <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
+          </Button>
+        </div>
+
+        {visibleCategories.length === 0 ? (
+          <div className="rounded-[22px] border border-dashed border-[rgba(148,163,184,0.35)] bg-[rgba(255,255,255,0.58)] px-4 py-5 text-center text-sm text-[#64748B] backdrop-blur-[14px]">
+            Категории пока не добавлены.
+            <div className="mt-3">
+              <Button className="bg-[#2563EB] hover:bg-[#1D4ED8]" size="sm" asChild>
+                <Link href="/listings">Перейти в каталог</Link>
+              </Button>
+            </div>
           </div>
         ) : (
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {categories.map((category) => {
-              const Icon = getCategoryIcon(category.name, category.slug);
+          <div className="relative">
+            <div
+              className="pointer-events-none absolute inset-y-0 left-0 z-10 w-5 bg-gradient-to-r from-[#F5F7FA] to-transparent sm:w-7"
+              aria-hidden="true"
+            />
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 z-10 w-5 bg-gradient-to-l from-[#F5F7FA] to-transparent sm:w-7"
+              aria-hidden="true"
+            />
 
-              return (
-                <Link
-                  key={category.id}
-                  href={`/listings?category=${encodeURIComponent(category.id)}`}
-                  className={`group flex h-full min-h-[148px] flex-col rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-blue-200 hover:bg-blue-50/20 ${focusRingClassName}`}
-                >
-                  <span
-                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-100"
-                    aria-hidden="true"
-                  >
-                    <Icon className="h-5 w-5" strokeWidth={1.75} />
-                  </span>
-                  <h3 className="mt-4 line-clamp-2 text-base font-semibold text-slate-900 transition group-hover:text-blue-700">
-                    {category.name}
-                  </h3>
-                  <p className="mt-auto pt-3 text-sm text-slate-500">
-                    {formatListingsCount(category.listingsCount)}
-                  </p>
-                </Link>
-              );
-            })}
+            <div
+              className={cn(
+                "flex gap-3.5 overflow-x-auto snap-x snap-mandatory scroll-smooth sm:gap-4",
+                "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+              )}
+            >
+              {visibleCategories.map((category) => (
+                <CategoryCarouselCard key={category.id} category={category} />
+              ))}
+            </div>
           </div>
         )}
       </Container>

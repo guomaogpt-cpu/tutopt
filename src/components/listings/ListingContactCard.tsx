@@ -1,12 +1,16 @@
 "use client";
 
-import { MessageSquare, Phone } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { MessageSquare, Phone, Send } from "lucide-react";
 import { ListingStatus, type ListingStatus as ListingStatusType } from "@prisma/client";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
+import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import {
-  listingStatusBadgeClass,
   listingStatusLabels,
 } from "@/features/listings/lib/listing-status";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 type ListingContactCardProps = {
   listingId: string;
@@ -17,10 +21,42 @@ type ListingContactCardProps = {
   unitLabel: string;
   stockQuantity: number | null;
   cityName: string | null;
+  brandName: string | null;
   status: ListingStatusType;
   publishedAtLabel: string;
+  contactPhone: string | null;
+  whatsapp: string | null;
+  telegram: string | null;
   messageSectionId?: string;
 };
+
+function digitsOnly(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
+function buildWhatsAppHref(phone: string): string {
+  return `https://wa.me/${digitsOnly(phone)}`;
+}
+
+function buildTelegramHref(username: string): string {
+  const handle = username.replace(/^@/, "").trim();
+  return `https://t.me/${encodeURIComponent(handle)}`;
+}
+
+function getStatusBadgeVariant(
+  status: ListingStatusType,
+): "default" | "secondary" | "destructive" | "outline" | "success" | "warning" {
+  switch (status) {
+    case ListingStatus.PUBLISHED:
+      return "success";
+    case ListingStatus.PENDING_MODERATION:
+      return "warning";
+    case ListingStatus.REJECTED:
+      return "destructive";
+    default:
+      return "secondary";
+  }
+}
 
 export function ListingContactCard({
   listingId,
@@ -31,10 +67,20 @@ export function ListingContactCard({
   unitLabel,
   stockQuantity,
   cityName,
+  brandName,
   status,
   publishedAtLabel,
+  contactPhone,
+  whatsapp,
+  telegram,
   messageSectionId = "listing-seller-message",
 }: ListingContactCardProps) {
+  const router = useRouter();
+
+  function handleLoginToViewContacts() {
+    router.push(buildLoginUrl(getCurrentPathFromWindow()));
+  }
+
   function handleWriteToSeller() {
     const section = document.getElementById(messageSectionId);
     section?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -44,66 +90,64 @@ export function ListingContactCard({
     }
   }
 
+  const hasContacts = Boolean(contactPhone || whatsapp || telegram);
+
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6">
-      {status === ListingStatus.PENDING_MODERATION ? (
-        <span
-          className={`mb-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${listingStatusBadgeClass.PENDING_MODERATION}`}
-        >
-          На модерации
-        </span>
-      ) : null}
-
-      <p className="text-3xl font-bold tracking-tight text-slate-900">{priceLabel}</p>
-
-      <dl className="mt-5 space-y-3 border-b border-slate-100 pb-5 text-sm">
-        <div className="flex justify-between gap-4">
-          <dt className="text-slate-500">MOQ</dt>
-          <dd className="font-medium text-slate-900">
-            {moq} {unitLabel.toLowerCase()}
-          </dd>
-        </div>
-        <div className="flex justify-between gap-4">
-          <dt className="text-slate-500">Единица</dt>
-          <dd className="font-medium text-slate-900">{unitLabel}</dd>
-        </div>
-        {stockQuantity != null ? (
-          <div className="flex justify-between gap-4">
-            <dt className="text-slate-500">Остаток</dt>
-            <dd className="font-medium text-slate-900">{stockQuantity}</dd>
-          </div>
+    <Card>
+      <CardHeader className="space-y-4 p-6 pb-0">
+        {status === ListingStatus.PENDING_MODERATION ? (
+          <Badge variant="warning">На модерации</Badge>
         ) : null}
-        {cityName ? (
-          <div className="flex justify-between gap-4">
-            <dt className="text-slate-500">Город</dt>
-            <dd className="font-medium text-slate-900">{cityName}</dd>
-          </div>
-        ) : null}
-        <div className="flex justify-between gap-4">
-          <dt className="text-slate-500">Статус</dt>
-          <dd>
-            <span
-              className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${listingStatusBadgeClass[status]}`}
-            >
-              {listingStatusLabels[status]}
-            </span>
-          </dd>
-        </div>
-        <div className="flex justify-between gap-4">
-          <dt className="text-slate-500">Дата публикации</dt>
-          <dd className="font-medium text-slate-900">{publishedAtLabel}</dd>
-        </div>
-      </dl>
 
-      <div className="mt-5 space-y-3">
-        <button
-          type="button"
-          onClick={handleWriteToSeller}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-        >
-          <MessageSquare className="h-4 w-4" aria-hidden="true" />
+        <p className="text-3xl font-bold tracking-tight text-foreground">{priceLabel}</p>
+      </CardHeader>
+
+      <CardContent className="space-y-3 p-6 pt-5">
+        <dl className="space-y-3 border-b pb-5 text-sm">
+          <div className="flex justify-between gap-4">
+            <dt className="text-muted-foreground">MOQ</dt>
+            <dd className="font-medium text-foreground">
+              {moq} {unitLabel.toLowerCase()}
+            </dd>
+          </div>
+          {cityName ? (
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Город</dt>
+              <dd className="font-medium text-foreground">{cityName}</dd>
+            </div>
+          ) : null}
+          {brandName ? (
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Бренд</dt>
+              <dd className="font-medium text-foreground">{brandName}</dd>
+            </div>
+          ) : null}
+          {stockQuantity != null ? (
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Остаток</dt>
+              <dd className="font-medium text-foreground">{stockQuantity}</dd>
+            </div>
+          ) : null}
+          <div className="flex justify-between gap-4">
+            <dt className="text-muted-foreground">Статус</dt>
+            <dd>
+              <Badge variant={getStatusBadgeVariant(status)}>
+                {listingStatusLabels[status]}
+              </Badge>
+            </dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-muted-foreground">Дата публикации</dt>
+            <dd className="font-medium text-foreground">{publishedAtLabel}</dd>
+          </div>
+        </dl>
+      </CardContent>
+
+      <CardFooter className="flex flex-col gap-3 p-6 pt-0">
+        <Button type="button" className="w-full gap-2" onClick={handleWriteToSeller}>
+          <MessageSquare className="size-4" aria-hidden="true" />
           Отправить заявку
-        </button>
+        </Button>
 
         <FavoriteButton
           listingId={listingId}
@@ -112,18 +156,44 @@ export function ListingContactCard({
           variant="button"
         />
 
-        <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5">
-          <button
-            type="button"
-            disabled
-            className="inline-flex w-full items-center justify-center gap-2 text-sm font-semibold text-slate-400"
-          >
-            <Phone className="h-4 w-4" aria-hidden="true" />
-            Позвонить
-          </button>
-          <p className="mt-1 text-center text-xs text-slate-400">Будет доступен после запуска</p>
-        </div>
-      </div>
-    </article>
+        {!isAuthenticated ? (
+          <Button variant="outline" className="w-full" onClick={handleLoginToViewContacts}>
+            Войти, чтобы увидеть контакты
+          </Button>
+        ) : (
+          <>
+            {contactPhone ? (
+              <Button variant="outline" className="w-full gap-2" asChild>
+                <a href={`tel:${contactPhone}`}>
+                  <Phone className="size-4" aria-hidden="true" />
+                  {contactPhone}
+                </a>
+              </Button>
+            ) : null}
+            {whatsapp ? (
+              <Button variant="outline" className="w-full gap-2" asChild>
+                <a href={buildWhatsAppHref(whatsapp)} target="_blank" rel="noopener noreferrer">
+                  <MessageSquare className="size-4" aria-hidden="true" />
+                  WhatsApp
+                </a>
+              </Button>
+            ) : null}
+            {telegram ? (
+              <Button variant="outline" className="w-full gap-2" asChild>
+                <a href={buildTelegramHref(telegram)} target="_blank" rel="noopener noreferrer">
+                  <Send className="size-4" aria-hidden="true" />
+                  Telegram
+                </a>
+              </Button>
+            ) : null}
+            {isAuthenticated && !hasContacts ? (
+              <p className="text-center text-xs text-muted-foreground">
+                Продавец не указал контакты
+              </p>
+            ) : null}
+          </>
+        )}
+      </CardFooter>
+    </Card>
   );
 }

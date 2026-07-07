@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Bell } from "lucide-react";
 import type { NotificationItem } from "@/features/notifications/lib/notifications-data";
 import {
   markAllNotificationsReadRequest,
@@ -13,6 +14,11 @@ import {
   setUnreadNotificationCount,
 } from "@/features/notifications/lib/notifications-unread-store";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/utils";
 
 type NotificationsListProps = {
   initialNotifications: NotificationItem[];
@@ -110,79 +116,85 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
 
   const hasUnread = notifications.some((notification) => !notification.read_at);
 
+  if (notifications.length === 0) {
+    return (
+      <EmptyState
+        icon={Bell}
+        title="У вас пока нет уведомлений"
+        description="Здесь появятся новые заявки и другие события по вашему аккаунту."
+        action={
+          <Button asChild>
+            <Link href="/listings">Перейти в каталог</Link>
+          </Button>
+        }
+      />
+    );
+  }
+
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-slate-600">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
           {hasUnread ? "Есть непрочитанные уведомления" : "Все уведомления прочитаны"}
         </p>
         {hasUnread ? (
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => void handleMarkAllRead()}
             disabled={isMarkingAll}
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
           >
             {isMarkingAll ? "Обновление..." : "Отметить все как прочитанные"}
-          </button>
+          </Button>
         ) : null}
       </div>
 
-      {notifications.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-14 text-center">
-          <p className="text-base font-medium text-slate-900">Уведомлений пока нет</p>
-          <p className="mx-auto mt-2 max-w-md text-sm text-slate-600">
-            Здесь появятся новые заявки и другие события по вашему аккаунту.
-          </p>
-          <Link
-            href="/listings"
-            className="mt-6 inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-          >
-            Перейти в каталог
-          </Link>
-        </div>
-      ) : (
-        <ul className="mt-6 space-y-3">
-          {notifications.map((notification) => {
-            const isUnread = !notification.read_at;
+      <ul className="space-y-3">
+        {notifications.map((notification) => {
+          const isUnread = !notification.read_at;
 
-            return (
-              <li key={notification.id}>
-                <button
-                  type="button"
-                  onClick={() => void handleNotificationClick(notification)}
-                  disabled={pendingId === notification.id}
-                  className={`w-full rounded-2xl border px-5 py-4 text-left transition disabled:opacity-60 ${
-                    isUnread
-                      ? "border-blue-200 bg-blue-50/60 hover:bg-blue-50"
-                      : "border-slate-200 bg-white hover:bg-slate-50"
-                  }`}
+          return (
+            <li key={notification.id}>
+              <button
+                type="button"
+                onClick={() => void handleNotificationClick(notification)}
+                disabled={pendingId === notification.id}
+                className="w-full text-left disabled:opacity-60"
+              >
+                <Card
+                  className={cn(
+                    "transition hover:shadow-md",
+                    isUnread && "border-primary/30 bg-primary/5",
+                  )}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-slate-900">{notification.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                        {notification.message}
-                      </p>
-                      {notification.actor ? (
-                        <p className="mt-2 text-xs text-slate-500">
-                          От: {notification.actor.name}
+                  <CardContent className="p-4 sm:p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-semibold text-foreground">{notification.title}</p>
+                          {isUnread ? <Badge>Новое</Badge> : null}
+                        </div>
+                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                          {notification.message}
                         </p>
-                      ) : null}
+                        {notification.actor ? (
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            От: {notification.actor.name}
+                          </p>
+                        ) : null}
+                      </div>
                     </div>
-                    {isUnread ? (
-                      <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-blue-600" />
-                    ) : null}
-                  </div>
-                  <p className="mt-3 text-xs text-slate-500">
-                    {formatListingDate(notification.created_at)}
-                  </p>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+                    <p className="mt-3 text-xs text-muted-foreground">
+                      {formatListingDate(notification.created_at)}
+                    </p>
+                  </CardContent>
+                </Card>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

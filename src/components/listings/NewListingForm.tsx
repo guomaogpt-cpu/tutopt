@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
@@ -16,6 +17,11 @@ import {
 } from "@/features/listings/lib/listings-client";
 import type { CategoryItem } from "@/features/listings/types/category";
 import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 type NewListingFormProps = {
   categories: CategoryItem[];
@@ -25,8 +31,13 @@ type NewListingFormProps = {
 
 const emptyErrors: ListingFormErrors = { form: [], fields: {} };
 
-const fieldClassName =
-  "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-base text-slate-900 shadow-sm placeholder:text-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20";
+function FieldError({ message }: { message?: string }) {
+  if (!message) {
+    return null;
+  }
+
+  return <p className="text-xs text-destructive">{message}</p>;
+}
 
 export function NewListingForm({ categories, cities, brands }: NewListingFormProps) {
   const router = useRouter();
@@ -48,6 +59,11 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
+
     setErrors(emptyErrors);
     setClientError("");
 
@@ -99,38 +115,32 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
           fields: {},
         });
       }
-    } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+    <form onSubmit={(event) => void handleSubmit(event)} className="mt-8 space-y-6">
       {(clientError || errors.form.length > 0) && (
-        <div
-          role="alert"
-          className="animate-fade-in-up rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800"
-        >
-          {clientError ? <p>{clientError}</p> : null}
-          {errors.form.length > 0 ? (
-            <ul className="space-y-1">
-              {errors.form.map((message) => (
-                <li key={message}>{message}</li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
+        <Card className="border-destructive/30 bg-destructive/5" role="alert">
+          <CardContent className="space-y-1 p-4 text-sm text-destructive">
+            {clientError ? <p>{clientError}</p> : null}
+            {errors.form.map((message) => (
+              <p key={message}>{message}</p>
+            ))}
+          </CardContent>
+        </Card>
       )}
 
       <FormSection
         title="Основная информация"
-        description="Название, описание, категория и фото — самое важное для покупателя."
+        description="Название, описание и категория — самое важное для покупателя."
       >
         <div className="space-y-2">
-          <label htmlFor="listing-title" className="text-sm font-medium text-slate-700">
+          <label htmlFor="listing-title" className="text-sm font-medium text-foreground">
             Название
           </label>
-          <input
+          <Input
             id="listing-title"
             name="title"
             type="text"
@@ -138,19 +148,16 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder="Например: Цемент М500 оптом"
-            className={fieldClassName}
             disabled={isSubmitting}
           />
-          {getListingFieldError(errors, "title") ? (
-            <p className="text-xs text-red-600">{getListingFieldError(errors, "title")}</p>
-          ) : null}
+          <FieldError message={getListingFieldError(errors, "title")} />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="listing-description" className="text-sm font-medium text-slate-700">
+          <label htmlFor="listing-description" className="text-sm font-medium text-foreground">
             Описание
           </label>
-          <textarea
+          <Textarea
             id="listing-description"
             name="description"
             rows={5}
@@ -158,12 +165,10 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             placeholder="Опишите товар, условия поставки и преимущества для оптовых покупателей"
-            className={`${fieldClassName} resize-y min-h-[140px]`}
+            className="min-h-[140px] resize-y"
             disabled={isSubmitting}
           />
-          {getListingFieldError(errors, "description") ? (
-            <p className="text-xs text-red-600">{getListingFieldError(errors, "description")}</p>
-          ) : null}
+          <FieldError message={getListingFieldError(errors, "description")} />
         </div>
 
         <CategoryPicker
@@ -173,7 +178,12 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
           disabled={isSubmitting}
           error={getListingFieldError(errors, "category_id")}
         />
+      </FormSection>
 
+      <FormSection
+        title="Фото"
+        description="Загрузите от 1 до 10 фотографий. Первое фото станет главным на карточке."
+      >
         <ListingImageUpload
           value={imageUrls}
           onChange={setImageUrls}
@@ -182,13 +192,13 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
         />
       </FormSection>
 
-      <FormSection title="Цена" description="Укажите оптовую цену и минимальную партию.">
+      <FormSection title="Цена и условия" description="Укажите оптовую цену и минимальную партию.">
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
-            <label htmlFor="listing-price" className="text-sm font-medium text-slate-700">
+            <label htmlFor="listing-price" className="text-sm font-medium text-foreground">
               Цена
             </label>
-            <input
+            <Input
               id="listing-price"
               name="price"
               type="number"
@@ -198,12 +208,9 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
               value={price}
               onChange={(event) => setPrice(event.target.value)}
               placeholder="320"
-              className={fieldClassName}
               disabled={isSubmitting}
             />
-            {getListingFieldError(errors, "price") ? (
-              <p className="text-xs text-red-600">{getListingFieldError(errors, "price")}</p>
-            ) : null}
+            <FieldError message={getListingFieldError(errors, "price")} />
           </div>
 
           <ChipPicker
@@ -220,10 +227,10 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
-            <label htmlFor="listing-moq" className="text-sm font-medium text-slate-700">
+            <label htmlFor="listing-moq" className="text-sm font-medium text-foreground">
               MOQ (мин. партия)
             </label>
-            <input
+            <Input
               id="listing-moq"
               name="moq"
               type="number"
@@ -231,12 +238,9 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
               required
               value={moq}
               onChange={(event) => setMoq(event.target.value)}
-              className={fieldClassName}
               disabled={isSubmitting}
             />
-            {getListingFieldError(errors, "moq") ? (
-              <p className="text-xs text-red-600">{getListingFieldError(errors, "moq")}</p>
-            ) : null}
+            <FieldError message={getListingFieldError(errors, "moq")} />
           </div>
 
           <ChipPicker
@@ -253,7 +257,7 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
       </FormSection>
 
       <FormSection
-        title="Дополнительная информация"
+        title="Местоположение и бренд"
         description="Город, бренд и остаток помогут покупателю быстрее принять решение."
         className={openPickerId ? "relative z-40" : undefined}
       >
@@ -288,10 +292,10 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="listing-stock" className="text-sm font-medium text-slate-700">
-            Остаток на складе <span className="font-normal text-slate-400">(необязательно)</span>
+          <label htmlFor="listing-stock" className="text-sm font-medium text-foreground">
+            Остаток на складе <span className="font-normal text-muted-foreground">(необязательно)</span>
           </label>
-          <input
+          <Input
             id="listing-stock"
             name="stock_quantity"
             type="number"
@@ -299,24 +303,27 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
             value={stockQuantity}
             onChange={(event) => setStockQuantity(event.target.value)}
             placeholder="1000"
-            className={fieldClassName}
             disabled={isSubmitting}
           />
         </div>
       </FormSection>
 
-      <div className="relative z-0 animate-fade-in-up rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-6 shadow-sm sm:p-8">
-        <button
+      <FormSection title="Публикация" description="После публикации объявление отправится на модерацию.">
+        <Button
           type="submit"
           disabled={isSubmitting || imageUrls.length === 0}
-          className="w-full rounded-2xl bg-blue-600 px-6 py-4 text-base font-semibold text-white shadow-md transition hover:bg-blue-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-12 w-full text-base"
         >
-          {isSubmitting ? "Публикация..." : "Опубликовать объявление"}
-        </button>
-        <p className="mt-4 text-center text-sm text-slate-500">
-          После публикации объявление отправится на модерацию.
-        </p>
-      </div>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              Публикация...
+            </>
+          ) : (
+            "Опубликовать объявление"
+          )}
+        </Button>
+      </FormSection>
     </form>
   );
 }
@@ -333,17 +340,17 @@ export function ListingAccessMessage({
   actionLabel?: string;
 }) {
   return (
-    <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
-      <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
-      <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">{description}</p>
-      {actionHref && actionLabel ? (
-        <Link
-          href={actionHref}
-          className="mt-6 inline-flex rounded-xl bg-blue-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-blue-700"
-        >
-          {actionLabel}
-        </Link>
-      ) : null}
-    </div>
+    <EmptyState
+      title={title}
+      description={description}
+      className="mt-8"
+      action={
+        actionHref && actionLabel ? (
+          <Button asChild>
+            <Link href={actionHref}>{actionLabel}</Link>
+          </Button>
+        ) : null
+      }
+    />
   );
 }
