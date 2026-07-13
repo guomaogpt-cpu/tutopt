@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState, type FormEvent } from "react";
-import { Container } from "@/components/layout/Container";
-import {
-  FormField,
-  buttonPrimaryClassName,
-  inputClassName,
-} from "@/components/public/FormField";
-import { PublicPageHeader } from "@/components/public/PublicPageHeader";
+import { Loader2 } from "lucide-react";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { AuthAlert, AuthFormCard, AuthFormField } from "@/components/auth/AuthFormCard";
+import { PasswordInput } from "@/components/auth/PasswordInput";
+import { RoleSelector } from "@/components/auth/RoleSelector";
+import { authButtonClassName, authInputClassName } from "@/components/auth/auth-form-styles";
 import {
   AuthRequestError,
   getFieldError,
@@ -19,6 +18,7 @@ import {
 } from "@/features/auth/lib/auth-client";
 import { resolveNextParam } from "@/features/auth/lib/login-redirect";
 import type { RegisterInput } from "@/features/auth/validators/auth.validators";
+import { cn } from "@/lib/utils";
 
 const emptyErrors: AuthFormErrors = { form: [], fields: {} };
 
@@ -90,184 +90,167 @@ function RegisterForm() {
       : "/login";
 
   return (
-    <form
-      onSubmit={(event) => void handleSubmit(event)}
-      className="mt-8 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8"
+    <AuthFormCard
+      title="Регистрация"
+      description="Создайте аккаунт покупателя или продавца."
     >
-      {successMessage ? (
-        <div
-          role="status"
-          className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+      <form onSubmit={(event) => void handleSubmit(event)} className="space-y-5">
+        {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
+        <AuthAlert variant="error" messages={errors.form} />
+
+        <RoleSelector
+          value={role}
+          onChange={setRole}
+          disabled={isSubmitting}
+          error={getFieldError(errors, "role")}
+        />
+
+        <AuthFormField
+          label={role === "SELLER" ? "Имя контактного лица" : "Имя"}
+          htmlFor="register-name"
+          error={getFieldError(errors, "name")}
         >
-          {successMessage}
-        </div>
-      ) : null}
-
-      {errors.form.length > 0 ? (
-        <div
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-        >
-          <ul className="space-y-1">
-            {errors.form.map((message) => (
-              <li key={message}>{message}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      <FormField label="Имя" htmlFor="register-name">
-        <input
-          id="register-name"
-          name="name"
-          type="text"
-          autoComplete="name"
-          placeholder="Ваше имя"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          className={inputClassName}
-          disabled={isSubmitting}
-        />
-        {getFieldError(errors, "name") ? (
-          <p className="text-xs text-red-600">{getFieldError(errors, "name")}</p>
-        ) : null}
-      </FormField>
-
-      <FormField label="Email" htmlFor="register-email" hint="Укажите email или телефон">
-        <input
-          id="register-email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          placeholder="name@company.kg"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          className={inputClassName}
-          disabled={isSubmitting}
-        />
-        {getFieldError(errors, "email") ? (
-          <p className="text-xs text-red-600">{getFieldError(errors, "email")}</p>
-        ) : null}
-      </FormField>
-
-      <FormField label="Телефон" htmlFor="register-phone">
-        <input
-          id="register-phone"
-          name="phone"
-          type="tel"
-          autoComplete="tel"
-          placeholder="+996XXXXXXXXX"
-          value={phone}
-          onChange={(event) => setPhone(event.target.value)}
-          className={inputClassName}
-          disabled={isSubmitting}
-        />
-        {getFieldError(errors, "phone") ? (
-          <p className="text-xs text-red-600">{getFieldError(errors, "phone")}</p>
-        ) : null}
-      </FormField>
-
-      <FormField label="Пароль" htmlFor="register-password">
-        <input
-          id="register-password"
-          name="password"
-          type="password"
-          autoComplete="new-password"
-          placeholder="Минимум 8 символов"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className={inputClassName}
-          disabled={isSubmitting}
-        />
-        {getFieldError(errors, "password") ? (
-          <p className="text-xs text-red-600">{getFieldError(errors, "password")}</p>
-        ) : null}
-      </FormField>
-
-      <fieldset className="space-y-3">
-        <legend className="text-sm font-medium text-slate-700">Тип аккаунта</legend>
-        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
           <input
-            type="radio"
-            name="role"
-            value="BUYER"
-            checked={role === "BUYER"}
-            onChange={() => setRole("BUYER")}
-            disabled={isSubmitting}
-            className="text-blue-600"
-          />
-          <span className="text-sm text-slate-700">Покупатель — ищу оптовые предложения</span>
-        </label>
-        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
-          <input
-            type="radio"
-            name="role"
-            value="SELLER"
-            checked={role === "SELLER"}
-            onChange={() => setRole("SELLER")}
-            disabled={isSubmitting}
-            className="text-blue-600"
-          />
-          <span className="text-sm text-slate-700">Продавец — размещаю объявления</span>
-        </label>
-        {getFieldError(errors, "role") ? (
-          <p className="text-xs text-red-600">{getFieldError(errors, "role")}</p>
-        ) : null}
-      </fieldset>
-
-      {role === "SELLER" ? (
-        <FormField label="Название компании" htmlFor="register-company">
-          <input
-            id="register-company"
-            name="company_name"
+            id="register-name"
+            name="name"
             type="text"
-            placeholder="ОсОО «Ваша компания»"
-            value={companyName}
-            onChange={(event) => setCompanyName(event.target.value)}
-            className={inputClassName}
+            autoComplete="name"
+            placeholder={role === "SELLER" ? "Ваше имя" : "Ваше имя"}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            className={cn(
+              authInputClassName,
+              getFieldError(errors, "name") &&
+                "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+            )}
             disabled={isSubmitting}
           />
-          {getFieldError(errors, "company_name") ? (
-            <p className="text-xs text-red-600">{getFieldError(errors, "company_name")}</p>
-          ) : null}
-        </FormField>
-      ) : null}
+        </AuthFormField>
 
-      <button type="submit" disabled={isSubmitting} className={buttonPrimaryClassName}>
-        {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
-      </button>
+        {role === "SELLER" ? (
+          <AuthFormField
+            label="Название компании"
+            htmlFor="register-company"
+            error={getFieldError(errors, "company_name")}
+          >
+            <input
+              id="register-company"
+              name="company_name"
+              type="text"
+              placeholder="ОсОО «Ваша компания»"
+              value={companyName}
+              onChange={(event) => setCompanyName(event.target.value)}
+              className={cn(
+                authInputClassName,
+                getFieldError(errors, "company_name") &&
+                  "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+              )}
+              disabled={isSubmitting}
+            />
+          </AuthFormField>
+        ) : null}
 
-      <p className="text-center text-sm text-slate-600">
-        Уже есть аккаунт?{" "}
-        <Link href={loginHref} className="font-medium text-blue-600 hover:text-blue-700">
-          Войти
-        </Link>
-      </p>
-    </form>
+        <AuthFormField
+          label="Email"
+          htmlFor="register-email"
+          hint="Укажите email или телефон"
+          error={getFieldError(errors, "email")}
+        >
+          <input
+            id="register-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="name@company.kg"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className={cn(
+              authInputClassName,
+              getFieldError(errors, "email") &&
+                "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+            )}
+            disabled={isSubmitting}
+          />
+        </AuthFormField>
+
+        <AuthFormField
+          label="Телефон"
+          htmlFor="register-phone"
+          error={getFieldError(errors, "phone")}
+        >
+          <input
+            id="register-phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            placeholder="+996XXXXXXXXX"
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+            className={cn(
+              authInputClassName,
+              getFieldError(errors, "phone") &&
+                "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+            )}
+            disabled={isSubmitting}
+          />
+        </AuthFormField>
+
+        <AuthFormField
+          label="Пароль"
+          htmlFor="register-password"
+          error={getFieldError(errors, "password")}
+        >
+          <PasswordInput
+            id="register-password"
+            name="password"
+            value={password}
+            onChange={setPassword}
+            placeholder="Минимум 8 символов"
+            autoComplete="new-password"
+            disabled={isSubmitting}
+            hasError={Boolean(getFieldError(errors, "password"))}
+          />
+        </AuthFormField>
+
+        <button type="submit" disabled={isSubmitting} className={authButtonClassName}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              Создание аккаунта...
+            </>
+          ) : (
+            "Создать аккаунт"
+          )}
+        </button>
+
+        <p className="text-center text-sm text-[#64748B]">
+          Уже есть аккаунт?{" "}
+          <Link
+            href={loginHref}
+            className="font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
+          >
+            Войти
+          </Link>
+        </p>
+      </form>
+    </AuthFormCard>
+  );
+}
+
+function RegisterFormFallback() {
+  return (
+    <AuthFormCard title="Регистрация" description="Загрузка формы...">
+      <p className="text-sm text-[#64748B]">Загрузка формы...</p>
+    </AuthFormCard>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <main className="bg-slate-50 py-10 sm:py-14">
-      <Container>
-        <div className="mx-auto max-w-md">
-          <PublicPageHeader
-            title="Регистрация"
-            description="Создайте аккаунт покупателя или продавца для работы с оптовыми объявлениями."
-          />
-
-          <Suspense
-            fallback={
-              <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
-                <p className="text-sm text-slate-500">Загрузка формы...</p>
-              </div>
-            }
-          >
-            <RegisterForm />
-          </Suspense>
-        </div>
-      </Container>
-    </main>
+    <AuthLayout>
+      <Suspense fallback={<RegisterFormFallback />}>
+        <RegisterForm />
+      </Suspense>
+    </AuthLayout>
   );
 }

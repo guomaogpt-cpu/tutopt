@@ -84,7 +84,12 @@ export function UserMenu({ user, align = "end" }: UserMenuProps) {
         </Button>
       </DropdownTrigger>
 
-      <DropdownContent align={align} className="min-w-[220px]">
+      <DropdownContent
+        align={align}
+        sideOffset={8}
+        collisionPadding={12}
+        className="min-w-[220px] max-w-[min(100vw-2rem,280px)]"
+      >
         {user ? (
           <>
             <DropdownLabel className="px-2 py-2 font-normal">

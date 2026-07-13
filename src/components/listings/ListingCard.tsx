@@ -13,7 +13,8 @@ type ListingCardProps = {
   listing: ListingCardData;
   isAuthenticated?: boolean;
   isFavorited?: boolean;
-  variant?: "default" | "showcase" | "home";
+  variant?: "default" | "showcase" | "home" | "catalog";
+  onFavoriteChange?: (isFavorited: boolean) => void;
 };
 
 export function ListingCard({
@@ -21,12 +22,14 @@ export function ListingCard({
   isAuthenticated = false,
   isFavorited = false,
   variant = "default",
+  onFavoriteChange,
 }: ListingCardProps) {
   const mainImage = listing.images[0]?.url;
   const unitLabel =
     listingUnitOptions.find((option) => option.value === listing.unit)?.label ??
     listing.unit.toLowerCase();
   const isHome = variant === "home";
+  const isCatalog = variant === "catalog";
   const isShowcase = variant === "showcase";
 
   if (isHome) {
@@ -68,6 +71,7 @@ export function ListingCard({
             isAuthenticated={isAuthenticated}
             initialIsFavorited={isFavorited}
             variant="icon"
+            onFavoriteChange={onFavoriteChange}
             className="absolute right-2 top-2 z-10 size-8 rounded-full border border-[rgba(148,163,184,0.22)] bg-[rgba(255,255,255,0.86)] p-0 shadow-none backdrop-blur-sm hover:bg-white md:right-3 md:top-3 md:size-[34px] [&_svg]:size-4"
           />
         </div>
@@ -115,6 +119,95 @@ export function ListingCard({
     );
   }
 
+  if (isCatalog) {
+    const cityName = listing.city?.name ?? "Не указан";
+    const brandName = listing.brand?.name ?? "Без бренда";
+    const moqValue = `${listing.moq} ${unitLabel.toLowerCase()}`;
+
+    return (
+      <article
+        className={cn(
+          "group flex h-full w-full min-w-0 flex-col overflow-hidden rounded-[18px] border border-[rgba(148,163,184,0.18)] bg-white",
+          "shadow-[0_4px_16px_rgba(15,23,42,0.04)] transition-all duration-200",
+          "hover:-translate-y-0.5 hover:border-[rgba(37,99,235,0.22)] hover:shadow-[0_8px_24px_rgba(37,99,235,0.08)]",
+        )}
+      >
+        <div className="relative h-[140px] w-full overflow-hidden bg-[#F1F5F9] md:h-[160px]">
+          <Link href={`/listings/${listing.id}`} className="relative block h-full w-full">
+            {mainImage ? (
+              <Image
+                src={mainImage}
+                alt={listing.title}
+                fill
+                unoptimized
+                className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 20vw"
+              />
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center gap-1.5 text-xs text-[#94A3B8]">
+                <Package className="size-5" aria-hidden="true" />
+                Нет фото
+              </div>
+            )}
+          </Link>
+
+          <FavoriteButton
+            listingId={listing.id}
+            isAuthenticated={isAuthenticated}
+            initialIsFavorited={isFavorited}
+            variant="icon"
+            onFavoriteChange={onFavoriteChange}
+            className="absolute right-2 top-2 z-10 size-8 rounded-full border border-[rgba(148,163,184,0.22)] bg-[rgba(255,255,255,0.9)] p-0 shadow-none backdrop-blur-sm hover:bg-white md:right-3 md:top-3 md:size-9 [&_svg]:size-4"
+          />
+        </div>
+
+        <div className="flex flex-1 flex-col p-3 md:p-3.5">
+          <h2 className="line-clamp-2 min-h-[2.4rem] text-sm font-semibold leading-snug text-[#0F172A] md:min-h-10 md:text-[15px]">
+            <Link
+              href={`/listings/${listing.id}`}
+              className="transition hover:text-[#2563EB]"
+            >
+              {listing.title}
+            </Link>
+          </h2>
+
+          <p className="mt-2 text-base font-bold leading-tight text-[#2563EB] md:text-lg">
+            {formatListingPrice(listing.price, listing.currency)}
+            <span className="text-[11px] font-medium text-[#64748B] md:text-xs">
+              {" "}
+              / {unitLabel.toLowerCase()}
+            </span>
+          </p>
+
+          <dl className="mt-2 space-y-1">
+            <div className="flex items-center justify-between gap-2">
+              <dt className="shrink-0 text-[11px] text-[#64748B] md:text-xs">Мин. партия</dt>
+              <dd className="min-w-0 truncate text-right text-[11px] font-medium text-[#334155] md:text-xs">
+                {moqValue}
+              </dd>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <dt className="shrink-0 text-[11px] text-[#64748B] md:text-xs">Город</dt>
+              <dd className="min-w-0 truncate text-right text-[11px] font-medium text-[#334155] md:text-xs">
+                {cityName}
+              </dd>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <dt className="shrink-0 text-[11px] text-[#64748B] md:text-xs">Бренд</dt>
+              <dd className="min-w-0 truncate text-right text-[11px] font-medium text-[#334155] md:text-xs">
+                {brandName}
+              </dd>
+            </div>
+          </dl>
+
+          <p className="mt-2 truncate border-t border-[rgba(148,163,184,0.14)] pt-2 text-xs font-medium text-[#475569] md:text-sm">
+            {listing.sellerProfile.company_name}
+          </p>
+        </div>
+      </article>
+    );
+  }
+
   return (
     <Card
       className={cn(
@@ -150,6 +243,7 @@ export function ListingCard({
           isAuthenticated={isAuthenticated}
           initialIsFavorited={isFavorited}
           variant="icon"
+          onFavoriteChange={onFavoriteChange}
           className="absolute right-2 top-2 z-10"
         />
       </div>

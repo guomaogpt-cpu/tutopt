@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState, type FormEvent } from "react";
-import { Container } from "@/components/layout/Container";
-import {
-  FormField,
-  buttonPrimaryClassName,
-  inputClassName,
-} from "@/components/public/FormField";
-import { PublicPageHeader } from "@/components/public/PublicPageHeader";
+import { Loader2 } from "lucide-react";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { AuthAlert, AuthFormCard, AuthFormField } from "@/components/auth/AuthFormCard";
+import { PasswordInput } from "@/components/auth/PasswordInput";
+import { authButtonClassName, authInputClassName } from "@/components/auth/auth-form-styles";
 import {
   AuthRequestError,
   getFieldError,
@@ -17,6 +15,7 @@ import {
   type AuthFormErrors,
 } from "@/features/auth/lib/auth-client";
 import { resolveNextParam } from "@/features/auth/lib/login-redirect";
+import { cn } from "@/lib/utils";
 
 const emptyErrors: AuthFormErrors = { form: [], fields: {} };
 
@@ -60,120 +59,110 @@ function LoginForm() {
       ? `/register?next=${encodeURIComponent(resolveNextParam(searchParams.get("next")))}`
       : "/register";
 
+  const identityError = getFieldError(errors, "email") ?? getFieldError(errors, "phone");
+  const passwordError = getFieldError(errors, "password");
+
   return (
-    <form
-      onSubmit={(event) => void handleSubmit(event)}
-      className="mt-8 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8"
+    <AuthFormCard
+      title="Вход"
+      description="Войдите, чтобы отправлять заявки, сохранять товары и управлять объявлениями."
     >
-      {successMessage ? (
-        <div
-          role="status"
-          className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+      <form onSubmit={(event) => void handleSubmit(event)} className="space-y-5">
+        {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
+        <AuthAlert variant="error" messages={errors.form} />
+
+        <AuthFormField
+          label="Email или телефон"
+          htmlFor="login-identity"
+          error={identityError}
         >
-          {successMessage}
-        </div>
-      ) : null}
-
-      {errors.form.length > 0 ? (
-        <div
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-        >
-          <ul className="space-y-1">
-            {errors.form.map((message) => (
-              <li key={message}>{message}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      <FormField label="Email или телефон" htmlFor="login-identity">
-        <input
-          id="login-identity"
-          name="identity"
-          type="text"
-          autoComplete="username"
-          placeholder="name@company.kg или +996..."
-          value={identity}
-          onChange={(event) => setIdentity(event.target.value)}
-          className={inputClassName}
-          disabled={isSubmitting}
-        />
-        {getFieldError(errors, "email") || getFieldError(errors, "phone") ? (
-          <p className="text-xs text-red-600">
-            {getFieldError(errors, "email") ?? getFieldError(errors, "phone")}
-          </p>
-        ) : null}
-      </FormField>
-
-      <FormField label="Пароль" htmlFor="login-password">
-        <input
-          id="login-password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          placeholder="Введите пароль"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className={inputClassName}
-          disabled={isSubmitting}
-        />
-        {getFieldError(errors, "password") ? (
-          <p className="text-xs text-red-600">{getFieldError(errors, "password")}</p>
-        ) : null}
-      </FormField>
-
-      <div className="flex items-center justify-between gap-3">
-        <label className="flex items-center gap-2 text-sm text-slate-600">
           <input
-            type="checkbox"
-            checked={rememberMe}
-            onChange={(event) => setRememberMe(event.target.checked)}
+            id="login-identity"
+            name="identity"
+            type="text"
+            autoComplete="username"
+            placeholder="name@company.kg или +996..."
+            value={identity}
+            onChange={(event) => setIdentity(event.target.value)}
+            className={cn(
+              authInputClassName,
+              identityError && "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+            )}
             disabled={isSubmitting}
-            className="rounded border-slate-300 text-blue-600"
           />
-          Запомнить меня
-        </label>
-        <Link href="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-700">
-          Забыли пароль?
-        </Link>
-      </div>
+        </AuthFormField>
 
-      <button type="submit" disabled={isSubmitting} className={buttonPrimaryClassName}>
-        {isSubmitting ? "Вход..." : "Войти"}
-      </button>
+        <AuthFormField label="Пароль" htmlFor="login-password" error={passwordError}>
+          <PasswordInput
+            id="login-password"
+            name="password"
+            value={password}
+            onChange={setPassword}
+            placeholder="Введите пароль"
+            autoComplete="current-password"
+            disabled={isSubmitting}
+            hasError={Boolean(passwordError)}
+          />
+        </AuthFormField>
 
-      <p className="text-center text-sm text-slate-600">
-        Нет аккаунта?{" "}
-        <Link href={registerHref} className="font-medium text-blue-600 hover:text-blue-700">
-          Зарегистрироваться
-        </Link>
-      </p>
-    </form>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <label className="flex items-center gap-2 text-sm text-[#64748B]">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(event) => setRememberMe(event.target.checked)}
+              disabled={isSubmitting}
+              className="rounded border-[rgba(148,163,184,0.4)] text-[#2563EB] focus:ring-[#2563EB]/20"
+            />
+            Запомнить меня
+          </label>
+          <Link
+            href="/forgot-password"
+            className="text-sm font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
+          >
+            Забыли пароль?
+          </Link>
+        </div>
+
+        <button type="submit" disabled={isSubmitting} className={authButtonClassName}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              Вход...
+            </>
+          ) : (
+            "Войти"
+          )}
+        </button>
+
+        <p className="text-center text-sm text-[#64748B]">
+          Нет аккаунта?{" "}
+          <Link
+            href={registerHref}
+            className="font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
+          >
+            Зарегистрироваться
+          </Link>
+        </p>
+      </form>
+    </AuthFormCard>
+  );
+}
+
+function LoginFormFallback() {
+  return (
+    <AuthFormCard title="Вход" description="Загрузка формы...">
+      <p className="text-sm text-[#64748B]">Загрузка формы...</p>
+    </AuthFormCard>
   );
 }
 
 export default function LoginPage() {
   return (
-    <main className="bg-slate-50 py-10 sm:py-14">
-      <Container>
-        <div className="mx-auto max-w-md">
-          <PublicPageHeader
-            title="Вход"
-            description="Войдите в аккаунт, чтобы видеть контакты продавцов и отправлять заявки."
-          />
-
-          <Suspense
-            fallback={
-              <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
-                <p className="text-sm text-slate-500">Загрузка формы...</p>
-              </div>
-            }
-          >
-            <LoginForm />
-          </Suspense>
-        </div>
-      </Container>
-    </main>
+    <AuthLayout>
+      <Suspense fallback={<LoginFormFallback />}>
+        <LoginForm />
+      </Suspense>
+    </AuthLayout>
   );
 }

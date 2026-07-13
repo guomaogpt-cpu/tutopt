@@ -17,6 +17,7 @@ type FavoriteButtonProps = {
   initialIsFavorited?: boolean;
   variant?: "icon" | "button";
   className?: string;
+  onFavoriteChange?: (isFavorited: boolean) => void;
 };
 
 export function FavoriteButton({
@@ -25,6 +26,7 @@ export function FavoriteButton({
   initialIsFavorited = false,
   variant = "icon",
   className = "",
+  onFavoriteChange,
 }: FavoriteButtonProps) {
   const router = useRouter();
   const [isFavorited, setIsFavorited] = useState(initialIsFavorited);
@@ -51,6 +53,7 @@ export function FavoriteButton({
       } else {
         await removeFavoriteRequest(listingId);
       }
+      onFavoriteChange?.(nextValue);
       router.refresh();
     } catch {
       setIsFavorited(!nextValue);

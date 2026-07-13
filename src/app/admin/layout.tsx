@@ -1,4 +1,3 @@
-import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
@@ -26,24 +25,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   }
 
   return (
-    <div className="bg-slate-50 py-10 sm:py-14">
-      <Container>
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-6">
-            <p className="text-sm font-medium uppercase tracking-wider text-blue-600">Админка</p>
-            <h1 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
-              Панель управления
-            </h1>
-            <p className="mt-2 text-sm text-slate-600">
-              {user.role === UserRole.ADMIN
-                ? "Полный доступ к управлению пользователями и модерацией."
-                : "Доступ к модерации объявлений."}
-            </p>
-          </div>
-
-          <AdminNav user={user} />
-          {children}
-        </div>
+    <div className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <Container className="max-w-[1280px] min-w-0">
+        <AdminNav user={user} />
+        {children}
       </Container>
     </div>
   );

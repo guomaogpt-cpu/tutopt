@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Section, SectionHeader, SectionTitle } from "@/components/ui/section";
+import { cn } from "@/lib/utils";
 
 const COLLAPSED_LENGTH = 480;
 
@@ -21,33 +20,33 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
   }
 
   return (
-    <Section spacing="none" aria-labelledby="listing-description-title">
-      <SectionHeader className="mb-4">
-        <SectionTitle id="listing-description-title" className="text-xl">
-          Описание
-        </SectionTitle>
-      </SectionHeader>
+    <section aria-labelledby="listing-description-title">
+      <h2
+        id="listing-description-title"
+        className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl"
+      >
+        Описание
+      </h2>
 
-      <Card>
-        <CardHeader className="sr-only">
-          <CardTitle>Описание</CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 sm:p-6">
-          <p className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
-            {displayText}
-          </p>
-          {isLong ? (
-            <Button
-              type="button"
-              variant="link"
-              className="mt-4 h-auto p-0"
-              onClick={() => setExpanded((current) => !current)}
-            >
-              {expanded ? "Свернуть" : "Показать полностью"}
-            </Button>
-          ) : null}
-        </CardContent>
-      </Card>
-    </Section>
+      <div
+        className={cn(
+          "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-sm sm:p-6",
+        )}
+      >
+        <p className="whitespace-pre-wrap text-base leading-relaxed text-[#334155]">
+          {displayText}
+        </p>
+        {isLong ? (
+          <Button
+            type="button"
+            variant="link"
+            className="mt-4 h-auto p-0 text-[#2563EB]"
+            onClick={() => setExpanded((current) => !current)}
+          >
+            {expanded ? "Свернуть" : "Показать полностью"}
+          </Button>
+        ) : null}
+      </div>
+    </section>
   );
 }

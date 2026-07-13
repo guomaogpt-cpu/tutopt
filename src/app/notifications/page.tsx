@@ -6,7 +6,6 @@ import { getUserNotifications } from "@/features/notifications/lib/notifications
 import { Container } from "@/components/ui/container";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
-import { Section } from "@/components/ui/section";
 
 export const dynamic = "force-dynamic";
 
@@ -20,20 +19,20 @@ export default async function NotificationsPage() {
   const notifications = await getUserNotifications(user.id);
 
   return (
-    <main className="bg-background py-6 sm:py-10">
-      <Container size="md">
-        <PageHeader className="pb-4">
+    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <Container size="md" className="max-w-[1000px] min-w-0">
+        <PageHeader className="pb-0">
           <PageHeaderContent>
-            <PageTitle className="text-2xl sm:text-3xl">Уведомления</PageTitle>
-            <PageSubtitle className="text-sm sm:text-base">
-              Последние события по вашему аккаунту.
+            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Уведомления</PageTitle>
+            <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
+              События по вашим объявлениям, заявкам и аккаунту
             </PageSubtitle>
           </PageHeaderContent>
         </PageHeader>
 
-        <Section spacing="none" className="mt-4">
-          <NotificationsList initialNotifications={notifications} />
-        </Section>
+        <div className="mt-6 lg:mt-8">
+          <NotificationsList initialNotifications={notifications} userRole={user.role} />
+        </div>
       </Container>
     </main>
   );

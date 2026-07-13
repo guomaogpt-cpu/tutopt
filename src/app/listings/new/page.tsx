@@ -8,9 +8,6 @@ import {
 } from "@/features/auth/lib/login-redirect";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { prisma } from "@/shared/lib/prisma";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
@@ -24,16 +21,25 @@ export default async function NewListingPage() {
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
     return (
-      <main className="bg-background py-10 sm:py-14">
-        <Container size="md">
-          <PageHeader>
+      <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+        <Container size="md" className="max-w-[1100px] min-w-0">
+          <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
+            <ol className="flex flex-wrap items-center gap-1.5">
+              <li>
+                <Link href="/" className="transition hover:text-[#2563EB]">
+                  Главная
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li className="font-medium text-[#334155]">Новое объявление</li>
+            </ol>
+          </nav>
+
+          <PageHeader className="mt-4 pb-0">
             <PageHeaderContent>
-              <Badge variant="secondary" className="w-fit">
-                Продавцам
-              </Badge>
-              <PageTitle className="text-2xl sm:text-3xl">Подать объявление</PageTitle>
-              <PageSubtitle className="text-sm sm:text-base">
-                Разместите оптовое предложение на платформе Tutopt.
+              <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Подать объявление</PageTitle>
+              <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
+                Добавьте товар, который хотите продавать оптом
               </PageSubtitle>
             </PageHeaderContent>
           </PageHeader>
@@ -68,27 +74,40 @@ export default async function NewListingPage() {
   ]);
 
   return (
-    <main className="bg-background py-10 sm:py-14">
-      <Container size="md">
-        <PageHeader>
+    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <Container size="md" className="max-w-[1100px] min-w-0">
+        <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
+          <ol className="flex flex-wrap items-center gap-1.5">
+            <li>
+              <Link href="/" className="transition hover:text-[#2563EB]">
+                Главная
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li>
+              <Link href="/seller/dashboard" className="transition hover:text-[#2563EB]">
+                Кабинет продавца
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li className="line-clamp-1 font-medium text-[#334155]">Новое объявление</li>
+          </ol>
+        </nav>
+
+        <PageHeader className="mt-4 pb-0">
           <PageHeaderContent>
-            <Badge variant="secondary" className="w-fit">
-              Продавцам
-            </Badge>
-            <PageTitle className="text-2xl sm:text-3xl">Подать объявление</PageTitle>
-            <PageSubtitle className="text-sm sm:text-base">
-              Быстрая публикация оптового предложения — всего несколько минут.
+            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Подать объявление</PageTitle>
+            <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
+              Добавьте товар, который хотите продавать оптом
             </PageSubtitle>
           </PageHeaderContent>
         </PageHeader>
 
         {categories.length === 0 || cities.length === 0 ? (
-          <Card className="mt-8 border-amber-200 bg-amber-50">
-            <CardContent className="p-6 text-sm text-amber-900">
-              Для создания объявления нужны категории и города в базе. Запустите{" "}
-              <code className="rounded bg-amber-100 px-1">npm run db:seed</code>.
-            </CardContent>
-          </Card>
+          <div className="mt-8 rounded-[22px] border border-[#FDE68A] bg-[#FFFBEB] p-6 text-sm text-[#92400E]">
+            Для создания объявления нужны категории и города в базе. Запустите{" "}
+            <code className="rounded bg-[#FEF3C7] px-1">npm run db:seed</code>.
+          </div>
         ) : (
           <NewListingForm
             categories={categories}
@@ -96,12 +115,6 @@ export default async function NewListingPage() {
             brands={brands.map((item) => ({ id: item.id, label: item.name }))}
           />
         )}
-
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          <Button variant="link" className="h-auto p-0" asChild>
-            <Link href="/seller/dashboard">Перейти в кабинет продавца</Link>
-          </Button>
-        </p>
       </Container>
     </main>
   );

@@ -5,12 +5,10 @@ import { MessageSquare, Phone, Send } from "lucide-react";
 import { ListingStatus, type ListingStatus as ListingStatusType } from "@prisma/client";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
-import {
-  listingStatusLabels,
-} from "@/features/listings/lib/listing-status";
+import { listingStatusLabels } from "@/features/listings/lib/listing-status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type ListingContactCardProps = {
   listingId: string;
@@ -23,7 +21,7 @@ type ListingContactCardProps = {
   cityName: string | null;
   brandName: string | null;
   status: ListingStatusType;
-  publishedAtLabel: string;
+  showStatusBadge?: boolean;
   contactPhone: string | null;
   whatsapp: string | null;
   telegram: string | null;
@@ -58,6 +56,10 @@ function getStatusBadgeVariant(
   }
 }
 
+const cardClassName = cn(
+  "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-6",
+);
+
 export function ListingContactCard({
   listingId,
   isAuthenticated,
@@ -69,7 +71,7 @@ export function ListingContactCard({
   cityName,
   brandName,
   status,
-  publishedAtLabel,
+  showStatusBadge = false,
   contactPhone,
   whatsapp,
   telegram,
@@ -93,58 +95,53 @@ export function ListingContactCard({
   const hasContacts = Boolean(contactPhone || whatsapp || telegram);
 
   return (
-    <Card>
-      <CardHeader className="space-y-4 p-6 pb-0">
-        {status === ListingStatus.PENDING_MODERATION ? (
-          <Badge variant="warning">На модерации</Badge>
+    <div className={cardClassName}>
+      {showStatusBadge ? (
+        <Badge variant={getStatusBadgeVariant(status)} className="mb-3">
+          {listingStatusLabels[status]}
+        </Badge>
+      ) : null}
+
+      <div className="space-y-1">
+        <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px]">
+          {priceLabel}
+        </p>
+        <p className="text-sm text-[#64748B]">за {unitLabel.toLowerCase()}</p>
+      </div>
+
+      <dl className="mt-5 space-y-2.5 border-b border-[rgba(148,163,184,0.14)] pb-5 text-sm">
+        <div className="flex justify-between gap-4">
+          <dt className="text-[#64748B]">Мин. партия</dt>
+          <dd className="font-medium text-[#0F172A]">
+            {moq} {unitLabel.toLowerCase()}
+          </dd>
+        </div>
+        {cityName ? (
+          <div className="flex justify-between gap-4">
+            <dt className="text-[#64748B]">Город</dt>
+            <dd className="font-medium text-[#0F172A]">{cityName}</dd>
+          </div>
         ) : null}
-
-        <p className="text-3xl font-bold tracking-tight text-foreground">{priceLabel}</p>
-      </CardHeader>
-
-      <CardContent className="space-y-3 p-6 pt-5">
-        <dl className="space-y-3 border-b pb-5 text-sm">
+        {brandName ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-muted-foreground">MOQ</dt>
-            <dd className="font-medium text-foreground">
-              {moq} {unitLabel.toLowerCase()}
-            </dd>
+            <dt className="text-[#64748B]">Бренд</dt>
+            <dd className="font-medium text-[#0F172A]">{brandName}</dd>
           </div>
-          {cityName ? (
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Город</dt>
-              <dd className="font-medium text-foreground">{cityName}</dd>
-            </div>
-          ) : null}
-          {brandName ? (
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Бренд</dt>
-              <dd className="font-medium text-foreground">{brandName}</dd>
-            </div>
-          ) : null}
-          {stockQuantity != null ? (
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Остаток</dt>
-              <dd className="font-medium text-foreground">{stockQuantity}</dd>
-            </div>
-          ) : null}
+        ) : null}
+        {stockQuantity != null ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-muted-foreground">Статус</dt>
-            <dd>
-              <Badge variant={getStatusBadgeVariant(status)}>
-                {listingStatusLabels[status]}
-              </Badge>
-            </dd>
+            <dt className="text-[#64748B]">Остаток</dt>
+            <dd className="font-medium text-[#0F172A]">{stockQuantity}</dd>
           </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-muted-foreground">Дата публикации</dt>
-            <dd className="font-medium text-foreground">{publishedAtLabel}</dd>
-          </div>
-        </dl>
-      </CardContent>
+        ) : null}
+      </dl>
 
-      <CardFooter className="flex flex-col gap-3 p-6 pt-0">
-        <Button type="button" className="w-full gap-2" onClick={handleWriteToSeller}>
+      <div className="mt-5 flex flex-col gap-3">
+        <Button
+          type="button"
+          className="h-11 w-full gap-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
+          onClick={handleWriteToSeller}
+        >
           <MessageSquare className="size-4" aria-hidden="true" />
           Отправить заявку
         </Button>
@@ -154,16 +151,25 @@ export function ListingContactCard({
           isAuthenticated={isAuthenticated}
           initialIsFavorited={isFavorited}
           variant="button"
+          className="h-11 w-full rounded-xl"
         />
 
         {!isAuthenticated ? (
-          <Button variant="outline" className="w-full" onClick={handleLoginToViewContacts}>
+          <Button
+            variant="outline"
+            className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)]"
+            onClick={handleLoginToViewContacts}
+          >
             Войти, чтобы увидеть контакты
           </Button>
         ) : (
           <>
             {contactPhone ? (
-              <Button variant="outline" className="w-full gap-2" asChild>
+              <Button
+                variant="outline"
+                className="h-11 w-full gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
                 <a href={`tel:${contactPhone}`}>
                   <Phone className="size-4" aria-hidden="true" />
                   {contactPhone}
@@ -171,7 +177,11 @@ export function ListingContactCard({
               </Button>
             ) : null}
             {whatsapp ? (
-              <Button variant="outline" className="w-full gap-2" asChild>
+              <Button
+                variant="outline"
+                className="h-11 w-full gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
                 <a href={buildWhatsAppHref(whatsapp)} target="_blank" rel="noopener noreferrer">
                   <MessageSquare className="size-4" aria-hidden="true" />
                   WhatsApp
@@ -179,7 +189,11 @@ export function ListingContactCard({
               </Button>
             ) : null}
             {telegram ? (
-              <Button variant="outline" className="w-full gap-2" asChild>
+              <Button
+                variant="outline"
+                className="h-11 w-full gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
                 <a href={buildTelegramHref(telegram)} target="_blank" rel="noopener noreferrer">
                   <Send className="size-4" aria-hidden="true" />
                   Telegram
@@ -187,13 +201,11 @@ export function ListingContactCard({
               </Button>
             ) : null}
             {isAuthenticated && !hasContacts ? (
-              <p className="text-center text-xs text-muted-foreground">
-                Продавец не указал контакты
-              </p>
+              <p className="text-center text-xs text-[#94A3B8]">Продавец не указал контакты</p>
             ) : null}
           </>
         )}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }

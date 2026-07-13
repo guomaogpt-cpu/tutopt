@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { Globe, Mail, MessageCircle, Phone, Send } from "lucide-react";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type SellerProfileContactsProps = {
   isAuthenticated: boolean;
@@ -48,100 +50,112 @@ export function SellerProfileContacts({
     router.push(buildLoginUrl(getCurrentPathFromWindow()));
   }
 
+  const cardClassName = cn(
+    "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.04)] sm:p-6",
+  );
+
   if (!isAuthenticated) {
     return (
-      <section className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-slate-900">Контакты</h2>
-        <p className="mt-3 text-sm leading-relaxed text-slate-600">
-          Войдите, чтобы увидеть контакты поставщика.
-        </p>
-        <button
-          type="button"
-          onClick={handleLoginRedirect}
-          className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 sm:w-auto"
-        >
-          Войти
-        </button>
+      <section id="seller-contacts" className="mt-6 scroll-mt-24" aria-labelledby="seller-contacts-title">
+        <h2 id="seller-contacts-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl">
+          Контакты
+        </h2>
+        <div className={cardClassName}>
+          <p className="text-sm leading-relaxed text-[#64748B]">
+            Войдите, чтобы увидеть контакты продавца.
+          </p>
+          <Button
+            type="button"
+            onClick={handleLoginRedirect}
+            className="mt-4 h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:w-auto sm:px-6"
+          >
+            Войти
+          </Button>
+        </div>
       </section>
     );
   }
 
+  const hasAnyContact = Boolean(contactPhone || contactEmail || whatsapp || telegram || website);
+
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="text-lg font-semibold text-slate-900">Контакты</h2>
+    <section id="seller-contacts" className="mt-6 scroll-mt-24" aria-labelledby="seller-contacts-title">
+      <h2 id="seller-contacts-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl">
+        Контакты
+      </h2>
 
-      <ul className="mt-4 space-y-3">
-        <li className="flex items-center gap-3 text-sm">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-            <Phone className="h-4 w-4" aria-hidden="true" />
-          </span>
-          <a href={`tel:${contactPhone}`} className="font-medium text-slate-900 hover:text-blue-600">
-            {contactPhone}
-          </a>
-        </li>
+      <div className={cardClassName}>
+        {!hasAnyContact ? (
+          <p className="text-sm text-[#64748B]">Продавец не указал контакты.</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {contactPhone ? (
+              <Button
+                variant="outline"
+                className="h-11 w-full justify-start gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
+                <a href={`tel:${contactPhone}`}>
+                  <Phone className="size-4 shrink-0" aria-hidden="true" />
+                  Позвонить: {contactPhone}
+                </a>
+              </Button>
+            ) : null}
 
-        {contactEmail ? (
-          <li className="flex items-center gap-3 text-sm">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-              <Mail className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <a
-              href={`mailto:${contactEmail}`}
-              className="font-medium text-slate-900 hover:text-blue-600"
-            >
-              {contactEmail}
-            </a>
-          </li>
-        ) : null}
+            {whatsapp ? (
+              <Button
+                variant="outline"
+                className="h-11 w-full justify-start gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
+                <a href={buildWhatsAppHref(whatsapp)} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="size-4 shrink-0" aria-hidden="true" />
+                  WhatsApp
+                </a>
+              </Button>
+            ) : null}
 
-        {whatsapp ? (
-          <li className="flex items-center gap-3 text-sm">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-600">
-              <MessageCircle className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <a
-              href={buildWhatsAppHref(whatsapp)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-slate-900 hover:text-blue-600"
-            >
-              WhatsApp: {whatsapp}
-            </a>
-          </li>
-        ) : null}
+            {telegram ? (
+              <Button
+                variant="outline"
+                className="h-11 w-full justify-start gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
+                <a href={buildTelegramHref(telegram)} target="_blank" rel="noopener noreferrer">
+                  <Send className="size-4 shrink-0" aria-hidden="true" />
+                  Telegram
+                </a>
+              </Button>
+            ) : null}
 
-        {telegram ? (
-          <li className="flex items-center gap-3 text-sm">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
-              <Send className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <a
-              href={buildTelegramHref(telegram)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-slate-900 hover:text-blue-600"
-            >
-              Telegram: {telegram.replace(/^@/, "")}
-            </a>
-          </li>
-        ) : null}
+            {contactEmail ? (
+              <Button
+                variant="outline"
+                className="h-11 w-full justify-start gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
+                <a href={`mailto:${contactEmail}`}>
+                  <Mail className="size-4 shrink-0" aria-hidden="true" />
+                  {contactEmail}
+                </a>
+              </Button>
+            ) : null}
 
-        {website ? (
-          <li className="flex items-center gap-3 text-sm">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-              <Globe className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <a
-              href={normalizeWebsiteUrl(website)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-slate-900 hover:text-blue-600"
-            >
-              {website}
-            </a>
-          </li>
-        ) : null}
-      </ul>
+            {website ? (
+              <Button
+                variant="outline"
+                className="h-11 w-full justify-start gap-2 rounded-xl border-[rgba(148,163,184,0.25)]"
+                asChild
+              >
+                <a href={normalizeWebsiteUrl(website)} target="_blank" rel="noopener noreferrer">
+                  <Globe className="size-4 shrink-0" aria-hidden="true" />
+                  {website}
+                </a>
+              </Button>
+            ) : null}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

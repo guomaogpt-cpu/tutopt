@@ -10,12 +10,13 @@ import {
   parseListingsCatalogParams,
 } from "@/features/listings/lib/listings-catalog";
 import { getCurrentUser } from "@/features/auth/lib/session";
-import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
+import {
+  getCreateListingHref,
+  shouldShowCreateListingCTA,
+} from "@/features/auth/lib/login-redirect";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
-import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
-import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
 
 type ListingsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -91,18 +92,19 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const hasFilters = hasActiveCatalogFilters(filters);
   const headerUser = user ? { id: user.id, name: user.name, role: user.role } : null;
   const createListingHref = getCreateListingHref(headerUser);
+  const showCreateListingCTA = shouldShowCreateListingCTA(headerUser);
 
   return (
-    <main className="bg-background py-6 sm:py-8">
-      <Container>
-        <PageHeader className="pb-4">
-          <PageHeaderContent>
-            <PageTitle className="text-2xl sm:text-3xl">Каталог объявлений</PageTitle>
-            <PageSubtitle className="text-sm sm:text-base">
-              Оптовые предложения от поставщиков Кыргызстана
-            </PageSubtitle>
-          </PageHeaderContent>
-        </PageHeader>
+    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <Container size="lg" className="min-w-0">
+        <header className="mb-5 sm:mb-6">
+          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+            Оптовые объявления
+          </h1>
+          <p className="mt-1.5 text-sm text-[#64748B] sm:text-base">
+            Оптовые предложения от поставщиков Кыргызстана
+          </p>
+        </header>
 
         <ListingsCatalogToolbar
           filters={filters}
@@ -117,17 +119,20 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
           <ListingsEmptyState
             hasActiveFilters={hasFilters}
             createListingHref={createListingHref}
+            showCreateListingCTA={showCreateListingCTA}
           />
         ) : (
           <>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {listings.map((listing) => (
-                <ListingCard
-                  key={listing.id}
-                  listing={listing}
-                  isAuthenticated={user !== null}
-                  isFavorited={favoriteIds.has(listing.id)}
-                />
+                <div key={listing.id} className="min-w-0 w-full">
+                  <ListingCard
+                    listing={listing}
+                    isAuthenticated={user !== null}
+                    isFavorited={favoriteIds.has(listing.id)}
+                    variant="catalog"
+                  />
+                </div>
               ))}
             </div>
 

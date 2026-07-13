@@ -1,14 +1,13 @@
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { Shield, Store, UserCog, Users } from "lucide-react";
+import { ShoppingBag, Store, UserCog, Users } from "lucide-react";
+import { AdminStatCards } from "@/components/admin/AdminStatCards";
 import { AdminUsersTable, type AdminUserRow } from "@/components/admin/AdminUsersTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { prisma } from "@/shared/lib/prisma";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
-import { Section } from "@/components/ui/section";
-import { StatCard } from "@/components/ui/stat-card";
 
 export default async function AdminUsersPage() {
   const user = await getCurrentUser();
@@ -44,48 +43,46 @@ export default async function AdminUsersPage() {
     created_at: item.created_at.toISOString(),
   }));
 
-  const totalCount = users.length;
-  const sellersCount = users.filter((item) => item.role === UserRole.SELLER).length;
-  const moderatorsCount = users.filter((item) => item.role === UserRole.MODERATOR).length;
-  const adminsCount = users.filter((item) => item.role === UserRole.ADMIN).length;
+  const stats = [
+    {
+      label: "Всего пользователей",
+      value: users.length,
+      icon: Users,
+      iconClassName: "bg-[#EFF6FF] text-[#2563EB]",
+    },
+    {
+      label: "Покупатели",
+      value: users.filter((item) => item.role === UserRole.BUYER).length,
+      icon: ShoppingBag,
+      iconClassName: "bg-[#F8FAFC] text-[#475569]",
+    },
+    {
+      label: "Продавцы",
+      value: users.filter((item) => item.role === UserRole.SELLER).length,
+      icon: Store,
+      iconClassName: "bg-[#ECFDF5] text-[#059669]",
+    },
+    {
+      label: "Модераторы",
+      value: users.filter((item) => item.role === UserRole.MODERATOR).length,
+      icon: UserCog,
+      iconClassName: "bg-[#FFFBEB] text-[#D97706]",
+    },
+  ];
 
   return (
-    <section>
-      <PageHeader className="pb-4">
+    <section className="min-w-0">
+      <PageHeader className="pb-0">
         <PageHeaderContent>
-          <PageTitle className="text-2xl sm:text-3xl">Пользователи</PageTitle>
-          <PageSubtitle className="text-sm sm:text-base">
-            Назначайте и снимайте роль модератора. Продавцов и администраторов изменить нельзя.
+          <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Пользователи</PageTitle>
+          <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
+            Управление ролями и доступом пользователей
           </PageSubtitle>
         </PageHeaderContent>
       </PageHeader>
 
-      <Section spacing="sm">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard
-            label="Всего пользователей"
-            value={totalCount}
-            icon={Users}
-          />
-          <StatCard
-            label="Продавцы"
-            value={sellersCount}
-            icon={Store}
-          />
-          <StatCard
-            label="Модераторы"
-            value={moderatorsCount}
-            icon={UserCog}
-          />
-          <StatCard
-            label="Администраторы"
-            value={adminsCount}
-            icon={Shield}
-          />
-        </div>
-      </Section>
-
-      <div className="mt-8">
+      <div className="mt-6 space-y-6 lg:mt-8">
+        <AdminStatCards stats={stats} />
         <AdminUsersTable users={rows} currentUserId={user.id} />
       </div>
     </section>

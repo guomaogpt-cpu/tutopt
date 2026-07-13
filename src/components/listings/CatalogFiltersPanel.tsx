@@ -196,7 +196,7 @@ function FilterActions({ onReset, onApply, className }: FilterActionsProps) {
         Сбросить
       </Button>
       <Button type="button" className="flex-1" onClick={onApply}>
-        Применить
+        Показать
       </Button>
     </div>
   );

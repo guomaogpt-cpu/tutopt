@@ -7,7 +7,6 @@ import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl, buildRegisterUrl } from "@/features/auth/lib/login-redirect";
 import { getSellerLeads } from "@/features/leads/lib/leads-data";
 import { prisma } from "@/shared/lib/prisma";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import {
@@ -16,7 +15,6 @@ import {
   PageHeaderContent,
 } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
-import { Section } from "@/components/ui/section";
 
 export const dynamic = "force-dynamic";
 
@@ -29,11 +27,11 @@ export default async function SellerLeadsPage() {
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
     return (
-      <main className="bg-background py-10 sm:py-14">
-        <Container size="lg">
-          <PageHeader>
+      <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+        <Container size="lg" className="max-w-[1280px]">
+          <PageHeader className="pb-0">
             <PageHeaderContent>
-              <PageTitle className="text-2xl sm:text-3xl">Заявки</PageTitle>
+              <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Заявки</PageTitle>
             </PageHeaderContent>
           </PageHeader>
           <ListingAccessMessage
@@ -55,30 +53,31 @@ export default async function SellerLeadsPage() {
   const leads = sellerProfile ? await getSellerLeads(sellerProfile.id) : [];
 
   return (
-    <main className="bg-background py-10 sm:py-14">
-      <Container size="lg">
-        <PageHeader>
+    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <Container size="lg" className="max-w-[1280px] min-w-0">
+        <PageHeader className="pb-0">
           <PageHeaderContent>
-            <Badge variant="secondary" className="w-fit">
-              Продавец
-            </Badge>
-            <PageTitle className="text-2xl sm:text-3xl">Заявки</PageTitle>
-            <PageSubtitle className="text-sm sm:text-base">
-              {sellerProfile
-                ? `Входящие заявки по объявлениям ${sellerProfile.company_name}`
-                : "Создайте объявление, чтобы начать получать заявки от покупателей."}
+            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">
+              Заявки покупателей
+            </PageTitle>
+            <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
+              Новые заявки по вашим объявлениям
             </PageSubtitle>
           </PageHeaderContent>
-          <PageHeaderActions>
-            <Button variant="outline" asChild>
+          <PageHeaderActions className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              asChild
+              className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
+            >
               <Link href="/seller/dashboard">Кабинет продавца</Link>
             </Button>
           </PageHeaderActions>
         </PageHeader>
 
-        <Section spacing="none" className="mt-8">
+        <div className="mt-6 lg:mt-8">
           <SellerLeadsTable leads={leads} />
-        </Section>
+        </div>
       </Container>
     </main>
   );

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { cn } from "@/lib/utils";
 
+const HEADER_SEARCH_PLACEHOLDER = "Найти товар...";
+
 type HeaderSearchProps = {
   id?: string;
   className?: string;
@@ -18,7 +20,13 @@ export function HeaderSearch(props: HeaderSearchProps) {
     return <HeaderSearchStatic {...props} />;
   }
 
-  return <SearchWithSuggest variant="header" {...props} />;
+  return (
+    <SearchWithSuggest
+      variant="header"
+      placeholder={HEADER_SEARCH_PLACEHOLDER}
+      {...props}
+    />
+  );
 }
 
 function HeaderSearchStatic({
@@ -34,7 +42,7 @@ function HeaderSearchStatic({
       <SearchInput
         id={id}
         disabled
-        placeholder="Найти товары оптом..."
+        placeholder={HEADER_SEARCH_PLACEHOLDER}
         containerClassName="min-w-0 flex-1"
         className={cn("h-11 rounded-xl bg-white", inputClassName)}
       />

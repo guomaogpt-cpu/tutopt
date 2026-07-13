@@ -42,39 +42,37 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
     case "BUYER":
       return [
         buyerDashboardItem,
-        { label: "Профиль", icon: User, disabled: true },
         { label: "Избранное", href: "/favorites", icon: Heart },
+        { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     case "SELLER":
       return [
-        buyerDashboardItem,
         { label: "Кабинет продавца", href: "/seller/dashboard", icon: LayoutDashboard },
         { label: "Заявки", href: "/seller/leads", icon: Inbox },
-        { label: "Мои объявления", href: "/seller/dashboard", icon: LayoutDashboard },
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
+        { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     case "MODERATOR":
       return [
-        buyerDashboardItem,
         {
-          label: "Модерация объявлений",
+          label: "Модерация",
           href: "/admin/moderation/listings",
           icon: Shield,
         },
+        { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     case "ADMIN":
       return [
-        buyerDashboardItem,
-        { label: "Админка", href: "/admin/users", icon: Shield },
         { label: "Пользователи", href: "/admin/users", icon: User },
         {
-          label: "Модерация объявлений",
+          label: "Модерация",
           href: "/admin/moderation/listings",
           icon: Shield,
         },
+        { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     default:

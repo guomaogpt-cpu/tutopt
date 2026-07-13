@@ -4,8 +4,6 @@ import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
-import { EmptyState } from "@/components/ui/empty-state";
 
 type ListingGalleryProps = {
   images: { id: string; url: string }[];
@@ -17,43 +15,33 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <EmptyState
-        icon={ImageIcon}
-        title="Фотографии не добавлены"
-        description="Изображение товара появится здесь"
-        className="h-[320px] justify-center sm:h-[360px] lg:h-[540px]"
-      />
+      <section aria-label="Галерея товара">
+        <div className="flex aspect-[4/3] max-h-[520px] w-full flex-col items-center justify-center gap-2 rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] text-[#94A3B8]">
+          <ImageIcon className="size-10" aria-hidden="true" />
+          <p className="text-sm font-medium">Фото не добавлено</p>
+        </div>
+      </section>
     );
   }
 
   const activeImage = images[activeIndex] ?? images[0];
-  const useThumbnailScroll = images.length > 5;
 
   return (
     <section aria-label="Галерея товара">
-      <Card className="overflow-hidden">
-        <div className="relative mx-auto h-[320px] w-full bg-muted sm:h-[360px] lg:h-[540px]">
-          <Image
-            src={activeImage.url}
-            alt={title}
-            fill
-            unoptimized
-            className="object-contain p-4"
-            priority
-            sizes="(max-width: 1024px) 100vw, 720px"
-          />
-        </div>
-      </Card>
+      <div className="relative aspect-[4/3] max-h-[520px] w-full overflow-hidden rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9]">
+        <Image
+          src={activeImage.url}
+          alt={title}
+          fill
+          unoptimized
+          className="object-contain p-3 sm:p-4"
+          priority
+          sizes="(max-width: 1024px) 100vw, 760px"
+        />
+      </div>
 
       {images.length > 1 ? (
-        <div
-          className={cn(
-            "mt-4 flex gap-2",
-            useThumbnailScroll
-              ? "overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/30"
-              : "flex-wrap",
-          )}
-        >
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {images.map((image, index) => (
             <button
               key={image.id}
@@ -62,10 +50,10 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
               aria-label={`Фото ${index + 1}`}
               aria-current={index === activeIndex ? "true" : undefined}
               className={cn(
-                "relative size-[72px] shrink-0 overflow-hidden rounded-xl border-2 bg-muted transition hover:border-primary/40",
+                "relative size-[76px] shrink-0 overflow-hidden rounded-xl border-2 bg-[#F1F5F9] transition sm:size-20",
                 index === activeIndex
-                  ? "border-primary ring-2 ring-primary/20"
-                  : "border-border",
+                  ? "border-[#2563EB] ring-2 ring-[#2563EB]/20"
+                  : "border-[rgba(148,163,184,0.25)] hover:border-[#2563EB]/40",
               )}
             >
               <Image
@@ -74,7 +62,7 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
                 fill
                 unoptimized
                 className="object-cover"
-                sizes="72px"
+                sizes="80px"
               />
             </button>
           ))}

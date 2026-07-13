@@ -11,6 +11,7 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
+import { cn } from "@/lib/utils";
 
 type ListingsPaginationProps = {
   filters: ListingsCatalogFilters;
@@ -28,16 +29,21 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
 
   return (
     <Pagination aria-label="Пагинация каталога" className="mt-8">
-      <PaginationContent>
+      <PaginationContent className="flex-wrap gap-1 sm:gap-2">
         {filters.page > 1 ? (
           <PaginationItem>
-            <Button variant="outline" size="default" className="gap-1 pl-2.5" asChild>
+            <Button
+              variant="outline"
+              size="default"
+              className="h-9 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-2.5 pr-3"
+              asChild
+            >
               <Link
                 href={`/listings${buildListingsCatalogQueryString(filters, { page: filters.page - 1 })}`}
                 aria-label="Предыдущая страница"
               >
                 <ChevronLeft className="size-4" />
-                <span>Назад</span>
+                <span className="hidden sm:inline">Назад</span>
               </Link>
             </Button>
           </PaginationItem>
@@ -48,7 +54,7 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
             <PaginationItem key={`ellipsis-${index}`}>
               <span
                 aria-hidden
-                className="flex size-10 items-center justify-center text-muted-foreground"
+                className="flex size-9 items-center justify-center text-muted-foreground sm:size-10"
               >
                 <MoreHorizontal className="size-4" />
               </span>
@@ -58,7 +64,10 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
               <Button
                 variant={page === filters.page ? "outline" : "ghost"}
                 size="icon"
-                className="min-w-10"
+                className={cn(
+                  "size-9 min-w-9 rounded-xl sm:size-10 sm:min-w-10",
+                  page === filters.page && "border-[#2563EB]/30 bg-[#EFF6FF] text-[#2563EB]",
+                )}
                 asChild
               >
                 <Link
@@ -74,12 +83,17 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
 
         {filters.page < totalPages ? (
           <PaginationItem>
-            <Button variant="outline" size="default" className="gap-1 pr-2.5" asChild>
+            <Button
+              variant="outline"
+              size="default"
+              className="h-9 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-3 pr-2.5"
+              asChild
+            >
               <Link
                 href={`/listings${buildListingsCatalogQueryString(filters, { page: filters.page + 1 })}`}
                 aria-label="Следующая страница"
               >
-                <span>Вперёд</span>
+                <span className="hidden sm:inline">Вперёд</span>
                 <ChevronRight className="size-4" />
               </Link>
             </Button>

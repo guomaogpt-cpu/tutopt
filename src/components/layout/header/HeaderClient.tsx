@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import Link from "next/link";
-import { Heart, LayoutGrid, LogOut, Menu, PlusCircle, X } from "lucide-react";
+import { Heart, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { logoutRequest } from "@/features/auth/lib/auth-client";
@@ -10,15 +10,16 @@ import {
   getCreateListingHref,
   shouldShowCreateListingCTA,
 } from "@/features/auth/lib/login-redirect";
+import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import {
-  getHeaderMenuItems,
-  type HeaderUser,
-} from "@/features/navigation/lib/header-menu";
-import { Logo } from "@/components/layout/Logo";
+  getMobileDrawerLinks,
+  HEADER_PRIMARY_LINKS,
+  isNavLinkActive,
+} from "@/features/navigation/lib/header-nav";
+import { BrandLogo } from "@/components/layout/BrandLogo";
 import { HeaderSearch } from "@/components/layout/header/HeaderSearch";
 import { HeaderNotificationsBell } from "@/components/layout/header/HeaderNotificationsBell";
 import { UserMenu } from "@/components/layout/header/UserMenu";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import {
@@ -27,6 +28,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { cn } from "@/lib/utils";
 
 type HeaderClientProps = {
   user: HeaderUser | null;
@@ -34,43 +36,38 @@ type HeaderClientProps = {
 
 type MobileNavItem = {
   label: string;
-  href?: string;
-  disabled?: boolean;
+  href: string;
 };
 
 function buildMobileNavItems(user: HeaderUser | null): MobileNavItem[] {
-  const items: MobileNavItem[] = [
-    { label: "Категории", href: "/categories" },
-    { label: "Каталог", href: "/listings" },
+  const items = getMobileDrawerLinks(user).map((link) => ({
+    label: link.label,
+    href: link.href,
+  }));
+
+  if (!shouldShowCreateListingCTA(user)) {
+    return items;
+  }
+
+  const createListingItem: MobileNavItem = {
+    label: "Подать объявление",
+    href: getCreateListingHref(user),
+  };
+
+  if (items.some((item) => item.label === createListingItem.label)) {
+    return items;
+  }
+
+  const catalogIndex = items.findIndex((item) => item.href === "/listings");
+  if (catalogIndex === -1) {
+    return [...items, createListingItem];
+  }
+
+  return [
+    ...items.slice(0, catalogIndex + 1),
+    createListingItem,
+    ...items.slice(catalogIndex + 1),
   ];
-
-  if (shouldShowCreateListingCTA(user)) {
-    items.push({ label: "Подать объявление", href: getCreateListingHref(user) });
-  }
-
-  const seen = new Set(items.map((item) => `${item.label}:${item.href ?? ""}`));
-
-  for (const item of getHeaderMenuItems(user)) {
-    if (item.action === "logout") {
-      continue;
-    }
-
-    const key = `${item.label}:${item.href ?? ""}`;
-    if (seen.has(key)) {
-      continue;
-    }
-
-    seen.add(key);
-
-    if (item.disabled || !item.href) {
-      items.push({ label: item.label, disabled: true });
-      continue;
-    }
-
-    items.push({ label: item.label, href: item.href });
-  }
-
-  return items;
 }
 
 export function HeaderClient({ user }: HeaderClientProps) {
@@ -79,11 +76,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const isHomePage = pathname === "/";
-
   const mobileItems = buildMobileNavItems(user);
-  const createListingHref = getCreateListingHref(user);
-  const showCreateListingCTA = shouldShowCreateListingCTA(user);
 
   async function handleMobileLogout() {
     setIsLoggingOut(true);
@@ -99,37 +92,40 @@ export function HeaderClient({ user }: HeaderClientProps) {
   }
 
   return (
-    <header className="relative z-40 border-b border-[#E5E7EB] bg-white shadow-sm">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/80">
       <Container>
-        <div className="flex h-16 min-w-0 items-center gap-1.5 sm:gap-2 lg:gap-4">
-          <div className="shrink-0">
-            <Logo />
-          </div>
+        <div className="flex h-16 min-w-0 items-center gap-2 lg:h-[72px] lg:gap-4">
+          <BrandLogo variant="header" priority />
 
-          <div className="hidden min-w-0 flex-1 items-center gap-2 lg:flex">
+          <nav
+            className="hidden shrink-0 items-center gap-0.5 lg:flex"
+            aria-label="Основная навигация"
+          >
+            {HEADER_PRIMARY_LINKS.map((link) => (
+              <HeaderNavLink
+                key={link.href}
+                href={link.href}
+                label={link.label}
+                isActive={isNavLinkActive(pathname, link.href)}
+              />
+            ))}
+          </nav>
+
+          <div className="hidden min-w-0 flex-1 justify-center lg:flex">
             <Suspense
               fallback={
-                <HeaderSearch className="mx-auto w-full max-w-3xl" syncDisabled />
+                <HeaderSearch
+                  className="w-full max-w-[420px]"
+                  syncDisabled
+                />
               }
             >
-              <HeaderSearch className="mx-auto w-full max-w-3xl" />
+              <HeaderSearch className="w-full max-w-[420px]" />
             </Suspense>
-
-            <Button
-              variant="outline"
-              className="shrink-0 border-[#E5E7EB] bg-white"
-              asChild
-            >
-              <Link href="/categories">
-                <LayoutGrid className="size-4" aria-hidden="true" />
-                <span className="hidden xl:inline">Категории</span>
-              </Link>
-            </Button>
           </div>
 
-          <div className="hidden min-w-0 items-center gap-1.5 lg:flex xl:gap-2">
-            <FavoritesButton />
-
+          <div className="hidden min-w-0 shrink-0 items-center gap-1.5 lg:flex xl:gap-2">
+            {user ? <FavoritesButton /> : null}
             {user ? <HeaderNotificationsBell /> : null}
 
             {!user ? (
@@ -145,39 +141,20 @@ export function HeaderClient({ user }: HeaderClientProps) {
                   <Link href="/register">Регистрация</Link>
                 </Button>
               </>
-            ) : null}
-
-            <UserMenu user={user} />
+            ) : (
+              <UserMenu user={user} />
+            )}
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
-            <Button variant="outline" size="icon" className="shrink-0 border-[#E5E7EB]" asChild>
-              <Link href="/categories" aria-label="Категории" title="Категории">
-                <LayoutGrid className="size-5" aria-hidden="true" />
-              </Link>
-            </Button>
-
-            <FavoritesButton />
-
+          <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
+            {user ? <FavoritesButton /> : null}
             {user ? <HeaderNotificationsBell /> : null}
-
-            {showCreateListingCTA ? (
-              <Button
-                size="icon"
-                className="shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8]"
-                asChild
-              >
-                <Link href={createListingHref} aria-label="Подать объявление">
-                  <PlusCircle className="size-5" aria-hidden="true" />
-                </Link>
-              </Button>
-            ) : null}
 
             <Button
               type="button"
               variant="outline"
               size="icon"
-              className="border-[#E5E7EB]"
+              className="shrink-0 border-[#E5E7EB]"
               aria-expanded={mobileOpen}
               aria-controls="mobile-header-menu"
               aria-label={mobileOpen ? "Закрыть меню" : "Открыть меню"}
@@ -191,14 +168,6 @@ export function HeaderClient({ user }: HeaderClientProps) {
             </Button>
           </div>
         </div>
-
-        {!isHomePage ? (
-          <div className="min-w-0 pb-3 lg:hidden">
-            <Suspense fallback={<HeaderSearch id="header-search-mobile" className="w-full" syncDisabled />}>
-              <HeaderSearch id="header-search-mobile" className="w-full" />
-            </Suspense>
-          </div>
-        ) : null}
       </Container>
 
       <Drawer open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -213,28 +182,23 @@ export function HeaderClient({ user }: HeaderClientProps) {
             </DrawerTitle>
           </DrawerHeader>
 
-          <nav className="flex-1 overflow-y-auto p-4">
+          <nav className="flex-1 overflow-y-auto overflow-x-hidden p-4">
             <ul className="flex flex-col gap-1">
               {mobileItems.map((item) => (
-                <li key={`${item.label}:${item.href ?? "disabled"}`}>
-                  {item.disabled || !item.href ? (
-                    <div className="flex items-center rounded-xl px-3 py-3 text-sm text-muted-foreground">
+                <li key={`${item.label}:${item.href}`}>
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "h-auto w-full justify-start px-3 py-3 font-medium",
+                      isNavLinkActive(pathname, item.href) &&
+                        "bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-700",
+                    )}
+                    asChild
+                  >
+                    <Link href={item.href} onClick={() => setMobileOpen(false)}>
                       {item.label}
-                      <Badge variant="secondary" className="ml-auto text-[10px]">
-                        скоро
-                      </Badge>
-                    </div>
-                  ) : (
-                    <Button
-                      variant="ghost"
-                      className="h-auto w-full justify-start px-3 py-3 font-medium"
-                      asChild
-                    >
-                      <Link href={item.href} onClick={() => setMobileOpen(false)}>
-                        {item.label}
-                      </Link>
-                    </Button>
-                  )}
+                    </Link>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -268,6 +232,27 @@ export function HeaderClient({ user }: HeaderClientProps) {
         </DrawerContent>
       </Drawer>
     </header>
+  );
+}
+
+type HeaderNavLinkProps = {
+  href: string;
+  label: string;
+  isActive: boolean;
+};
+
+function HeaderNavLink({ href, label, isActive }: HeaderNavLinkProps) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-100",
+        isActive &&
+          "bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-700 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-950 dark:hover:text-blue-300",
+      )}
+    >
+      {label}
+    </Link>
   );
 }
 

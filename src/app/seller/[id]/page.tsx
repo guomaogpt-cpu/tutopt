@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
-import { SellerProfileContacts } from "@/components/seller/SellerProfileContacts";
-import { SellerProfileHeader } from "@/components/seller/SellerProfileHeader";
 import { SellerProfileListings } from "@/components/seller/SellerProfileListings";
+import { SellerProfileSidebar } from "@/components/seller/SellerProfileSidebar";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import {
@@ -33,60 +32,44 @@ export default async function SellerProfilePage({ params }: SellerProfilePagePro
   ]);
 
   return (
-    <main className="bg-slate-50 py-6 sm:py-10">
-      <Container className="max-w-[1280px]">
-        <nav aria-label="Хлебные крошки" className="text-sm text-slate-500">
+    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <Container className="max-w-[1280px] min-w-0">
+        <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
-              <Link href="/" className="transition hover:text-blue-600">
+              <Link href="/" className="transition hover:text-[#2563EB]">
                 Главная
               </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li>
-              <Link href="/listings" className="transition hover:text-blue-600">
+              <Link href="/listings" className="transition hover:text-[#2563EB]">
                 Каталог
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li className="line-clamp-1 font-medium text-slate-700">{profile.company_name}</li>
+            <li className="line-clamp-1 font-medium text-[#334155]">{profile.company_name}</li>
           </ol>
         </nav>
 
-        <div className="mt-6 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-8">
-          <div className="min-w-0">
-            <SellerProfileHeader profile={profile} publishedListingCount={publishedListingCount} />
-
-            <div className="mt-6 lg:hidden">
-              <SellerProfileContacts
-                isAuthenticated={user !== null}
-                contactPhone={profile.contact_phone}
-                contactEmail={profile.contact_email}
-                whatsapp={profile.whatsapp}
-                telegram={profile.telegram}
-                website={profile.website}
-              />
-            </div>
-
+        <div className="mt-6 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-8">
+          <SellerProfileSidebar
+            profile={profile}
+            publishedListingCount={publishedListingCount}
+            isAuthenticated={user !== null}
+            contactPhone={profile.contact_phone}
+            contactEmail={profile.contact_email}
+            whatsapp={profile.whatsapp}
+            telegram={profile.telegram}
+            website={profile.website}
+          />
+          <div className="order-2 min-w-0 lg:order-1">
             <SellerProfileListings
               listings={listings}
               isAuthenticated={user !== null}
               favoriteListingIds={favoriteListingIds}
             />
           </div>
-
-          <aside className="hidden lg:block">
-            <div className="sticky top-24">
-              <SellerProfileContacts
-                isAuthenticated={user !== null}
-                contactPhone={profile.contact_phone}
-                contactEmail={profile.contact_email}
-                whatsapp={profile.whatsapp}
-                telegram={profile.telegram}
-                website={profile.website}
-              />
-            </div>
-          </aside>
         </div>
       </Container>
     </main>

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { ListingStatus, UserRole } from "@prisma/client";
 import { ListingCharacteristics } from "@/components/listings/ListingCharacteristics";
 import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
@@ -8,15 +9,13 @@ import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
 import { SimilarListings } from "@/components/listings/SimilarListings";
 import { listingUnitOptions } from "@/features/listings/constants";
 import { canViewListing } from "@/features/listings/lib/listing-access";
-import {
-  formatListingDate,
-  formatListingPrice,
-} from "@/features/listings/lib/format-listing-price";
+import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import {
   getListingDetail,
   getSellerPublishedListingCount,
   getSimilarListings,
 } from "@/features/listings/lib/listing-detail-data";
+import { listingStatusLabels } from "@/features/listings/lib/listing-status";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { recordListingView } from "@/features/buyer/lib/listing-views";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -28,9 +27,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
-import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
-import { PageTitle } from "@/components/ui/page-title";
 
 type ListingPageProps = {
   params: Promise<{ id: string }>;
@@ -62,26 +60,28 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const unitLabel =
     listingUnitOptions.find((option) => option.value === listing.unit)?.label ?? listing.unit;
 
-  const publishedDate = listing.published_at ?? listing.created_at;
   const priceLabel = formatListingPrice(listing.price, listing.currency);
-  const publishedAtLabel = formatListingDate(publishedDate);
 
   const sellerProfile = listing.sellerProfile;
   const isOwner = user?.id === sellerProfile.user_id;
+  const isPrivilegedViewer =
+    isOwner || user?.role === UserRole.ADMIN || user?.role === UserRole.MODERATOR;
+  const showStatusBadge =
+    listing.status !== ListingStatus.PUBLISHED && isPrivilegedViewer;
+
   const sellerName = sellerProfile.user.name;
   const sellerAvatar = sellerProfile.logo_url ?? sellerProfile.user.avatar_url;
   const sellerCity = sellerProfile.city?.name ?? listing.city?.name ?? null;
 
   const characteristicItems = [
     { label: "Категория", value: listing.category.name },
-    ...(listing.brand ? [{ label: "Бренд", value: listing.brand.name }] : []),
-    { label: "MOQ", value: `${listing.moq} ${unitLabel.toLowerCase()}` },
-    { label: "Единица", value: unitLabel },
     ...(listing.city ? [{ label: "Город", value: listing.city.name }] : []),
+    ...(listing.brand ? [{ label: "Бренд", value: listing.brand.name }] : []),
+    { label: "Мин. партия", value: `${listing.moq} ${unitLabel.toLowerCase()}` },
+    { label: "Единица", value: unitLabel },
     ...(listing.stock_quantity != null
       ? [{ label: "Остаток", value: String(listing.stock_quantity) }]
       : []),
-    { label: "Дата", value: publishedAtLabel },
   ];
 
   const contactCard = (
@@ -96,7 +96,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
       cityName={listing.city?.name ?? null}
       brandName={listing.brand?.name ?? null}
       status={listing.status}
-      publishedAtLabel={publishedAtLabel}
+      showStatusBadge={showStatusBadge}
       contactPhone={sellerProfile.contact_phone}
       whatsapp={sellerProfile.whatsapp}
       telegram={sellerProfile.telegram}
@@ -117,8 +117,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
   );
 
   return (
-    <main className="bg-background py-6 sm:py-10">
-      <Container className="max-w-[1280px]">
+    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <Container size="lg" className="min-w-0 max-w-[1280px]">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -141,17 +141,20 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <PageHeader className="mt-4 pb-0">
-          <PageHeaderContent>
-            <PageTitle className="hidden text-2xl sm:text-3xl lg:block">{listing.title}</PageTitle>
-          </PageHeaderContent>
-        </PageHeader>
+        <header className="mt-4 sm:mt-5">
+          <h1 className="text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
+            {listing.title}
+          </h1>
+          {showStatusBadge ? (
+            <Badge variant="warning" className="mt-2">
+              {listingStatusLabels[listing.status]}
+            </Badge>
+          ) : null}
+        </header>
 
-        <div className="mt-6 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-8">
-          <div className="min-w-0 space-y-8">
+        <div className="mt-6 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1.85fr)_minmax(300px,1fr)] lg:items-start lg:gap-8">
+          <div className="min-w-0 space-y-6">
             <ListingGallery images={listing.images} title={listing.title} />
-
-            <PageTitle className="text-2xl sm:text-3xl lg:hidden">{listing.title}</PageTitle>
 
             <div className="space-y-4 lg:hidden">
               {contactCard}
@@ -172,7 +175,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
             />
           </div>
 
-          <aside className="hidden lg:block">
+          <aside className="hidden min-w-0 lg:block">
             <div className="sticky top-24 space-y-4">
               {contactCard}
               {sellerCard}

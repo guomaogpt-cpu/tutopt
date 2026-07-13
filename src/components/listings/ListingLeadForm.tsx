@@ -10,9 +10,8 @@ import {
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Section, SectionHeader, SectionTitle } from "@/components/ui/section";
+import { Section } from "@/components/ui/section";
 import { Textarea } from "@/components/ui/textarea";
 
 const QUICK_TEMPLATES = [
@@ -21,6 +20,9 @@ const QUICK_TEMPLATES = [
   "Можно получить КП?",
   "Какие условия доставки?",
 ] as const;
+
+const leadCardClassName =
+  "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-sm sm:p-6";
 
 type ListingLeadFormProps = {
   listingId: string;
@@ -123,27 +125,23 @@ export function ListingLeadForm({
         className="scroll-mt-28"
         aria-labelledby="listing-lead-success-title"
       >
-        <Card className="border-green-200 bg-green-50">
-          <CardHeader>
-            <CardTitle id="listing-lead-success-title" className="text-green-900">
-              Заявка отправлена
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm leading-relaxed text-green-800">
-              Поставщик {sellerName} получит вашу заявку и сможет связаться с вами по указанным
-              контактам. Можно отправить ещё одну заявку по этому объявлению.
-            </p>
-            <Button
-              type="button"
-              variant="outline"
-              className="mt-5 border-green-300 bg-white text-green-900 hover:bg-green-100"
-              onClick={resetFormForAnotherLead}
-            >
-              Отправить ещё заявку
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="rounded-[22px] border border-green-200 bg-green-50 p-5 sm:p-6">
+          <h3 id="listing-lead-success-title" className="text-lg font-semibold text-green-900">
+            Заявка отправлена
+          </h3>
+          <p className="mt-3 text-sm leading-relaxed text-green-800">
+            Поставщик {sellerName} получит вашу заявку и сможет связаться с вами по указанным
+            контактам. Можно отправить ещё одну заявку по этому объявлению.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-5 rounded-xl border-green-300 bg-white text-green-900 hover:bg-green-100"
+            onClick={resetFormForAnotherLead}
+          >
+            Отправить ещё заявку
+          </Button>
+        </div>
       </Section>
     );
   }
@@ -156,19 +154,17 @@ export function ListingLeadForm({
         className="scroll-mt-28"
         aria-labelledby="listing-lead-login-title"
       >
-        <Card>
-          <CardHeader>
-            <CardTitle id="listing-lead-login-title">Отправить заявку</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Войдите, чтобы отправить заявку поставщику {sellerName}.
-            </p>
-            <Button className="mt-5" onClick={handleLoginRedirect}>
-              Войти
-            </Button>
-          </CardContent>
-        </Card>
+        <div className={leadCardClassName}>
+          <h3 id="listing-lead-login-title" className="text-lg font-semibold text-[#0F172A]">
+            Отправить заявку
+          </h3>
+          <p className="mt-2 text-sm text-[#64748B]">
+            Войдите, чтобы отправить заявку поставщику {sellerName}.
+          </p>
+          <Button className="mt-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]" onClick={handleLoginRedirect}>
+            Войти
+          </Button>
+        </div>
       </Section>
     );
   }
@@ -181,19 +177,17 @@ export function ListingLeadForm({
         className="scroll-mt-28"
         aria-labelledby="listing-lead-owner-title"
       >
-        <Card>
-          <CardHeader>
-            <CardTitle id="listing-lead-owner-title">Отправить заявку</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Это ваше объявление — заявки от покупателей появятся в разделе «Заявки».
-            </p>
-            <Button variant="outline" className="mt-5" asChild>
-              <Link href="/seller/leads">Перейти к заявкам</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <div className={leadCardClassName}>
+          <h3 id="listing-lead-owner-title" className="text-lg font-semibold text-[#0F172A]">
+            Отправить заявку
+          </h3>
+          <p className="mt-2 text-sm text-[#64748B]">
+            Это ваше объявление — заявки от покупателей появятся в разделе «Заявки».
+          </p>
+          <Button variant="outline" className="mt-5 rounded-xl" asChild>
+            <Link href="/seller/leads">Перейти к заявкам</Link>
+          </Button>
+        </div>
       </Section>
     );
   }
@@ -205,19 +199,16 @@ export function ListingLeadForm({
       className="scroll-mt-28"
       aria-labelledby="listing-lead-form-title"
     >
-      <SectionHeader className="mb-4">
-        <SectionTitle id="listing-lead-form-title" className="text-xl">
-          Отправить заявку
-        </SectionTitle>
-      </SectionHeader>
+      <h2 id="listing-lead-form-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl">
+        Отправить заявку
+      </h2>
 
-      <Card>
-        <CardContent className="p-4 sm:p-6">
-          <p className="text-sm text-muted-foreground">
-            Опишите интерес к товару — поставщик {sellerName} получит заявку и свяжется с вами.
-          </p>
+      <div className={leadCardClassName}>
+        <p className="text-sm text-[#64748B]">
+          Опишите интерес к товару — поставщик {sellerName} получит заявку и свяжется с вами.
+        </p>
 
-          <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
+        <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label htmlFor="lead-quantity" className="text-sm font-medium text-foreground">
@@ -230,6 +221,7 @@ export function ListingLeadForm({
                   step={1}
                   value={quantity}
                   onChange={(event) => setQuantity(event.target.value)}
+                  className="rounded-xl"
                   required
                 />
                 <p className="text-xs text-muted-foreground">
@@ -250,6 +242,7 @@ export function ListingLeadForm({
                   value={contactPhone}
                   onChange={(event) => setContactPhone(event.target.value)}
                   placeholder="+996700000000"
+                  className="rounded-xl"
                 />
                 {fieldErrors.contact_phone ? (
                   <p className="text-xs text-destructive">{fieldErrors.contact_phone}</p>
@@ -267,6 +260,7 @@ export function ListingLeadForm({
                 value={contactEmail}
                 onChange={(event) => setContactEmail(event.target.value)}
                 placeholder="buyer@company.kg"
+                className="rounded-xl"
               />
               {fieldErrors.contact_email ? (
                 <p className="text-xs text-destructive">{fieldErrors.contact_email}</p>
@@ -283,6 +277,7 @@ export function ListingLeadForm({
                 onChange={(event) => setMessage(event.target.value)}
                 rows={4}
                 placeholder="Здравствуйте! Интересует товар..."
+                className="rounded-xl"
               />
               {fieldErrors.message ? (
                 <p className="text-xs text-destructive">{fieldErrors.message}</p>
@@ -294,7 +289,7 @@ export function ListingLeadForm({
                 <Badge
                   key={template}
                   variant="secondary"
-                  className="cursor-pointer px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                  className="cursor-pointer rounded-full px-3 py-1.5 text-xs font-medium hover:bg-[#EFF6FF] hover:text-[#2563EB]"
                   onClick={() => applyTemplate(template)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
@@ -312,12 +307,15 @@ export function ListingLeadForm({
 
             {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
 
-            <Button type="submit" disabled={isPending}>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
+            >
               {isPending ? "Отправка..." : "Отправить заявку"}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+      </div>
     </Section>
   );
 }

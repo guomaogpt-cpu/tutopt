@@ -45,3 +45,24 @@ export async function getUserFavoriteListings(userId: string): Promise<ListingCa
 
   return favorites.map((favorite) => favorite.listing);
 }
+
+export async function getUserFavoritesPageData(userId: string): Promise<{
+  listings: ListingCardData[];
+  lastAddedAt: Date | null;
+}> {
+  const favorites = await prisma.favorite.findMany({
+    where: { user_id: userId },
+    orderBy: { created_at: "desc" },
+    select: {
+      created_at: true,
+      listing: {
+        select: favoriteListingSelect,
+      },
+    },
+  });
+
+  return {
+    listings: favorites.map((favorite) => favorite.listing),
+    lastAddedAt: favorites[0]?.created_at ?? null,
+  };
+}
