@@ -1,4 +1,4 @@
-import type { LoginInput, RegisterInput } from "@/features/auth/validators/auth.validators";
+import type { RegisterInput } from "@/features/auth/validators/auth.validators";
 
 type ApiErrorBody = {
   error: {
@@ -37,30 +37,6 @@ export class AuthRequestError extends Error {
   }
 }
 
-export function parseIdentity(identity: string): Pick<LoginInput, "email" | "phone"> {
-  const trimmed = identity.trim();
-
-  if (trimmed.includes("@")) {
-    return { email: trimmed };
-  }
-
-  const digits = trimmed.replace(/\D/g, "");
-
-  if (digits.length === 9) {
-    return { phone: `+996${digits}` };
-  }
-
-  if (digits.length === 12 && digits.startsWith("996")) {
-    return { phone: `+${digits}` };
-  }
-
-  if (trimmed.startsWith("+996") && trimmed.length === 13) {
-    return { phone: trimmed };
-  }
-
-  return { phone: trimmed.startsWith("+") ? trimmed : `+${digits}` };
-}
-
 function mapApiErrors(body: ApiErrorBody): AuthFormErrors {
   const form: string[] = [];
   const fields: Record<string, string> = {};
@@ -97,21 +73,30 @@ async function parseAuthResponse(response: Response): Promise<AuthSuccessBody["d
   return (body as AuthSuccessBody).data;
 }
 
+async function parseJsonApi<T>(response: Response): Promise<T> {
+  const body = (await response.json()) as { data?: T } | ApiErrorBody;
+
+  if (!response.ok) {
+    const errors = mapApiErrors(body as ApiErrorBody);
+    throw new AuthRequestError(errors.form[0] ?? "Request failed", errors);
+  }
+
+  return (body as { data: T }).data;
+}
+
 export async function loginRequest(
-  identity: string,
+  phone: string,
   password: string,
   rememberMe = false,
 ): Promise<AuthSuccessBody["data"]> {
-  const payload: LoginInput = {
-    ...parseIdentity(identity),
-    password,
-    remember_me: rememberMe,
-  };
-
   const response = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      phone: phone.trim(),
+      password,
+      remember_me: rememberMe,
+    }),
   });
 
   return parseAuthResponse(response);
@@ -127,6 +112,32 @@ export async function registerRequest(input: RegisterInput): Promise<AuthSuccess
   return parseAuthResponse(response);
 }
 
+export async function sendOtpRequest(phone: string): Promise<{
+  message: string;
+  resendAvailableInSeconds: number;
+}> {
+  const response = await fetch("/api/auth/otp/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone }),
+  });
+
+  return parseJsonApi(response);
+}
+
+export async function verifyOtpRequest(
+  phone: string,
+  code: string,
+): Promise<{ phoneVerificationToken: string; message: string }> {
+  const response = await fetch("/api/auth/otp/verify", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, code }),
+  });
+
+  return parseJsonApi(response);
+}
+
 export async function logoutRequest(): Promise<void> {
   const response = await fetch("/api/auth/logout", {
     method: "POST",
@@ -136,14 +147,6 @@ export async function logoutRequest(): Promise<void> {
     throw new Error("Logout failed");
   }
 }
-
-type ForgotPasswordResponse = {
-  message: string;
-};
-
-type ResetPasswordResponse = {
-  message: string;
-};
 
 type MessageSuccessBody = {
   data: {
@@ -162,7 +165,7 @@ async function parseMessageResponse(response: Response): Promise<string> {
   return (body as MessageSuccessBody).data.message;
 }
 
-export async function forgotPasswordRequest(email: string): Promise<ForgotPasswordResponse> {
+export async function forgotPasswordRequest(email: string): Promise<{ message: string }> {
   const response = await fetch("/api/auth/forgot-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -176,7 +179,7 @@ export async function forgotPasswordRequest(email: string): Promise<ForgotPasswo
 export async function resetPasswordRequest(
   token: string,
   password: string,
-): Promise<ResetPasswordResponse> {
+): Promise<{ message: string }> {
   const response = await fetch("/api/auth/reset-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -193,4 +196,19 @@ export function getFieldError(
   fallback?: string,
 ): string | undefined {
   return errors.fields[field] ?? fallback;
+}
+
+export function buildGoogleStartHref(options?: {
+  role?: "BUYER" | "SELLER";
+  next?: string;
+}): string {
+  const params = new URLSearchParams();
+  if (options?.role) {
+    params.set("role", options.role);
+  }
+  if (options?.next && options.next !== "/") {
+    params.set("next", options.next);
+  }
+  const query = params.toString();
+  return query ? `/api/auth/google/start?${query}` : "/api/auth/google/start";
 }

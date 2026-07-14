@@ -21,6 +21,11 @@ enum UserRole {
   ADMIN
 }
 
+enum AuthProvider {
+  PASSWORD
+  GOOGLE
+}
+
 enum ListingStatus {
   DRAFT
   PENDING_MODERATION
@@ -131,21 +136,23 @@ model Brand {
 }
 
 model User {
-  id                String    @id @default(uuid()) @db.Uuid
-  email             String?   @unique @db.VarChar(255)
-  phone             String?   @unique @db.VarChar(20)
-  password_hash     String    @map("password_hash") @db.VarChar(255)
-  role              UserRole  @default(BUYER)
-  name              String    @db.VarChar(100)
-  avatar_url        String?   @map("avatar_url") @db.Text
-  city              String?   @db.VarChar(100)
-  region_id         String?   @map("region_id") @db.Uuid
-  email_verified_at DateTime? @map("email_verified_at") @db.Timestamptz
-  phone_verified_at DateTime? @map("phone_verified_at") @db.Timestamptz
-  is_blocked        Boolean   @default(false) @map("is_blocked")
-  last_login_at     DateTime? @map("last_login_at") @db.Timestamptz
-  created_at        DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updated_at        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  id                String        @id @default(uuid()) @db.Uuid
+  email             String?       @unique @db.VarChar(255)
+  phone             String?       @unique @db.VarChar(20)
+  password_hash     String?       @map("password_hash") @db.VarChar(255)
+  google_id         String?       @unique @map("google_id") @db.VarChar(255)
+  auth_provider     AuthProvider? @map("auth_provider")
+  role              UserRole      @default(BUYER)
+  name              String        @db.VarChar(100)
+  avatar_url        String?       @map("avatar_url") @db.Text
+  city              String?       @db.VarChar(100)
+  region_id         String?       @map("region_id") @db.Uuid
+  email_verified_at DateTime?     @map("email_verified_at") @db.Timestamptz
+  phone_verified_at DateTime?     @map("phone_verified_at") @db.Timestamptz
+  is_blocked        Boolean       @default(false) @map("is_blocked")
+  last_login_at     DateTime?     @map("last_login_at") @db.Timestamptz
+  created_at        DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updated_at        DateTime      @updatedAt @map("updated_at") @db.Timestamptz
 
   region                   Region?                   @relation(fields: [region_id], references: [id], onDelete: SetNull)
   sellerProfile            SellerProfile?
@@ -166,6 +173,7 @@ model User {
 
   @@index([email])
   @@index([phone])
+  @@index([google_id])
   @@index([role])
   @@index([created_at])
   @@map("users")
@@ -438,6 +446,21 @@ model Session {
   @@index([user_id])
   @@index([expires_at])
   @@map("sessions")
+}
+
+model PhoneOtp {
+  id          String    @id @default(uuid()) @db.Uuid
+  phone       String    @db.VarChar(20)
+  code_hash   String    @map("code_hash") @db.VarChar(255)
+  expires_at  DateTime  @map("expires_at") @db.Timestamptz
+  attempts    Int       @default(0)
+  consumed_at DateTime? @map("consumed_at") @db.Timestamptz
+  created_at  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updated_at  DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([phone])
+  @@index([expires_at])
+  @@map("phone_otps")
 }
 
 model PasswordResetToken {

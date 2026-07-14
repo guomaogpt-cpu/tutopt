@@ -4,7 +4,9 @@ import { redirect } from "next/navigation";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { SellerLeadsTable } from "@/components/seller/SellerLeadsTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl, buildRegisterUrl } from "@/features/auth/lib/login-redirect";
+import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getSellerLeads } from "@/features/leads/lib/leads-data";
 import { prisma } from "@/shared/lib/prisma";
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,10 @@ export default async function SellerLeadsPage() {
 
   if (!user) {
     redirect(buildLoginUrl("/seller/leads"));
+  }
+
+  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
+    redirect(buildSellerOnboardingUrl("/seller/leads"));
   }
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {

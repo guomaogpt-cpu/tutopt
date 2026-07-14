@@ -6,6 +6,11 @@ const serverEnvSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   LOG_LEVEL: logLevelSchema.default("info"),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_REDIRECT_URI: z.string().url().optional(),
+  OTP_SECRET: z.string().optional(),
+  SMS_PROVIDER: z.string().optional(),
 });
 
 const clientEnvSchema = z.object({
@@ -63,6 +68,11 @@ export function getEnv(): Env {
 /** Reset cached env — for tests only. */
 export function resetEnvCache(): void {
   cachedEnv = null;
+}
+
+export function isGoogleAuthConfigured(): boolean {
+  const env = getEnv();
+  return Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.GOOGLE_REDIRECT_URI);
 }
 
 export const env = new Proxy({} as Env, {

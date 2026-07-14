@@ -12,7 +12,9 @@ import { SellerDashboardListings } from "@/components/seller/SellerDashboardList
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
 import { SellerQuickActions } from "@/components/seller/SellerQuickActions";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl, buildRegisterUrl } from "@/features/auth/lib/login-redirect";
+import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { prisma } from "@/shared/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -28,6 +30,10 @@ export default async function SellerDashboardPage() {
 
   if (!user) {
     redirect(buildLoginUrl("/seller/dashboard"));
+  }
+
+  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
+    redirect(buildSellerOnboardingUrl("/seller/dashboard"));
   }
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {

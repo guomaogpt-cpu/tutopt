@@ -1,129 +1,207 @@
-# Deploy Tutopt on Railway
+# Deploy Tutopt on Railway (GitHub Repository)
 
-Краткая инструкция для деплоя Next.js + Prisma + PostgreSQL на [Railway](https://railway.app).
+Инструкция для деплоя Next.js + Prisma + PostgreSQL на [Railway](https://railway.app) через подключение GitHub-репозитория.
 
-## 1. Создать сервисы
+> Deploy выполняется вручную через Railway UI. Этот файл — только инструкция.
 
-1. Создайте новый проект в Railway.
-2. Добавьте **PostgreSQL** plugin — Railway автоматически создаст `DATABASE_URL`.
-3. Добавьте **Web Service** из GitHub-репозитория (ветка `main` или нужная вам).
+---
 
-Railway/Nixpacks определит Next.js по `package.json`. Дополнительная конфигурация — в `railway.toml`.
+## 1. Создать Railway project через GitHub Repository
 
-## 2. Переменные окружения
+1. Зайдите на [railway.app](https://railway.app) и войдите в аккаунт.
+2. Нажмите **New Project**.
+3. Выберите **Deploy from GitHub repo**.
+4. Подключите GitHub-аккаунт, если ещё не подключён.
+5. Выберите репозиторий **tutopt** (или ваш fork).
+6. Railway создаст Web Service и начнёт первый build.
 
-Задайте в Railway Dashboard → Service → Variables:
+**Важно:** код с `railway.toml`, `postinstall` и `README_DEPLOY.md` должен быть уже в репозитории (закоммичен и запушен вами).
+
+Railway/Nixpacks определит Next.js по `package.json`. Дополнительные настройки — в `railway.toml` в корне репозитория.
+
+---
+
+## 2. Добавить PostgreSQL
+
+1. В том же Railway project нажмите **+ New** → **Database** → **PostgreSQL**.
+2. Дождитесь, пока база поднимется.
+3. Откройте PostgreSQL service → вкладка **Variables** или **Connect**.
+4. Скопируйте `DATABASE_URL` (или используйте **Reference Variable** в web-сервисе).
+
+### Подключить DATABASE_URL к web-сервису
+
+1. Откройте **Web Service** (Next.js).
+2. **Variables** → **New Variable** → **Add Reference**.
+3. Выберите PostgreSQL service → переменную `DATABASE_URL`.
+
+Так web-приложение получит доступ к БД без ручного копирования строки подключения.
+
+---
+
+## 3. Переменные окружения (Railway Variables)
+
+В Web Service → **Variables** добавьте:
 
 | Переменная | Обязательна | Описание |
 |------------|-------------|----------|
-| `DATABASE_URL` | Да | Подключение к PostgreSQL (часто подставляется из PostgreSQL plugin) |
+| `DATABASE_URL` | Да | Reference из PostgreSQL plugin |
 | `NODE_ENV` | Да | `production` |
-| `NEXT_PUBLIC_APP_URL` | Да | Публичный URL приложения, например `https://your-app.up.railway.app` |
+| `NEXT_PUBLIC_APP_URL` | Да | Публичный HTTPS URL сервиса, например `https://tutopt-production.up.railway.app` |
 | `LOG_LEVEL` | Нет | `debug` \| `info` \| `warn` \| `error` (по умолчанию `info`) |
+| `GOOGLE_CLIENT_ID` | Нет* | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | Нет* | Google OAuth Client Secret |
+| `GOOGLE_REDIRECT_URI` | Нет* | `https://tutopt-production.up.railway.app/api/auth/google/callback` |
 
-Для создания первого админа (только при ручном запуске `admin:create`):
+\* Без Google-переменных работает вход по телефону/паролю; кнопка Google будет disabled.
 
-| Переменная | Описание |
-|------------|----------|
-| `ADMIN_EMAIL` | Email администратора |
-| `ADMIN_PHONE` | Телефон |
-| `ADMIN_NAME` | Имя |
-| `ADMIN_PASSWORD` | Пароль (не коммитить, не логировать) |
+### Для создания admin (только при ручном запуске)
 
-**Не требуются** отдельные `SESSION_SECRET`, `JWT_SECRET`, `COOKIE_SECRET` — сессии хранятся в БД.
+| Переменная | Когда нужна |
+|------------|-------------|
+| `ADMIN_EMAIL` | `npm run admin:create` |
+| `ADMIN_PHONE` | `npm run admin:create` |
+| `ADMIN_NAME` | `npm run admin:create` |
+| `ADMIN_PASSWORD` | `npm run admin:create` |
 
-> `NEXT_PUBLIC_*` вшивается при **build**. После смены `NEXT_PUBLIC_APP_URL` нужен **redeploy** (новый build).
+### Не используются в проекте
 
-## 3. Build и start
+Следующие переменные **не нужны** — в коде их нет:
 
-Скрипты из `package.json`:
+- `SESSION_SECRET`
+- `JWT_SECRET`
+- `COOKIE_SECRET`
+
+Сессии хранятся в PostgreSQL (таблица `Session`), cookie — `tutopt_session`.
+
+> `NEXT_PUBLIC_*` встраивается при **build**. После смены `NEXT_PUBLIC_APP_URL` нужен **Redeploy** (новый build).
+
+### Публичный домен
+
+1. Web Service → **Settings** → **Networking** → **Generate Domain**.
+2. Скопируйте выданный URL и укажите его в `NEXT_PUBLIC_APP_URL`.
+3. Запустите **Redeploy**, чтобы build подхватил новый URL.
+
+---
+
+## 4. Build, start и migrations
+
+### Автоматически (из `package.json` + `railway.toml`)
+
+| Этап | Команда |
+|------|---------|
+| postinstall | `prisma generate` |
+| build | `npm run build` → `next build` |
+| release | `npx prisma migrate deploy` |
+| start | `npm run start` → `next start` |
+
+`next start` слушает `PORT`, который Railway задаёт автоматически.
+
+### Migrations вручную (если release не сработал)
+
+Через Railway CLI:
 
 ```bash
-npm run build    # next build (postinstall → prisma generate)
-npm run start    # next start (слушает PORT от Railway)
-```
-
-Миграции при деплое (из `railway.toml`):
-
-```bash
-npx prisma migrate deploy
-```
-
-Если release command не сработал, выполните вручную:
-
-```bash
+railway link          # привязать к проекту
 railway run npx prisma migrate deploy
 ```
 
-## 4. Seed и admin (вручную, один раз)
+Или через Railway Dashboard → Web Service → **Settings** → выполнить одноразовую команду в shell/deploy logs, если доступно.
 
-**Seed** (регионы, города, категории, бренды) — **не** запускается автоматически при deploy:
+**Seed не запускается автоматически** при каждом deploy.
+
+---
+
+## 5. Seed и admin (вручную, один раз)
+
+### Базовый seed (регионы, города, категории, бренды)
+
+Только если БД пустая:
 
 ```bash
 railway run npm run db:seed
 ```
 
-Seed идемпотентен для справочников (upsert), но на production запускайте осознанно.
+Seed использует upsert для справочников, но на production запускайте осознанно.
 
-**Первый администратор** — отдельная команда (не seed):
+### Первый администратор
+
+Seed **не создаёт** admin. Отдельная команда:
+
+1. Задайте `ADMIN_EMAIL`, `ADMIN_PHONE`, `ADMIN_NAME`, `ADMIN_PASSWORD` в Variables.
+2. Выполните:
 
 ```bash
-# Сначала задайте ADMIN_* в Variables, затем:
 railway run npm run admin:create
 ```
 
-## 5. Загрузка изображений (uploads)
+---
 
-Сейчас фото объявлений сохраняются **локально на диск**:
+## 6. Uploads (фото объявлений)
 
-- Путь на сервере: `public/uploads/listings/`
-- URL в приложении: `/uploads/listings/<filename>`
-- Код: `src/features/listings/lib/save-upload.ts`
+Сейчас загрузка — **локальная файловая система**:
 
-**На Railway без Volume это не персистентно:** файлы пропадут при redeploy или перезапуске контейнера.
+| | |
+|--|--|
+| Код | `src/features/listings/lib/save-upload.ts` |
+| API | `src/app/api/uploads/listing-images/route.ts` |
+| Путь на диске | `public/uploads/listings/` |
+| URL в браузере | `/uploads/listings/<filename>` |
 
-### Вариант A — Railway Volume (временное решение)
+### Без Railway Volume
 
-1. В сервисе добавьте **Volume**.
-2. Mount path: `/app/public/uploads`
-3. Убедитесь, что рабочая директория приложения — корень репозитория (`/app` в Nixpacks).
+Загрузка **работает**, но файлы **не персистентны** — пропадут при redeploy или перезапуске контейнера.
 
-Тогда `public/uploads/listings/` будет сохраняться между рестартами (но не между сменой сервиса/региона без бэкапа).
+### С Railway Volume (рекомендуется для MVP)
 
-### Вариант B — объектное хранилище (рекомендуется позже)
+1. Web Service → **Volumes** → **Add Volume**.
+2. **Mount path:** `/app/public/uploads`
+3. Redeploy сервиса.
 
-S3/R2/Cloudinary — отдельная задача; сейчас upload logic не менялась.
+Nixpacks использует `/app` как рабочую директорию — путь совпадает с `process.cwd()/public/uploads/listings`.
 
-## 6. Проверка после deploy
+Объектное хранилище (S3/R2) — отдельная задача, upload logic сейчас не менялась.
 
-1. Откройте `NEXT_PUBLIC_APP_URL` — главная страница загружается.
-2. Проверьте каталог `/listings`.
-3. Войдите под admin (после `admin:create`).
-4. Загрузите тестовое фото объявления — убедитесь, что Volume настроен, если нужна персистентность.
-5. Логи: Railway Dashboard → Deployments → View Logs.
+---
 
-Локальная проверка перед push:
+## 7. Проверка после deploy
+
+1. **Deployments** → убедитесь, что build и release прошли без ошибок.
+2. Откройте публичный URL — главная страница загружается.
+3. Проверьте `/listings` — каталог открывается.
+4. Войдите под admin (после `admin:create`).
+5. Загрузите тестовое фото объявления — проверьте Volume, если нужна персистентность.
+6. Смотрите логи: **Deployments** → **View Logs**.
+
+### Локальная проверка перед push
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## 7. Чеклист в Railway Dashboard
+---
 
-- [ ] PostgreSQL plugin подключён, `DATABASE_URL` доступен web-сервису
+## 8. Чеклист в Railway Dashboard
+
+- [ ] New Project → Deploy from GitHub repo → выбран репозиторий tutopt
+- [ ] Добавлен PostgreSQL, `DATABASE_URL` подключён к web-сервису (Reference)
 - [ ] `NODE_ENV=production`
-- [ ] `NEXT_PUBLIC_APP_URL` = публичный HTTPS URL сервиса
-- [ ] Deploy прошёл, `prisma migrate deploy` выполнился (release logs)
+- [ ] Сгенерирован публичный домен
+- [ ] `NEXT_PUBLIC_APP_URL` = этот домен → **Redeploy**
+- [ ] Build успешен, `prisma migrate deploy` в release logs
 - [ ] `railway run npm run db:seed` (если БД пустая)
-- [ ] `railway run npm run admin:create` (первый admin)
+- [ ] `ADMIN_*` заданы → `railway run npm run admin:create`
 - [ ] Volume на `/app/public/uploads` (если нужны локальные фото)
 
-## 8. Полезные команды
+---
+
+## 9. Полезные npm scripts
 
 ```bash
-npm run db:migrate:deploy   # prisma migrate deploy
-npm run db:seed             # базовый seed
-npm run admin:create        # создать/обновить admin
-npm run db:studio           # Prisma Studio (только локально)
+npm run build              # production build
+npm run start              # production server
+npm run lint               # ESLint
+npm run db:migrate:deploy  # prisma migrate deploy
+npm run db:seed            # базовый seed
+npm run admin:create       # создать/обновить admin
 ```

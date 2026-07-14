@@ -1,3 +1,4 @@
+import { AuthProvider } from "@prisma/client";
 import { hashPassword } from "@/features/auth/lib/password";
 import { hashToken } from "@/features/auth/lib/tokens";
 import { resetPasswordSchema } from "@/features/auth/validators/auth.validators";
@@ -28,7 +29,10 @@ export async function POST(request: Request) {
     await prisma.$transaction([
       prisma.user.update({
         where: { id: resetToken.user_id },
-        data: { password_hash },
+        data: {
+          password_hash,
+          auth_provider: AuthProvider.PASSWORD,
+        },
       }),
       prisma.passwordResetToken.update({
         where: { id: resetToken.id },

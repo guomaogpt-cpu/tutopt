@@ -10,27 +10,28 @@ export async function POST(request: Request) {
   return withApiHandler(async () => {
     const input = await parseJsonBody(request, loginSchema);
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          ...(input.email ? [{ email: input.email }] : []),
-          ...(input.phone ? [{ phone: input.phone }] : []),
-        ],
-      },
+    const user = await prisma.user.findUnique({
+      where: { phone: input.phone },
     });
 
     if (!user) {
-      throw new UnauthorizedError("Неверный email, телефон или пароль");
+      throw new UnauthorizedError("Неверный телефон или пароль");
     }
 
     if (user.is_blocked) {
       throw new ForbiddenError("Аккаунт заблокирован");
     }
 
+    if (!user.password_hash) {
+      throw new UnauthorizedError(
+        "Этот аккаунт использует вход через Google. Нажмите «Продолжить с Google».",
+      );
+    }
+
     const isValidPassword = await verifyPassword(input.password, user.password_hash);
 
     if (!isValidPassword) {
-      throw new UnauthorizedError("Неверный email, телефон или пароль");
+      throw new UnauthorizedError("Неверный телефон или пароль");
     }
 
     await prisma.user.update({

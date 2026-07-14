@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { ZodSchema } from "zod";
+import type { z, ZodTypeAny } from "zod";
 import { ZodError } from "zod";
 import {
   ValidationError,
@@ -39,7 +39,10 @@ export function jsonError(error: unknown): NextResponse {
   return NextResponse.json(toErrorResponse(appError), { status: appError.statusCode });
 }
 
-export async function parseJsonBody<T>(request: Request, schema: ZodSchema<T>): Promise<T> {
+export async function parseJsonBody<T extends ZodTypeAny>(
+  request: Request,
+  schema: T,
+): Promise<z.infer<T>> {
   let body: unknown;
 
   try {
@@ -49,7 +52,7 @@ export async function parseJsonBody<T>(request: Request, schema: ZodSchema<T>): 
   }
 
   try {
-    return schema.parse(body);
+    return schema.parse(body) as z.infer<T>;
   } catch (error) {
     if (error instanceof ZodError) {
       throw new ValidationError("Validation failed", error.flatten());

@@ -6,7 +6,9 @@ import {
   buildLoginUrl,
   buildRegisterUrl,
 } from "@/features/auth/lib/login-redirect";
+import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
@@ -17,6 +19,10 @@ export default async function NewListingPage() {
 
   if (!user) {
     redirect(buildLoginUrl("/listings/new"));
+  }
+
+  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
+    redirect(buildSellerOnboardingUrl("/listings/new"));
   }
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
