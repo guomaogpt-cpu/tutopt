@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { randomBytes } from "crypto";
+import type { UploadFileLike } from "@/features/listings/lib/upload-file-like";
 
 const UPLOAD_DIR = path.join(process.cwd(), "public/uploads/listings");
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
@@ -11,7 +12,7 @@ const ALLOWED_MIME_TYPES = new Map<string, string>([
   ["image/webp", ".webp"],
 ]);
 
-export function validateListingImageFile(file: File): void {
+export function validateListingImageFile(file: UploadFileLike): void {
   if (!ALLOWED_MIME_TYPES.has(file.type)) {
     throw new Error("Only JPG, PNG and WEBP images are allowed");
   }
@@ -21,7 +22,7 @@ export function validateListingImageFile(file: File): void {
   }
 }
 
-export async function saveListingImageFile(file: File): Promise<{
+export async function saveListingImageFile(file: UploadFileLike): Promise<{
   url: string;
   filename: string;
 }> {

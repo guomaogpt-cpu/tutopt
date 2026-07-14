@@ -1,6 +1,7 @@
 import { UserRole } from "@prisma/client";
 import { requireAuth } from "@/features/auth/lib/session";
 import { saveListingImageFile } from "@/features/listings/lib/save-upload";
+import { isUploadFileLike } from "@/features/listings/lib/upload-file-like";
 import { jsonData, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, ValidationError } from "@/shared/lib/errors";
 
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("file");
 
-    if (!(file instanceof File)) {
+    if (!isUploadFileLike(file)) {
       throw new ValidationError("File is required");
     }
 
