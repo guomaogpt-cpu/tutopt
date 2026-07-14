@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import { ImageIcon, Plus, Upload, X } from "lucide-react";
-import { useRef, useState, type DragEvent } from "react";
+import { useEffect, useRef, useState, type DragEvent } from "react";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { uploadListingImageRequest } from "@/features/listings/lib/upload-client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loading } from "@/components/ui/loading";
 import { cn } from "@/lib/utils";
 
 const MAX_IMAGES = 10;
@@ -17,6 +17,11 @@ type ListingImageUploadProps = {
   onChange: (urls: string[]) => void;
   disabled?: boolean;
   error?: string;
+};
+
+type LocalPreview = {
+  id: string;
+  blobUrl: string;
 };
 
 export function ListingImageUpload({
@@ -30,6 +35,28 @@ export function ListingImageUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [localPreviews, setLocalPreviews] = useState<LocalPreview[]>([]);
+  const localPreviewsRef = useRef<LocalPreview[]>([]);
+
+  useEffect(() => {
+    localPreviewsRef.current = localPreviews;
+  }, [localPreviews]);
+
+  useEffect(() => {
+    return () => {
+      for (const preview of localPreviewsRef.current) {
+        URL.revokeObjectURL(preview.blobUrl);
+      }
+    };
+  }, []);
+
+  function clearLocalPreviews() {
+    for (const preview of localPreviewsRef.current) {
+      URL.revokeObjectURL(preview.blobUrl);
+    }
+    localPreviewsRef.current = [];
+    setLocalPreviews([]);
+  }
 
   async function uploadFiles(files: File[]) {
     if (disabled || files.length === 0) {
@@ -51,6 +78,13 @@ export function ListingImageUpload({
     setUploadError("");
     setIsUploading(true);
 
+    const previews: LocalPreview[] = files.map((file, index) => ({
+      id: `${Date.now()}-${index}-${file.name}`,
+      blobUrl: URL.createObjectURL(file),
+    }));
+    localPreviewsRef.current = previews;
+    setLocalPreviews(previews);
+
     const uploadedUrls: string[] = [];
 
     try {
@@ -63,6 +97,7 @@ export function ListingImageUpload({
         uploadedUrls.push(result.url);
       }
 
+      // Submit payload must receive only server URLs — never blob:
       onChange([...value, ...uploadedUrls]);
     } catch (uploadFailure) {
       setUploadError(
@@ -71,6 +106,7 @@ export function ListingImageUpload({
           : "Не удалось загрузить фото",
       );
     } finally {
+      clearLocalPreviews();
       setIsUploading(false);
       if (inputRef.current) {
         inputRef.current.value = "";
@@ -127,7 +163,20 @@ export function ListingImageUpload({
     await uploadFiles(files);
   }
 
-  const showEmptyState = value.length === 0;
+  const displayItems: { key: string; src: string; isPreview: boolean }[] = [
+    ...value.map((url, index) => ({
+      key: `server-${url}-${index}`,
+      src: normalizeListingImageUrl(url),
+      isPreview: false,
+    })),
+    ...localPreviews.map((preview) => ({
+      key: `preview-${preview.id}`,
+      src: preview.blobUrl,
+      isPreview: true,
+    })),
+  ];
+
+  const showEmptyState = displayItems.length === 0;
   const displayError = uploadError || error;
 
   return (
@@ -154,11 +203,7 @@ export function ListingImageUpload({
               : "border-[rgba(148,163,184,0.28)] bg-[#F8FAFC]",
         )}
       >
-        {isUploading ? (
-          <div className="flex min-h-40 items-center justify-center py-10">
-            <Loading label="Загрузка фото..." />
-          </div>
-        ) : showEmptyState ? (
+        {showEmptyState ? (
           <div className="flex min-h-40 flex-col items-center justify-center py-8 text-center">
             <div className="flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
               <ImageIcon className="size-6" aria-hidden="true" />
@@ -168,7 +213,7 @@ export function ListingImageUpload({
             <Button
               type="button"
               onClick={() => inputRef.current?.click()}
-              disabled={disabled}
+              disabled={disabled || isUploading}
               className="mt-4 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
             >
               <Upload className="size-4" aria-hidden="true" />
@@ -178,48 +223,74 @@ export function ListingImageUpload({
         ) : (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-              {value.map((url, index) => (
+              {displayItems.map((item, index) => (
                 <div
-                  key={`${url}-${index}`}
-                  draggable={!disabled && !isUploading}
-                  onDragStart={() => handleDragStart(index)}
-                  onDragOver={(event) => handleDragOverItem(event, index)}
+                  key={item.key}
+                  draggable={!disabled && !isUploading && !item.isPreview}
+                  onDragStart={() => {
+                    if (!item.isPreview) {
+                      handleDragStart(index);
+                    }
+                  }}
+                  onDragOver={(event) => {
+                    if (!item.isPreview) {
+                      handleDragOverItem(event, index);
+                    }
+                  }}
                   onDragEnd={() => setDraggedIndex(null)}
                   className={cn(
-                    "relative aspect-[4/3] cursor-grab overflow-hidden rounded-[14px] border bg-white shadow-sm transition active:cursor-grabbing",
-                    draggedIndex === index
+                    "relative aspect-[4/3] overflow-hidden rounded-[14px] border bg-white shadow-sm transition",
+                    item.isPreview
+                      ? "cursor-wait border-[#2563EB]/40 opacity-90"
+                      : "cursor-grab active:cursor-grabbing",
+                    !item.isPreview && draggedIndex === index
                       ? "border-[#2563EB] ring-2 ring-[#2563EB]/20"
-                      : "border-[rgba(148,163,184,0.18)]",
+                      : !item.isPreview
+                        ? "border-[rgba(148,163,184,0.18)]"
+                        : null,
                   )}
                 >
                   <Image
-                    src={url}
-                    alt={index === 0 ? "Главное фото" : `Фото ${index + 1}`}
+                    src={item.src}
+                    alt={
+                      item.isPreview
+                        ? "Загрузка фото"
+                        : index === 0
+                          ? "Главное фото"
+                          : `Фото ${index + 1}`
+                    }
                     fill
                     unoptimized
                     className="object-cover"
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />
-                  {index === 0 ? (
+                  {item.isPreview ? (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/25 text-xs font-medium text-white">
+                      Загрузка...
+                    </div>
+                  ) : null}
+                  {!item.isPreview && index === 0 ? (
                     <Badge className="absolute left-2 top-2 bg-[#2563EB] text-[10px] hover:bg-[#2563EB]">
                       Главное
                     </Badge>
                   ) : null}
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="secondary"
-                    onClick={() => handleRemove(index)}
-                    disabled={disabled || isUploading}
-                    className="absolute right-2 top-2 size-7 rounded-full border border-[rgba(148,163,184,0.18)] bg-white/95 shadow-sm"
-                    aria-label="Удалить фото"
-                  >
-                    <X className="size-3.5" />
-                  </Button>
+                  {!item.isPreview ? (
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="secondary"
+                      onClick={() => handleRemove(index)}
+                      disabled={disabled || isUploading}
+                      className="absolute right-2 top-2 size-7 rounded-full border border-[rgba(148,163,184,0.18)] bg-white/95 shadow-sm"
+                      aria-label="Удалить фото"
+                    >
+                      <X className="size-3.5" />
+                    </Button>
+                  ) : null}
                 </div>
               ))}
 
-              {value.length < MAX_IMAGES ? (
+              {value.length + localPreviews.length < MAX_IMAGES ? (
                 <button
                   type="button"
                   onClick={() => inputRef.current?.click()}
@@ -240,7 +311,7 @@ export function ListingImageUpload({
               className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
             >
               <Upload className="size-4" aria-hidden="true" />
-              Загрузить фото
+              {isUploading ? "Загрузка..." : "Загрузить фото"}
             </Button>
           </div>
         )}

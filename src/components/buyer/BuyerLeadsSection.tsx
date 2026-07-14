@@ -4,6 +4,7 @@ import { Inbox, Package } from "lucide-react";
 import { LeadStatusBadge } from "@/components/seller/LeadStatusBadge";
 import type { BuyerLeadItem } from "@/features/leads/lib/leads-data";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +55,7 @@ export function BuyerLeadsSection({ leads }: BuyerLeadsSectionProps) {
                 >
                   {lead.listing.image_url ? (
                     <Image
-                      src={lead.listing.image_url}
+                      src={normalizeListingImageUrl(lead.listing.image_url)}
                       alt={lead.listing.title}
                       fill
                       unoptimized

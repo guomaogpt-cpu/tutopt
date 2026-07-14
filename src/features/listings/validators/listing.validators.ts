@@ -19,7 +19,10 @@ export const createListingSchema = z.object({
     .array(
       z
         .string()
-        .regex(/^\/uploads\/listings\/[a-zA-Z0-9._-]+$/, "Некорректный адрес изображения"),
+        .regex(
+          /^\/(api\/)?uploads\/listings\/[a-zA-Z0-9._-]+$/,
+          "Некорректный адрес изображения",
+        ),
     )
     .min(1, "Добавьте хотя бы одно фото")
     .max(10, "Можно загрузить не более 10 фото"),

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { CheckCircle2, ImageIcon, Lightbulb } from "lucide-react";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { Prisma } from "@prisma/client";
 import { cn } from "@/lib/utils";
 
@@ -65,7 +66,7 @@ export function NewListingSidebar({
             <div className="relative aspect-[4/3] bg-[#F1F5F9]">
               {imageUrl ? (
                 <Image
-                  src={imageUrl}
+                  src={normalizeListingImageUrl(imageUrl)}
                   alt={title || "Предпросмотр"}
                   fill
                   unoptimized

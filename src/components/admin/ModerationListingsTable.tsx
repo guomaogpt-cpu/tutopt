@@ -9,6 +9,7 @@ import { ListingStatus as ListingStatusEnum, Prisma } from "@prisma/client";
 import { Package } from "lucide-react";
 import { ListingStatusBadge } from "@/components/seller/ListingStatusBadge";
 import { formatListingDate, formatListingPrice } from "@/features/listings/lib/format-listing-price";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import {
@@ -95,7 +96,7 @@ function ModerationListingCard({
         >
           {listing.imageUrl ? (
             <Image
-              src={listing.imageUrl}
+              src={normalizeListingImageUrl(listing.imageUrl)}
               alt={listing.title}
               fill
               unoptimized

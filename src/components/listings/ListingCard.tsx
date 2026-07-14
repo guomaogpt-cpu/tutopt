@@ -4,6 +4,7 @@ import { MapPin, Package } from "lucide-react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { listingUnitOptions } from "@/features/listings/constants";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,8 @@ export function ListingCard({
   variant = "default",
   onFavoriteChange,
 }: ListingCardProps) {
-  const mainImage = listing.images[0]?.url;
+  const rawMainImage = listing.images[0]?.url;
+  const mainImage = rawMainImage ? normalizeListingImageUrl(rawMainImage) : undefined;
   const unitLabel =
     listingUnitOptions.find((option) => option.value === listing.unit)?.label ??
     listing.unit.toLowerCase();

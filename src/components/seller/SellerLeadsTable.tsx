@@ -4,6 +4,7 @@ import { Inbox, Package } from "lucide-react";
 import { LeadStatusBadge } from "@/components/seller/LeadStatusBadge";
 import type { SellerLeadItem } from "@/features/leads/lib/leads-data";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -36,7 +37,9 @@ export function SellerLeadsTable({ leads }: SellerLeadsTableProps) {
   return (
     <div className="space-y-4">
       {leads.map((lead) => {
-        const imageUrl = lead.listing.image_url;
+        const imageUrl = lead.listing.image_url
+          ? normalizeListingImageUrl(lead.listing.image_url)
+          : null;
 
         return (
           <article

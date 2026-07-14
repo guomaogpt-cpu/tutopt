@@ -13,6 +13,7 @@ import {
 import type { ReactNode } from "react";
 import type { SearchSuggestResponse } from "@/features/search/lib/search-suggest-types";
 import { hasSearchSuggestions } from "@/features/search/lib/search-suggest-types";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { cn } from "@/lib/utils";
 
 type SearchSuggestDropdownProps = {
@@ -61,7 +62,7 @@ function SuggestItem({ href, icon, title, subtitle, imageUrl, onSelect }: Sugges
         <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-muted-foreground">
           {imageUrl ? (
             <Image
-              src={imageUrl}
+              src={normalizeListingImageUrl(imageUrl)}
               alt=""
               width={40}
               height={40}

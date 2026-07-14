@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { cn } from "@/lib/utils";
 
 type ListingGalleryProps = {
@@ -30,7 +31,7 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
     <section aria-label="Галерея товара">
       <div className="relative aspect-[4/3] max-h-[520px] w-full overflow-hidden rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9]">
         <Image
-          src={activeImage.url}
+          src={normalizeListingImageUrl(activeImage.url)}
           alt={title}
           fill
           unoptimized
@@ -57,7 +58,7 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
               )}
             >
               <Image
-                src={image.url}
+                src={normalizeListingImageUrl(image.url)}
                 alt={`${title} — фото ${index + 1}`}
                 fill
                 unoptimized

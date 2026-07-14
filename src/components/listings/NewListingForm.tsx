@@ -104,6 +104,15 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
       return;
     }
 
+    const serverImageUrls = imageUrls.filter((url) =>
+      url.startsWith("/api/uploads/listings/"),
+    );
+
+    if (serverImageUrls.length === 0) {
+      setClientError("Дождитесь окончания загрузки фото");
+      return;
+    }
+
     if (!cityId) {
       setClientError("Выберите город");
       return;
@@ -123,7 +132,7 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
         city_id: cityId,
         brand_id: brandId || null,
         stock_quantity: stockQuantity ? Number(stockQuantity) : null,
-        image_urls: imageUrls,
+        image_urls: serverImageUrls,
       });
 
       router.push(`/listings/${result.listing.id}`);

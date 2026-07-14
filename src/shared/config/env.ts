@@ -9,6 +9,7 @@ const serverEnvSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GOOGLE_REDIRECT_URI: z.string().url().optional(),
+  UPLOAD_DIR: z.string().min(1).optional(),
   OTP_SECRET: z.string().optional(),
   SMS_PROVIDER: z.string().optional(),
   /** Temporary: allow returning OTP in API response on production without SMS. Default off. */

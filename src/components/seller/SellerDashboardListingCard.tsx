@@ -5,6 +5,7 @@ import { Eye, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import { ListingStatusBadge } from "@/components/seller/ListingStatusBadge";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -43,7 +44,7 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
       >
         {listing.image_url ? (
           <Image
-            src={listing.image_url}
+            src={normalizeListingImageUrl(listing.image_url)}
             alt={listing.title}
             fill
             unoptimized
