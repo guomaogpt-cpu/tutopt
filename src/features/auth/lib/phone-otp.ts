@@ -39,6 +39,8 @@ export type SendOtpResult = {
   phone: string;
   expiresInSeconds: number;
   resendAvailableInSeconds: number;
+  /** Present only when NODE_ENV !== "production" — never persisted. */
+  devOtpCode?: string;
 };
 
 export async function sendPhoneOtp(phoneInput: string): Promise<SendOtpResult> {
@@ -74,7 +76,7 @@ export async function sendPhoneOtp(phoneInput: string): Promise<SendOtpResult> {
     },
   });
 
-  // Pluggable SMS layer: log in development until SMS_PROVIDER is connected.
+  // Pluggable SMS layer: log + return plain code only in development.
   if (env.NODE_ENV !== "production") {
     console.warn(`DEV OTP for ${phone}: ${code}`);
     logger.info("DEV OTP generated", { phone });
@@ -89,6 +91,7 @@ export async function sendPhoneOtp(phoneInput: string): Promise<SendOtpResult> {
     phone,
     expiresInSeconds: Math.floor(OTP_TTL_MS / 1000),
     resendAvailableInSeconds: Math.floor(OTP_RESEND_COOLDOWN_MS / 1000),
+    ...(env.NODE_ENV !== "production" ? { devOtpCode: code } : {}),
   };
 }
 

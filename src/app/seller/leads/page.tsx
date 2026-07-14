@@ -5,7 +5,7 @@ import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { SellerLeadsTable } from "@/components/seller/SellerLeadsTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl, buildRegisterUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getSellerLeads } from "@/features/leads/lib/leads-data";
 import { prisma } from "@/shared/lib/prisma";
@@ -27,6 +27,10 @@ export default async function SellerLeadsPage() {
     redirect(buildLoginUrl("/seller/leads"));
   }
 
+  if (user.role === UserRole.BUYER) {
+    redirect(buildSellerUpgradeUrl("/seller/leads"));
+  }
+
   if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
     redirect(buildSellerOnboardingUrl("/seller/leads"));
   }
@@ -42,8 +46,8 @@ export default async function SellerLeadsPage() {
           </PageHeader>
           <ListingAccessMessage
             title="Раздел доступен только продавцам"
-            description="Зарегистрируйтесь с типом аккаунта «Продавец» или войдите в аккаунт продавца."
-            actionHref={buildRegisterUrl({ role: "SELLER", returnPath: "/seller/leads" })}
+            description="Станьте продавцом в текущем аккаунте, чтобы получать заявки от покупателей."
+            actionHref={buildSellerUpgradeUrl("/seller/leads")}
             actionLabel="Стать продавцом"
           />
         </Container>

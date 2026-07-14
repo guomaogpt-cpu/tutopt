@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { AuthFormField } from "@/components/auth/AuthFormCard";
 import { authButtonClassName, authInputClassName } from "@/components/auth/auth-form-styles";
 import {
@@ -42,6 +42,7 @@ export function PhoneOtpFields({
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [devToastCode, setDevToastCode] = useState<string | null>(null);
 
   useEffect(() => {
     if (cooldown <= 0) {
@@ -53,9 +54,20 @@ export function PhoneOtpFields({
     return () => window.clearInterval(timer);
   }, [cooldown]);
 
+  useEffect(() => {
+    if (!devToastCode) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      setDevToastCode(null);
+    }, 9000);
+    return () => window.clearTimeout(timer);
+  }, [devToastCode]);
+
   async function handleSendCode() {
     setOtpError("");
     setOtpMessage("");
+    setDevToastCode(null);
     setIsSending(true);
     onTokenReset();
 
@@ -64,6 +76,9 @@ export function PhoneOtpFields({
       setOtpMessage(result.message);
       setCooldown(result.resendAvailableInSeconds || 60);
       setCode("");
+      if (result.devOtpCode) {
+        setDevToastCode(result.devOtpCode);
+      }
     } catch (error) {
       if (error instanceof AuthRequestError) {
         setOtpError(error.message);
@@ -83,6 +98,7 @@ export function PhoneOtpFields({
       const result = await verifyOtpRequest(phone, code);
       onVerified(result.phoneVerificationToken);
       setOtpMessage(result.message);
+      setDevToastCode(null);
     } catch (error) {
       if (error instanceof AuthRequestError) {
         setOtpError(error.message);
@@ -100,6 +116,40 @@ export function PhoneOtpFields({
 
   return (
     <div className="min-w-0 space-y-4">
+      {devToastCode ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className={cn(
+            "fixed top-4 right-4 z-50 w-[min(100%-2rem,320px)]",
+            "rounded-2xl border border-slate-200 bg-white p-4 shadow-lg",
+            "dark:border-slate-700 dark:bg-slate-950",
+          )}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Код подтверждения
+              </p>
+              <p className="mt-1 text-base font-bold tracking-wider text-slate-900 dark:text-slate-50">
+                Dev-код: {devToastCode}
+              </p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                Только для локального тестирования
+              </p>
+            </div>
+            <button
+              type="button"
+              aria-label="Закрыть"
+              onClick={() => setDevToastCode(null)}
+              className="rounded-lg p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            >
+              <X className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <AuthFormField
         label="Телефон"
         htmlFor="otp-phone"
@@ -118,6 +168,7 @@ export function PhoneOtpFields({
             onTokenReset();
             setOtpMessage("");
             setOtpError("");
+            setDevToastCode(null);
           }}
           className={cn(
             authInputClassName,
@@ -196,7 +247,7 @@ export function PhoneOtpFields({
 
       {showDevHint ? (
         <p className="text-xs text-[#94A3B8]">
-          В режиме разработки код выводится в server console
+          В режиме разработки код также появляется справа сверху и в server console
         </p>
       ) : null}
     </div>

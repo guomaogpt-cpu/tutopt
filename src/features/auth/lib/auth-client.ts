@@ -115,6 +115,10 @@ export async function registerRequest(input: RegisterInput): Promise<AuthSuccess
 export async function sendOtpRequest(phone: string): Promise<{
   message: string;
   resendAvailableInSeconds: number;
+  expiresInSeconds?: number;
+  phone?: string;
+  /** Development only — never present in production responses. */
+  devOtpCode?: string;
 }> {
   const response = await fetch("/api/auth/otp/send", {
     method: "POST",

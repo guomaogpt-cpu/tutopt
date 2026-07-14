@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { ListingAccessMessage, NewListingForm } from "@/components/listings/NewListingForm";
+import { NewListingForm } from "@/components/listings/NewListingForm";
 import {
   buildLoginUrl,
-  buildRegisterUrl,
+  buildSellerUpgradeUrl,
 } from "@/features/auth/lib/login-redirect";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -21,44 +21,20 @@ export default async function NewListingPage() {
     redirect(buildLoginUrl("/listings/new"));
   }
 
+  if (user.role === UserRole.BUYER) {
+    redirect(buildSellerUpgradeUrl("/listings/new"));
+  }
+
   if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
     redirect(buildSellerOnboardingUrl("/listings/new"));
   }
 
+  if (user.role === UserRole.MODERATOR) {
+    redirect("/");
+  }
+
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
-    return (
-      <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
-        <Container size="md" className="max-w-[1100px] min-w-0">
-          <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
-            <ol className="flex flex-wrap items-center gap-1.5">
-              <li>
-                <Link href="/" className="transition hover:text-[#2563EB]">
-                  Главная
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li className="font-medium text-[#334155]">Новое объявление</li>
-            </ol>
-          </nav>
-
-          <PageHeader className="mt-4 pb-0">
-            <PageHeaderContent>
-              <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Подать объявление</PageTitle>
-              <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
-                Добавьте товар, который хотите продавать оптом
-              </PageSubtitle>
-            </PageHeaderContent>
-          </PageHeader>
-
-          <ListingAccessMessage
-            title="Создание объявлений доступно только продавцам"
-            description="Зарегистрируйтесь с типом аккаунта «Продавец» или войдите в аккаунт продавца."
-            actionHref={buildRegisterUrl({ role: "SELLER", returnPath: "/listings/new" })}
-            actionLabel="Стать продавцом"
-          />
-        </Container>
-      </main>
-    );
+    redirect("/");
   }
 
   const [categories, cities, brands] = await Promise.all([

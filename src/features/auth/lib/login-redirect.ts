@@ -44,6 +44,13 @@ export function buildRegisterUrl(options?: { role?: "SELLER"; returnPath?: strin
   return query ? `/register?${query}` : "/register";
 }
 
+export function buildSellerUpgradeUrl(returnPath?: string): string {
+  if (returnPath && isSafeInternalPath(returnPath) && returnPath !== "/seller/upgrade") {
+    return `/seller/upgrade?next=${encodeURIComponent(returnPath)}`;
+  }
+  return "/seller/upgrade";
+}
+
 export function shouldShowCreateListingCTA(user: HeaderUser | null): boolean {
   if (!user) {
     return true;
@@ -62,7 +69,8 @@ export function getCreateListingHref(user: HeaderUser | null): string {
     case "ADMIN":
       return "/listings/new";
     case "BUYER":
-      return "/listings/new";
+      // Page guard also redirects; explicit upgrade path avoids register.
+      return buildSellerUpgradeUrl("/listings/new");
     default:
       return buildLoginUrl("/listings/new");
   }

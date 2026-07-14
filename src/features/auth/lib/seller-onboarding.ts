@@ -19,3 +19,11 @@ export function needsSellerOnboarding(input: {
 }): boolean {
   return input.role === "SELLER" && !isSellerPhoneComplete(input.phone);
 }
+
+/** BUYER upgrade can skip OTP when phone already exists and is verified. */
+export function hasVerifiedSellerPhone(input: {
+  phone: string | null | undefined;
+  phone_verified_at: Date | string | null | undefined;
+}): boolean {
+  return isSellerPhoneComplete(input.phone) && Boolean(input.phone_verified_at);
+}

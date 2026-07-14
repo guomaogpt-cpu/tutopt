@@ -13,7 +13,7 @@ import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardSta
 import { SellerQuickActions } from "@/components/seller/SellerQuickActions";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl, buildRegisterUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { prisma } from "@/shared/lib/prisma";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,10 @@ export default async function SellerDashboardPage() {
     redirect(buildLoginUrl("/seller/dashboard"));
   }
 
+  if (user.role === UserRole.BUYER) {
+    redirect(buildSellerUpgradeUrl("/seller/dashboard"));
+  }
+
   if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
     redirect(buildSellerOnboardingUrl("/seller/dashboard"));
   }
@@ -47,8 +51,8 @@ export default async function SellerDashboardPage() {
           </PageHeader>
           <ListingAccessMessage
             title="Создание объявлений доступно только продавцам"
-            description="Зарегистрируйтесь с типом аккаунта «Продавец» или войдите в аккаунт продавца."
-            actionHref={buildRegisterUrl({ role: "SELLER", returnPath: "/seller/dashboard" })}
+            description="Станьте продавцом в текущем аккаунте, чтобы публиковать товары и получать заявки."
+            actionHref={buildSellerUpgradeUrl("/seller/dashboard")}
             actionLabel="Стать продавцом"
           />
         </Container>
