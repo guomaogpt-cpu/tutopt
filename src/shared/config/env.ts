@@ -11,6 +11,11 @@ const serverEnvSchema = z.object({
   GOOGLE_REDIRECT_URI: z.string().url().optional(),
   OTP_SECRET: z.string().optional(),
   SMS_PROVIDER: z.string().optional(),
+  /** Temporary: allow returning OTP in API response on production without SMS. Default off. */
+  DEMO_OTP_ENABLED: z
+    .enum(["true", "false"])
+    .optional()
+    .transform((value) => value === "true"),
 });
 
 const clientEnvSchema = z.object({
@@ -73,6 +78,17 @@ export function resetEnvCache(): void {
 export function isGoogleAuthConfigured(): boolean {
   const env = getEnv();
   return Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.GOOGLE_REDIRECT_URI);
+}
+
+/** Temporary test flag: expose OTP in responses without SMS (explicit opt-in). */
+export function isDemoOtpEnabled(): boolean {
+  return Boolean(getEnv().DEMO_OTP_ENABLED);
+}
+
+/** Local development OR temporarily enabled production demo mode. */
+export function shouldExposeOtpInResponse(): boolean {
+  const env = getEnv();
+  return env.NODE_ENV !== "production" || isDemoOtpEnabled();
 }
 
 export const env = new Proxy({} as Env, {

@@ -43,6 +43,7 @@ export function PhoneOtpFields({
   const [isVerifying, setIsVerifying] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [devToastCode, setDevToastCode] = useState<string | null>(null);
+  const [demoModeToast, setDemoModeToast] = useState(false);
 
   useEffect(() => {
     if (cooldown <= 0) {
@@ -60,7 +61,8 @@ export function PhoneOtpFields({
     }
     const timer = window.setTimeout(() => {
       setDevToastCode(null);
-    }, 9000);
+      setDemoModeToast(false);
+    }, 10000);
     return () => window.clearTimeout(timer);
   }, [devToastCode]);
 
@@ -68,6 +70,7 @@ export function PhoneOtpFields({
     setOtpError("");
     setOtpMessage("");
     setDevToastCode(null);
+    setDemoModeToast(false);
     setIsSending(true);
     onTokenReset();
 
@@ -78,6 +81,7 @@ export function PhoneOtpFields({
       setCode("");
       if (result.devOtpCode) {
         setDevToastCode(result.devOtpCode);
+        setDemoModeToast(Boolean(result.demoMode));
       }
     } catch (error) {
       if (error instanceof AuthRequestError) {
@@ -135,13 +139,23 @@ export function PhoneOtpFields({
                 Dev-код: {devToastCode}
               </p>
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                Только для локального тестирования
+                {demoModeToast
+                  ? "Демо-режим: код показан только для тестирования"
+                  : "Только для локального тестирования"}
               </p>
+              {demoModeToast ? (
+                <p className="mt-2 text-xs font-medium text-amber-700 dark:text-amber-400">
+                  Демо-режим production. Отключите DEMO_OTP_ENABLED перед реальным запуском.
+                </p>
+              ) : null}
             </div>
             <button
               type="button"
               aria-label="Закрыть"
-              onClick={() => setDevToastCode(null)}
+              onClick={() => {
+                setDevToastCode(null);
+                setDemoModeToast(false);
+              }}
               className="rounded-lg p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
             >
               <X className="size-4" aria-hidden="true" />
@@ -169,6 +183,7 @@ export function PhoneOtpFields({
             setOtpMessage("");
             setOtpError("");
             setDevToastCode(null);
+            setDemoModeToast(false);
           }}
           className={cn(
             authInputClassName,

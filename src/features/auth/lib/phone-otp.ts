@@ -6,7 +6,7 @@ import {
   OTP_TTL_MS,
   PHONE_VERIFICATION_TOKEN_TTL_MS,
 } from "@/shared/constants/auth";
-import { getEnv } from "@/shared/config/env";
+import { getEnv, isDemoOtpEnabled, shouldExposeOtpInResponse } from "@/shared/config/env";
 import { ConflictError, ValidationError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
@@ -39,15 +39,19 @@ export type SendOtpResult = {
   phone: string;
   expiresInSeconds: number;
   resendAvailableInSeconds: number;
-  /** Present only when NODE_ENV !== "production" — never persisted. */
+  /** Never persisted. Present only in development or DEMO_OTP_ENABLED production. */
   devOtpCode?: string;
+  /** True only when production DEMO_OTP_ENABLED is on. */
+  demoMode?: boolean;
 };
 
 export async function sendPhoneOtp(phoneInput: string): Promise<SendOtpResult> {
   const phone = assertValidPhone(phoneInput);
   const env = getEnv();
+  const exposeOtp = shouldExposeOtpInResponse();
+  const demoMode = env.NODE_ENV === "production" && isDemoOtpEnabled();
 
-  if (env.NODE_ENV === "production" && !env.SMS_PROVIDER) {
+  if (env.NODE_ENV === "production" && !env.SMS_PROVIDER && !isDemoOtpEnabled()) {
     throw new ValidationError("SMS-подтверждение пока не настроено");
   }
 
@@ -76,10 +80,14 @@ export async function sendPhoneOtp(phoneInput: string): Promise<SendOtpResult> {
     },
   });
 
-  // Pluggable SMS layer: log + return plain code only in development.
   if (env.NODE_ENV !== "production") {
     console.warn(`DEV OTP for ${phone}: ${code}`);
     logger.info("DEV OTP generated", { phone });
+  } else if (demoMode) {
+    console.warn(`DEMO OTP for ${phone}: ${code}`);
+    logger.warn("DEMO OTP mode enabled — disable DEMO_OTP_ENABLED before real launch", {
+      phone,
+    });
   } else if (env.SMS_PROVIDER) {
     logger.info("OTP generated for production SMS provider", {
       phone,
@@ -91,7 +99,8 @@ export async function sendPhoneOtp(phoneInput: string): Promise<SendOtpResult> {
     phone,
     expiresInSeconds: Math.floor(OTP_TTL_MS / 1000),
     resendAvailableInSeconds: Math.floor(OTP_RESEND_COOLDOWN_MS / 1000),
-    ...(env.NODE_ENV !== "production" ? { devOtpCode: code } : {}),
+    ...(exposeOtp ? { devOtpCode: code } : {}),
+    ...(demoMode ? { demoMode: true } : {}),
   };
 }
 

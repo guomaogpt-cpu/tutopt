@@ -171,14 +171,31 @@ Google Cloud Console → Authorized redirect URIs:
 
 Сейчас SMS-провайдер **не подключён**.
 
-- **development:** OTP пишется в server console: `DEV OTP for +996...: 123456`
-- **production без `SMS_PROVIDER`:** `/api/auth/otp/send` вернёт ошибку «SMS-подтверждение пока не настроено»
+- **development:** OTP в server console и toast (`devOtpCode`)
+- **production без `SMS_PROVIDER` и без demo:** `/api/auth/otp/send` → «SMS-подтверждение пока не настроено»
+- **временный demo на Railway (тестовый сайт):**
+
+```text
+DEMO_OTP_ENABLED=true
+```
+
+Тогда OTP возвращается в response и показывается в UI toast. Это **временный** режим.
+
+Перед реальными пользователями обязательно:
+
+```text
+DEMO_OTP_ENABLED=false
+```
+
+(или удалить переменную)
+
 - Подпись `phoneVerificationToken`: `OTP_SECRET` (опционально) или fallback на `DATABASE_URL`
 
 Позже для реального SMS:
 1. выбрать провайдера (Twilio / local KG SMS)
 2. задать `SMS_PROVIDER` + ключи провайдера
 3. подключить adapter в `src/features/auth/lib/phone-otp.ts`
+4. выключить `DEMO_OTP_ENABLED`
 
 Обычная регистрация больше **не** принимает email — только phone + OTP + password. Email появляется только через Google.
 

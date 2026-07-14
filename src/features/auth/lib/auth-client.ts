@@ -117,8 +117,10 @@ export async function sendOtpRequest(phone: string): Promise<{
   resendAvailableInSeconds: number;
   expiresInSeconds?: number;
   phone?: string;
-  /** Development only — never present in production responses. */
+  /** Development or DEMO_OTP_ENABLED — never present in real production SMS mode. */
   devOtpCode?: string;
+  /** Production temporary demo flag. */
+  demoMode?: boolean;
 }> {
   const response = await fetch("/api/auth/otp/send", {
     method: "POST",
