@@ -3,6 +3,7 @@ import { requireAuth } from "@/features/auth/lib/session";
 import { ensureSellerProfile } from "@/features/listings/lib/seller-profile";
 import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
 import { createListingSchema } from "@/features/listings/validators/listing.validators";
+import { DEFAULT_LISTING_VERTICAL } from "@/features/verticals/verticals";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, NotFoundError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
@@ -17,6 +18,7 @@ export async function POST(request: Request) {
     }
 
     const input = await parseJsonBody(request, createListingSchema);
+    const vertical = input.vertical ?? DEFAULT_LISTING_VERTICAL;
 
     const [category, city, brand] = await Promise.all([
       prisma.category.findFirst({
@@ -64,6 +66,7 @@ export async function POST(request: Request) {
         moq: input.moq,
         stock_quantity: input.stock_quantity ?? null,
         status: ListingStatus.PENDING_MODERATION,
+        vertical,
         images: {
           create: input.image_urls.map((url, index) => ({
             url,
@@ -75,11 +78,16 @@ export async function POST(request: Request) {
         id: true,
         title: true,
         status: true,
+        vertical: true,
         created_at: true,
       },
     });
 
-    logger.info("Listing created", { listingId: listing.id, sellerId: sellerProfile.id });
+    logger.info("Listing created", {
+      listingId: listing.id,
+      sellerId: sellerProfile.id,
+      vertical: listing.vertical,
+    });
 
     return jsonData({ listing }, 201);
   });

@@ -34,6 +34,13 @@ enum ListingStatus {
   ARCHIVED
 }
 
+enum ListingVertical {
+  OPT
+  MARKET
+  SERVICES
+  CARGO
+}
+
 enum ListingUnit {
   PIECE
   PACK
@@ -236,17 +243,18 @@ model SellerDocument {
 }
 
 model Category {
-  id             String   @id @default(uuid()) @db.Uuid
-  parent_id      String?  @map("parent_id") @db.Uuid
-  name           String   @db.VarChar(150)
-  slug           String   @unique @db.VarChar(170)
-  description    String?  @db.Text
-  icon           String?  @db.VarChar(50)
-  sort_order     Int      @default(0) @map("sort_order")
-  is_active      Boolean  @default(true) @map("is_active")
-  listings_count Int      @default(0) @map("listings_count")
-  created_at     DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updated_at     DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id             String          @id @default(uuid()) @db.Uuid
+  parent_id      String?         @map("parent_id") @db.Uuid
+  name           String          @db.VarChar(150)
+  slug           String          @unique @db.VarChar(170)
+  description    String?         @db.Text
+  icon           String?         @db.VarChar(50)
+  vertical       ListingVertical @default(OPT)
+  sort_order     Int             @default(0) @map("sort_order")
+  is_active      Boolean         @default(true) @map("is_active")
+  listings_count Int             @default(0) @map("listings_count")
+  created_at     DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updated_at     DateTime        @updatedAt @map("updated_at") @db.Timestamptz
 
   parent        Category?              @relation("CategoryHierarchy", fields: [parent_id], references: [id], onDelete: SetNull)
   children      Category[]             @relation("CategoryHierarchy")
@@ -255,35 +263,37 @@ model Category {
 
   @@index([parent_id])
   @@index([slug])
+  @@index([vertical])
   @@index([sort_order])
   @@map("categories")
 }
 
 model Listing {
-  id                 String        @id @default(uuid()) @db.Uuid
-  seller_profile_id  String        @map("seller_profile_id") @db.Uuid
-  category_id        String        @map("category_id") @db.Uuid
-  region_id          String        @map("region_id") @db.Uuid
-  city_id            String?       @map("city_id") @db.Uuid
-  brand_id           String?       @map("brand_id") @db.Uuid
-  title              String        @db.VarChar(200)
-  slug               String        @db.VarChar(250)
-  short_id           String        @map("short_id") @db.VarChar(8)
-  description        String        @db.Text
-  price              Decimal       @db.Decimal(12, 2)
-  currency           String        @default("KGS") @db.VarChar(3)
-  price_negotiable   Boolean       @default(false) @map("price_negotiable")
+  id                 String          @id @default(uuid()) @db.Uuid
+  seller_profile_id  String          @map("seller_profile_id") @db.Uuid
+  category_id        String          @map("category_id") @db.Uuid
+  region_id          String          @map("region_id") @db.Uuid
+  city_id            String?         @map("city_id") @db.Uuid
+  brand_id           String?         @map("brand_id") @db.Uuid
+  title              String          @db.VarChar(200)
+  slug               String          @db.VarChar(250)
+  short_id           String          @map("short_id") @db.VarChar(8)
+  description        String          @db.Text
+  price              Decimal         @db.Decimal(12, 2)
+  currency           String          @default("KGS") @db.VarChar(3)
+  price_negotiable   Boolean         @default(false) @map("price_negotiable")
   unit               ListingUnit
-  moq                Int           @default(1)
-  stock_quantity     Int?          @map("stock_quantity")
-  status             ListingStatus @default(DRAFT)
-  rejection_reason   String?       @map("rejection_reason") @db.Text
-  view_count         Int           @default(0) @map("view_count")
-  contact_count      Int           @default(0) @map("contact_count")
-  published_at       DateTime?     @map("published_at") @db.Timestamptz
-  expires_at         DateTime?     @map("expires_at") @db.Timestamptz
-  created_at         DateTime      @default(now()) @map("created_at") @db.Timestamptz
-  updated_at         DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+  moq                Int             @default(1)
+  stock_quantity     Int?            @map("stock_quantity")
+  status             ListingStatus   @default(DRAFT)
+  vertical           ListingVertical @default(OPT)
+  rejection_reason   String?         @map("rejection_reason") @db.Text
+  view_count         Int             @default(0) @map("view_count")
+  contact_count      Int             @default(0) @map("contact_count")
+  published_at       DateTime?       @map("published_at") @db.Timestamptz
+  expires_at         DateTime?       @map("expires_at") @db.Timestamptz
+  created_at         DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updated_at         DateTime        @updatedAt @map("updated_at") @db.Timestamptz
 
   sellerProfile  SellerProfile         @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
   category       Category              @relation(fields: [category_id], references: [id], onDelete: Restrict)
@@ -302,6 +312,7 @@ model Listing {
   @@unique([slug, short_id])
   @@index([status, published_at(sort: Desc)])
   @@index([category_id, status])
+  @@index([vertical, status])
   @@index([seller_profile_id])
   @@index([region_id, status])
   @@index([city_id])

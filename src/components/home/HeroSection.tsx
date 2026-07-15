@@ -91,7 +91,7 @@ export function HeroSection({ stats }: HeroSectionProps) {
   return (
     <section
       data-home-section="hero"
-      className="relative isolate overflow-hidden"
+      className="relative isolate overflow-x-clip"
     >
       {/* Background — only bgZul */}
       <div

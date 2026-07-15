@@ -191,12 +191,15 @@ export function SearchWithSuggest({
 
   if (isHero) {
     return (
-      <form onSubmit={handleSubmit} className={cn("w-full min-w-0 max-w-[760px]", className)}>
+      <form
+        onSubmit={handleSubmit}
+        className={cn("w-full min-w-0 max-w-[760px] overflow-x-clip", className)}
+      >
         <label htmlFor={inputId} className="sr-only">
           Поиск оптовых товаров
         </label>
         <div className="flex flex-col md:flex-row md:items-stretch">
-          <div ref={containerRef} className="relative min-w-0 w-full flex-1">
+          <div ref={containerRef} className="relative z-20 min-w-0 w-full flex-1">
             <Search
               className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-[18px] -translate-y-1/2 text-muted-foreground md:left-4 md:size-5"
               aria-hidden="true"

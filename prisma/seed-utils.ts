@@ -1,4 +1,10 @@
-import { PrismaClient, type Brand, type Category, type City } from "@prisma/client";
+import {
+  ListingVertical,
+  PrismaClient,
+  type Brand,
+  type Category,
+  type City,
+} from "@prisma/client";
 import type { CategorySeed } from "./seed-data/categories";
 import { BRANDS } from "./seed-data/brands";
 import { CITIES, type CitySeed } from "./seed-data/regions";
@@ -31,6 +37,7 @@ export async function seedCategories(
         sort_order: category.sort_order,
         parent_id: parentId,
         is_active: true,
+        vertical: ListingVertical.OPT,
       },
       create: {
         name: category.name,
@@ -39,6 +46,7 @@ export async function seedCategories(
         sort_order: category.sort_order,
         parent_id: parentId,
         is_active: true,
+        vertical: ListingVertical.OPT,
       },
     });
 

@@ -1,4 +1,5 @@
-import { ListingStatus, type ListingUnit, type Prisma } from "@prisma/client";
+import { ListingStatus, type ListingUnit, type ListingVertical, type Prisma } from "@prisma/client";
+import { parseListingVerticalParam } from "@/features/verticals/verticals";
 
 export const LISTINGS_PER_PAGE = 12;
 
@@ -12,6 +13,8 @@ export type ListingsCatalogFilters = {
   priceMin: string;
   priceMax: string;
   withPhotos: boolean;
+  /** When set, filters by Listing.vertical. When empty, catalog shows all (current behavior). */
+  vertical: ListingVertical | null;
   sort: ListingSort;
   page: number;
 };
@@ -59,6 +62,7 @@ export function parseListingsCatalogParams(
     priceMin: get("priceFrom") || get("priceMin"),
     priceMax: get("priceTo") || get("priceMax"),
     withPhotos: get("withPhoto") === "1" || get("withPhotos") === "1",
+    vertical: parseListingVerticalParam(get("vertical")),
     sort,
     page,
   };
@@ -72,7 +76,8 @@ export function hasActiveCatalogFilters(filters: ListingsCatalogFilters): boolea
       filters.brandId ||
       filters.priceMin ||
       filters.priceMax ||
-      filters.withPhotos,
+      filters.withPhotos ||
+      filters.vertical,
   );
 }
 
@@ -97,6 +102,10 @@ export function buildListingsCatalogWhere(
 
   if (filters.brandId) {
     where.brand_id = filters.brandId;
+  }
+
+  if (filters.vertical) {
+    where.vertical = filters.vertical;
   }
 
   const priceFilter: Prisma.DecimalFilter = {};
@@ -169,6 +178,9 @@ export function buildListingsCatalogQueryString(
   }
   if (next.withPhotos) {
     params.set("withPhoto", "1");
+  }
+  if (next.vertical) {
+    params.set("vertical", next.vertical);
   }
   if (next.sort !== "newest") {
     params.set("sort", next.sort);

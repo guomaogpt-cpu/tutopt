@@ -1,4 +1,4 @@
-import { ListingUnit } from "@prisma/client";
+import { ListingUnit, ListingVertical } from "@prisma/client";
 import { z } from "zod";
 
 export const createListingSchema = z.object({
@@ -15,6 +15,8 @@ export const createListingSchema = z.object({
   city_id: z.string().uuid("Выберите город"),
   brand_id: z.string().uuid("Некорректный бренд").optional().nullable(),
   stock_quantity: z.coerce.number().int().min(0).optional().nullable(),
+  /** Optional; UI does not send this yet — API defaults to OPT. */
+  vertical: z.nativeEnum(ListingVertical).optional(),
   image_urls: z
     .array(
       z
