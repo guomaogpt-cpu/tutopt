@@ -47,32 +47,40 @@ type ListingPageProps = {
 export async function generateMetadata({
   params,
 }: ListingPageProps): Promise<Metadata> {
-  const { id } = await params;
-  const listing = await getListingDetail(id);
+  try {
+    const { id } = await params;
+    const listing = await getListingDetail(id);
 
-  if (!listing) {
+    if (!listing) {
+      return {
+        title: `Объявление не найдено | ${SITE_NAME}`,
+      };
+    }
+
+    const priceLabel = formatListingPrice(listing.price, listing.currency);
+    const title = `${listing.title} — ${priceLabel} | ${SITE_NAME}`;
+    const description = listing.description.trim()
+      ? truncateSeoText(listing.description)
+      : `${listing.title}: объявление на Tutopt.`;
+    const firstImage = listing.images[0]
+      ? normalizeListingImageUrl(listing.images[0].url)
+      : undefined;
+
+    return buildPageMetadata({
+      title,
+      description,
+      path: `/listings/${listing.id}`,
+      type: "article",
+      images: firstImage ? [firstImage] : undefined,
+      noIndex: listing.status !== ListingStatus.PUBLISHED,
+    });
+  } catch (error) {
+    console.error("[listings/[id]/metadata] Failed to load listing metadata", error);
     return {
-      title: `Объявление не найдено | ${SITE_NAME}`,
+      title: `Объявление | ${SITE_NAME}`,
+      description: "Объявление на платформе Tutopt.",
     };
   }
-
-  const priceLabel = formatListingPrice(listing.price, listing.currency);
-  const title = `${listing.title} — ${priceLabel} | ${SITE_NAME}`;
-  const description = listing.description.trim()
-    ? truncateSeoText(listing.description)
-    : `${listing.title}: объявление на Tutopt.`;
-  const firstImage = listing.images[0]
-    ? normalizeListingImageUrl(listing.images[0].url)
-    : undefined;
-
-  return buildPageMetadata({
-    title,
-    description,
-    path: `/listings/${listing.id}`,
-    type: "article",
-    images: firstImage ? [firstImage] : undefined,
-    noIndex: listing.status !== ListingStatus.PUBLISHED,
-  });
 }
 
 export default async function ListingPage({ params }: ListingPageProps) {

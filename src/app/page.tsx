@@ -16,6 +16,8 @@ import {
   buildPageMetadata,
 } from "@/shared/seo/seo.config";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = buildPageMetadata({
   title: DEFAULT_TITLE,
   description: DEFAULT_DESCRIPTION,

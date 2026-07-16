@@ -6,6 +6,9 @@ import { VERTICAL_LIST, VERTICALS } from "@/features/verticals/verticals";
 import { getAbsoluteUrl } from "@/shared/seo/absolute-url";
 import { prisma } from "@/shared/lib/prisma";
 
+/** Prevent static prerender during Railway build (DB unavailable at build time). */
+export const dynamic = "force-dynamic";
+
 function collectAncestorIds(
   categoryId: string,
   parentById: Map<string, string | null>,
@@ -21,10 +24,8 @@ function collectAncestorIds(
   return ids;
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
-  const staticEntries: MetadataRoute.Sitemap = [
+function buildStaticSitemapEntries(now: Date): MetadataRoute.Sitemap {
+  return [
     {
       url: getAbsoluteUrl("/"),
       lastModified: now,
@@ -43,20 +44,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 0.8,
     },
-    {
-      url: getAbsoluteUrl("/sellers"),
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
-      url: getAbsoluteUrl("/categories"),
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
   ];
+}
 
+async function buildDynamicSitemapEntries(
+  now: Date,
+  staticEntries: MetadataRoute.Sitemap,
+): Promise<MetadataRoute.Sitemap> {
   const [categories, publishedCombos, listings] = await Promise.all([
     prisma.category.findMany({
       where: { is_active: true },
@@ -173,8 +167,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticEntries,
+    {
+      url: getAbsoluteUrl("/sellers"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: getAbsoluteUrl("/categories"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
     ...categoryEntries,
     ...categoryCityEntries,
     ...listingEntries,
   ];
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+  const staticEntries = buildStaticSitemapEntries(now);
+
+  try {
+    return await buildDynamicSitemapEntries(now, staticEntries);
+  } catch (error) {
+    console.error("[sitemap] Failed to load dynamic sitemap entries", error);
+    return staticEntries;
+  }
 }

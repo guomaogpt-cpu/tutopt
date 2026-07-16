@@ -57,49 +57,59 @@ const listingCardSelect = {
 export async function generateMetadata({
   searchParams,
 }: ListingsPageProps): Promise<Metadata> {
-  const rawParams = await searchParams;
-  const filters = parseListingsCatalogParams(rawParams);
+  try {
+    const rawParams = await searchParams;
+    const filters = parseListingsCatalogParams(rawParams);
 
-  if (filters.q) {
+    if (filters.q) {
+      return buildPageMetadata({
+        title: `Поиск: ${filters.q} — объявления Кыргызстана | ${SITE_NAME}`,
+        description: `Результаты поиска «${filters.q}» на Tutopt — объявления Кыргызстана.`,
+        path: "/listings",
+      });
+    }
+
+    if (filters.categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: filters.categoryId },
+        select: { name: true },
+      });
+
+      if (category) {
+        return buildPageMetadata({
+          title: `${category.name} — объявления Кыргызстана | ${SITE_NAME}`,
+          description: `${category.name}: объявления на Tutopt в Кыргызстане.`,
+          path: filters.vertical
+            ? `/listings?vertical=${filters.vertical}`
+            : "/listings",
+        });
+      }
+    }
+
+    if (filters.vertical) {
+      const seo = VERTICAL_CATALOG_SEO[filters.vertical];
+      return buildPageMetadata({
+        title: seo.title,
+        description: seo.description,
+        path: `/listings?vertical=${filters.vertical}`,
+      });
+    }
+
     return buildPageMetadata({
-      title: `Поиск: ${filters.q} — объявления Кыргызстана | ${SITE_NAME}`,
-      description: `Результаты поиска «${filters.q}» на Tutopt — объявления Кыргызстана.`,
+      title: "Объявления Кыргызстана | Tutopt",
+      description:
+        "Каталог объявлений Tutopt: опт, розница, услуги и грузоперевозки в Кыргызстане.",
+      path: "/listings",
+    });
+  } catch (error) {
+    console.error("[listings/metadata] Failed to load catalog metadata", error);
+    return buildPageMetadata({
+      title: "Объявления Кыргызстана | Tutopt",
+      description:
+        "Каталог объявлений Tutopt: опт, розница, услуги и грузоперевозки в Кыргызстане.",
       path: "/listings",
     });
   }
-
-  if (filters.categoryId) {
-    const category = await prisma.category.findUnique({
-      where: { id: filters.categoryId },
-      select: { name: true },
-    });
-
-    if (category) {
-      return buildPageMetadata({
-        title: `${category.name} — объявления Кыргызстана | ${SITE_NAME}`,
-        description: `${category.name}: объявления на Tutopt в Кыргызстане.`,
-        path: filters.vertical
-          ? `/listings?vertical=${filters.vertical}`
-          : "/listings",
-      });
-    }
-  }
-
-  if (filters.vertical) {
-    const seo = VERTICAL_CATALOG_SEO[filters.vertical];
-    return buildPageMetadata({
-      title: seo.title,
-      description: seo.description,
-      path: `/listings?vertical=${filters.vertical}`,
-    });
-  }
-
-  return buildPageMetadata({
-    title: "Объявления Кыргызстана | Tutopt",
-    description:
-      "Каталог объявлений Tutopt: опт, розница, услуги и грузоперевозки в Кыргызстане.",
-    path: "/listings",
-  });
 }
 
 export default async function ListingsPage({ searchParams }: ListingsPageProps) {

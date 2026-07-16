@@ -18,22 +18,30 @@ export async function generateVerticalCategoryMetadata(
   vertical: ListingVertical,
   params: SeoRouteParams,
 ): Promise<Metadata> {
-  const { categorySlug, citySlug } = await params;
-  const category = await findCategoryForVerticalSeo(vertical, categorySlug);
+  try {
+    const { categorySlug, citySlug } = await params;
+    const category = await findCategoryForVerticalSeo(vertical, categorySlug);
 
-  if (!category) {
-    return { title: "Раздел не найден" };
-  }
-
-  let city = null;
-  if (citySlug) {
-    city = await findCityForSeoSlug(citySlug);
-    if (!city) {
-      return { title: "Город не найден" };
+    if (!category) {
+      return { title: "Раздел не найден" };
     }
-  }
 
-  return buildSeoLandingMetadata(category, city);
+    let city = null;
+    if (citySlug) {
+      city = await findCityForSeoSlug(citySlug);
+      if (!city) {
+        return { title: "Город не найден" };
+      }
+    }
+
+    return buildSeoLandingMetadata(category, city);
+  } catch (error) {
+    console.error("[seo/metadata] Failed to load category landing metadata", error);
+    return {
+      title: "Раздел | Tutopt",
+      description: "Объявления на платформе Tutopt.",
+    };
+  }
 }
 
 export async function renderVerticalCategoryPage(

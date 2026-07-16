@@ -31,43 +31,53 @@ export async function generateMetadata({
   searchParams,
 }: SellerProfilePageProps): Promise<Metadata> {
   const { id } = await params;
-  const { vertical: verticalParam } = await searchParams;
-  const profile = await getSellerProfileByParam(id);
 
-  if (!profile) {
+  try {
+    const { vertical: verticalParam } = await searchParams;
+    const profile = await getSellerProfileByParam(id);
+
+    if (!profile) {
+      return buildPageMetadata({
+        title: "Профиль продавца",
+        description: "Профиль продавца на Tutopt",
+        path: `/seller/${id}`,
+        noIndex: true,
+      });
+    }
+
+    const listings = await getSellerPublishedListings(profile.id);
+    const filterVertical = parseListingVerticalParam(verticalParam);
+    const primaryVertical =
+      filterVertical ?? getSellerPrimaryVertical(listings);
+    const cityName = profile.city?.name ?? null;
+    const path = profile.slug
+      ? `/seller/${profile.slug}`
+      : `/seller/${profile.id}`;
+    const title = getSellerProfileSeoTitle(profile.company_name, primaryVertical);
+    const description = truncateSeoText(
+      getSellerProfileSeoDescription({
+        sellerName: profile.company_name,
+        cityName,
+        listingCount: listings.length,
+        primaryVertical,
+      }),
+    );
+
     return buildPageMetadata({
-      title: "Профиль продавца",
-      description: "Профиль продавца на Tutopt",
+      title,
+      description,
+      path: filterVertical ? `${path}?vertical=${filterVertical}` : path,
+      type: "website",
+      images: profile.logo_url ? [profile.logo_url] : undefined,
+    });
+  } catch (error) {
+    console.error("[seller/[id]/metadata] Failed to load seller metadata", error);
+    return buildPageMetadata({
+      title: "Профиль продавца | Tutopt",
+      description: "Профиль продавца на платформе Tutopt.",
       path: `/seller/${id}`,
-      noIndex: true,
     });
   }
-
-  const listings = await getSellerPublishedListings(profile.id);
-  const filterVertical = parseListingVerticalParam(verticalParam);
-  const primaryVertical =
-    filterVertical ?? getSellerPrimaryVertical(listings);
-  const cityName = profile.city?.name ?? null;
-  const path = profile.slug
-    ? `/seller/${profile.slug}`
-    : `/seller/${profile.id}`;
-  const title = getSellerProfileSeoTitle(profile.company_name, primaryVertical);
-  const description = truncateSeoText(
-    getSellerProfileSeoDescription({
-      sellerName: profile.company_name,
-      cityName,
-      listingCount: listings.length,
-      primaryVertical,
-    }),
-  );
-
-  return buildPageMetadata({
-    title,
-    description,
-    path: filterVertical ? `${path}?vertical=${filterVertical}` : path,
-    type: "website",
-    images: profile.logo_url ? [profile.logo_url] : undefined,
-  });
 }
 
 export default async function SellerProfilePage({
