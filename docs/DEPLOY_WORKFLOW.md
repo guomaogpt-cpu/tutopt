@@ -53,6 +53,16 @@ Railway → **tutopt** → **Deployments** — дождаться successful dep
 
 Открыть: [https://tutopt-production.up.railway.app](https://tutopt-production.up.railway.app)
 
+**После каждого deploy:**
+
+1. Дождаться successful Railway deployment
+2. Если были migrations: `npx prisma migrate deploy` (или проверить release command)
+3. Если seed менялся: `npm run db:seed` (только осознанно)
+4. Открыть `/api/health` — `ok: true`, `database: ok`
+5. Открыть `/sitemap.xml`
+6. Открыть `/robots.txt`
+7. Пройти smoke test из [`PRODUCTION_CHECKLIST.md`](./PRODUCTION_CHECKLIST.md)
+
 ---
 
 ## 3. Checklist после каждого deploy
@@ -71,6 +81,15 @@ Railway → **tutopt** → **Deployments** — дождаться successful dep
 | Кабинет покупателя | `/buyer/dashboard` |
 | Админка (пользователи) | `/admin/users` |
 | Модерация объявлений | `/admin/moderation/listings` |
+| Health check | `/api/health` |
+| Sitemap | `/sitemap.xml` |
+| Robots | `/robots.txt` |
+| ТутОпт | `/opt` |
+| ТутМаркет | `/market` |
+| ТутУслуги | `/services` |
+| ТутКарго | `/cargo` |
+
+Полный чеклист: [`PRODUCTION_CHECKLIST.md`](./PRODUCTION_CHECKLIST.md)
 
 Базовый адрес: `https://tutopt-production.up.railway.app`
 
@@ -128,6 +147,24 @@ npx prisma migrate deploy
 | `NODE_ENV` | `production` |
 | `LOG_LEVEL` | например `info` |
 | `NEXT_PUBLIC_APP_URL` | публичный URL приложения |
+
+### Analytics (optional)
+
+Скрипты подключаются только если переменные заданы. После смены `NEXT_PUBLIC_*` нужен **Redeploy**.
+
+```text
+NEXT_PUBLIC_GA_ID=
+NEXT_PUBLIC_YANDEX_METRIKA_ID=
+```
+
+### Search engine verification (optional)
+
+Meta-теги verification добавляются в layout только при заполненных env:
+
+```text
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
+NEXT_PUBLIC_YANDEX_VERIFICATION=
+```
 
 Пример публичного URL (можно писать в docs):
 
