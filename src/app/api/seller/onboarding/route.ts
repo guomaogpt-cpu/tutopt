@@ -11,6 +11,7 @@ import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route"
 import { ConflictError, ForbiddenError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
+import { getAccountRestrictedMessage, isUserBlocked } from "@/lib/security/user-restrictions";
 
 export async function POST(request: Request) {
   return withApiHandler(async () => {
@@ -18,6 +19,10 @@ export async function POST(request: Request) {
 
     if (user.role !== UserRole.SELLER) {
       throw new ForbiddenError("Онбординг доступен только продавцам");
+    }
+
+    if (isUserBlocked(user)) {
+      throw new ForbiddenError(getAccountRestrictedMessage());
     }
 
     const input = await parseJsonBody(request, sellerOnboardingSchema);

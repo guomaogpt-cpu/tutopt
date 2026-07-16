@@ -161,11 +161,18 @@ model User {
   email_verified_at DateTime?     @map("email_verified_at") @db.Timestamptz
   phone_verified_at DateTime?     @map("phone_verified_at") @db.Timestamptz
   is_blocked        Boolean       @default(false) @map("is_blocked")
+  blocked_at        DateTime?     @map("blocked_at") @db.Timestamptz
+  blocked_reason    String?       @map("blocked_reason") @db.Text
+  blocked_by_id     String?       @map("blocked_by_id") @db.Uuid
+  listing_restricted_at DateTime? @map("listing_restricted_at") @db.Timestamptz
+  lead_restricted_at    DateTime? @map("lead_restricted_at") @db.Timestamptz
   last_login_at     DateTime?     @map("last_login_at") @db.Timestamptz
   created_at        DateTime      @default(now()) @map("created_at") @db.Timestamptz
   updated_at        DateTime      @updatedAt @map("updated_at") @db.Timestamptz
 
   region                   Region?                   @relation(fields: [region_id], references: [id], onDelete: SetNull)
+  blockedBy                User?                     @relation("UserBlockedBy", fields: [blocked_by_id], references: [id], onDelete: SetNull)
+  usersBlocked             User[]                    @relation("UserBlockedBy")
   sellerProfile            SellerProfile?
   favorites                Favorite[]
   leadsAsBuyer             Lead[]                    @relation("LeadBuyer")

@@ -35,6 +35,10 @@ export default async function AdminUsersPage() {
         avatar_url: true,
         role: true,
         is_blocked: true,
+        blocked_at: true,
+        blocked_reason: true,
+        listing_restricted_at: true,
+        lead_restricted_at: true,
         created_at: true,
       },
     }),
@@ -121,6 +125,10 @@ export default async function AdminUsersPage() {
       name: item.name,
       role: item.role,
       is_blocked: item.is_blocked,
+      blocked_at: item.blocked_at?.toISOString() ?? null,
+      blocked_reason: item.blocked_reason,
+      listing_restricted_at: item.listing_restricted_at?.toISOString() ?? null,
+      lead_restricted_at: item.lead_restricted_at?.toISOString() ?? null,
       created_at: item.created_at.toISOString(),
       listingCount: stats?.listingCount ?? 0,
       verticals,
@@ -161,7 +169,7 @@ export default async function AdminUsersPage() {
         <PageHeaderContent>
           <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Пользователи</PageTitle>
           <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
-            Управление ролями и доступом пользователей
+            Управление ролями, блокировками и ограничениями пользователей
           </PageSubtitle>
         </PageHeaderContent>
       </PageHeader>

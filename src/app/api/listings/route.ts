@@ -6,6 +6,7 @@ import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
 import { createListingSchema } from "@/features/listings/validators/listing.validators";
 import { validateListingContent } from "@/lib/moderation/content-checks";
 import { assertListingCreateRateLimit } from "@/lib/security/rate-limit";
+import { getCreateListingRestrictionMessage } from "@/lib/security/user-restrictions";
 import { DEFAULT_LISTING_VERTICAL } from "@/features/verticals/verticals";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import {
@@ -23,6 +24,11 @@ export async function POST(request: Request) {
 
     if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
       throw new ForbiddenError("Only sellers can create listings");
+    }
+
+    const listingRestrictionMessage = getCreateListingRestrictionMessage(user);
+    if (listingRestrictionMessage) {
+      throw new ForbiddenError(listingRestrictionMessage);
     }
 
     assertListingCreateRateLimit(user.id);

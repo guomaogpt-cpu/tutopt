@@ -27,12 +27,20 @@ export default async function AdminReportsPage() {
             id: true,
             title: true,
             vertical: true,
+            sellerProfile: {
+              select: {
+                id: true,
+                company_name: true,
+                user_id: true,
+              },
+            },
           },
         },
         sellerProfile: {
           select: {
             id: true,
             company_name: true,
+            user_id: true,
           },
         },
         reporter: {
@@ -49,6 +57,8 @@ export default async function AdminReportsPage() {
 
   const rows: AdminReportRow[] = reports.map((report) => {
     const targetType: "listing" | "seller" = report.listing_id ? "listing" : "seller";
+    const sellerFromListing = report.listing?.sellerProfile;
+    const seller = report.sellerProfile ?? sellerFromListing ?? null;
 
     return {
       id: report.id,
@@ -60,8 +70,9 @@ export default async function AdminReportsPage() {
       listingId: report.listing?.id ?? report.listing_id,
       listingTitle: report.listing?.title ?? null,
       listingVertical: report.listing?.vertical ?? null,
-      sellerId: report.sellerProfile?.id ?? report.seller_profile_id,
-      sellerName: report.sellerProfile?.company_name ?? null,
+      sellerId: seller?.id ?? report.seller_profile_id,
+      sellerName: seller?.company_name ?? null,
+      sellerUserId: seller?.user_id ?? null,
       targetType,
     };
   });

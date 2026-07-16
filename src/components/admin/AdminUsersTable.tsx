@@ -9,8 +9,17 @@ import { UserRoleBadge } from "@/components/admin/UserRoleBadge";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { SellerTrustBadge } from "@/components/seller/SellerTrustBlock";
 import type { SellerTrustLevel } from "@/lib/trust/seller-trust";
+import { getUserRestrictionLabels } from "@/lib/security/user-restrictions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Modal,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/modal";
 import { SearchInput } from "@/components/ui/search-input";
 import {
   Select,
@@ -19,9 +28,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 type AssignableRole = "BUYER" | "MODERATOR";
+
+type RestrictionAction =
+  | "block"
+  | "unblock"
+  | "restrict_listings"
+  | "unrestrict_listings"
+  | "restrict_leads"
+  | "unrestrict_leads";
 
 export type AdminUserRow = {
   id: string;
@@ -30,6 +48,10 @@ export type AdminUserRow = {
   name: string;
   role: UserRole;
   is_blocked: boolean;
+  blocked_at: string | null;
+  blocked_reason: string | null;
+  listing_restricted_at: string | null;
+  lead_restricted_at: string | null;
   created_at: string;
   listingCount: number;
   verticals: ListingVertical[];
@@ -51,7 +73,7 @@ type ApiSuccessBody = {
   data: {
     user: {
       name: string;
-      role: UserRole;
+      role?: UserRole;
     };
   };
 };
@@ -61,6 +83,15 @@ const roleLabels: Record<UserRole, string> = {
   SELLER: "Продавец",
   MODERATOR: "Модератор",
   ADMIN: "Админ",
+};
+
+const restrictionActionLabels: Record<RestrictionAction, string> = {
+  block: "Заблокировать",
+  unblock: "Разблокировать",
+  restrict_listings: "Ограничить объявления",
+  unrestrict_listings: "Снять ограничение объявлений",
+  restrict_leads: "Ограничить заявки",
+  unrestrict_leads: "Снять ограничение заявок",
 };
 
 function getInitials(name: string): string {
@@ -74,56 +105,173 @@ function getInitials(name: string): string {
   return `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase();
 }
 
+function UserStatusBadges({ user }: { user: AdminUserRow }) {
+  const labels = getUserRestrictionLabels({
+    is_blocked: user.is_blocked,
+    blocked_at: user.blocked_at,
+    listing_restricted_at: user.listing_restricted_at,
+    lead_restricted_at: user.lead_restricted_at,
+  });
+
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {labels.map((label) => {
+        const isBlocked = label === "Заблокирован";
+        const isActive = label === "Активен";
+        return (
+          <Badge
+            key={label}
+            variant={isBlocked ? "destructive" : "secondary"}
+            className={cn(
+              "rounded-full text-[11px]",
+              isActive && "bg-[#ECFDF5] text-[#059669] hover:bg-[#ECFDF5]",
+              !isBlocked &&
+                !isActive &&
+                "bg-[#FFFBEB] text-[#D97706] hover:bg-[#FFFBEB]",
+            )}
+          >
+            {label}
+          </Badge>
+        );
+      })}
+    </div>
+  );
+}
+
 function UserActions({
   user,
   currentUserId,
   isPending,
   onPromote,
   onDemote,
+  onRestrictionAction,
 }: {
   user: AdminUserRow;
   currentUserId: string;
   isPending: boolean;
   onPromote: () => void;
   onDemote: () => void;
+  onRestrictionAction: (action: RestrictionAction) => void;
 }) {
   const isSelf = user.id === currentUserId;
   const canPromote = user.role === UserRole.BUYER && !isSelf;
   const canDemote = user.role === UserRole.MODERATOR && !isSelf;
-  const isProtected = user.role === UserRole.ADMIN || user.role === UserRole.SELLER || isSelf;
-
-  if (isProtected) {
-    return (
-      <p className="text-xs text-[#64748B]">
-        {isSelf ? "Нельзя изменить свою роль" : "Роль защищена от изменений"}
-      </p>
-    );
-  }
+  const roleProtected = user.role === UserRole.ADMIN || user.role === UserRole.SELLER || isSelf;
+  const canRestrict = !isSelf && user.role !== UserRole.ADMIN;
+  const isBlocked = user.is_blocked || Boolean(user.blocked_at);
+  const listingsRestricted = Boolean(user.listing_restricted_at);
+  const leadsRestricted = Boolean(user.lead_restricted_at);
 
   return (
-    <div className="flex flex-col gap-2 sm:flex-row">
-      {canPromote ? (
-        <Button
-          type="button"
-          size="sm"
-          disabled={isPending}
-          onClick={onPromote}
-          className="h-10 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:w-auto"
-        >
-          Назначить модератором
-        </Button>
-      ) : null}
-      {canDemote ? (
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          disabled={isPending}
-          onClick={onDemote}
-          className="h-10 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
-        >
-          Снять модератора
-        </Button>
+    <div className="flex flex-col gap-2">
+      {!roleProtected ? (
+        <div className="flex flex-col gap-2 sm:flex-row">
+          {canPromote ? (
+            <Button
+              type="button"
+              size="sm"
+              disabled={isPending}
+              onClick={onPromote}
+              className="h-10 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:w-auto"
+            >
+              Назначить модератором
+            </Button>
+          ) : null}
+          {canDemote ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isPending}
+              onClick={onDemote}
+              className="h-10 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
+            >
+              Снять модератора
+            </Button>
+          ) : null}
+        </div>
+      ) : (
+        <p className="text-xs text-[#64748B]">
+          {isSelf ? "Нельзя изменить свою роль" : "Роль защищена от изменений"}
+        </p>
+      )}
+
+      {canRestrict ? (
+        <div className="flex flex-col gap-2">
+          {isBlocked ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isPending}
+              onClick={() => onRestrictionAction("unblock")}
+              className="h-10 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
+            >
+              Разблокировать
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isPending}
+              onClick={() => onRestrictionAction("block")}
+              className="h-10 w-full rounded-xl border-[#FECACA] bg-[#FEF2F2] text-[#DC2626] hover:bg-[#FEE2E2] sm:w-auto"
+            >
+              Заблокировать
+            </Button>
+          )}
+
+          {listingsRestricted ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isPending || isBlocked}
+              onClick={() => onRestrictionAction("unrestrict_listings")}
+              className="h-10 w-full rounded-xl sm:w-auto"
+            >
+              Снять ограничение объявлений
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isPending || isBlocked}
+              onClick={() => onRestrictionAction("restrict_listings")}
+              className="h-10 w-full rounded-xl sm:w-auto"
+            >
+              Ограничить объявления
+            </Button>
+          )}
+
+          {leadsRestricted ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isPending || isBlocked}
+              onClick={() => onRestrictionAction("unrestrict_leads")}
+              className="h-10 w-full rounded-xl sm:w-auto"
+            >
+              Снять ограничение заявок
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={isPending || isBlocked}
+              onClick={() => onRestrictionAction("restrict_leads")}
+              className="h-10 w-full rounded-xl sm:w-auto"
+            >
+              Ограничить заявки
+            </Button>
+          )}
+        </div>
+      ) : isSelf ? (
+        <p className="text-xs text-[#64748B]">Нельзя ограничить свой аккаунт</p>
       ) : null}
     </div>
   );
@@ -136,13 +284,16 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [confirmUser, setConfirmUser] = useState<AdminUserRow | null>(null);
+  const [confirmAction, setConfirmAction] = useState<RestrictionAction | null>(null);
+  const [blockReason, setBlockReason] = useState("");
 
   const filteredUsers = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
     return users.filter((user) => {
       const matchesRole = roleFilter === "all" || user.role === roleFilter;
-      const haystack = [user.name, user.email ?? "", user.phone ?? ""].join(" ").toLowerCase();
+      const haystack = [user.name, user.email ?? "", user.phone ?? "", user.id].join(" ").toLowerCase();
       const matchesQuery = !normalizedQuery || haystack.includes(normalizedQuery);
       return matchesRole && matchesQuery;
     });
@@ -171,11 +322,60 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
       const updatedUser = successBody.data.user;
 
       setSuccessMessage(
-        `Роль пользователя «${updatedUser.name}» изменена на «${roleLabels[updatedUser.role]}».`,
+        `Роль пользователя «${updatedUser.name}» изменена на «${roleLabels[updatedUser.role ?? role]}».`,
       );
       router.refresh();
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Не удалось изменить роль");
+    } finally {
+      setPendingUserId(null);
+    }
+  }
+
+  function openRestrictionConfirm(user: AdminUserRow, action: RestrictionAction) {
+    setConfirmUser(user);
+    setConfirmAction(action);
+    setBlockReason("");
+    setErrorMessage("");
+  }
+
+  async function submitRestrictionAction() {
+    if (!confirmUser || !confirmAction) {
+      return;
+    }
+
+    setPendingUserId(confirmUser.id);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      const response = await fetch(`/api/admin/users/${confirmUser.id}/restrictions`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: confirmAction,
+          reason: confirmAction === "block" ? blockReason.trim() || null : null,
+        }),
+      });
+
+      const body = (await response.json()) as ApiErrorBody | ApiSuccessBody;
+
+      if (!response.ok) {
+        const errorBody = body as ApiErrorBody;
+        throw new Error(errorBody.error?.message ?? "Не удалось обновить ограничения");
+      }
+
+      setSuccessMessage(
+        `Для «${confirmUser.name}» выполнено: ${restrictionActionLabels[confirmAction]}.`,
+      );
+      setConfirmUser(null);
+      setConfirmAction(null);
+      setBlockReason("");
+      router.refresh();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Не удалось обновить ограничения",
+      );
     } finally {
       setPendingUserId(null);
     }
@@ -221,7 +421,7 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onClear={() => setQuery("")}
-            placeholder="Поиск по имени или email..."
+            placeholder="Поиск по имени, email, телефону или id..."
             containerClassName="min-w-0 flex-1"
             className="h-11 rounded-xl bg-white"
           />
@@ -249,7 +449,7 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
         <>
           <div className="hidden overflow-hidden rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.04)] lg:block">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[880px] text-left text-sm">
+              <table className="w-full min-w-[960px] text-left text-sm">
                 <thead className="border-b border-[rgba(148,163,184,0.14)] bg-[#F8FAFC] text-xs uppercase tracking-wide text-[#64748B]">
                   <tr>
                     <th className="px-5 py-3 font-medium">Пользователь</th>
@@ -268,6 +468,7 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                     return (
                       <tr
                         key={user.id}
+                        id={`user-${user.id}`}
                         className="border-b border-[rgba(148,163,184,0.1)] last:border-b-0"
                       >
                         <td className="px-5 py-4">
@@ -308,13 +509,7 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                           {new Date(user.created_at).toLocaleDateString("ru-RU")}
                         </td>
                         <td className="px-5 py-4">
-                          {user.is_blocked ? (
-                            <Badge variant="destructive">Заблокирован</Badge>
-                          ) : (
-                            <Badge className="bg-[#ECFDF5] text-[#059669] hover:bg-[#ECFDF5]">
-                              Активен
-                            </Badge>
-                          )}
+                          <UserStatusBadges user={user} />
                         </td>
                         <td className="px-5 py-4">
                           <UserActions
@@ -323,6 +518,7 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                             isPending={isPending}
                             onPromote={() => void changeRole(user.id, "MODERATOR")}
                             onDemote={() => void changeRole(user.id, "BUYER")}
+                            onRestrictionAction={(action) => openRestrictionConfirm(user, action)}
                           />
                         </td>
                       </tr>
@@ -340,6 +536,7 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
               return (
                 <article
                   key={user.id}
+                  id={`user-${user.id}`}
                   className={cn(
                     "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)] sm:p-5",
                   )}
@@ -376,24 +573,11 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                     <div>
                       <dt className="text-xs text-[#64748B]">Объявления</dt>
                       <dd className="mt-0.5 font-medium text-[#0F172A]">{user.listingCount}</dd>
-                      {user.verticals.length > 0 ? (
-                        <div className="mt-1.5 flex flex-wrap gap-1">
-                          {user.verticals.map((vertical) => (
-                            <VerticalListingBadge key={vertical} vertical={vertical} />
-                          ))}
-                        </div>
-                      ) : null}
                     </div>
                     <div>
                       <dt className="text-xs text-[#64748B]">Статус</dt>
                       <dd className="mt-1">
-                        {user.is_blocked ? (
-                          <Badge variant="destructive">Заблокирован</Badge>
-                        ) : (
-                          <Badge className="bg-[#ECFDF5] text-[#059669] hover:bg-[#ECFDF5]">
-                            Активен
-                          </Badge>
-                        )}
+                        <UserStatusBadges user={user} />
                       </dd>
                     </div>
                   </dl>
@@ -405,6 +589,7 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                       isPending={isPending}
                       onPromote={() => void changeRole(user.id, "MODERATOR")}
                       onDemote={() => void changeRole(user.id, "BUYER")}
+                      onRestrictionAction={(action) => openRestrictionConfirm(user, action)}
                     />
                   </div>
                 </article>
@@ -413,6 +598,77 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
           </div>
         </>
       )}
+
+      <Modal
+        open={Boolean(confirmUser && confirmAction)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setConfirmUser(null);
+            setConfirmAction(null);
+            setBlockReason("");
+          }
+        }}
+      >
+        <ModalContent className="max-w-md">
+          <ModalHeader>
+            <ModalTitle>
+              {confirmAction ? restrictionActionLabels[confirmAction] : "Подтверждение"}
+            </ModalTitle>
+            <ModalDescription>
+              {confirmUser
+                ? `Пользователь: ${confirmUser.name}`
+                : "Подтвердите действие над пользователем."}
+            </ModalDescription>
+          </ModalHeader>
+
+          {confirmAction === "block" ? (
+            <div className="space-y-2">
+              <label htmlFor="block-reason" className="text-sm font-medium text-[#0F172A]">
+                Причина <span className="font-normal text-[#94A3B8]">(необязательно)</span>
+              </label>
+              <Textarea
+                id="block-reason"
+                value={blockReason}
+                onChange={(event) => setBlockReason(event.target.value)}
+                maxLength={500}
+                placeholder="Кратко укажите причину блокировки"
+                className="min-h-[96px] rounded-xl"
+              />
+            </div>
+          ) : (
+            <p className="text-sm text-[#475569]">
+              Действие не удаляет пользователя и не скрывает объявления автоматически.
+            </p>
+          )}
+
+          <ModalFooter>
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl"
+              onClick={() => {
+                setConfirmUser(null);
+                setConfirmAction(null);
+              }}
+            >
+              Отмена
+            </Button>
+            <Button
+              type="button"
+              className={cn(
+                "rounded-xl",
+                confirmAction === "block"
+                  ? "bg-[#DC2626] hover:bg-[#B91C1C]"
+                  : "bg-[#2563EB] hover:bg-[#1D4ED8]",
+              )}
+              disabled={pendingUserId !== null}
+              onClick={() => void submitRestrictionAction()}
+            >
+              Подтвердить
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

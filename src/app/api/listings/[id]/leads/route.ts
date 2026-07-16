@@ -9,6 +9,7 @@ import {
 import { createNewLeadNotification } from "@/features/notifications/lib/notifications-data";
 import { validateLeadContent } from "@/lib/moderation/content-checks";
 import { assertLeadCreateRateLimits } from "@/lib/security/rate-limit";
+import { getLeadRestrictionMessage } from "@/lib/security/user-restrictions";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ConflictError, ForbiddenError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
@@ -22,6 +23,12 @@ type LeadRouteContext = {
 export async function POST(request: Request, context: LeadRouteContext) {
   return withApiHandler(async () => {
     const user = await requireAuth();
+
+    const leadRestrictionMessage = getLeadRestrictionMessage(user);
+    if (leadRestrictionMessage) {
+      throw new ForbiddenError(leadRestrictionMessage);
+    }
+
     const { id } = await context.params;
     const listingId = listingIdSchema.safeParse(id);
 

@@ -27,6 +27,7 @@ export type AdminReportRow = {
   listingVertical: ListingVertical | null;
   sellerId: string | null;
   sellerName: string | null;
+  sellerUserId: string | null;
   targetType: "listing" | "seller";
 };
 
@@ -254,6 +255,17 @@ export function AdminReportsTable({ reports }: AdminReportsTableProps) {
                       className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
                     >
                       <Link href={objectHref}>Открыть</Link>
+                    </Button>
+                  ) : null}
+                  {report.sellerUserId ? (
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
+                    >
+                      <Link href={`/admin/users#user-${report.sellerUserId}`}>
+                        Открыть пользователя
+                      </Link>
                     </Button>
                   ) : null}
                   {canAct ? (

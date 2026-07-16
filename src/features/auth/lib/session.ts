@@ -23,6 +23,10 @@ export const publicUserSelect = {
   email_verified_at: true,
   phone_verified_at: true,
   is_blocked: true,
+  blocked_at: true,
+  blocked_reason: true,
+  listing_restricted_at: true,
+  lead_restricted_at: true,
   last_login_at: true,
   created_at: true,
   updated_at: true,
@@ -40,6 +44,10 @@ export type PublicUser = {
   email_verified_at: Date | null;
   phone_verified_at: Date | null;
   is_blocked: boolean;
+  blocked_at: Date | null;
+  blocked_reason: string | null;
+  listing_restricted_at: Date | null;
+  lead_restricted_at: Date | null;
   last_login_at: Date | null;
   created_at: Date;
   updated_at: Date;

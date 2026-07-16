@@ -10,11 +10,16 @@ import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route"
 import { ConflictError, ForbiddenError, ValidationError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
+import { getAccountRestrictedMessage, isUserBlocked } from "@/lib/security/user-restrictions";
 
 export async function POST(request: Request) {
   return withApiHandler(async () => {
     const user = await requireAuth();
     const input = await parseJsonBody(request, sellerUpgradeSchema);
+
+    if (isUserBlocked(user)) {
+      throw new ForbiddenError(getAccountRestrictedMessage());
+    }
 
     if (user.role === UserRole.SELLER) {
       const next =
