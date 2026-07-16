@@ -10,10 +10,10 @@ type VerticalListingBadgeProps = {
 };
 
 const BADGE_TONES: Record<ListingVertical, string> = {
-  OPT: "bg-[#EFF6FF] text-[#1D4ED8] ring-[#BFDBFE]",
-  MARKET: "bg-[#F0FDF4] text-[#15803D] ring-[#BBF7D0]",
-  SERVICES: "bg-[#FFF7ED] text-[#C2410C] ring-[#FED7AA]",
-  CARGO: "bg-[#F8FAFC] text-[#334155] ring-[#CBD5E1]",
+  OPT: "border border-blue-200 bg-blue-50 text-blue-700",
+  MARKET: "border border-indigo-200 bg-indigo-50 text-indigo-700",
+  SERVICES: "border border-teal-200 bg-teal-50 text-teal-700",
+  CARGO: "border border-rose-200 bg-rose-50 text-rose-700",
 };
 
 export function VerticalListingBadge({
@@ -24,7 +24,7 @@ export function VerticalListingBadge({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center rounded-md font-medium ring-1 ring-inset",
+        "inline-flex shrink-0 items-center rounded-full border font-medium",
         BADGE_TONES[vertical],
         size === "sm" ? "px-1.5 py-0.5 text-[10px] leading-none" : "px-2 py-0.5 text-xs",
         className,

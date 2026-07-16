@@ -34,6 +34,16 @@ import {
 import { cn } from "@/lib/utils";
 import type { ListingVertical } from "@prisma/client";
 
+const VERTICAL_CHIP_ACTIVE: Record<ListingVertical, string> = {
+  OPT: "bg-blue-50 text-blue-700 ring-1 ring-blue-300",
+  MARKET: "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-300",
+  SERVICES: "bg-teal-50 text-teal-700 ring-1 ring-teal-300",
+  CARGO: "bg-rose-50 text-rose-700 ring-1 ring-rose-300",
+};
+
+const VERTICAL_CHIP_INACTIVE =
+  "bg-[#F8FAFC] text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:text-[#334155]";
+
 type ListingsCatalogToolbarProps = {
   filters: ListingsCatalogFilters;
   categories: SelectOption[];
@@ -177,10 +187,10 @@ export function ListingsCatalogToolbar({
             type="button"
             onClick={() => handleVerticalChange(null)}
             className={cn(
-              "h-7 shrink-0 rounded-full px-2.5 text-xs font-medium transition",
+              "h-7 shrink-0 rounded-full px-2.5 text-xs font-medium transition-colors",
               filters.vertical === null
-                ? "bg-blue-50 text-blue-700 ring-1 ring-[#2563EB]/40"
-                : "bg-[#F8FAFC] text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:text-[#334155]",
+                ? "bg-blue-50 text-blue-700 ring-1 ring-blue-300"
+                : VERTICAL_CHIP_INACTIVE,
             )}
           >
             Все
@@ -193,10 +203,8 @@ export function ListingsCatalogToolbar({
                 type="button"
                 onClick={() => handleVerticalChange(vertical.id)}
                 className={cn(
-                  "h-7 shrink-0 rounded-full px-2.5 text-xs font-medium transition",
-                  isActive
-                    ? "bg-blue-50 text-blue-700 ring-1 ring-[#2563EB]/40"
-                    : "bg-[#F8FAFC] text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:text-[#334155]",
+                  "h-7 shrink-0 rounded-full px-2.5 text-xs font-medium transition-colors",
+                  isActive ? VERTICAL_CHIP_ACTIVE[vertical.id] : VERTICAL_CHIP_INACTIVE,
                 )}
               >
                 {vertical.label}

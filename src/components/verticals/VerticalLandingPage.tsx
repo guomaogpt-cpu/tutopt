@@ -11,6 +11,95 @@ import {
   VERTICALS,
   type VerticalDefinition,
 } from "@/features/verticals/verticals";
+import { cn } from "@/lib/utils";
+
+const VERTICAL_LANDING_STYLES: Record<
+  ListingVertical,
+  {
+    heroSection: string;
+    heroAccent: string;
+    directionBadge: string;
+    label: string;
+    statusBadge: string;
+    titleUnderline: string;
+    mainBg: string;
+    primaryButton: string;
+    secondaryButton: string;
+    link: string;
+    categoryAccent: string;
+    categoryHover: string;
+  }
+> = {
+  OPT: {
+    heroSection:
+      "border-b border-blue-200 bg-gradient-to-br from-blue-100 via-blue-50 to-white shadow-sm",
+    heroAccent: "border-t-4 border-t-blue-600 sm:border-t-0 sm:border-l-4 sm:border-l-blue-600",
+    directionBadge: "border border-blue-600 bg-blue-600 text-white",
+    label: "text-blue-700",
+    statusBadge: "border border-blue-200 bg-blue-100 text-blue-700",
+    titleUnderline: "bg-blue-600",
+    mainBg: "bg-gradient-to-b from-blue-50/50 to-slate-50",
+    primaryButton:
+      "bg-blue-600 text-white transition-colors hover:bg-blue-700 active:scale-[0.98]",
+    secondaryButton:
+      "border border-blue-200 bg-blue-100 text-blue-700 transition-colors hover:bg-blue-200 active:scale-[0.98]",
+    link: "text-blue-700 hover:underline",
+    categoryAccent: "border-l-4 border-l-blue-500",
+    categoryHover: "hover:border-blue-300 hover:bg-blue-50/70",
+  },
+  MARKET: {
+    heroSection:
+      "border-b border-indigo-200 bg-gradient-to-br from-indigo-100 via-indigo-50 to-white shadow-sm",
+    heroAccent:
+      "border-t-4 border-t-indigo-600 sm:border-t-0 sm:border-l-4 sm:border-l-indigo-600",
+    directionBadge: "border border-indigo-600 bg-indigo-600 text-white",
+    label: "text-indigo-700",
+    statusBadge: "border border-indigo-200 bg-indigo-100 text-indigo-700",
+    titleUnderline: "bg-indigo-600",
+    mainBg: "bg-gradient-to-b from-indigo-50/60 to-slate-50",
+    primaryButton:
+      "bg-indigo-600 text-white transition-colors hover:bg-indigo-700 active:scale-[0.98]",
+    secondaryButton:
+      "border border-indigo-200 bg-indigo-100 text-indigo-700 transition-colors hover:bg-indigo-200 active:scale-[0.98]",
+    link: "text-indigo-700 hover:underline",
+    categoryAccent: "border-l-4 border-l-indigo-500",
+    categoryHover: "hover:border-indigo-300 hover:bg-indigo-50/70",
+  },
+  SERVICES: {
+    heroSection:
+      "border-b border-teal-200 bg-gradient-to-br from-teal-100 via-teal-50 to-white shadow-sm",
+    heroAccent: "border-t-4 border-t-teal-700 sm:border-t-0 sm:border-l-4 sm:border-l-teal-700",
+    directionBadge: "border border-teal-700 bg-teal-700 text-white",
+    label: "text-teal-700",
+    statusBadge: "border border-teal-200 bg-teal-100 text-teal-700",
+    titleUnderline: "bg-teal-700",
+    mainBg: "bg-gradient-to-b from-teal-50/60 to-slate-50",
+    primaryButton:
+      "bg-teal-700 text-white transition-colors hover:bg-teal-800 active:scale-[0.98]",
+    secondaryButton:
+      "border border-teal-200 bg-teal-100 text-teal-700 transition-colors hover:bg-teal-200 active:scale-[0.98]",
+    link: "text-teal-700 hover:underline",
+    categoryAccent: "border-l-4 border-l-teal-600",
+    categoryHover: "hover:border-teal-300 hover:bg-teal-50/70",
+  },
+  CARGO: {
+    heroSection:
+      "border-b border-rose-200 bg-gradient-to-br from-rose-100 via-rose-50 to-white shadow-sm",
+    heroAccent: "border-t-4 border-t-rose-600 sm:border-t-0 sm:border-l-4 sm:border-l-rose-600",
+    directionBadge: "border border-rose-600 bg-rose-600 text-white",
+    label: "text-rose-700",
+    statusBadge: "border border-rose-200 bg-rose-100 text-rose-700",
+    titleUnderline: "bg-rose-600",
+    mainBg: "bg-gradient-to-b from-rose-50/60 to-slate-50",
+    primaryButton:
+      "bg-rose-600 text-white transition-colors hover:bg-rose-700 active:scale-[0.98]",
+    secondaryButton:
+      "border border-rose-200 bg-rose-100 text-rose-700 transition-colors hover:bg-rose-200 active:scale-[0.98]",
+    link: "text-rose-700 hover:underline",
+    categoryAccent: "border-l-4 border-l-rose-500",
+    categoryHover: "hover:border-rose-300 hover:bg-rose-50/70",
+  },
+};
 
 export type VerticalLandingCategory = {
   id: string;
@@ -48,10 +137,11 @@ export function VerticalLandingPage({
         : null
       : statusBadge;
   const listingCount = publishedCount ?? listings.length;
+  const styles = VERTICAL_LANDING_STYLES[verticalId];
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA]">
-      <section className="border-b border-[rgba(148,163,184,0.14)] bg-white">
+    <main className={cn("min-w-0 overflow-x-clip", styles.mainBg)}>
+      <section className={cn(styles.heroSection, styles.heroAccent)}>
         <Container size="lg" className="py-8 sm:py-10">
           <AppBreadcrumbs
             className="mb-4"
@@ -63,11 +153,29 @@ export function VerticalLandingPage({
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="min-w-0 max-w-2xl">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="text-sm font-medium uppercase tracking-wider text-[#2563EB]">
+                <p
+                  className={cn(
+                    "text-sm font-medium uppercase tracking-wider",
+                    styles.label,
+                  )}
+                >
                   Направление
                 </p>
+                <span
+                  className={cn(
+                    "rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                    styles.directionBadge,
+                  )}
+                >
+                  {config.label}
+                </span>
                 {resolvedBadge ? (
-                  <span className="rounded-full bg-[#FEF3C7] px-2.5 py-0.5 text-xs font-medium text-[#92400E]">
+                  <span
+                    className={cn(
+                      "rounded-full px-2.5 py-0.5 text-xs font-medium",
+                      styles.statusBadge,
+                    )}
+                  >
                     {resolvedBadge}
                   </span>
                 ) : null}
@@ -75,20 +183,24 @@ export function VerticalLandingPage({
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#0F172A] sm:text-4xl">
                 {resolvedTitle}
               </h1>
+              <span
+                className={cn("mt-2 block h-1 w-14 rounded-full", styles.titleUnderline)}
+                aria-hidden="true"
+              />
               <p className="mt-3 text-base leading-relaxed text-[#64748B] sm:text-lg">
                 {resolvedSubtitle}
               </p>
 
               <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                 <Button
-                  className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:w-auto"
+                  className={cn("h-11 w-full rounded-xl sm:w-auto", styles.primaryButton)}
                   asChild
                 >
                   <Link href={config.listingsHref}>Смотреть объявления</Link>
                 </Button>
                 <Button
                   variant="outline"
-                  className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] bg-white sm:w-auto"
+                  className={cn("h-11 w-full rounded-xl sm:w-auto", styles.secondaryButton)}
                   asChild
                 >
                   <Link href={config.createListingHref}>Подать объявление</Link>
@@ -146,7 +258,11 @@ export function VerticalLandingPage({
                   <li key={category.id} className="min-w-0">
                     <Link
                       href={seoHref}
-                      className="flex h-full min-h-[56px] items-center rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white px-3.5 py-3 text-sm font-medium text-[#334155] shadow-[0_4px_12px_rgba(15,23,42,0.03)] transition hover:border-[rgba(37,99,235,0.28)] hover:text-[#2563EB]"
+                      className={cn(
+                        "flex h-full min-h-[56px] items-center rounded-2xl border border-slate-200 bg-white py-3 pl-3.5 pr-3.5 text-sm font-medium text-[#334155] shadow-[0_4px_12px_rgba(15,23,42,0.03)] transition-colors",
+                        styles.categoryAccent,
+                        styles.categoryHover,
+                      )}
                     >
                       <span className="line-clamp-2">{category.name}</span>
                     </Link>
@@ -168,7 +284,7 @@ export function VerticalLandingPage({
             {listings.length > 0 ? (
               <Link
                 href={config.listingsHref}
-                className="shrink-0 text-sm font-medium text-[#2563EB] hover:underline"
+                className={cn("shrink-0 text-sm font-medium", styles.link)}
               >
                 Все объявления
               </Link>

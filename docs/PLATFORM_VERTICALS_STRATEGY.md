@@ -532,10 +532,16 @@ enum ListingVertical {
 - `/admin/users`: счётчик объявлений и badges направлений продавца;
 - см. [`ADMIN_VERTICALS_UX.md`](./ADMIN_VERTICALS_UX.md).
 
+### Phase 10.5
+
+- лёгкая цветовая идентичность направлений (OPT blue / MARKET indigo / SERVICES teal / CARGO rose);
+- явные Tailwind class mappings внутри существующих компонентов (без `vertical-theme.ts`);
+- badges, VerticalCards, landings, catalog chips, SEO category CTA.
+
 ### Phase 11
 
 - стабилизация после внедрения verticals: аудит, bugfix, lint/build;
-- search suggest scoped по vertical;
+- подтверждение отсутствия `vertical-theme` и неудачных hero-компонентов;
 - подготовка к commit/deploy (`prisma migrate deploy`, seed notes).
 
 ### Phase 12+

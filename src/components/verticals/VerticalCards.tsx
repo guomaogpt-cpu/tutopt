@@ -22,6 +22,51 @@ const VERTICAL_ICONS: Record<ListingVertical, LucideIcon> = {
   CARGO: Truck,
 };
 
+const VERTICAL_CARD_STYLES: Record<
+  ListingVertical,
+  {
+    activeBorder: string;
+    activeBg: string;
+    activeShadow: string;
+    activeIcon: string;
+    activeBadge: string;
+    hoverBorder: string;
+  }
+> = {
+  OPT: {
+    activeBorder: "border-blue-300",
+    activeBg: "bg-blue-100",
+    activeShadow: "shadow-sm",
+    activeIcon: "bg-white text-blue-600",
+    activeBadge: "bg-blue-600 text-white",
+    hoverBorder: "hover:border-blue-300",
+  },
+  MARKET: {
+    activeBorder: "border-indigo-300",
+    activeBg: "bg-indigo-100",
+    activeShadow: "shadow-sm",
+    activeIcon: "bg-white text-indigo-600",
+    activeBadge: "bg-indigo-600 text-white",
+    hoverBorder: "hover:border-indigo-300",
+  },
+  SERVICES: {
+    activeBorder: "border-teal-300",
+    activeBg: "bg-teal-100",
+    activeShadow: "shadow-sm",
+    activeIcon: "bg-white text-teal-700",
+    activeBadge: "bg-teal-700 text-white",
+    hoverBorder: "hover:border-teal-300",
+  },
+  CARGO: {
+    activeBorder: "border-rose-300",
+    activeBg: "bg-rose-100",
+    activeShadow: "shadow-sm",
+    activeIcon: "bg-white text-rose-600",
+    activeBadge: "bg-rose-600 text-white",
+    hoverBorder: "hover:border-rose-300",
+  },
+};
+
 type VerticalCardsProps = {
   activeVertical?: ListingVertical | null;
   variant?: "cards" | "compact";
@@ -73,6 +118,7 @@ type VerticalCardProps = {
 
 function VerticalCard({ vertical, isActive, compact }: VerticalCardProps) {
   const Icon = VERTICAL_ICONS[vertical.id];
+  const cardStyles = VERTICAL_CARD_STYLES[vertical.id];
 
   return (
     <Link
@@ -81,10 +127,14 @@ function VerticalCard({ vertical, isActive, compact }: VerticalCardProps) {
       className={cn(
         "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border bg-white",
         "shadow-[0_8px_20px_rgba(15,23,42,0.04)] transition duration-200",
-        "hover:-translate-y-0.5 hover:border-[rgba(37,99,235,0.28)] hover:shadow-[0_12px_24px_rgba(15,23,42,0.06)]",
         isActive
-          ? "border-[#2563EB] bg-[#EFF6FF]"
-          : "border-[rgba(148,163,184,0.18)]",
+          ? cn(
+              cardStyles.activeBorder,
+              cardStyles.activeBg,
+              cardStyles.activeShadow,
+              cardStyles.hoverBorder,
+            )
+          : "border-[rgba(148,163,184,0.18)] hover:border-[rgba(148,163,184,0.35)]",
         compact ? "p-3.5" : "p-4",
       )}
     >
@@ -92,7 +142,7 @@ function VerticalCard({ vertical, isActive, compact }: VerticalCardProps) {
         <span
           className={cn(
             "flex size-10 shrink-0 items-center justify-center rounded-xl",
-            isActive ? "bg-white text-[#2563EB]" : "bg-[#F1F5F9] text-[#475569]",
+            isActive ? cardStyles.activeIcon : "bg-[#F1F5F9] text-[#475569]",
           )}
         >
           <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
@@ -104,7 +154,12 @@ function VerticalCard({ vertical, isActive, compact }: VerticalCardProps) {
               {vertical.label}
             </span>
             {isActive ? (
-              <span className="rounded-full bg-[#2563EB] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+              <span
+                className={cn(
+                  "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                  cardStyles.activeBadge,
+                )}
+              >
                 Активно
               </span>
             ) : null}

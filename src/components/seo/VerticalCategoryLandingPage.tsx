@@ -17,6 +17,33 @@ import {
   buildSeoLandingPath,
 } from "@/features/seo/vertical-category-seo";
 import { VERTICALS } from "@/features/verticals/verticals";
+import { cn } from "@/lib/utils";
+
+const VERTICAL_SEO_STYLES: Record<
+  ListingVertical,
+  { primaryButton: string; link: string }
+> = {
+  OPT: {
+    primaryButton:
+      "bg-blue-600 text-white transition-colors hover:bg-blue-700 active:scale-[0.98]",
+    link: "text-blue-700 hover:underline",
+  },
+  MARKET: {
+    primaryButton:
+      "bg-indigo-600 text-white transition-colors hover:bg-indigo-700 active:scale-[0.98]",
+    link: "text-indigo-700 hover:underline",
+  },
+  SERVICES: {
+    primaryButton:
+      "bg-teal-700 text-white transition-colors hover:bg-teal-800 active:scale-[0.98]",
+    link: "text-teal-700 hover:underline",
+  },
+  CARGO: {
+    primaryButton:
+      "bg-rose-600 text-white transition-colors hover:bg-rose-700 active:scale-[0.98]",
+    link: "text-rose-700 hover:underline",
+  },
+};
 
 type VerticalCategoryLandingPageProps = {
   vertical: ListingVertical;
@@ -34,6 +61,7 @@ export function VerticalCategoryLandingPage({
   totalCount,
 }: VerticalCategoryLandingPageProps) {
   const config = VERTICALS[vertical];
+  const styles = VERTICAL_SEO_STYLES[vertical];
   const path = buildSeoLandingPath(category, city);
   const h1 = buildSeoLandingH1(category, city);
   const seoText = buildSeoLandingBodyText(category, city);
@@ -88,7 +116,7 @@ export function VerticalCategoryLandingPage({
 
         <div className="mb-6">
           <Button
-            className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:w-auto"
+            className={cn("h-11 w-full rounded-xl sm:w-auto", styles.primaryButton)}
             asChild
           >
             <Link href={createHref}>Подать объявление в этот раздел</Link>
@@ -121,11 +149,11 @@ export function VerticalCategoryLandingPage({
           <div className="mt-5 flex flex-wrap gap-3 text-sm">
             <Link
               href={config.listingsHref}
-              className="font-medium text-[#2563EB] hover:underline"
+              className={cn("font-medium", styles.link)}
             >
               Все объявления {config.label}
             </Link>
-            <Link href={config.href} className="font-medium text-[#2563EB] hover:underline">
+            <Link href={config.href} className={cn("font-medium", styles.link)}>
               На страницу направления
             </Link>
           </div>
