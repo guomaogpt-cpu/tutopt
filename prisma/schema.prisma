@@ -60,6 +60,10 @@ enum ReportReason {
   SPAM
   FRAUD
   WRONG_CATEGORY
+  PROHIBITED_ITEM
+  DUPLICATE
+  CONTACTS_IN_WRONG_PLACE
+  OFFENSIVE_CONTENT
   OTHER
 }
 
@@ -216,6 +220,7 @@ model SellerProfile {
   documents  SellerDocument[]
   listings   Listing[]
   leads      Lead[]
+  reports    Report[]
 
   @@index([slug])
   @@index([region_id])
@@ -384,20 +389,25 @@ model Lead {
 }
 
 model Report {
-  id          String       @id @default(uuid()) @db.Uuid
-  listing_id  String       @map("listing_id") @db.Uuid
-  reporter_id String       @map("reporter_id") @db.Uuid
-  reason      ReportReason
-  comment     String?      @db.Text
-  status      ReportStatus @default(OPEN)
-  resolved_by String?      @map("resolved_by") @db.Uuid
-  created_at  DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  id                String       @id @default(uuid()) @db.Uuid
+  listing_id        String?      @map("listing_id") @db.Uuid
+  seller_profile_id String?      @map("seller_profile_id") @db.Uuid
+  reporter_id       String       @map("reporter_id") @db.Uuid
+  reason            ReportReason
+  comment           String?      @db.Text
+  status            ReportStatus @default(OPEN)
+  resolved_by       String?      @map("resolved_by") @db.Uuid
+  reviewed_at       DateTime?    @map("reviewed_at") @db.Timestamptz
+  created_at        DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updated_at        DateTime     @updatedAt @map("updated_at") @db.Timestamptz
 
-  listing  Listing @relation(fields: [listing_id], references: [id], onDelete: Cascade)
-  reporter User    @relation("ReportReporter", fields: [reporter_id], references: [id], onDelete: Cascade)
-  resolver User?   @relation("ReportResolver", fields: [resolved_by], references: [id], onDelete: SetNull)
+  listing       Listing?       @relation(fields: [listing_id], references: [id], onDelete: Cascade)
+  sellerProfile SellerProfile? @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
+  reporter      User           @relation("ReportReporter", fields: [reporter_id], references: [id], onDelete: Cascade)
+  resolver      User?          @relation("ReportResolver", fields: [resolved_by], references: [id], onDelete: SetNull)
 
   @@index([listing_id])
+  @@index([seller_profile_id])
   @@index([reporter_id])
   @@index([status])
   @@map("reports")

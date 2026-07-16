@@ -108,6 +108,21 @@ export function assertLeadCreateRateLimits(userId: string, listingId: string): v
   );
 }
 
+export const REPORT_CREATE_RATE_LIMIT = {
+  limit: 10,
+  windowMs: 60 * 60 * 1000,
+  message: "Можно отправить не более 10 жалоб в час. Попробуйте позже.",
+} as const;
+
+export function assertReportCreateRateLimit(userId: string): void {
+  assertRateLimit(
+    `report:create:${userId}`,
+    REPORT_CREATE_RATE_LIMIT.limit,
+    REPORT_CREATE_RATE_LIMIT.windowMs,
+    REPORT_CREATE_RATE_LIMIT.message,
+  );
+}
+
 /** @internal Test helper — clears in-memory buckets. */
 export function resetRateLimitStoreForTests(): void {
   buckets.clear();

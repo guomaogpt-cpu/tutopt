@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { UserRole, ListingStatus } from "@prisma/client";
+import { ListingStatus, ReportStatus, UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import {
   ClipboardCheck,
+  Flag,
   LayoutGrid,
   Package,
   Store,
@@ -40,21 +41,23 @@ export default async function AdminDashboardPage() {
 
   const isAdmin = user.role === UserRole.ADMIN;
 
-  const [pendingCount, usersCount, verticalGroups, pendingByVertical] = await Promise.all([
-    prisma.listing.count({
-      where: { status: ListingStatus.PENDING_MODERATION },
-    }),
-    isAdmin ? prisma.user.count() : Promise.resolve(0),
-    prisma.listing.groupBy({
-      by: ["vertical"],
-      _count: { _all: true },
-    }),
-    prisma.listing.groupBy({
-      by: ["vertical"],
-      where: { status: ListingStatus.PENDING_MODERATION },
-      _count: { _all: true },
-    }),
-  ]);
+  const [pendingCount, usersCount, openReportsCount, verticalGroups, pendingByVertical] =
+    await Promise.all([
+      prisma.listing.count({
+        where: { status: ListingStatus.PENDING_MODERATION },
+      }),
+      isAdmin ? prisma.user.count() : Promise.resolve(0),
+      prisma.report.count({ where: { status: ReportStatus.OPEN } }),
+      prisma.listing.groupBy({
+        by: ["vertical"],
+        _count: { _all: true },
+      }),
+      prisma.listing.groupBy({
+        by: ["vertical"],
+        where: { status: ListingStatus.PENDING_MODERATION },
+        _count: { _all: true },
+      }),
+    ]);
 
   const listingCounts = Object.fromEntries(
     verticalGroups.map((row) => [row.vertical, row._count._all]),
@@ -70,6 +73,12 @@ export default async function AdminDashboardPage() {
       value: pendingCount,
       icon: ClipboardCheck,
       iconClassName: "bg-[#FFFBEB] text-[#D97706]",
+    },
+    {
+      label: "Новые жалобы",
+      value: openReportsCount,
+      icon: Flag,
+      iconClassName: "bg-[#FEF2F2] text-[#DC2626]",
     },
     ...(isAdmin
       ? [
@@ -121,6 +130,22 @@ export default async function AdminDashboardPage() {
             <p className="mt-1 text-lg font-bold text-[#0F172A]">Объявления на модерации</p>
             <p className="mt-2 text-sm text-[#2563EB]">
               {pendingCount > 0 ? `${pendingCount} ожидают проверки →` : "Открыть модерацию →"}
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/reports"
+            className={cn(
+              "rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white p-5",
+              "shadow-[0_4px_16px_rgba(15,23,42,0.04)] transition hover:border-[rgba(37,99,235,0.25)]",
+            )}
+          >
+            <p className="text-sm font-medium text-[#64748B]">Abuse</p>
+            <p className="mt-1 text-lg font-bold text-[#0F172A]">Жалобы</p>
+            <p className="mt-2 text-sm text-[#2563EB]">
+              {openReportsCount > 0
+                ? `${openReportsCount} новых жалоб →`
+                : "Открыть жалобы →"}
             </p>
           </Link>
 

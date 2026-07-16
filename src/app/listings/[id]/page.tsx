@@ -232,10 +232,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
       sellerSince={sellerProfile.created_at}
       publishedListingCount={sellerListingCount}
       sellerId={sellerProfile.id}
+      listingId={listing.id}
       vertical={listing.vertical}
       trustLevel={sellerTrust.level}
       trustLevelLabel={sellerTrust.levelLabel}
       trustSignals={sellerTrust.signals}
+      isAuthenticated={user !== null}
     />
   );
 

@@ -2,6 +2,7 @@ import type { ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { BadgeCheck, Building2 } from "lucide-react";
 import { SellerTrustCompactBlock } from "@/components/seller/SellerTrustBlock";
+import { ReportDialog } from "@/components/reports/ReportDialog";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import {
   buildSellerProfileHref,
@@ -23,11 +24,13 @@ type ListingSellerCardProps = {
   sellerSince: Date;
   publishedListingCount: number;
   sellerId: string;
+  listingId: string;
   vertical: ListingVertical;
   messageSectionId?: string;
   trustLevel?: SellerTrustLevel;
   trustLevelLabel?: string;
   trustSignals?: SellerTrustSignal[];
+  isAuthenticated?: boolean;
 };
 
 function getInitials(name: string): string {
@@ -50,11 +53,13 @@ export function ListingSellerCard({
   sellerSince,
   publishedListingCount,
   sellerId,
+  listingId,
   vertical,
   messageSectionId = "listing-seller-message",
   trustLevel,
   trustLevelLabel,
   trustSignals = [],
+  isAuthenticated = false,
 }: ListingSellerCardProps) {
   const displayName = companyName.trim() || sellerName;
   const roleLabel = getSellerProfileLabel(vertical);
@@ -138,6 +143,16 @@ export function ListingSellerCard({
       >
         <Link href={buildSellerProfileHref(sellerId, vertical)}>Все объявления</Link>
       </Button>
+
+      <div className="mt-3 border-t border-[rgba(148,163,184,0.14)] pt-3 text-center">
+        <ReportDialog
+          targetType="listing"
+          listingId={listingId}
+          isAuthenticated={isAuthenticated}
+          vertical={vertical}
+          triggerLabel="Пожаловаться"
+        />
+      </div>
     </div>
   );
 }

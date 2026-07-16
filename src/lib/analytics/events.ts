@@ -12,7 +12,8 @@ export type AnalyticsEventName =
   | "seller_onboarding_start"
   | "seller_onboarding_complete"
   | "moderation_approve"
-  | "moderation_reject";
+  | "moderation_reject"
+  | "report_submit";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -32,6 +33,8 @@ export type AnalyticsEventParams = {
   search_length?: number;
   has_query?: boolean;
   is_active?: boolean;
+  target_type?: "listing" | "seller";
+  reason?: string;
 };
 
 const SEARCH_QUERY_MAX_LENGTH = 80;
@@ -166,5 +169,17 @@ export function trackModerationAction(
   trackEvent(action === "approve" ? "moderation_approve" : "moderation_reject", {
     ...(vertical ? { vertical } : {}),
     ...(listingId ? { listing_id: listingId } : {}),
+  });
+}
+
+export function trackReportSubmit(
+  targetType: "listing" | "seller",
+  reason: string,
+  vertical?: ListingVertical | null,
+): void {
+  trackEvent("report_submit", {
+    target_type: targetType,
+    reason,
+    ...(vertical ? { vertical } : {}),
   });
 }

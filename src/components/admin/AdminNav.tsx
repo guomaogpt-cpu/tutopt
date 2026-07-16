@@ -25,6 +25,13 @@ const navItems = [
     prefix: "/admin/moderation",
   },
   {
+    label: "Жалобы",
+    href: "/admin/reports",
+    roles: [UserRole.ADMIN, UserRole.MODERATOR],
+    match: "prefix" as const,
+    prefix: "/admin/reports",
+  },
+  {
     label: "Пользователи",
     href: "/admin/users",
     roles: [UserRole.ADMIN],

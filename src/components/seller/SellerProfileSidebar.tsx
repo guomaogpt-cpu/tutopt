@@ -31,6 +31,7 @@ import {
   SellerTrustBadge,
   SellerTrustSignalsList,
 } from "@/components/seller/SellerTrustBlock";
+import { ReportDialog } from "@/components/reports/ReportDialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -388,6 +389,16 @@ export function SellerProfileSidebar({
               </div>
             )}
           </section>
+
+          <div className="px-5 py-4 text-center lg:px-6">
+            <ReportDialog
+              targetType="seller"
+              sellerId={profile.id}
+              isAuthenticated={isAuthenticated}
+              vertical={primaryVertical}
+              triggerLabel="Пожаловаться на продавца"
+            />
+          </div>
         </div>
       </div>
     </aside>
