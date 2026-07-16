@@ -1,6 +1,7 @@
 import { ListingStatus } from "@prisma/client";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { favoriteListingSelect } from "@/features/favorites/lib/favorites-data";
+import { serializeListingCard } from "@/features/listings/lib/serialize-listing-card";
 import { prisma } from "@/shared/lib/prisma";
 
 export async function recordListingView(userId: string, listingId: string): Promise<void> {
@@ -49,7 +50,7 @@ export async function getUserRecentViewedListings(
     }
 
     seen.add(view.listing_id);
-    listings.push(view.listing);
+    listings.push(serializeListingCard(view.listing));
 
     if (listings.length >= limit) {
       break;

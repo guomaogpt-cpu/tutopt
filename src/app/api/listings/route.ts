@@ -1,11 +1,19 @@
 import { ListingStatus, UserRole } from "@prisma/client";
 import { requireAuth } from "@/features/auth/lib/session";
+import { findRecentDuplicateListing } from "@/features/listings/lib/listing-duplicate-check";
 import { ensureSellerProfile } from "@/features/listings/lib/seller-profile";
 import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
 import { createListingSchema } from "@/features/listings/validators/listing.validators";
+import { validateListingContent } from "@/lib/moderation/content-checks";
+import { assertListingCreateRateLimit } from "@/lib/security/rate-limit";
 import { DEFAULT_LISTING_VERTICAL } from "@/features/verticals/verticals";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
-import { ForbiddenError, NotFoundError, ValidationError } from "@/shared/lib/errors";
+import {
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+  ValidationError,
+} from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
 
@@ -17,8 +25,27 @@ export async function POST(request: Request) {
       throw new ForbiddenError("Only sellers can create listings");
     }
 
+    assertListingCreateRateLimit(user.id);
+
     const input = await parseJsonBody(request, createListingSchema);
     const vertical = input.vertical ?? DEFAULT_LISTING_VERTICAL;
+
+    const contentIssues = validateListingContent({
+      title: input.title,
+      description: input.description,
+    });
+
+    if (contentIssues.length > 0) {
+      const fieldErrors: Record<string, string[]> = {};
+
+      for (const issue of contentIssues) {
+        fieldErrors[issue.field] = [...(fieldErrors[issue.field] ?? []), issue.message];
+      }
+
+      throw new ValidationError(contentIssues[0]?.message ?? "Проверьте текст объявления", {
+        fieldErrors,
+      });
+    }
 
     const [category, city, brand] = await Promise.all([
       prisma.category.findFirst({
@@ -56,6 +83,17 @@ export async function POST(request: Request) {
     }
 
     const sellerProfile = await ensureSellerProfile(user);
+
+    const duplicate = await findRecentDuplicateListing({
+      sellerProfileId: sellerProfile.id,
+      title: input.title,
+      categoryId: category.id,
+      vertical,
+    });
+
+    if (duplicate) {
+      throw new ConflictError("Похоже, такое объявление уже было создано недавно.");
+    }
 
     const listing = await prisma.listing.create({
       data: {

@@ -3,10 +3,12 @@ import Link from "next/link";
 import type { ListingStatus, ListingVertical } from "@prisma/client";
 import { Eye, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
+import { ListingQualityBadge } from "@/components/moderation/ListingQualityHints";
 import { ListingStatusBadge } from "@/components/seller/ListingStatusBadge";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
+import type { QualityLevel } from "@/lib/moderation/listing-quality";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +22,8 @@ export type SellerDashboardListing = {
   created_at: string;
   view_count: number;
   image_url: string | null;
+  qualityLevel: QualityLevel;
+  qualityWarnings: { code: string; label: string }[];
 };
 
 type SellerDashboardListingCardProps = {
@@ -72,6 +76,12 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
             {listing.title}
           </Link>
         </h3>
+
+        <ListingQualityBadge
+          level={listing.qualityLevel}
+          warnings={listing.qualityWarnings}
+          className="mt-2"
+        />
 
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#64748B]">
           <span className="font-semibold text-[#0F172A]">

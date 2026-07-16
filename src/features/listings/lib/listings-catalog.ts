@@ -22,15 +22,15 @@ export type ListingsCatalogFilters = {
 export type ListingCardData = {
   id: string;
   title: string;
-  price: Prisma.Decimal;
+  price: string;
   currency: string;
   moq: number;
   unit: ListingUnit;
   status: ListingStatus;
   vertical: ListingVertical;
   stock_quantity: number | null;
-  created_at: Date;
-  published_at: Date | null;
+  created_at: string;
+  published_at: string | null;
   category: { name: string };
   city: { name: string } | null;
   brand: { name: string } | null;

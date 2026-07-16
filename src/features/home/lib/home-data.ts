@@ -1,35 +1,16 @@
 import { ListingStatus, ListingVertical } from "@prisma/client";
 import { getDescendantIds } from "@/features/listings/lib/category-search";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import {
+  listingCardSelect,
+  serializeListingCards,
+} from "@/features/listings/lib/serialize-listing-card";
 import type { CategoryItem } from "@/features/listings/types/category";
 import { prisma } from "@/shared/lib/prisma";
 
 export const HOME_CATEGORIES_LIMIT = 10;
 export const HOME_LISTINGS_PRIMARY_LIMIT = 12;
 export const HOME_LISTINGS_SECONDARY_LIMIT = 8;
-
-const listingCardSelect = {
-  id: true,
-  title: true,
-  price: true,
-  currency: true,
-  moq: true,
-  unit: true,
-  status: true,
-  vertical: true,
-  stock_quantity: true,
-  created_at: true,
-  published_at: true,
-  category: { select: { name: true } },
-  city: { select: { name: true } },
-  brand: { select: { name: true } },
-  sellerProfile: { select: { company_name: true } },
-  images: {
-    orderBy: { sort_order: "asc" as const },
-    take: 1,
-    select: { url: true },
-  },
-} as const;
 
 export type HomeCategoryCard = {
   id: string;
@@ -140,12 +121,16 @@ export async function getHomePageData(): Promise<HomePageData> {
     };
   });
 
-  const primaryListings = listings.slice(0, HOME_LISTINGS_PRIMARY_LIMIT);
+  const primaryListings = serializeListingCards(
+    listings.slice(0, HOME_LISTINGS_PRIMARY_LIMIT),
+  );
   const moreListings =
     listings.length > HOME_LISTINGS_PRIMARY_LIMIT
-      ? listings.slice(
-          HOME_LISTINGS_PRIMARY_LIMIT,
-          HOME_LISTINGS_PRIMARY_LIMIT + HOME_LISTINGS_SECONDARY_LIMIT,
+      ? serializeListingCards(
+          listings.slice(
+            HOME_LISTINGS_PRIMARY_LIMIT,
+            HOME_LISTINGS_PRIMARY_LIMIT + HOME_LISTINGS_SECONDARY_LIMIT,
+          ),
         )
       : [];
 

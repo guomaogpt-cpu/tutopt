@@ -11,6 +11,10 @@ import {
   hasActiveCatalogFilters,
   parseListingsCatalogParams,
 } from "@/features/listings/lib/listings-catalog";
+import {
+  listingCardSelect,
+  serializeListingCards,
+} from "@/features/listings/lib/serialize-listing-card";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import {
   getCreateListingHref,
@@ -29,29 +33,6 @@ import {
 
 type ListingsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
-};
-
-const listingCardSelect = {
-  id: true,
-  title: true,
-  price: true,
-  currency: true,
-  moq: true,
-  unit: true,
-  status: true,
-  vertical: true,
-  stock_quantity: true,
-  created_at: true,
-  published_at: true,
-  category: { select: { name: true } },
-  city: { select: { name: true } },
-  brand: { select: { name: true } },
-  sellerProfile: { select: { company_name: true } },
-  images: {
-    orderBy: { sort_order: "asc" as const },
-    take: 1,
-    select: { url: true },
-  },
 };
 
 export async function generateMetadata({
@@ -122,7 +103,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const favoriteIds = new Set(favoriteListingIds);
 
-  const [listings, totalCount, categories, cities, brands] = await Promise.all([
+  const [rawListings, totalCount, categories, cities, brands] = await Promise.all([
     prisma.listing.findMany({
       where,
       orderBy,
@@ -150,6 +131,8 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
       select: { id: true, name: true },
     }),
   ]);
+
+  const listings = serializeListingCards(rawListings);
 
   const categoryOptions = categories.map((item) => ({ id: item.id, label: item.name }));
   const cityOptions = cities.map((item) => ({ id: item.id, label: item.name }));

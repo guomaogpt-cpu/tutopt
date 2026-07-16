@@ -18,6 +18,7 @@ import {
   getSellerProfileSeoTitle,
   getSellerVerticals,
 } from "@/features/sellers/lib/seller-vertical-profile";
+import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { parseListingVerticalParam } from "@/features/verticals/verticals";
 import { buildPageMetadata, truncateSeoText } from "@/shared/seo/seo.config";
 
@@ -110,6 +111,22 @@ export default async function SellerProfilePage({
 
   const sellerPath = profile.slug ?? profile.id;
 
+  const sellerTrust = calculateSellerTrust({
+    hasSellerProfile: true,
+    companyName: profile.company_name,
+    userName: profile.user.name,
+    description: profile.description,
+    cityName: profile.city?.name ?? null,
+    phone: profile.user.phone ?? profile.contact_phone,
+    phoneVerifiedAt: profile.user.phone_verified_at,
+    logoUrl: profile.logo_url,
+    avatarUrl: profile.user.avatar_url,
+    accountCreatedAt: profile.user.created_at ?? profile.created_at,
+    publishedListingCount,
+    activeVerticals: sellerVerticals,
+    hasCompletedOnboarding: Boolean(profile.user.phone),
+  });
+
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
       <Container className="max-w-[1280px] min-w-0">
@@ -144,6 +161,9 @@ export default async function SellerProfilePage({
             whatsapp={profile.whatsapp}
             telegram={profile.telegram}
             website={profile.website}
+            trustLevel={sellerTrust.level}
+            trustLevelLabel={sellerTrust.levelLabel}
+            trustSignals={sellerTrust.signals}
           />
           <div className="order-2 min-w-0 lg:order-1">
             <SellerProfileListings

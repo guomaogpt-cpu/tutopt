@@ -6,6 +6,7 @@ import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
 import { ListingGallery } from "@/components/listings/ListingGallery";
 import { ListingSellerCard } from "@/components/listings/ListingSellerCard";
+import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
 import { SimilarListings } from "@/components/listings/SimilarListings";
 import { ListingViewTracker } from "@/components/analytics/ListingViewTracker";
@@ -16,6 +17,7 @@ import { formatListingPrice } from "@/features/listings/lib/format-listing-price
 import {
   getListingDetail,
   getSellerPublishedListingCount,
+  getSellerPublishedVerticals,
   getSimilarListings,
 } from "@/features/listings/lib/listing-detail-data";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
@@ -98,9 +100,10 @@ export default async function ListingPage({ params }: ListingPageProps) {
     await recordListingView(user.id, listing.id);
   }
 
-  const [similarListings, sellerListingCount] = await Promise.all([
+  const [similarListings, sellerListingCount, sellerVerticals] = await Promise.all([
     getSimilarListings(listing.id, listing.category_id),
     getSellerPublishedListingCount(listing.sellerProfile.id),
+    getSellerPublishedVerticals(listing.sellerProfile.id),
   ]);
 
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
@@ -128,6 +131,22 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const sellerName = sellerProfile.user.name;
   const sellerAvatar = sellerProfile.logo_url ?? sellerProfile.user.avatar_url;
   const sellerCity = sellerProfile.city?.name ?? listing.city?.name ?? null;
+
+  const sellerTrust = calculateSellerTrust({
+    hasSellerProfile: true,
+    companyName: sellerProfile.company_name,
+    userName: sellerProfile.user.name,
+    description: sellerProfile.description,
+    cityName: sellerProfile.city?.name ?? null,
+    phone: sellerProfile.user.phone ?? sellerProfile.contact_phone,
+    phoneVerifiedAt: sellerProfile.user.phone_verified_at,
+    logoUrl: sellerProfile.logo_url,
+    avatarUrl: sellerProfile.user.avatar_url,
+    accountCreatedAt: sellerProfile.user.created_at ?? sellerProfile.created_at,
+    publishedListingCount: sellerListingCount,
+    activeVerticals: sellerVerticals,
+    hasCompletedOnboarding: Boolean(sellerProfile.user.phone),
+  });
 
   const vertical = VERTICALS[listing.vertical];
   const breadcrumbItems = [
@@ -214,6 +233,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
       publishedListingCount={sellerListingCount}
       sellerId={sellerProfile.id}
       vertical={listing.vertical}
+      trustLevel={sellerTrust.level}
+      trustLevelLabel={sellerTrust.levelLabel}
+      trustSignals={sellerTrust.signals}
     />
   );
 

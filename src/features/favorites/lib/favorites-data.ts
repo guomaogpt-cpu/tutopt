@@ -1,28 +1,11 @@
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import {
+  listingCardSelect,
+  serializeListingCard,
+} from "@/features/listings/lib/serialize-listing-card";
 import { prisma } from "@/shared/lib/prisma";
 
-export const favoriteListingSelect = {
-  id: true,
-  title: true,
-  price: true,
-  currency: true,
-  moq: true,
-  unit: true,
-  status: true,
-  vertical: true,
-  stock_quantity: true,
-  created_at: true,
-  published_at: true,
-  category: { select: { name: true } },
-  city: { select: { name: true } },
-  brand: { select: { name: true } },
-  sellerProfile: { select: { company_name: true } },
-  images: {
-    orderBy: { sort_order: "asc" as const },
-    take: 1,
-    select: { url: true },
-  },
-} as const;
+export const favoriteListingSelect = listingCardSelect;
 
 export async function getUserFavoriteListingIds(userId: string): Promise<string[]> {
   const favorites = await prisma.favorite.findMany({
@@ -45,7 +28,7 @@ export async function getUserFavoriteListings(userId: string): Promise<ListingCa
     },
   });
 
-  return favorites.map((favorite) => favorite.listing);
+  return favorites.map((favorite) => serializeListingCard(favorite.listing));
 }
 
 export async function getUserFavoritesPageData(userId: string): Promise<{
@@ -64,7 +47,7 @@ export async function getUserFavoritesPageData(userId: string): Promise<{
   });
 
   return {
-    listings: favorites.map((favorite) => favorite.listing),
+    listings: favorites.map((favorite) => serializeListingCard(favorite.listing)),
     lastAddedAt: favorites[0]?.created_at ?? null,
   };
 }

@@ -7,6 +7,8 @@ import { UserRole } from "@prisma/client";
 import { Users } from "lucide-react";
 import { UserRoleBadge } from "@/components/admin/UserRoleBadge";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
+import { SellerTrustBadge } from "@/components/seller/SellerTrustBlock";
+import type { SellerTrustLevel } from "@/lib/trust/seller-trust";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -31,6 +33,7 @@ export type AdminUserRow = {
   created_at: string;
   listingCount: number;
   verticals: ListingVertical[];
+  trustLevel?: SellerTrustLevel | null;
 };
 
 type AdminUsersTableProps = {
@@ -282,7 +285,10 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                         </td>
                         <td className="px-5 py-4 text-[#334155]">{user.email ?? "—"}</td>
                         <td className="px-5 py-4">
-                          <UserRoleBadge role={user.role} />
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <UserRoleBadge role={user.role} />
+                            {user.trustLevel ? <SellerTrustBadge level={user.trustLevel} /> : null}
+                          </div>
                         </td>
                         <td className="px-5 py-4">
                           <div className="space-y-1.5">
@@ -348,7 +354,10 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                         <p className="truncate text-sm text-[#64748B]">{user.email ?? user.phone ?? "—"}</p>
                       </div>
                     </div>
-                    <UserRoleBadge role={user.role} />
+                    <div className="flex shrink-0 flex-col items-end gap-1.5">
+                      <UserRoleBadge role={user.role} />
+                      {user.trustLevel ? <SellerTrustBadge level={user.trustLevel} /> : null}
+                    </div>
                   </div>
 
                   <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">

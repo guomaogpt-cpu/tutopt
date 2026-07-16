@@ -10,6 +10,7 @@ import {
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { SellerDashboardListings } from "@/components/seller/SellerDashboardListings";
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
+import { SellerProfileCompletenessCard } from "@/components/seller/SellerProfileCompletenessCard";
 import { SellerQuickActions } from "@/components/seller/SellerQuickActions";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
@@ -17,6 +18,8 @@ import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { countSellerVerticals } from "@/features/sellers/lib/seller-vertical-profile";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
+import { calculateListingQuality } from "@/lib/moderation/listing-quality";
+import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { prisma } from "@/shared/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -65,17 +68,23 @@ export default async function SellerDashboardPage() {
   const sellerProfile = await prisma.sellerProfile.findUnique({
     where: { user_id: user.id },
     include: {
+      city: { select: { name: true } },
       listings: {
         orderBy: { created_at: "desc" },
         select: {
           id: true,
           title: true,
+          description: true,
           status: true,
           vertical: true,
           price: true,
           currency: true,
+          moq: true,
+          unit: true,
           created_at: true,
           view_count: true,
+          city: { select: { name: true } },
+          category: { select: { name: true } },
           images: {
             orderBy: { sort_order: "asc" },
             take: 1,
@@ -83,6 +92,9 @@ export default async function SellerDashboardPage() {
               url: true,
               thumbnail_url: true,
             },
+          },
+          _count: {
+            select: { images: true },
           },
         },
       },
@@ -106,17 +118,57 @@ export default async function SellerDashboardPage() {
   ).length;
   const rejectedCount = listings.filter((item) => item.status === ListingStatus.REJECTED).length;
 
-  const serializedListings = listings.map((listing) => ({
-    id: listing.id,
-    title: listing.title,
-    status: listing.status,
-    vertical: listing.vertical,
-    price: listing.price.toString(),
-    currency: listing.currency,
-    created_at: listing.created_at.toISOString(),
-    view_count: listing.view_count,
-    image_url: listing.images[0]?.thumbnail_url ?? listing.images[0]?.url ?? null,
-  }));
+  const verticalCounts = countSellerVerticals(listings);
+  const activeVerticals = VERTICAL_LIST.filter((item) => verticalCounts[item.id] > 0).map(
+    (item) => item.id,
+  );
+
+  const sellerTrust = calculateSellerTrust({
+    hasSellerProfile: Boolean(sellerProfile),
+    companyName: sellerProfile?.company_name ?? null,
+    userName: user.name,
+    description: sellerProfile?.description ?? null,
+    cityName: sellerProfile?.city?.name ?? user.city,
+    phone: user.phone ?? sellerProfile?.contact_phone ?? null,
+    phoneVerifiedAt: user.phone_verified_at,
+    logoUrl: sellerProfile?.logo_url ?? null,
+    avatarUrl: user.avatar_url,
+    accountCreatedAt: user.created_at,
+    publishedListingCount: publishedCount,
+    activeVerticals,
+    hasCompletedOnboarding: !needsSellerOnboarding({
+      role: user.role,
+      phone: user.phone,
+    }),
+  });
+
+  const serializedListings = listings.map((listing) => {
+    const quality = calculateListingQuality({
+      title: listing.title,
+      description: listing.description,
+      price: listing.price.toString(),
+      cityName: listing.city?.name ?? null,
+      categoryName: listing.category.name,
+      vertical: listing.vertical,
+      imageCount: listing._count.images,
+      moq: listing.moq,
+      unit: listing.unit,
+    });
+
+    return {
+      id: listing.id,
+      title: listing.title,
+      status: listing.status,
+      vertical: listing.vertical,
+      price: listing.price.toString(),
+      currency: listing.currency,
+      created_at: listing.created_at.toISOString(),
+      view_count: listing.view_count,
+      image_url: listing.images[0]?.thumbnail_url ?? listing.images[0]?.url ?? null,
+      qualityLevel: quality.level,
+      qualityWarnings: quality.warnings.slice(0, 2),
+    };
+  });
 
   const stats = [
     {
@@ -145,8 +197,10 @@ export default async function SellerDashboardPage() {
     },
   ];
 
-  const verticalCounts = countSellerVerticals(listings);
   const hasVerticalActivity = VERTICAL_LIST.some((item) => verticalCounts[item.id] > 0);
+  const publicProfileHref = sellerProfile
+    ? `/seller/${sellerProfile.slug ?? sellerProfile.id}`
+    : null;
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
@@ -170,6 +224,14 @@ export default async function SellerDashboardPage() {
 
         <div className="mt-6 space-y-8 lg:mt-8 lg:space-y-10">
           <SellerDashboardStatCards stats={stats} />
+
+          <SellerProfileCompletenessCard
+            score={sellerTrust.score}
+            level={sellerTrust.level}
+            levelLabel={sellerTrust.levelLabel}
+            improvements={sellerTrust.improvements}
+            publicProfileHref={publicProfileHref}
+          />
 
           {hasVerticalActivity ? (
             <section aria-labelledby="seller-vertical-stats-title">

@@ -1,5 +1,11 @@
 export type ErrorCode =
-  "VALIDATION_ERROR" | "NOT_FOUND" | "UNAUTHORIZED" | "FORBIDDEN" | "CONFLICT" | "INTERNAL_ERROR";
+  | "VALIDATION_ERROR"
+  | "NOT_FOUND"
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "CONFLICT"
+  | "RATE_LIMITED"
+  | "INTERNAL_ERROR";
 
 export type ErrorResponse = {
   error: {
@@ -60,6 +66,13 @@ export class ConflictError extends AppError {
   constructor(message: string, details?: unknown) {
     super(message, "CONFLICT", 409, details);
     this.name = "ConflictError";
+  }
+}
+
+export class RateLimitError extends AppError {
+  constructor(message = "Слишком много запросов. Попробуйте позже.") {
+    super(message, "RATE_LIMITED", 429);
+    this.name = "RateLimitError";
   }
 }
 

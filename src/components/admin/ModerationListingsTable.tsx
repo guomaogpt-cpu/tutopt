@@ -12,6 +12,12 @@ import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge
 import { formatListingDate, formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { getModerationHint } from "@/features/admin/lib/moderation-vertical";
+import type { ContentWarning } from "@/lib/moderation/content-checks";
+import type { QualityLevel, RiskLevel } from "@/lib/moderation/listing-quality";
+import {
+  ListingQualityBadge,
+  ListingRiskBadge,
+} from "@/components/moderation/ListingQualityHints";
 import { trackModerationAction } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -37,6 +43,11 @@ export type ModerationListingRow = {
   categoryName: string;
   cityName: string | null;
   sellerName: string;
+  contentWarnings?: ContentWarning[];
+  qualityLevel?: QualityLevel;
+  qualityScore?: number;
+  riskLevel?: RiskLevel;
+  riskLabel?: string;
 };
 
 type ModerationListingsTableProps = {
@@ -121,6 +132,9 @@ function ModerationListingCard({
           <div className="flex flex-wrap items-center gap-2">
             <ListingStatusBadge status={listing.status} />
             <VerticalListingBadge vertical={listing.vertical} size="md" />
+            {listing.riskLevel && listing.riskLabel ? (
+              <ListingRiskBadge risk={listing.riskLevel} label={listing.riskLabel} />
+            ) : null}
           </div>
 
           <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#0F172A]">
@@ -128,6 +142,25 @@ function ModerationListingCard({
               {listing.title}
             </Link>
           </h3>
+
+          {listing.qualityLevel ? (
+            <ListingQualityBadge
+              level={listing.qualityLevel}
+              warnings={listing.contentWarnings ?? []}
+              className="mt-2"
+            />
+          ) : listing.contentWarnings && listing.contentWarnings.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {listing.contentWarnings.map((warning) => (
+                <span
+                  key={`${listing.id}-${warning.code}`}
+                  className="inline-flex items-center rounded-full bg-[#FEF3C7] px-2.5 py-0.5 text-[11px] font-medium text-[#B45309]"
+                >
+                  {warning.label}
+                </span>
+              ))}
+            </div>
+          ) : null}
 
           <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
             <div>

@@ -12,6 +12,12 @@ import {
   getModerationVerticalFilterHref,
   getModerationVerticalLabel,
 } from "@/features/admin/lib/moderation-vertical";
+import { hasPossibleDuplicateListing } from "@/features/listings/lib/listing-duplicate-check";
+import { getModerationContentWarnings } from "@/lib/moderation/content-checks";
+import {
+  calculateListingQuality,
+  getListingRiskLevelLabel,
+} from "@/lib/moderation/listing-quality";
 import { parseListingVerticalParam, VERTICAL_LIST } from "@/features/verticals/verticals";
 import { prisma } from "@/shared/lib/prisma";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
@@ -53,18 +59,25 @@ export default async function AdminModerationListingsPage({
       select: {
         id: true,
         title: true,
+        description: true,
         status: true,
         vertical: true,
         price: true,
         currency: true,
+        moq: true,
+        unit: true,
         created_at: true,
+        category_id: true,
         category: { select: { name: true } },
         city: { select: { name: true } },
-        sellerProfile: { select: { company_name: true } },
+        sellerProfile: { select: { id: true, company_name: true } },
         images: {
           orderBy: { sort_order: "asc" },
           take: 1,
           select: { url: true, thumbnail_url: true },
+        },
+        _count: {
+          select: { images: true },
         },
       },
     }),
@@ -100,19 +113,63 @@ export default async function AdminModerationListingsPage({
 
   const allModerationCount = verticalGroups.reduce((sum, row) => sum + row._count._all, 0);
 
-  const rows: ModerationListingRow[] = listings.map((listing) => ({
-    id: listing.id,
-    title: listing.title,
-    status: listing.status,
-    vertical: listing.vertical,
-    price: listing.price.toString(),
-    currency: listing.currency,
-    created_at: listing.created_at.toISOString(),
-    imageUrl: listing.images[0]?.thumbnail_url ?? listing.images[0]?.url ?? null,
-    categoryName: listing.category.name,
-    cityName: listing.city?.name ?? null,
-    sellerName: listing.sellerProfile.company_name,
-  }));
+  const rows: ModerationListingRow[] = await Promise.all(
+    listings.map(async (listing) => {
+      let hasPossibleDuplicate = false;
+
+      if (listing.status === ListingStatus.PENDING_MODERATION) {
+        hasPossibleDuplicate = await hasPossibleDuplicateListing({
+          sellerProfileId: listing.sellerProfile.id,
+          title: listing.title,
+          categoryId: listing.category_id,
+          vertical: listing.vertical,
+          listingId: listing.id,
+        });
+      }
+
+      const quality = calculateListingQuality({
+        title: listing.title,
+        description: listing.description,
+        price: listing.price.toString(),
+        cityName: listing.city?.name ?? null,
+        categoryName: listing.category.name,
+        vertical: listing.vertical,
+        imageCount: listing._count.images,
+        moq: listing.moq,
+        unit: listing.unit,
+        hasPossibleDuplicate,
+      });
+
+      const contentWarnings = [
+        ...quality.warnings,
+        ...getModerationContentWarnings({
+          title: listing.title,
+          description: listing.description,
+        }).filter(
+          (warning) => !quality.warnings.some((item) => item.code === warning.code),
+        ),
+      ];
+
+      return {
+        id: listing.id,
+        title: listing.title,
+        status: listing.status,
+        vertical: listing.vertical,
+        price: listing.price.toString(),
+        currency: listing.currency,
+        created_at: listing.created_at.toISOString(),
+        imageUrl: listing.images[0]?.thumbnail_url ?? listing.images[0]?.url ?? null,
+        categoryName: listing.category.name,
+        cityName: listing.city?.name ?? null,
+        sellerName: listing.sellerProfile.company_name,
+        contentWarnings,
+        qualityLevel: quality.level,
+        qualityScore: quality.score,
+        riskLevel: quality.risk,
+        riskLabel: getListingRiskLevelLabel(quality.risk),
+      };
+    }),
+  );
 
   const stats = [
     {

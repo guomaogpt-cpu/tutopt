@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
 import { FormSection } from "@/components/listings/FormSection";
+import type { ListingQualityInput } from "@/lib/moderation/listing-quality";
 import { ListingImageUpload } from "@/components/listings/ListingImageUpload";
 import { NewListingSidebar } from "@/components/listings/NewListingSidebar";
 import { ChipPicker, OptionPicker } from "@/components/listings/OptionPicker";
@@ -149,6 +150,19 @@ export function NewListingForm({
     [cities, cityId],
   );
 
+  const qualityInput: ListingQualityInput = {
+    title,
+    description,
+    price,
+    cityId: cityId || null,
+    cityName: cityLabel || null,
+    categoryId: categoryId || null,
+    vertical,
+    imageCount: imageUrls.length,
+    moq: Number.isFinite(Number(moq)) ? Number(moq) : null,
+    unit,
+  };
+
   const sidebarPreview = {
     title,
     price,
@@ -159,6 +173,7 @@ export function NewListingForm({
     tips: formConfig.sidebarTips,
     quantityLabel: formConfig.previewQuantityLabel,
     showQuantity: formConfig.showMoq,
+    qualityInput,
   };
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -305,7 +320,7 @@ export function NewListingForm({
                 name="title"
                 type="text"
                 required
-                maxLength={200}
+                maxLength={120}
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 placeholder={formConfig.titlePlaceholder}

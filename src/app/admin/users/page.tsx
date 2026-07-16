@@ -1,5 +1,5 @@
 import type { ListingVertical } from "@prisma/client";
-import { UserRole } from "@prisma/client";
+import { ListingStatus, UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ShoppingBag, Store, UserCog, Users } from "lucide-react";
 import { AdminStatCards } from "@/components/admin/AdminStatCards";
@@ -7,6 +7,7 @@ import { AdminUsersTable, type AdminUserRow } from "@/components/admin/AdminUser
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
+import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { prisma } from "@/shared/lib/prisma";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
@@ -22,30 +23,44 @@ export default async function AdminUsersPage() {
     redirect("/admin/moderation");
   }
 
-  const [users, sellerProfiles, listingGroups] = await Promise.all([
+  const [users, sellerProfiles, listingGroups, publishedGroups] = await Promise.all([
     prisma.user.findMany({
       orderBy: { created_at: "desc" },
       select: {
         id: true,
         email: true,
         phone: true,
+        phone_verified_at: true,
         name: true,
+        avatar_url: true,
         role: true,
         is_blocked: true,
         created_at: true,
       },
     }),
     prisma.sellerProfile.findMany({
-      select: { id: true, user_id: true },
+      select: {
+        id: true,
+        user_id: true,
+        company_name: true,
+        description: true,
+        logo_url: true,
+        city: { select: { name: true } },
+      },
     }),
     prisma.listing.groupBy({
       by: ["seller_profile_id", "vertical"],
       _count: { _all: true },
     }),
+    prisma.listing.groupBy({
+      by: ["seller_profile_id"],
+      where: { status: ListingStatus.PUBLISHED },
+      _count: { _all: true },
+    }),
   ]);
 
   const profileByUserId = new Map(
-    sellerProfiles.map((profile) => [profile.user_id, profile.id]),
+    sellerProfiles.map((profile) => [profile.user_id, profile]),
   );
 
   const statsByProfileId = new Map<
@@ -65,14 +80,39 @@ export default async function AdminUsersPage() {
     statsByProfileId.set(row.seller_profile_id, current);
   }
 
+  const publishedByProfileId = new Map(
+    publishedGroups.map((row) => [row.seller_profile_id, row._count._all]),
+  );
+
   const verticalOrder = VERTICAL_LIST.map((item) => item.id);
 
   const rows: AdminUserRow[] = users.map((item) => {
-    const profileId = profileByUserId.get(item.id);
-    const stats = profileId ? statsByProfileId.get(profileId) : undefined;
+    const profile = profileByUserId.get(item.id);
+    const stats = profile ? statsByProfileId.get(profile.id) : undefined;
     const verticals = (stats?.verticals ?? [])
       .slice()
       .sort((a, b) => verticalOrder.indexOf(a) - verticalOrder.indexOf(b));
+
+    const trust =
+      item.role === UserRole.SELLER || profile
+        ? calculateSellerTrust({
+            hasSellerProfile: Boolean(profile),
+            companyName: profile?.company_name ?? null,
+            userName: item.name,
+            description: profile?.description ?? null,
+            cityName: profile?.city?.name ?? null,
+            phone: item.phone,
+            phoneVerifiedAt: item.phone_verified_at,
+            logoUrl: profile?.logo_url ?? null,
+            avatarUrl: item.avatar_url,
+            accountCreatedAt: item.created_at,
+            publishedListingCount: profile
+              ? (publishedByProfileId.get(profile.id) ?? 0)
+              : 0,
+            activeVerticals: verticals,
+            hasCompletedOnboarding: Boolean(item.phone && profile),
+          })
+        : null;
 
     return {
       id: item.id,
@@ -84,6 +124,7 @@ export default async function AdminUsersPage() {
       created_at: item.created_at.toISOString(),
       listingCount: stats?.listingCount ?? 0,
       verticals,
+      trustLevel: trust?.level ?? null,
     };
   });
 

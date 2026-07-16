@@ -1,12 +1,14 @@
 import type { ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { BadgeCheck, Building2 } from "lucide-react";
+import { SellerTrustCompactBlock } from "@/components/seller/SellerTrustBlock";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import {
   buildSellerProfileHref,
   getListingSellerCardCtaLabel,
   getSellerProfileLabel,
 } from "@/features/sellers/lib/seller-vertical-profile";
+import type { SellerTrustLevel, SellerTrustSignal } from "@/lib/trust/seller-trust";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,9 @@ type ListingSellerCardProps = {
   sellerId: string;
   vertical: ListingVertical;
   messageSectionId?: string;
+  trustLevel?: SellerTrustLevel;
+  trustLevelLabel?: string;
+  trustSignals?: SellerTrustSignal[];
 };
 
 function getInitials(name: string): string {
@@ -47,6 +52,9 @@ export function ListingSellerCard({
   sellerId,
   vertical,
   messageSectionId = "listing-seller-message",
+  trustLevel,
+  trustLevelLabel,
+  trustSignals = [],
 }: ListingSellerCardProps) {
   const displayName = companyName.trim() || sellerName;
   const roleLabel = getSellerProfileLabel(vertical);
@@ -89,6 +97,15 @@ export function ListingSellerCard({
           ) : null}
         </div>
       </div>
+
+      {trustLevel && trustLevelLabel ? (
+        <SellerTrustCompactBlock
+          level={trustLevel}
+          levelLabel={trustLevelLabel}
+          signals={trustSignals}
+          className="mt-4"
+        />
+      ) : null}
 
       <dl className="mt-4 space-y-2 border-t border-[rgba(148,163,184,0.14)] pt-4 text-sm">
         <div className="flex justify-between gap-4">

@@ -1,11 +1,21 @@
 import { z } from "zod";
 
+export const LEAD_MESSAGE_MIN = 5;
+export const LEAD_MESSAGE_MAX = 2000;
+
+const trimmedMessage = z
+  .string()
+  .trim()
+  .min(LEAD_MESSAGE_MIN, "Сообщение слишком короткое")
+  .max(LEAD_MESSAGE_MAX, "Сообщение слишком длинное");
+
 export const createLeadSchema = z.object({
   quantity: z.coerce.number().int().min(1, "Укажите количество не меньше 1"),
-  message: z.string().max(5000, "Сообщение слишком длинное").optional().nullable(),
-  contact_phone: z.string().max(20, "Телефон слишком длинный").optional().nullable(),
+  message: trimmedMessage,
+  contact_phone: z.string().trim().max(20, "Телефон слишком длинный").optional().nullable(),
   contact_email: z
     .string()
+    .trim()
     .max(255)
     .optional()
     .nullable()
@@ -16,12 +26,8 @@ export const createLeadSchema = z.object({
 
 export type CreateLeadInput = z.infer<typeof createLeadSchema>;
 
-export function buildLeadMessage(input: CreateLeadInput): string | null {
-  const parts: string[] = [];
-
-  if (input.message?.trim()) {
-    parts.push(input.message.trim());
-  }
+export function buildLeadMessage(input: CreateLeadInput): string {
+  const parts: string[] = [input.message.trim()];
 
   const contactLines: string[] = [];
 
@@ -37,5 +43,5 @@ export function buildLeadMessage(input: CreateLeadInput): string | null {
     parts.push(contactLines.join("\n"));
   }
 
-  return parts.length > 0 ? parts.join("\n\n") : null;
+  return parts.join("\n\n");
 }

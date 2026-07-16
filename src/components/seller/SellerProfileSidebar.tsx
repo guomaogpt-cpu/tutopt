@@ -26,6 +26,11 @@ import {
   getSellerVerticalBrandLabel,
   type SellerVerticalCounts,
 } from "@/features/sellers/lib/seller-vertical-profile";
+import type { SellerTrustLevel, SellerTrustSignal } from "@/lib/trust/seller-trust";
+import {
+  SellerTrustBadge,
+  SellerTrustSignalsList,
+} from "@/components/seller/SellerTrustBlock";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +46,9 @@ type SellerProfileSidebarProps = {
   whatsapp: string | null;
   telegram: string | null;
   website: string | null;
+  trustLevel?: SellerTrustLevel;
+  trustLevelLabel?: string;
+  trustSignals?: SellerTrustSignal[];
 };
 
 function getInitials(name: string): string {
@@ -120,6 +128,9 @@ export function SellerProfileSidebar({
   whatsapp,
   telegram,
   website,
+  trustLevel,
+  trustLevelLabel,
+  trustSignals = [],
 }: SellerProfileSidebarProps) {
   const router = useRouter();
   const logoUrl = profile.logo_url ?? profile.user.avatar_url;
@@ -240,6 +251,47 @@ export function SellerProfileSidebar({
         </div>
 
         <div className="divide-y divide-slate-200 border-t border-slate-200">
+          {trustLevel && trustLevelLabel ? (
+            <section aria-labelledby="seller-trust-title" className="p-5 lg:p-6">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2 id="seller-trust-title" className="text-sm font-semibold text-[#0F172A]">
+                  О продавце
+                </h2>
+                <SellerTrustBadge level={trustLevel} />
+              </div>
+              <p className="mt-1.5 text-sm font-medium text-[#0F172A]">{trustLevelLabel}</p>
+              {trustSignals.length > 0 ? (
+                <SellerTrustSignalsList signals={trustSignals} maxItems={5} className="mt-2" />
+              ) : (
+                <p className="mt-2 text-sm leading-relaxed text-[#64748B]">
+                  Продавец пока не заполнил подробную информацию.
+                </p>
+              )}
+              <dl className="mt-3 space-y-1 text-xs text-[#64748B]">
+                <div className="flex justify-between gap-3">
+                  <dt>Активных объявлений</dt>
+                  <dd className="font-medium text-[#334155]">{publishedListingCount}</dd>
+                </div>
+                {sellerVerticals.length > 0 ? (
+                  <div className="flex justify-between gap-3">
+                    <dt>Направления</dt>
+                    <dd className="text-right font-medium text-[#334155]">
+                      {sellerVerticals
+                        .map((vertical) => getSellerVerticalBrandLabel(vertical))
+                        .join(", ")}
+                    </dd>
+                  </div>
+                ) : null}
+                <div className="flex justify-between gap-3">
+                  <dt>На платформе с</dt>
+                  <dd className="font-medium text-[#334155]">
+                    {formatListingDate(profile.user.created_at ?? profile.created_at)}
+                  </dd>
+                </div>
+              </dl>
+            </section>
+          ) : null}
+
           <section aria-labelledby="seller-about-title" className="p-5 lg:p-6">
             <h2 id="seller-about-title" className="text-sm font-semibold text-[#0F172A]">
               О компании
@@ -250,7 +302,7 @@ export function SellerProfileSidebar({
               </p>
             ) : (
               <p className="mt-2 text-sm leading-relaxed text-[#64748B]">
-                Продавец пока не добавил описание компании.
+                Продавец пока не заполнил подробную информацию.
               </p>
             )}
 

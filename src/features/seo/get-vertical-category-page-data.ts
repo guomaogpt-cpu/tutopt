@@ -1,33 +1,14 @@
 import { ListingStatus, type ListingVertical } from "@prisma/client";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import {
+  listingCardSelect,
+  serializeListingCards,
+} from "@/features/listings/lib/serialize-listing-card";
 import { getCategorySlugCandidates } from "@/features/seo/category-seo-slug";
 import { getCitySlugCandidates } from "@/features/seo/city-slug";
 import { prisma } from "@/shared/lib/prisma";
 
 export const SEO_LANDING_PAGE_SIZE = 24;
-
-const listingCardSelect = {
-  id: true,
-  title: true,
-  price: true,
-  currency: true,
-  moq: true,
-  unit: true,
-  status: true,
-  vertical: true,
-  stock_quantity: true,
-  created_at: true,
-  published_at: true,
-  category: { select: { name: true } },
-  city: { select: { name: true } },
-  brand: { select: { name: true } },
-  sellerProfile: { select: { company_name: true } },
-  images: {
-    orderBy: { sort_order: "asc" as const },
-    take: 1,
-    select: { url: true },
-  },
-} as const;
 
 export type SeoLandingCategory = {
   id: string;
@@ -183,7 +164,7 @@ export async function getVerticalCategoryLandingData(options: {
     category,
     city,
     categoryIds,
-    listings,
+    listings: serializeListingCards(listings),
     totalCount,
     page,
     pageSize: SEO_LANDING_PAGE_SIZE,

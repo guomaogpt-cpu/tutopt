@@ -1,5 +1,9 @@
-import { ListingStatus } from "@prisma/client";
+import { ListingStatus, type ListingVertical } from "@prisma/client";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import {
+  listingCardSelect,
+  serializeListingCards,
+} from "@/features/listings/lib/serialize-listing-card";
 import { prisma } from "@/shared/lib/prisma";
 
 export const listingDetailSelect = {
@@ -34,6 +38,7 @@ export const listingDetailSelect = {
       user_id: true,
       company_name: true,
       slug: true,
+      description: true,
       logo_url: true,
       is_verified: true,
       contact_phone: true,
@@ -41,7 +46,15 @@ export const listingDetailSelect = {
       telegram: true,
       created_at: true,
       city: { select: { name: true } },
-      user: { select: { name: true, avatar_url: true } },
+      user: {
+        select: {
+          name: true,
+          avatar_url: true,
+          phone: true,
+          phone_verified_at: true,
+          created_at: true,
+        },
+      },
     },
   },
 } as const;
@@ -55,34 +68,13 @@ export async function getListingDetail(id: string) {
   });
 }
 
-const similarListingSelect = {
-  id: true,
-  title: true,
-  price: true,
-  currency: true,
-  moq: true,
-  unit: true,
-  status: true,
-  vertical: true,
-  stock_quantity: true,
-  created_at: true,
-  published_at: true,
-  category: { select: { name: true } },
-  city: { select: { name: true } },
-  brand: { select: { name: true } },
-  sellerProfile: { select: { company_name: true } },
-  images: {
-    orderBy: { sort_order: "asc" as const },
-    take: 1,
-    select: { url: true },
-  },
-};
+const similarListingSelect = listingCardSelect;
 
 export async function getSimilarListings(
   listingId: string,
   categoryId: string,
 ): Promise<ListingCardData[]> {
-  return prisma.listing.findMany({
+  const listings = await prisma.listing.findMany({
     where: {
       id: { not: listingId },
       category_id: categoryId,
@@ -92,6 +84,8 @@ export async function getSimilarListings(
     take: 4,
     select: similarListingSelect,
   });
+
+  return serializeListingCards(listings);
 }
 
 export async function getSellerPublishedListingCount(sellerProfileId: string): Promise<number> {
@@ -101,6 +95,21 @@ export async function getSellerPublishedListingCount(sellerProfileId: string): P
       status: ListingStatus.PUBLISHED,
     },
   });
+}
+
+export async function getSellerPublishedVerticals(
+  sellerProfileId: string,
+): Promise<ListingVertical[]> {
+  const rows = await prisma.listing.findMany({
+    where: {
+      seller_profile_id: sellerProfileId,
+      status: ListingStatus.PUBLISHED,
+    },
+    distinct: ["vertical"],
+    select: { vertical: true },
+  });
+
+  return rows.map((row) => row.vertical);
 }
 
 export function getListingCondition(

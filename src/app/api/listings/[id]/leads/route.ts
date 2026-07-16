@@ -1,13 +1,16 @@
 import { ListingStatus } from "@prisma/client";
 import { z } from "zod";
 import { requireAuth } from "@/features/auth/lib/session";
+import { findRecentDuplicateLead } from "@/features/leads/lib/lead-duplicate-check";
 import {
   buildLeadMessage,
   createLeadSchema,
 } from "@/features/leads/validators/lead.validators";
 import { createNewLeadNotification } from "@/features/notifications/lib/notifications-data";
+import { validateLeadContent } from "@/lib/moderation/content-checks";
+import { assertLeadCreateRateLimits } from "@/lib/security/rate-limit";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
-import { ForbiddenError, NotFoundError } from "@/shared/lib/errors";
+import { ConflictError, ForbiddenError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
 
 const listingIdSchema = z.string().uuid();
@@ -27,6 +30,19 @@ export async function POST(request: Request, context: LeadRouteContext) {
     }
 
     const input = await parseJsonBody(request, createLeadSchema);
+
+    const contentIssues = validateLeadContent({ message: input.message });
+    if (contentIssues.length > 0) {
+      const fieldErrors: Record<string, string[]> = {};
+
+      for (const issue of contentIssues) {
+        fieldErrors[issue.field] = [...(fieldErrors[issue.field] ?? []), issue.message];
+      }
+
+      throw new ValidationError(contentIssues[0]?.message ?? "Проверьте текст сообщения", {
+        fieldErrors,
+      });
+    }
 
     const listing = await prisma.listing.findUnique({
       where: { id: listingId.data },
@@ -56,13 +72,29 @@ export async function POST(request: Request, context: LeadRouteContext) {
       throw new ForbiddenError("Заявки принимаются только по опубликованным объявлениям");
     }
 
+    assertLeadCreateRateLimits(user.id, listing.id);
+
+    const message = buildLeadMessage(input);
+
+    const duplicateLead = await findRecentDuplicateLead({
+      buyerId: user.id,
+      listingId: listing.id,
+      message,
+    });
+
+    if (duplicateLead) {
+      throw new ConflictError(
+        "Такая заявка уже была отправлена недавно. Подождите несколько минут.",
+      );
+    }
+
     const lead = await prisma.lead.create({
       data: {
         listing_id: listing.id,
         buyer_id: user.id,
         seller_profile_id: listing.sellerProfile.id,
         quantity: input.quantity,
-        message: buildLeadMessage(input),
+        message,
       },
       select: { id: true },
     });
