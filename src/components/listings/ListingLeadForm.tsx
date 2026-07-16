@@ -9,6 +9,7 @@ import {
   createLeadRequest,
 } from "@/features/leads/lib/leads-client";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
+import { trackLeadSubmit } from "@/lib/analytics/events";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -110,6 +111,7 @@ export function ListingLeadForm({
         contact_phone: contactPhone || null,
         contact_email: contactEmail || null,
       });
+      trackLeadSubmit(vertical);
       setIsSuccess(true);
       router.refresh();
     } catch (error) {

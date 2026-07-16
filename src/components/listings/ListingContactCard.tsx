@@ -171,6 +171,7 @@ export function ListingContactCard({
           listingId={listingId}
           isAuthenticated={isAuthenticated}
           initialIsFavorited={isFavorited}
+          vertical={vertical}
           variant="button"
           className="h-11 w-full rounded-xl"
         />

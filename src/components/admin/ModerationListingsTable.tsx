@@ -12,6 +12,7 @@ import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge
 import { formatListingDate, formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { getModerationHint } from "@/features/admin/lib/moderation-vertical";
+import { trackModerationAction } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import {
@@ -259,6 +260,9 @@ export function ModerationListingsTable({
         const body = (await response.json()) as ApiErrorBody;
         throw new Error(body.error?.message ?? "Не удалось обработать объявление");
       }
+
+      const listing = listings.find((item) => item.id === listingId);
+      trackModerationAction(action, listing?.vertical, listingId);
 
       router.refresh();
     } catch (error) {

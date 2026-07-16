@@ -90,6 +90,7 @@ export function ListingCard({
             listingId={listing.id}
             isAuthenticated={isAuthenticated}
             initialIsFavorited={isFavorited}
+            vertical={listing.vertical}
             variant="icon"
             onFavoriteChange={onFavoriteChange}
             className="absolute right-2 top-2 z-10 size-8 rounded-full border border-[rgba(148,163,184,0.22)] bg-[rgba(255,255,255,0.86)] p-0 shadow-none backdrop-blur-sm hover:bg-white md:right-3 md:top-3 md:size-[34px] [&_svg]:size-4"
@@ -173,6 +174,7 @@ export function ListingCard({
             listingId={listing.id}
             isAuthenticated={isAuthenticated}
             initialIsFavorited={isFavorited}
+            vertical={listing.vertical}
             variant="icon"
             onFavoriteChange={onFavoriteChange}
             className="absolute right-2 top-2 z-10 size-8 rounded-full border border-[rgba(148,163,184,0.22)] bg-[rgba(255,255,255,0.9)] p-0 shadow-none backdrop-blur-sm hover:bg-white md:right-3 md:top-3 md:size-9 [&_svg]:size-4"
@@ -260,6 +262,7 @@ export function ListingCard({
           listingId={listing.id}
           isAuthenticated={isAuthenticated}
           initialIsFavorited={isFavorited}
+          vertical={listing.vertical}
           variant="icon"
           onFavoriteChange={onFavoriteChange}
           className="absolute right-2 top-2 z-10"

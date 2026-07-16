@@ -1,8 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Loader2 } from "lucide-react";
+import {
+  trackSellerOnboardingComplete,
+  trackSellerOnboardingStart,
+} from "@/lib/analytics/events";
 import { AuthAlert, AuthFormCard, AuthFormField } from "@/components/auth/AuthFormCard";
 import { PhoneOtpFields } from "@/components/auth/PhoneOtpFields";
 import { authButtonClassName, authInputClassName } from "@/components/auth/auth-form-styles";
@@ -34,6 +38,10 @@ export function SellerOnboardingForm({
   const [phoneVerificationToken, setPhoneVerificationToken] = useState<string | null>(null);
   const [errors, setErrors] = useState<AuthFormErrors>(emptyErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    trackSellerOnboardingStart();
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -85,6 +93,7 @@ export function SellerOnboardingForm({
       }
 
       const redirectTo = body.data?.redirectTo ?? "/seller/dashboard";
+      trackSellerOnboardingComplete();
       router.push(redirectTo);
       router.refresh();
     } catch (error) {

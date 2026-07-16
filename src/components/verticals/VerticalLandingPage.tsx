@@ -233,7 +233,11 @@ export function VerticalLandingPage({
             Направления платформы
           </h2>
           <div className="mt-4">
-            <VerticalCards activeVertical={verticalId} variant="compact" />
+            <VerticalCards
+              activeVertical={verticalId}
+              variant="compact"
+              trackingSource="vertical_page"
+            />
           </div>
         </section>
 

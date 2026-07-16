@@ -24,6 +24,10 @@ import {
   DEFAULT_LISTING_VERTICAL,
   VERTICAL_LIST,
 } from "@/features/verticals/verticals";
+import {
+  trackCreateListingStart,
+  trackCreateListingSubmit,
+} from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -109,6 +113,10 @@ export function NewListingForm({
     () => categories.filter((category) => category.vertical === vertical),
     [categories, vertical],
   );
+
+  useEffect(() => {
+    trackCreateListingStart(initialVertical);
+  }, [initialVertical]);
 
   useEffect(() => {
     const allowed = formConfig.unitOptions.some((option) => option.value === unit);
@@ -217,6 +225,7 @@ export function NewListingForm({
         image_urls: serverImageUrls,
       });
 
+      trackCreateListingSubmit(vertical);
       router.push(`/listings/${result.listing.id}`);
       router.refresh();
     } catch (error) {

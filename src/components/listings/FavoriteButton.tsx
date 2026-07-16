@@ -1,5 +1,6 @@
 "use client";
 
+import type { ListingVertical } from "@prisma/client";
 import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,6 +9,7 @@ import {
   removeFavoriteRequest,
 } from "@/features/favorites/lib/favorites-client";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
+import { trackFavoriteToggle } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +17,7 @@ type FavoriteButtonProps = {
   listingId: string;
   isAuthenticated: boolean;
   initialIsFavorited?: boolean;
+  vertical?: ListingVertical | null;
   variant?: "icon" | "button";
   className?: string;
   onFavoriteChange?: (isFavorited: boolean) => void;
@@ -24,6 +27,7 @@ export function FavoriteButton({
   listingId,
   isAuthenticated,
   initialIsFavorited = false,
+  vertical = null,
   variant = "icon",
   className = "",
   onFavoriteChange,
@@ -53,6 +57,7 @@ export function FavoriteButton({
       } else {
         await removeFavoriteRequest(listingId);
       }
+      trackFavoriteToggle(listingId, vertical, nextValue);
       onFavoriteChange?.(nextValue);
       router.refresh();
     } catch {

@@ -13,6 +13,10 @@ import {
   VERTICAL_LIST,
   type VerticalDefinition,
 } from "@/features/verticals/verticals";
+import {
+  trackVerticalClick,
+  type AnalyticsVerticalSource,
+} from "@/lib/analytics/events";
 import { cn } from "@/lib/utils";
 
 const VERTICAL_ICONS: Record<ListingVertical, LucideIcon> = {
@@ -72,6 +76,7 @@ type VerticalCardsProps = {
   variant?: "cards" | "compact";
   showTitle?: boolean;
   className?: string;
+  trackingSource?: AnalyticsVerticalSource;
 };
 
 export function VerticalCards({
@@ -79,6 +84,7 @@ export function VerticalCards({
   variant = "cards",
   showTitle = false,
   className,
+  trackingSource,
 }: VerticalCardsProps) {
   const compact = variant === "compact";
 
@@ -102,6 +108,7 @@ export function VerticalCards({
               vertical={vertical}
               isActive={activeVertical === vertical.id}
               compact={compact}
+              trackingSource={trackingSource}
             />
           </li>
         ))}
@@ -114,9 +121,10 @@ type VerticalCardProps = {
   vertical: VerticalDefinition;
   isActive: boolean;
   compact: boolean;
+  trackingSource?: AnalyticsVerticalSource;
 };
 
-function VerticalCard({ vertical, isActive, compact }: VerticalCardProps) {
+function VerticalCard({ vertical, isActive, compact, trackingSource }: VerticalCardProps) {
   const Icon = VERTICAL_ICONS[vertical.id];
   const cardStyles = VERTICAL_CARD_STYLES[vertical.id];
 
@@ -124,6 +132,11 @@ function VerticalCard({ vertical, isActive, compact }: VerticalCardProps) {
     <Link
       href={vertical.href}
       aria-current={isActive ? "page" : undefined}
+      onClick={() => {
+        if (trackingSource) {
+          trackVerticalClick(vertical.id, trackingSource);
+        }
+      }}
       className={cn(
         "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border bg-white",
         "shadow-[0_8px_20px_rgba(15,23,42,0.04)] transition duration-200",

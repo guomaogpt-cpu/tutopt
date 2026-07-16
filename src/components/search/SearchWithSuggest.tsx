@@ -25,6 +25,7 @@ import {
   type SearchSuggestResponse,
 } from "@/features/search/lib/search-suggest-types";
 import { resolveSearchVertical } from "@/features/verticals/verticals";
+import { trackSearch } from "@/lib/analytics/events";
 import { cn } from "@/lib/utils";
 
 export type SearchWithSuggestProps = {
@@ -164,6 +165,10 @@ export function SearchWithSuggest({
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsOpen(false);
+    const trimmed = query.trim();
+    if (trimmed) {
+      trackSearch(trimmed, searchVertical);
+    }
     navigateWithQuery(query);
   }
 

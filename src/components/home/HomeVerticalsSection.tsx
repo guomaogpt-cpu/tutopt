@@ -9,7 +9,7 @@ export function HomeVerticalsSection() {
       aria-labelledby="home-verticals-heading"
     >
       <Container size="lg">
-        <VerticalCards showTitle />
+        <VerticalCards showTitle trackingSource="homepage" />
       </Container>
     </section>
   );

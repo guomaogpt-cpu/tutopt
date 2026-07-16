@@ -21,6 +21,7 @@ import {
 } from "@/features/listings/lib/listings-catalog";
 import { catalogShowsBrandFilter } from "@/features/listings/lib/vertical-form-config";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
+import { trackSearch, trackVerticalClick } from "@/lib/analytics/events";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -124,7 +125,11 @@ export function ListingsCatalogToolbar({
 
   function handleCatalogSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    pushFilters({ q: query.trim() });
+    const trimmed = query.trim();
+    if (trimmed) {
+      trackSearch(trimmed, filters.vertical);
+    }
+    pushFilters({ q: trimmed });
   }
 
   function handleCatalogClear() {
@@ -164,6 +169,9 @@ export function ListingsCatalogToolbar({
   }
 
   function handleVerticalChange(nextVertical: ListingVertical | null) {
+    if (nextVertical) {
+      trackVerticalClick(nextVertical, "catalog");
+    }
     pushFilters({
       vertical: nextVertical,
       categoryId: "",
