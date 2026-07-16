@@ -1,4 +1,4 @@
-import { ListingStatus } from "@prisma/client";
+import { ListingStatus, ListingVertical } from "@prisma/client";
 import { getDescendantIds } from "@/features/listings/lib/category-search";
 import type { HomeCategoryCard } from "@/features/home/lib/home-data";
 import type { CategoryItem } from "@/features/listings/types/category";
@@ -20,18 +20,19 @@ function countPublishedInTree(
 export async function getCategoriesPageData(): Promise<HomeCategoryCard[]> {
   const [allCategories, publishedByCategory] = await Promise.all([
     prisma.category.findMany({
-      where: { is_active: true },
+      where: { is_active: true, vertical: ListingVertical.OPT },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
       select: {
         id: true,
         name: true,
         slug: true,
         parent_id: true,
+        vertical: true,
       },
     }),
     prisma.listing.groupBy({
       by: ["category_id"],
-      where: { status: ListingStatus.PUBLISHED },
+      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
       _count: { _all: true },
     }),
   ]);
@@ -46,6 +47,7 @@ export async function getCategoriesPageData(): Promise<HomeCategoryCard[]> {
     slug: category.slug,
     parent_id: category.parent_id,
     icon: null,
+    vertical: category.vertical,
   }));
 
   const rootCategories = allCategories.filter((category) => category.parent_id === null);

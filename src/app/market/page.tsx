@@ -1,6 +1,22 @@
-import { VERTICALS } from "@/features/verticals/verticals";
-import { VerticalStubPage } from "@/features/verticals/VerticalStubPage";
+import { ListingVertical } from "@prisma/client";
+import { VerticalLandingPage } from "@/components/verticals/VerticalLandingPage";
+import { getVerticalPageData } from "@/features/verticals/get-vertical-page-data";
+import { buildVerticalPageMetadata } from "@/shared/seo/seo.config";
 
-export default function MarketVerticalPage() {
-  return <VerticalStubPage vertical={VERTICALS.MARKET} />;
+export const metadata = buildVerticalPageMetadata(ListingVertical.MARKET);
+
+export default async function MarketVerticalPage() {
+  const data = await getVerticalPageData(ListingVertical.MARKET);
+
+  return (
+    <VerticalLandingPage
+      vertical={ListingVertical.MARKET}
+      title="ТутМаркет"
+      subtitle="Розничные товары, магазины и частные объявления."
+      statusBadge="Раздел готовится к запуску"
+      categories={data.categories}
+      listings={data.listings}
+      publishedCount={data.publishedCount}
+    />
+  );
 }

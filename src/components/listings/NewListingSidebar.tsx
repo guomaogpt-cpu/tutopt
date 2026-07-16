@@ -14,8 +14,18 @@ type NewListingSidebarProps = {
   moq: string;
   cityLabel: string;
   imageUrl: string | null;
+  tips?: string[];
+  quantityLabel?: string;
+  showQuantity?: boolean;
   className?: string;
 };
+
+const DEFAULT_TIPS = [
+  "Добавьте реальные фото",
+  "Укажите понятную цену",
+  "Напишите город",
+  "Опишите ключевые детали предложения",
+];
 
 export function NewListingSidebar({
   title,
@@ -24,6 +34,9 @@ export function NewListingSidebar({
   moq,
   cityLabel,
   imageUrl,
+  tips = DEFAULT_TIPS,
+  quantityLabel = "Кол-во",
+  showQuantity = true,
   className,
 }: NewListingSidebarProps) {
   const hasPreview = title.trim().length > 0 || imageUrl;
@@ -38,10 +51,9 @@ export function NewListingSidebar({
           <h2 className="font-bold text-[#0F172A]">Как сделать объявление лучше</h2>
         </div>
         <ul className="mt-4 space-y-2.5 text-sm leading-relaxed text-[#64748B]">
-          <li>Добавьте реальные фото товара и упаковки</li>
-          <li>Укажите точную минимальную партию (MOQ)</li>
-          <li>Напишите город отгрузки</li>
-          <li>Опишите упаковку, наличие и условия отгрузки</li>
+          {tips.map((tip) => (
+            <li key={tip}>{tip}</li>
+          ))}
         </ul>
       </div>
 
@@ -92,7 +104,10 @@ export function NewListingSidebar({
                 <p className="text-sm text-[#94A3B8]">Цена</p>
               )}
               <p className="text-xs text-[#64748B]">
-                MOQ: {moq || "—"} · {cityLabel || "Город не выбран"}
+                {showQuantity && quantityLabel
+                  ? `${quantityLabel}: ${moq || "—"} · `
+                  : null}
+                {cityLabel || "Город не выбран"}
               </p>
             </div>
           </div>

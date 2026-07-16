@@ -1,3 +1,4 @@
+import type { ListingVertical } from "@prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 
 export type SellerLeadItem = {
@@ -10,6 +11,7 @@ export type SellerLeadItem = {
     id: string;
     title: string;
     image_url: string | null;
+    vertical: ListingVertical;
   };
   buyer: {
     id: string;
@@ -29,6 +31,7 @@ export type BuyerLeadItem = {
     id: string;
     title: string;
     image_url: string | null;
+    vertical: ListingVertical;
   };
   sellerProfile: {
     id: string;
@@ -50,6 +53,7 @@ export async function getBuyerLeads(userId: string): Promise<BuyerLeadItem[]> {
         select: {
           id: true,
           title: true,
+          vertical: true,
           images: {
             orderBy: { sort_order: "asc" },
             take: 1,
@@ -78,6 +82,7 @@ export async function getBuyerLeads(userId: string): Promise<BuyerLeadItem[]> {
     listing: {
       id: lead.listing.id,
       title: lead.listing.title,
+      vertical: lead.listing.vertical,
       image_url: lead.listing.images[0]?.thumbnail_url ?? lead.listing.images[0]?.url ?? null,
     },
     sellerProfile: lead.sellerProfile,
@@ -98,6 +103,7 @@ export async function getSellerLeads(sellerProfileId: string): Promise<SellerLea
         select: {
           id: true,
           title: true,
+          vertical: true,
           images: {
             orderBy: { sort_order: "asc" },
             take: 1,
@@ -128,6 +134,7 @@ export async function getSellerLeads(sellerProfileId: string): Promise<SellerLea
     listing: {
       id: lead.listing.id,
       title: lead.listing.title,
+      vertical: lead.listing.vertical,
       image_url: lead.listing.images[0]?.thumbnail_url ?? lead.listing.images[0]?.url ?? null,
     },
     buyer: lead.buyer,

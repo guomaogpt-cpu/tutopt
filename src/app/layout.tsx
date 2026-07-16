@@ -2,11 +2,19 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { AppProviders } from "@/components/providers";
+import { getSiteBaseUrl } from "@/shared/seo/absolute-url";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, SITE_NAME } from "@/shared/seo/seo.config";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tutopt",
-  description: "B2B платформа оптовых объявлений Кыргызстана",
+  metadataBase: new URL(getSiteBaseUrl()),
+  title: DEFAULT_TITLE,
+  description: DEFAULT_DESCRIPTION,
+  openGraph: {
+    siteName: SITE_NAME,
+    locale: "ru_KG",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

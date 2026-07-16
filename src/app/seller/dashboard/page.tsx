@@ -15,6 +15,8 @@ import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
+import { countSellerVerticals } from "@/features/sellers/lib/seller-vertical-profile";
+import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import { prisma } from "@/shared/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -69,6 +71,7 @@ export default async function SellerDashboardPage() {
           id: true,
           title: true,
           status: true,
+          vertical: true,
           price: true,
           currency: true,
           created_at: true,
@@ -107,6 +110,7 @@ export default async function SellerDashboardPage() {
     id: listing.id,
     title: listing.title,
     status: listing.status,
+    vertical: listing.vertical,
     price: listing.price.toString(),
     currency: listing.currency,
     created_at: listing.created_at.toISOString(),
@@ -141,6 +145,9 @@ export default async function SellerDashboardPage() {
     },
   ];
 
+  const verticalCounts = countSellerVerticals(listings);
+  const hasVerticalActivity = VERTICAL_LIST.some((item) => verticalCounts[item.id] > 0);
+
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
       <Container size="lg" className="max-w-[1280px] min-w-0">
@@ -163,7 +170,40 @@ export default async function SellerDashboardPage() {
 
         <div className="mt-6 space-y-8 lg:mt-8 lg:space-y-10">
           <SellerDashboardStatCards stats={stats} />
-          <SellerQuickActions sellerProfileId={sellerProfile?.id ?? null} />
+
+          {hasVerticalActivity ? (
+            <section aria-labelledby="seller-vertical-stats-title">
+              <h2
+                id="seller-vertical-stats-title"
+                className="mb-3 text-lg font-bold text-[#0F172A] sm:text-xl"
+              >
+                По направлениям
+              </h2>
+              <ul className="flex flex-wrap gap-2">
+                {VERTICAL_LIST.map((item) => {
+                  const count = verticalCounts[item.id];
+                  if (count === 0) {
+                    return null;
+                  }
+                  return (
+                    <li key={item.id}>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-[#334155] ring-1 ring-slate-200">
+                        {item.label}
+                        <span className="rounded-full bg-[#EFF6FF] px-1.5 py-0.5 text-xs font-semibold text-[#2563EB]">
+                          {count}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ) : null}
+
+          <SellerQuickActions
+            sellerProfileId={sellerProfile?.id ?? null}
+            verticalCounts={verticalCounts}
+          />
           <SellerDashboardListings listings={serializedListings} />
         </div>
       </Container>

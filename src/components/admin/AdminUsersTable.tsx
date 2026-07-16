@@ -2,9 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import type { ListingVertical } from "@prisma/client";
 import { UserRole } from "@prisma/client";
 import { Users } from "lucide-react";
 import { UserRoleBadge } from "@/components/admin/UserRoleBadge";
+import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -27,6 +29,8 @@ export type AdminUserRow = {
   role: UserRole;
   is_blocked: boolean;
   created_at: string;
+  listingCount: number;
+  verticals: ListingVertical[];
 };
 
 type AdminUsersTableProps = {
@@ -242,12 +246,13 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
         <>
           <div className="hidden overflow-hidden rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.04)] lg:block">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-left text-sm">
+              <table className="w-full min-w-[880px] text-left text-sm">
                 <thead className="border-b border-[rgba(148,163,184,0.14)] bg-[#F8FAFC] text-xs uppercase tracking-wide text-[#64748B]">
                   <tr>
                     <th className="px-5 py-3 font-medium">Пользователь</th>
                     <th className="px-5 py-3 font-medium">Email</th>
                     <th className="px-5 py-3 font-medium">Роль</th>
+                    <th className="px-5 py-3 font-medium">Объявления</th>
                     <th className="px-5 py-3 font-medium">Регистрация</th>
                     <th className="px-5 py-3 font-medium">Статус</th>
                     <th className="px-5 py-3 font-medium">Действия</th>
@@ -278,6 +283,20 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                         <td className="px-5 py-4 text-[#334155]">{user.email ?? "—"}</td>
                         <td className="px-5 py-4">
                           <UserRoleBadge role={user.role} />
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="space-y-1.5">
+                            <p className="font-medium text-[#0F172A]">{user.listingCount}</p>
+                            {user.verticals.length > 0 ? (
+                              <div className="flex flex-wrap gap-1">
+                                {user.verticals.map((vertical) => (
+                                  <VerticalListingBadge key={vertical} vertical={vertical} />
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-[#94A3B8]">—</p>
+                            )}
+                          </div>
                         </td>
                         <td className="px-5 py-4 text-[#334155]">
                           {new Date(user.created_at).toLocaleDateString("ru-RU")}
@@ -344,6 +363,17 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
                       <dd className="mt-0.5 font-medium text-[#0F172A]">
                         {new Date(user.created_at).toLocaleDateString("ru-RU")}
                       </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-[#64748B]">Объявления</dt>
+                      <dd className="mt-0.5 font-medium text-[#0F172A]">{user.listingCount}</dd>
+                      {user.verticals.length > 0 ? (
+                        <div className="mt-1.5 flex flex-wrap gap-1">
+                          {user.verticals.map((vertical) => (
+                            <VerticalListingBadge key={vertical} vertical={vertical} />
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
                     <div>
                       <dt className="text-xs text-[#64748B]">Статус</dt>

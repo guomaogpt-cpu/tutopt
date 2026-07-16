@@ -30,6 +30,8 @@ const listingCardSelect = {
   moq: true,
   unit: true,
   status: true,
+  vertical: true,
+  stock_quantity: true,
   created_at: true,
   published_at: true,
   category: { select: { name: true } },

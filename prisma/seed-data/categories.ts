@@ -1,11 +1,15 @@
+import type { ListingVertical } from "@prisma/client";
+
 export type CategorySeed = {
   name: string;
   slug: string;
   icon?: string;
   sort_order: number;
+  vertical?: ListingVertical;
   children?: CategorySeed[];
 };
 
+/** Existing OPT catalog tree — keep as-is for backward compatibility. */
 export const CATEGORIES: CategorySeed[] = [
   {
     name: "Продукты питания",
@@ -335,4 +339,52 @@ export const CATEGORIES: CategorySeed[] = [
       },
     ],
   },
+];
+
+/** Extra OPT top-level categories (no deep tree yet). */
+export const OPT_EXTRA_CATEGORIES: CategorySeed[] = [
+  { name: "Оборудование", slug: "opt-oborudovanie", icon: "cog", sort_order: 9, vertical: "OPT" },
+  { name: "Упаковка и тара", slug: "opt-upakovka-i-tara", icon: "box", sort_order: 10, vertical: "OPT" },
+  { name: "Хозтовары", slug: "opt-hoztovary", icon: "home", sort_order: 11, vertical: "OPT" },
+  { name: "Сырьё и материалы", slug: "opt-syrye-i-materialy", icon: "layers", sort_order: 12, vertical: "OPT" },
+];
+
+/** Flat first-level MARKET categories. Slugs prefixed — Category.slug is globally unique. */
+export const MARKET_CATEGORIES: CategorySeed[] = [
+  { name: "Телефоны и электроника", slug: "market-telefony-i-elektronika", sort_order: 1, vertical: "MARKET" },
+  { name: "Одежда и обувь", slug: "market-odezhda-i-obuv", sort_order: 2, vertical: "MARKET" },
+  { name: "Дом и сад", slug: "market-dom-i-sad", sort_order: 3, vertical: "MARKET" },
+  { name: "Авто и мото", slug: "market-avto-i-moto", sort_order: 4, vertical: "MARKET" },
+  { name: "Детские товары", slug: "market-detskie-tovary", sort_order: 5, vertical: "MARKET" },
+  { name: "Мебель", slug: "market-mebel", sort_order: 6, vertical: "MARKET" },
+  { name: "Бытовая техника", slug: "market-bytovaya-tehnika", sort_order: 7, vertical: "MARKET" },
+  { name: "Спорт и отдых", slug: "market-sport-i-otdyh", sort_order: 8, vertical: "MARKET" },
+  { name: "Красота и здоровье", slug: "market-krasota-i-zdorove", sort_order: 9, vertical: "MARKET" },
+  { name: "Животные", slug: "market-zhivotnye", sort_order: 10, vertical: "MARKET" },
+];
+
+export const SERVICES_CATEGORIES: CategorySeed[] = [
+  { name: "Ремонт и строительство", slug: "services-remont-i-stroitelstvo", sort_order: 1, vertical: "SERVICES" },
+  { name: "Красота и здоровье", slug: "services-krasota-i-zdorove", sort_order: 2, vertical: "SERVICES" },
+  { name: "Обучение", slug: "services-obuchenie", sort_order: 3, vertical: "SERVICES" },
+  { name: "IT и digital", slug: "services-it-i-digital", sort_order: 4, vertical: "SERVICES" },
+  { name: "Бизнес-услуги", slug: "services-biznes-uslugi", sort_order: 5, vertical: "SERVICES" },
+  { name: "Перевозки и грузчики", slug: "services-perevozki-i-gruzchiki", sort_order: 6, vertical: "SERVICES" },
+  { name: "Клининговые услуги", slug: "services-kliningovye-uslugi", sort_order: 7, vertical: "SERVICES" },
+  { name: "Мероприятия", slug: "services-meropriyatiya", sort_order: 8, vertical: "SERVICES" },
+  { name: "Юридические услуги", slug: "services-yuridicheskie-uslugi", sort_order: 9, vertical: "SERVICES" },
+  { name: "Фото и видео", slug: "services-foto-i-video", sort_order: 10, vertical: "SERVICES" },
+];
+
+export const CARGO_CATEGORIES: CategorySeed[] = [
+  { name: "Грузоперевозки по Кыргызстану", slug: "cargo-gruzoperevozki-po-kyrgyzstanu", sort_order: 1, vertical: "CARGO" },
+  { name: "Доставка Китай-Кыргызстан", slug: "cargo-dostavka-kitay-kyrgyzstan", sort_order: 2, vertical: "CARGO" },
+  { name: "Международная логистика", slug: "cargo-mezhdunarodnaya-logistika", sort_order: 3, vertical: "CARGO" },
+  { name: "Попутные грузы", slug: "cargo-poputnye-gruzy", sort_order: 4, vertical: "CARGO" },
+  { name: "Склады и хранение", slug: "cargo-sklady-i-hranenie", sort_order: 5, vertical: "CARGO" },
+  { name: "Таможенное оформление", slug: "cargo-tamozhennoe-oformlenie", sort_order: 6, vertical: "CARGO" },
+  { name: "Спецтехника", slug: "cargo-spectehnika", sort_order: 7, vertical: "CARGO" },
+  { name: "Курьерская доставка", slug: "cargo-kurerskaya-dostavka", sort_order: 8, vertical: "CARGO" },
+  { name: "Переезды", slug: "cargo-pereezdy", sort_order: 9, vertical: "CARGO" },
+  { name: "Экспедирование", slug: "cargo-ekspedirovanie", sort_order: 10, vertical: "CARGO" },
 ];

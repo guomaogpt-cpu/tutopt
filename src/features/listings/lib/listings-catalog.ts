@@ -27,6 +27,8 @@ export type ListingCardData = {
   moq: number;
   unit: ListingUnit;
   status: ListingStatus;
+  vertical: ListingVertical;
+  stock_quantity: number | null;
   created_at: Date;
   published_at: Date | null;
   category: { name: string };
@@ -76,8 +78,7 @@ export function hasActiveCatalogFilters(filters: ListingsCatalogFilters): boolea
       filters.brandId ||
       filters.priceMin ||
       filters.priceMax ||
-      filters.withPhotos ||
-      filters.vertical,
+      filters.withPhotos,
   );
 }
 

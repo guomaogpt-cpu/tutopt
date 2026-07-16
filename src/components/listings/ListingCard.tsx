@@ -2,8 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Package } from "lucide-react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
-import { listingUnitOptions } from "@/features/listings/constants";
-import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
+import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
+import {
+  formatListingCardPrice,
+  getListingMetaItems,
+  getListingUnitLabel,
+} from "@/features/listings/lib/listing-display";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { cn } from "@/lib/utils";
@@ -27,18 +31,27 @@ export function ListingCard({
 }: ListingCardProps) {
   const rawMainImage = listing.images[0]?.url;
   const mainImage = rawMainImage ? normalizeListingImageUrl(rawMainImage) : undefined;
-  const unitLabel =
-    listingUnitOptions.find((option) => option.value === listing.unit)?.label ??
-    listing.unit.toLowerCase();
+  const unitLabel = getListingUnitLabel(listing.unit, listing.vertical);
+  const priceLabel = formatListingCardPrice({
+    price: listing.price,
+    currency: listing.currency,
+    vertical: listing.vertical,
+  });
   const isHome = variant === "home";
   const isCatalog = variant === "catalog";
   const isShowcase = variant === "showcase";
 
-  if (isHome) {
-    const cityName = listing.city?.name ?? "Не указан";
-    const brandName = listing.brand?.name ?? "Без бренда";
-    const moqValue = `${listing.moq} ${unitLabel.toLowerCase()}`;
+  const metaItems = getListingMetaItems({
+    vertical: listing.vertical,
+    moq: listing.moq,
+    unit: listing.unit,
+    city: listing.city,
+    brand: listing.brand,
+    category: listing.category,
+    stock_quantity: isHome ? null : listing.stock_quantity,
+  }).slice(0, isHome ? 3 : 4);
 
+  if (isHome) {
     return (
       <article
         className={cn(
@@ -68,6 +81,11 @@ export function ListingCard({
             )}
           </Link>
 
+          <VerticalListingBadge
+            vertical={listing.vertical}
+            className="absolute left-2 top-2 z-10 bg-white/90 backdrop-blur-sm"
+          />
+
           <FavoriteButton
             listingId={listing.id}
             isAuthenticated={isAuthenticated}
@@ -89,32 +107,29 @@ export function ListingCard({
           </h2>
 
           <p className="mb-1.5 text-[15px] font-bold leading-[1.1] text-[#2563EB] md:mb-2 md:text-lg md:leading-[1.15]">
-            {formatListingPrice(listing.price, listing.currency)}
-            <span className="text-[10px] font-medium text-[#64748B] md:text-xs">
-              {" "}
-              / {unitLabel.toLowerCase()}
-            </span>
+            {priceLabel}
+            {listing.vertical === "OPT" || listing.vertical === "MARKET" ? (
+              <span className="text-[10px] font-medium text-[#64748B] md:text-xs">
+                {" "}
+                / {unitLabel.toLowerCase()}
+              </span>
+            ) : null}
           </p>
 
           <dl className="space-y-0.5 md:space-y-1">
-            <div className="flex items-center justify-between gap-2 md:gap-3">
-              <dt className="shrink-0 text-[11px] font-normal leading-[1.35] text-[#64748B] md:text-xs">Мин. партия</dt>
-              <dd className="min-w-0 truncate text-right text-[11px] font-medium leading-[1.35] text-[#334155] md:text-xs">
-                {moqValue}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-2 md:gap-3">
-              <dt className="shrink-0 text-[11px] font-normal leading-[1.35] text-[#64748B] md:text-xs">Город</dt>
-              <dd className="min-w-0 truncate text-right text-[11px] font-medium leading-[1.35] text-[#334155] md:text-xs">
-                {cityName}
-              </dd>
-            </div>
-            <div className="hidden items-center justify-between gap-3 md:flex">
-              <dt className="shrink-0 text-xs font-normal leading-[1.35] text-[#64748B]">Бренд</dt>
-              <dd className="min-w-0 truncate text-right text-xs font-medium leading-[1.35] text-[#334155]">
-                {brandName}
-              </dd>
-            </div>
+            {metaItems.map((item) => (
+              <div
+                key={`${item.label}-${item.value}`}
+                className="flex items-center justify-between gap-2 md:gap-3"
+              >
+                <dt className="shrink-0 text-[11px] font-normal leading-[1.35] text-[#64748B] md:text-xs">
+                  {item.label}
+                </dt>
+                <dd className="min-w-0 truncate text-right text-[11px] font-medium leading-[1.35] text-[#334155] md:text-xs">
+                  {item.value}
+                </dd>
+              </div>
+            ))}
           </dl>
         </div>
       </article>
@@ -122,10 +137,6 @@ export function ListingCard({
   }
 
   if (isCatalog) {
-    const cityName = listing.city?.name ?? "Не указан";
-    const brandName = listing.brand?.name ?? "Без бренда";
-    const moqValue = `${listing.moq} ${unitLabel.toLowerCase()}`;
-
     return (
       <article
         className={cn(
@@ -153,6 +164,11 @@ export function ListingCard({
             )}
           </Link>
 
+          <VerticalListingBadge
+            vertical={listing.vertical}
+            className="absolute left-2 top-2 z-10 bg-white/90 backdrop-blur-sm"
+          />
+
           <FavoriteButton
             listingId={listing.id}
             isAuthenticated={isAuthenticated}
@@ -174,32 +190,27 @@ export function ListingCard({
           </h2>
 
           <p className="mt-2 text-base font-bold leading-tight text-[#2563EB] md:text-lg">
-            {formatListingPrice(listing.price, listing.currency)}
-            <span className="text-[11px] font-medium text-[#64748B] md:text-xs">
-              {" "}
-              / {unitLabel.toLowerCase()}
-            </span>
+            {priceLabel}
+            {listing.vertical === "OPT" || listing.vertical === "MARKET" ? (
+              <span className="text-[11px] font-medium text-[#64748B] md:text-xs">
+                {" "}
+                / {unitLabel.toLowerCase()}
+              </span>
+            ) : null}
           </p>
 
           <dl className="mt-2 space-y-1">
-            <div className="flex items-center justify-between gap-2">
-              <dt className="shrink-0 text-[11px] text-[#64748B] md:text-xs">Мин. партия</dt>
-              <dd className="min-w-0 truncate text-right text-[11px] font-medium text-[#334155] md:text-xs">
-                {moqValue}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <dt className="shrink-0 text-[11px] text-[#64748B] md:text-xs">Город</dt>
-              <dd className="min-w-0 truncate text-right text-[11px] font-medium text-[#334155] md:text-xs">
-                {cityName}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <dt className="shrink-0 text-[11px] text-[#64748B] md:text-xs">Бренд</dt>
-              <dd className="min-w-0 truncate text-right text-[11px] font-medium text-[#334155] md:text-xs">
-                {brandName}
-              </dd>
-            </div>
+            {metaItems.map((item) => (
+              <div
+                key={`${item.label}-${item.value}`}
+                className="flex items-center justify-between gap-2"
+              >
+                <dt className="shrink-0 text-[11px] text-[#64748B] md:text-xs">{item.label}</dt>
+                <dd className="min-w-0 truncate text-right text-[11px] font-medium text-[#334155] md:text-xs">
+                  {item.value}
+                </dd>
+              </div>
+            ))}
           </dl>
 
           <p className="mt-2 truncate border-t border-[rgba(148,163,184,0.14)] pt-2 text-xs font-medium text-[#475569] md:text-sm">
@@ -240,6 +251,11 @@ export function ListingCard({
           </div>
         </Link>
 
+        <VerticalListingBadge
+          vertical={listing.vertical}
+          className="absolute left-2 top-2 z-10 bg-white/90 backdrop-blur-sm"
+        />
+
         <FavoriteButton
           listingId={listing.id}
           isAuthenticated={isAuthenticated}
@@ -251,9 +267,11 @@ export function ListingCard({
       </div>
 
       <CardContent className="flex flex-1 flex-col p-4">
-        <Badge variant="secondary" className="w-fit text-[11px] uppercase tracking-wide">
-          {listing.category.name}
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="secondary" className="w-fit text-[11px] uppercase tracking-wide">
+            {listing.category.name}
+          </Badge>
+        </div>
 
         <h2 className="mt-2 line-clamp-2 text-base font-semibold leading-snug text-foreground">
           <Link
@@ -264,30 +282,20 @@ export function ListingCard({
           </Link>
         </h2>
 
-        <p className="mt-3 text-lg font-bold text-foreground">
-          {formatListingPrice(listing.price, listing.currency)}
-        </p>
+        <p className="mt-3 text-lg font-bold text-foreground">{priceLabel}</p>
 
         <dl className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-          <div className="flex justify-between gap-2">
-            <dt>Мин. партия</dt>
-            <dd className="font-medium text-foreground">
-              {listing.moq} {unitLabel.toLowerCase()}
-            </dd>
-          </div>
-          <div className="flex items-center justify-between gap-2">
-            <dt className="flex items-center gap-1">
-              <MapPin className="size-3" aria-hidden="true" />
-              Город
-            </dt>
-            <dd className="font-medium text-foreground">{listing.city?.name ?? "—"}</dd>
-          </div>
-          {listing.brand ? (
-            <div className="flex justify-between gap-2">
-              <dt>Бренд</dt>
-              <dd className="font-medium text-foreground">{listing.brand.name}</dd>
+          {metaItems.map((item) => (
+            <div key={`${item.label}-${item.value}`} className="flex justify-between gap-2">
+              <dt className="flex items-center gap-1">
+                {item.label === "Город" ? (
+                  <MapPin className="size-3" aria-hidden="true" />
+                ) : null}
+                {item.label}
+              </dt>
+              <dd className="font-medium text-foreground">{item.value}</dd>
             </div>
-          ) : null}
+          ))}
         </dl>
       </CardContent>
 

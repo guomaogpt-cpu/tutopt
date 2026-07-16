@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { ListingStatus } from "@prisma/client";
+import type { ListingStatus, ListingVertical } from "@prisma/client";
 import { Eye, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import { ListingStatusBadge } from "@/components/seller/ListingStatusBadge";
+import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ export type SellerDashboardListing = {
   id: string;
   title: string;
   status: ListingStatus;
+  vertical: ListingVertical;
   price: string;
   currency: string;
   created_at: string;
@@ -62,6 +64,7 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <ListingStatusBadge status={listing.status} />
+          <VerticalListingBadge vertical={listing.vertical} />
         </div>
 
         <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#0F172A]">

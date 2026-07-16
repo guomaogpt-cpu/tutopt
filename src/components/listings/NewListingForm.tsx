@@ -1,33 +1,48 @@
 "use client";
 
 import Link from "next/link";
+import type { ListingUnit, ListingVertical } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
 import { FormSection } from "@/components/listings/FormSection";
 import { ListingImageUpload } from "@/components/listings/ListingImageUpload";
 import { NewListingSidebar } from "@/components/listings/NewListingSidebar";
 import { ChipPicker, OptionPicker } from "@/components/listings/OptionPicker";
-import { currencyOptions, listingUnitOptions, type SelectOption } from "@/features/listings/constants";
+import { currencyOptions, type SelectOption } from "@/features/listings/constants";
 import {
   ListingRequestError,
   createListingRequest,
   getListingFieldError,
   type ListingFormErrors,
 } from "@/features/listings/lib/listings-client";
+import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-config";
 import type { CategoryItem } from "@/features/listings/types/category";
 import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
+import {
+  DEFAULT_LISTING_VERTICAL,
+  VERTICAL_LIST,
+} from "@/features/verticals/verticals";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 type NewListingFormProps = {
   categories: CategoryItem[];
   cities: SelectOption[];
   brands: SelectOption[];
+  initialVertical?: ListingVertical;
+  initialCategoryId?: string;
 };
 
 const emptyErrors: ListingFormErrors = { form: [], fields: {} };
@@ -47,16 +62,41 @@ function fieldInputClass(hasError: boolean): string {
   );
 }
 
-export function NewListingForm({ categories, cities, brands }: NewListingFormProps) {
+function resolveInitialCategoryId(
+  categories: CategoryItem[],
+  vertical: ListingVertical,
+  initialCategoryId?: string,
+): string {
+  if (!initialCategoryId) {
+    return "";
+  }
+
+  const match = categories.find(
+    (category) => category.id === initialCategoryId && category.vertical === vertical,
+  );
+  return match?.id ?? "";
+}
+
+export function NewListingForm({
+  categories,
+  cities,
+  brands,
+  initialVertical = DEFAULT_LISTING_VERTICAL,
+  initialCategoryId,
+}: NewListingFormProps) {
   const router = useRouter();
+  const [vertical, setVertical] = useState<ListingVertical>(initialVertical);
+  const formConfig = getVerticalFormConfig(vertical);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryId, setCategoryId] = useState(() =>
+    resolveInitialCategoryId(categories, initialVertical, initialCategoryId),
+  );
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [price, setPrice] = useState("");
   const [currency, setCurrency] = useState("KGS");
   const [moq, setMoq] = useState("1");
-  const [unit, setUnit] = useState("PIECE");
+  const [unit, setUnit] = useState<ListingUnit>(formConfig.defaultUnit);
   const [cityId, setCityId] = useState("");
   const [brandId, setBrandId] = useState("");
   const [stockQuantity, setStockQuantity] = useState("");
@@ -64,6 +104,37 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
   const [clientError, setClientError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openPickerId, setOpenPickerId] = useState<string | null>(null);
+
+  const categoriesForVertical = useMemo(
+    () => categories.filter((category) => category.vertical === vertical),
+    [categories, vertical],
+  );
+
+  useEffect(() => {
+    const allowed = formConfig.unitOptions.some((option) => option.value === unit);
+    if (!allowed) {
+      setUnit(formConfig.defaultUnit);
+    }
+  }, [formConfig, unit]);
+
+  function handleVerticalChange(nextVertical: ListingVertical) {
+    const nextConfig = getVerticalFormConfig(nextVertical);
+    setVertical(nextVertical);
+    setUnit(nextConfig.defaultUnit);
+    setMoq("1");
+
+    if (!nextConfig.showBrand) {
+      setBrandId("");
+    }
+    if (!nextConfig.showStock) {
+      setStockQuantity("");
+    }
+
+    const selected = categories.find((category) => category.id === categoryId);
+    if (!selected || selected.vertical !== nextVertical) {
+      setCategoryId("");
+    }
+  }
 
   const cityLabel = useMemo(
     () => cities.find((city) => city.id === cityId)?.label ?? "",
@@ -77,6 +148,9 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
     moq,
     cityLabel,
     imageUrl: imageUrls[0] ?? null,
+    tips: formConfig.sidebarTips,
+    quantityLabel: formConfig.previewQuantityLabel,
+    showQuantity: formConfig.showMoq,
   };
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -118,6 +192,12 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
       return;
     }
 
+    const resolvedMoq = formConfig.showMoq ? Number(moq) : 1;
+    if (!Number.isFinite(resolvedMoq) || resolvedMoq < 1) {
+      setClientError(formConfig.showMoq ? "Укажите корректное количество" : "Ошибка формы");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -126,12 +206,14 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
         description: description.trim(),
         price: Number(price),
         currency,
-        moq: Number(moq),
+        moq: resolvedMoq,
         unit: unit as CreateListingInput["unit"],
         category_id: categoryId,
         city_id: cityId,
-        brand_id: brandId || null,
-        stock_quantity: stockQuantity ? Number(stockQuantity) : null,
+        brand_id: formConfig.showBrand && brandId ? brandId : null,
+        stock_quantity:
+          formConfig.showStock && stockQuantity ? Number(stockQuantity) : null,
+        vertical,
         image_urls: serverImageUrls,
       });
 
@@ -175,12 +257,39 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
           )}
 
           <FormSection
-            title="Основная информация"
-            description="Название и бренд помогут покупателю быстро понять предложение."
+            title="Раздел"
+            description="Выберите, где будет размещено объявление."
           >
             <div className="space-y-2">
+              <label htmlFor="listing-vertical" className="text-sm font-medium text-[#0F172A]">
+                Раздел объявления
+              </label>
+              <Select
+                value={vertical}
+                onValueChange={(value) => handleVerticalChange(value as ListingVertical)}
+                disabled={isSubmitting}
+              >
+                <SelectTrigger
+                  id="listing-vertical"
+                  className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] bg-white"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {VERTICAL_LIST.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </FormSection>
+
+          <FormSection title="Основная информация" description={formConfig.basicsDescription}>
+            <div className="space-y-2">
               <label htmlFor="listing-title" className="text-sm font-medium text-[#0F172A]">
-                Название объявления
+                {formConfig.titleLabel}
               </label>
               <Input
                 id="listing-title"
@@ -190,37 +299,34 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
                 maxLength={200}
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Например: Сахар оптом 50 кг"
+                placeholder={formConfig.titlePlaceholder}
                 disabled={isSubmitting}
                 className={fieldInputClass(Boolean(titleError))}
               />
-              <p className="text-xs text-[#64748B]">
-                Укажите товар, фасовку или ключевую характеристику
-              </p>
+              <p className="text-xs text-[#64748B]">{formConfig.titleHint}</p>
               <FieldError message={titleError} />
             </div>
 
-            <OptionPicker
-              pickerId="brand"
-              openPickerId={openPickerId}
-              onOpenPickerChange={setOpenPickerId}
-              label="Бренд"
-              value={brandId}
-              onChange={setBrandId}
-              options={brands}
-              placeholder="Без бренда"
-              searchable
-              optional
-              disabled={isSubmitting}
-            />
+            {formConfig.showBrand ? (
+              <OptionPicker
+                pickerId="brand"
+                openPickerId={openPickerId}
+                onOpenPickerChange={setOpenPickerId}
+                label="Бренд"
+                value={brandId}
+                onChange={setBrandId}
+                options={brands}
+                placeholder="Без бренда"
+                searchable
+                optional
+                disabled={isSubmitting}
+              />
+            ) : null}
           </FormSection>
 
-          <FormSection
-            title="Категория"
-            description="Выберите наиболее подходящую категорию для вашего товара."
-          >
+          <FormSection title="Категория" description={formConfig.categoryDescription}>
             <CategoryPicker
-              categories={categories}
+              categories={categoriesForVertical}
               value={categoryId}
               onChange={setCategoryId}
               disabled={isSubmitting}
@@ -229,13 +335,13 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
           </FormSection>
 
           <FormSection
-            title="Цена и условия опта"
-            description="Укажите оптовую цену, валюту и минимальную партию."
+            title={formConfig.priceSectionTitle}
+            description={formConfig.priceSectionDescription}
           >
             <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto]">
               <div className="space-y-2">
                 <label htmlFor="listing-price" className="text-sm font-medium text-[#0F172A]">
-                  Цена
+                  {formConfig.priceLabel}
                 </label>
                 <Input
                   id="listing-price"
@@ -250,7 +356,7 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
                   disabled={isSubmitting}
                   className={fieldInputClass(Boolean(priceError))}
                 />
-                <p className="text-xs text-[#64748B]">Цена за выбранную единицу измерения</p>
+                <p className="text-xs text-[#64748B]">{formConfig.priceHint}</p>
                 <FieldError message={priceError} />
               </div>
 
@@ -266,33 +372,40 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
               />
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label htmlFor="listing-moq" className="text-sm font-medium text-[#0F172A]">
-                  Минимальная партия (MOQ)
-                </label>
-                <Input
-                  id="listing-moq"
-                  name="moq"
-                  type="number"
-                  min="1"
-                  required
-                  value={moq}
-                  onChange={(event) => setMoq(event.target.value)}
-                  placeholder="100"
-                  disabled={isSubmitting}
-                  className={fieldInputClass(Boolean(moqError))}
-                />
-                <p className="text-xs text-[#64748B]">Минимальный объём заказа для опта</p>
-                <FieldError message={moqError} />
-              </div>
+            <div
+              className={cn(
+                "grid gap-5",
+                formConfig.showMoq ? "sm:grid-cols-2" : "sm:grid-cols-1",
+              )}
+            >
+              {formConfig.showMoq ? (
+                <div className="space-y-2">
+                  <label htmlFor="listing-moq" className="text-sm font-medium text-[#0F172A]">
+                    {formConfig.moqLabel}
+                  </label>
+                  <Input
+                    id="listing-moq"
+                    name="moq"
+                    type="number"
+                    min="1"
+                    required
+                    value={moq}
+                    onChange={(event) => setMoq(event.target.value)}
+                    placeholder={formConfig.moqPlaceholder}
+                    disabled={isSubmitting}
+                    className={fieldInputClass(Boolean(moqError))}
+                  />
+                  <p className="text-xs text-[#64748B]">{formConfig.moqHint}</p>
+                  <FieldError message={moqError} />
+                </div>
+              ) : null}
 
               <ChipPicker
-                label="Единица измерения"
+                label={formConfig.unitLabel}
                 value={unit}
-                onChange={setUnit}
+                onChange={(value) => setUnit(value as ListingUnit)}
                 disabled={isSubmitting}
-                options={listingUnitOptions.map((option) => ({
+                options={formConfig.unitOptions.map((option) => ({
                   id: option.value,
                   label: option.label,
                 }))}
@@ -301,8 +414,8 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
           </FormSection>
 
           <FormSection
-            title="Наличие и город"
-            description="Укажите город отгрузки и остаток, если он известен."
+            title={formConfig.locationSectionTitle}
+            description={formConfig.locationSectionDescription}
             className={openPickerId === "city" ? "relative z-40" : undefined}
           >
             <OptionPicker
@@ -319,30 +432,30 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
               error={cityError || (clientError === "Выберите город" ? clientError : undefined)}
             />
 
-            <div className="space-y-2">
-              <label htmlFor="listing-stock" className="text-sm font-medium text-[#0F172A]">
-                Остаток на складе
-              </label>
-              <Input
-                id="listing-stock"
-                name="stock_quantity"
-                type="number"
-                min="0"
-                value={stockQuantity}
-                onChange={(event) => setStockQuantity(event.target.value)}
-                placeholder="1000"
-                disabled={isSubmitting}
-                className={fieldInputClass(false)}
-              />
-              <p className="text-xs text-[#64748B]">
-                Можно оставить пустым, если точный остаток неизвестен
-              </p>
-            </div>
+            {formConfig.showStock ? (
+              <div className="space-y-2">
+                <label htmlFor="listing-stock" className="text-sm font-medium text-[#0F172A]">
+                  {formConfig.stockLabel}
+                </label>
+                <Input
+                  id="listing-stock"
+                  name="stock_quantity"
+                  type="number"
+                  min="0"
+                  value={stockQuantity}
+                  onChange={(event) => setStockQuantity(event.target.value)}
+                  placeholder={formConfig.stockPlaceholder}
+                  disabled={isSubmitting}
+                  className={fieldInputClass(false)}
+                />
+                <p className="text-xs text-[#64748B]">{formConfig.stockHint}</p>
+              </div>
+            ) : null}
           </FormSection>
 
           <FormSection
             title="Фото"
-            description="Качественные фото повышают доверие покупателей и скорость продаж."
+            description="Качественные фото повышают доверие и отклик."
           >
             <ListingImageUpload
               value={imageUrls}
@@ -358,7 +471,7 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
 
           <FormSection
             title="Описание"
-            description="Расскажите об упаковке, отгрузке и особенностях товара."
+            description={formConfig.descriptionSectionDescription}
           >
             <div className="space-y-2">
               <label htmlFor="listing-description" className="text-sm font-medium text-[#0F172A]">
@@ -370,7 +483,7 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
                 required
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder="Опишите товар, условия продажи, упаковку, наличие, особенности..."
+                placeholder={formConfig.descriptionPlaceholder}
                 className={cn(
                   "min-h-[160px] resize-y rounded-xl border-[rgba(148,163,184,0.25)]",
                   descriptionError && "border-[#FECACA] focus-visible:ring-[#FECACA]",
@@ -378,10 +491,9 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
                 disabled={isSubmitting}
               />
               <ul className="text-xs leading-relaxed text-[#64748B]">
-                <li>Упаковка и фасовка</li>
-                <li>Минимальная партия и условия отгрузки</li>
-                <li>Город и сроки поставки</li>
-                <li>Ключевые характеристики товара</li>
+                {formConfig.descriptionTips.map((tip) => (
+                  <li key={tip}>{tip}</li>
+                ))}
               </ul>
               <FieldError message={descriptionError} />
             </div>
@@ -416,16 +528,10 @@ export function NewListingForm({ categories, cities, brands }: NewListingFormPro
           </div>
         </div>
 
-        <NewListingSidebar
-          {...sidebarPreview}
-          className="hidden lg:block"
-        />
+        <NewListingSidebar {...sidebarPreview} className="hidden lg:block" />
       </div>
 
-      <NewListingSidebar
-        {...sidebarPreview}
-        className="mt-8 lg:hidden"
-      />
+      <NewListingSidebar {...sidebarPreview} className="mt-8 lg:hidden" />
     </form>
   );
 }

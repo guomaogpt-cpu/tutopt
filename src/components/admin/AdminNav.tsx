@@ -12,14 +12,24 @@ type AdminNavProps = {
 
 const navItems = [
   {
-    label: "Пользователи",
-    href: "/admin/users",
-    roles: [UserRole.ADMIN],
+    label: "Обзор",
+    href: "/admin",
+    roles: [UserRole.ADMIN, UserRole.MODERATOR],
+    match: "exact" as const,
   },
   {
     label: "Модерация",
     href: "/admin/moderation/listings",
     roles: [UserRole.ADMIN, UserRole.MODERATOR],
+    match: "prefix" as const,
+    prefix: "/admin/moderation",
+  },
+  {
+    label: "Пользователи",
+    href: "/admin/users",
+    roles: [UserRole.ADMIN],
+    match: "prefix" as const,
+    prefix: "/admin/users",
   },
 ] as const;
 
@@ -40,7 +50,10 @@ export function AdminNav({ user }: AdminNavProps) {
     >
       <div className="flex min-w-0 gap-1">
         {visibleItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const isActive =
+            item.match === "exact"
+              ? pathname === item.href
+              : pathname === item.href || pathname.startsWith(`${item.prefix}/`) || pathname === item.prefix;
 
           return (
             <Link

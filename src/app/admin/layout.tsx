@@ -10,7 +10,7 @@ import { isStaffRole } from "@/features/admin/lib/require-admin";
 async function getAdminReturnPath(): Promise<string> {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
-  return pathname && pathname.startsWith("/admin") ? pathname : "/admin/moderation/listings";
+  return pathname && pathname.startsWith("/admin") ? pathname : "/admin";
 }
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {

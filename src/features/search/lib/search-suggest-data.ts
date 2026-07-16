@@ -1,4 +1,4 @@
-import { ListingStatus } from "@prisma/client";
+import { ListingStatus, type ListingVertical } from "@prisma/client";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import {
   EMPTY_SEARCH_SUGGEST_RESPONSE,
@@ -12,7 +12,10 @@ function buildContainsFilter(query: string) {
   return { contains: query, mode: "insensitive" as const };
 }
 
-export async function getSearchSuggestions(query: string): Promise<SearchSuggestResponse> {
+export async function getSearchSuggestions(
+  query: string,
+  vertical: ListingVertical | null = null,
+): Promise<SearchSuggestResponse> {
   const trimmed = query.trim();
 
   if (trimmed.length < SEARCH_SUGGEST_MIN_LENGTH) {
@@ -20,11 +23,13 @@ export async function getSearchSuggestions(query: string): Promise<SearchSuggest
   }
 
   const contains = buildContainsFilter(trimmed);
+  const verticalFilter = vertical ? { vertical } : {};
 
   const [listings, categories, brands, sellers] = await Promise.all([
     prisma.listing.findMany({
       where: {
         status: ListingStatus.PUBLISHED,
+        ...verticalFilter,
         OR: [
           { title: contains },
           { description: contains },
@@ -51,6 +56,7 @@ export async function getSearchSuggestions(query: string): Promise<SearchSuggest
       where: {
         is_active: true,
         name: contains,
+        ...verticalFilter,
       },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
       take: SEARCH_SUGGEST_LIMITS.categories,
@@ -75,7 +81,10 @@ export async function getSearchSuggestions(query: string): Promise<SearchSuggest
       where: {
         company_name: contains,
         listings: {
-          some: { status: ListingStatus.PUBLISHED },
+          some: {
+            status: ListingStatus.PUBLISHED,
+            ...verticalFilter,
+          },
         },
       },
       orderBy: { company_name: "asc" },

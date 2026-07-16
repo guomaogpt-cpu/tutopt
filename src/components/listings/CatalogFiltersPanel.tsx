@@ -38,6 +38,7 @@ type CatalogFiltersPanelProps = {
   categories: SelectOption[];
   cities: SelectOption[];
   brands: SelectOption[];
+  showBrandFilter?: boolean;
   onApply: (draft: FilterDraft) => void;
   onReset: () => void;
 };
@@ -67,10 +68,18 @@ type FilterFieldsProps = {
   categories: SelectOption[];
   cities: SelectOption[];
   brands: SelectOption[];
+  showBrandFilter: boolean;
   onUpdate: <K extends keyof FilterDraft>(key: K, value: FilterDraft[K]) => void;
 };
 
-function FilterFields({ draft, categories, cities, brands, onUpdate }: FilterFieldsProps) {
+function FilterFields({
+  draft,
+  categories,
+  cities,
+  brands,
+  showBrandFilter,
+  onUpdate,
+}: FilterFieldsProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -117,27 +126,29 @@ function FilterFields({ draft, categories, cities, brands, onUpdate }: FilterFie
         </Select>
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="filter-brand" className="text-sm font-medium text-foreground">
-          Бренд
-        </label>
-        <Select
-          value={draft.brandId || "all"}
-          onValueChange={(value) => onUpdate("brandId", value === "all" ? "" : value)}
-        >
-          <SelectTrigger id="filter-brand">
-            <SelectValue placeholder="Все бренды" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Все бренды</SelectItem>
-            {brands.map((brand) => (
-              <SelectItem key={brand.id} value={brand.id}>
-                {brand.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      {showBrandFilter ? (
+        <div className="space-y-2">
+          <label htmlFor="filter-brand" className="text-sm font-medium text-foreground">
+            Бренд
+          </label>
+          <Select
+            value={draft.brandId || "all"}
+            onValueChange={(value) => onUpdate("brandId", value === "all" ? "" : value)}
+          >
+            <SelectTrigger id="filter-brand">
+              <SelectValue placeholder="Все бренды" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все бренды</SelectItem>
+              {brands.map((brand) => (
+                <SelectItem key={brand.id} value={brand.id}>
+                  {brand.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
@@ -209,6 +220,7 @@ export function CatalogFiltersPanel({
   categories,
   cities,
   brands,
+  showBrandFilter = true,
   onApply,
   onReset,
 }: CatalogFiltersPanelProps) {
@@ -241,7 +253,14 @@ export function CatalogFiltersPanel({
   }
 
   function handleApplyPanel() {
-    onApply(draft);
+    onApply(
+      showBrandFilter
+        ? draft
+        : {
+            ...draft,
+            brandId: "",
+          },
+    );
     onClose();
   }
 
@@ -251,6 +270,7 @@ export function CatalogFiltersPanel({
       categories={categories}
       cities={cities}
       brands={brands}
+      showBrandFilter={showBrandFilter}
       onUpdate={updateDraft}
     />
   );

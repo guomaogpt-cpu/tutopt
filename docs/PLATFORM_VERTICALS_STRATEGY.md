@@ -490,26 +490,65 @@ enum ListingVertical {
 ### Phase 4
 
 - поиск и каталог учитывают vertical;
-- отдельные страницы направлений.
+- отдельные страницы направлений;
+- SEO-фундамент: metadata, OpenGraph, canonical, sitemap, robots, JSON-LD, breadcrumbs
+  (см. [`SEO_STRATEGY.md`](./SEO_STRATEGY.md)).
 
 ### Phase 5
 
-- SEO routes;
-- sitemap;
-- meta;
-- breadcrumbs;
-- category/city landing pages.
+- SEO category/city landing routes (ЧПУ);
+- sitemap для реальных category и category+city комбинаций;
+- vertical landing categories → SEO URLs.
 
 ### Phase 6
 
-- отдельные формы под услуги и карго;
-- расширенные фильтры по типу объявления.
+- адаптивные формы создания объявления по vertical (labels/visibility без migration);
+- фильтры каталога: бренд только для OPT/MARKET;
+- лёгкая адаптация карточек (MOQ/бренд по vertical).
 
 ### Phase 7
 
-- монетизация;
-- продвижение объявлений;
-- платные пакеты (лучше **по vertical**, не одной ценой на всё).
+- адаптация ListingCard / detail / catalog copy по vertical;
+- vertical badges в seller dashboard и admin moderation;
+- display helper `listing-display.ts`.
+
+### Phase 8
+
+- адаптация lead/contact форм по vertical (labels, templates, notifications);
+- seller/buyer leads UI с vertical badge и типом заявки.
+
+### Phase 9
+
+- адаптация публичного seller profile и seller card по vertical (без Prisma migration);
+- primary vertical из объявлений; chips `?vertical=`; SEO metadata профиля;
+- dashboard: счётчики по направлениям и быстрые ссылки создания;
+- см. [`SELLER_PROFILE_UX.md`](./SELLER_PROFILE_UX.md).
+
+### Phase 10
+
+- admin dashboard `/admin` со статистикой по направлениям;
+- фильтр `?vertical=` и empty states в модерации;
+- vertical badges + подсказки модерации;
+- `/admin/users`: счётчик объявлений и badges направлений продавца;
+- см. [`ADMIN_VERTICALS_UX.md`](./ADMIN_VERTICALS_UX.md).
+
+### Phase 11
+
+- стабилизация после внедрения verticals: аудит, bugfix, lint/build;
+- search suggest scoped по vertical;
+- подготовка к commit/deploy (`prisma migrate deploy`, seed notes).
+
+### Phase 12+
+
+- глубокие category path (`/opt/a/b/c/city`);
+- 301 с query-каталога на ЧПУ;
+- listing SEO slug URL;
+- Prisma-поля для SERVICES/CARGO/MARKET и расширенных seller/lead профилей;
+- reject reasons UI (поле `rejection_reason` уже в schema);
+- расширенные ListingUnit enum;
+- монетизация и продвижение;
+- полноценный каталог `/sellers` с фильтрами по vertical;
+- унификация vertical copy в один source of truth.
 
 ---
 

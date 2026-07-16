@@ -9,24 +9,43 @@ import {
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
+import {
+  DEFAULT_LISTING_VERTICAL,
+  parseListingVerticalParam,
+} from "@/features/verticals/verticals";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
 
-export default async function NewListingPage() {
+type NewListingPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function NewListingPage({ searchParams }: NewListingPageProps) {
+  const rawParams = await searchParams;
+  const verticalParam =
+    typeof rawParams.vertical === "string" ? rawParams.vertical : undefined;
+  const categoryParam =
+    typeof rawParams.category === "string" ? rawParams.category.trim() : undefined;
+  const initialVertical =
+    parseListingVerticalParam(verticalParam) ?? DEFAULT_LISTING_VERTICAL;
+  const returnPath = categoryParam
+    ? `/listings/new?vertical=${initialVertical}&category=${categoryParam}`
+    : `/listings/new?vertical=${initialVertical}`;
+
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect(buildLoginUrl("/listings/new"));
+    redirect(buildLoginUrl(returnPath));
   }
 
   if (user.role === UserRole.BUYER) {
-    redirect(buildSellerUpgradeUrl("/listings/new"));
+    redirect(buildSellerUpgradeUrl(returnPath));
   }
 
   if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
-    redirect(buildSellerOnboardingUrl("/listings/new"));
+    redirect(buildSellerOnboardingUrl(returnPath));
   }
 
   if (user.role === UserRole.MODERATOR) {
@@ -41,7 +60,14 @@ export default async function NewListingPage() {
     prisma.category.findMany({
       where: { is_active: true },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
-      select: { id: true, name: true, slug: true, parent_id: true, icon: true },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        parent_id: true,
+        icon: true,
+        vertical: true,
+      },
     }),
     prisma.city.findMany({
       where: { is_active: true },
@@ -80,7 +106,7 @@ export default async function NewListingPage() {
           <PageHeaderContent>
             <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Подать объявление</PageTitle>
             <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
-              Добавьте товар, который хотите продавать оптом
+              Добавьте товар или предложение в выбранный раздел платформы
             </PageSubtitle>
           </PageHeaderContent>
         </PageHeader>
@@ -95,6 +121,8 @@ export default async function NewListingPage() {
             categories={categories}
             cities={cities.map((item) => ({ id: item.id, label: item.name }))}
             brands={brands.map((item) => ({ id: item.id, label: item.name }))}
+            initialVertical={initialVertical}
+            initialCategoryId={categoryParam}
           />
         )}
       </Container>

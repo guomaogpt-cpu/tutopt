@@ -1,4 +1,4 @@
-import { ListingStatus } from "@prisma/client";
+import { ListingStatus, ListingVertical } from "@prisma/client";
 import { getDescendantIds } from "@/features/listings/lib/category-search";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import type { CategoryItem } from "@/features/listings/types/category";
@@ -16,6 +16,8 @@ const listingCardSelect = {
   moq: true,
   unit: true,
   status: true,
+  vertical: true,
+  stock_quantity: true,
   created_at: true,
   published_at: true,
   category: { select: { name: true } },
@@ -74,7 +76,7 @@ export async function getHomePageData(): Promise<HomePageData> {
     leadsCount,
   ] = await Promise.all([
     prisma.category.findMany({
-      where: { is_active: true },
+      where: { is_active: true, vertical: ListingVertical.OPT },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
       select: {
         id: true,
@@ -83,21 +85,22 @@ export async function getHomePageData(): Promise<HomePageData> {
         icon: true,
         parent_id: true,
         sort_order: true,
+        vertical: true,
       },
     }),
     prisma.listing.findMany({
-      where: { status: ListingStatus.PUBLISHED },
+      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
       orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
       take: totalListingsNeeded,
       select: listingCardSelect,
     }),
     prisma.listing.groupBy({
       by: ["category_id"],
-      where: { status: ListingStatus.PUBLISHED },
+      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
       _count: { _all: true },
     }),
     prisma.listing.count({
-      where: { status: ListingStatus.PUBLISHED },
+      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
     }),
     prisma.sellerProfile.count({
       where: {
@@ -119,6 +122,7 @@ export async function getHomePageData(): Promise<HomePageData> {
     slug: category.slug,
     parent_id: category.parent_id,
     icon: category.icon,
+    vertical: category.vertical,
   }));
 
   const rootCategories = allCategories

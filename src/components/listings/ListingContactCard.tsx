@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { MessageSquare, Phone, Send } from "lucide-react";
-import { ListingStatus, type ListingStatus as ListingStatusType } from "@prisma/client";
+import { ListingStatus, type ListingStatus as ListingStatusType, type ListingVertical } from "@prisma/client";
+import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { listingStatusLabels } from "@/features/listings/lib/listing-status";
@@ -15,13 +16,20 @@ type ListingContactCardProps = {
   isAuthenticated: boolean;
   isFavorited: boolean;
   priceLabel: string;
+  priceCaption?: string;
   moq: number;
   unitLabel: string;
   stockQuantity: number | null;
   cityName: string | null;
   brandName: string | null;
   status: ListingStatusType;
+  vertical: ListingVertical;
   showStatusBadge?: boolean;
+  showMoq?: boolean;
+  moqLabel?: string;
+  showBrand?: boolean;
+  showStock?: boolean;
+  stockLabel?: string;
   contactPhone: string | null;
   whatsapp: string | null;
   telegram: string | null;
@@ -65,13 +73,20 @@ export function ListingContactCard({
   isAuthenticated,
   isFavorited,
   priceLabel,
+  priceCaption = "Цена",
   moq,
   unitLabel,
   stockQuantity,
   cityName,
   brandName,
   status,
+  vertical,
   showStatusBadge = false,
+  showMoq = true,
+  moqLabel = "Мин. партия",
+  showBrand = true,
+  showStock = true,
+  stockLabel = "Остаток",
   contactPhone,
   whatsapp,
   telegram,
@@ -93,6 +108,7 @@ export function ListingContactCard({
   }
 
   const hasContacts = Boolean(contactPhone || whatsapp || telegram);
+  const contactCtaLabel = getLeadFormConfig(vertical).contactCtaLabel;
 
   return (
     <div className={cardClassName}>
@@ -103,6 +119,9 @@ export function ListingContactCard({
       ) : null}
 
       <div className="space-y-1">
+        <p className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
+          {priceCaption}
+        </p>
         <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px]">
           {priceLabel}
         </p>
@@ -110,27 +129,29 @@ export function ListingContactCard({
       </div>
 
       <dl className="mt-5 space-y-2.5 border-b border-[rgba(148,163,184,0.14)] pb-5 text-sm">
-        <div className="flex justify-between gap-4">
-          <dt className="text-[#64748B]">Мин. партия</dt>
-          <dd className="font-medium text-[#0F172A]">
-            {moq} {unitLabel.toLowerCase()}
-          </dd>
-        </div>
+        {showMoq ? (
+          <div className="flex justify-between gap-4">
+            <dt className="text-[#64748B]">{moqLabel}</dt>
+            <dd className="font-medium text-[#0F172A]">
+              {moq} {unitLabel.toLowerCase()}
+            </dd>
+          </div>
+        ) : null}
         {cityName ? (
           <div className="flex justify-between gap-4">
             <dt className="text-[#64748B]">Город</dt>
             <dd className="font-medium text-[#0F172A]">{cityName}</dd>
           </div>
         ) : null}
-        {brandName ? (
+        {showBrand && brandName ? (
           <div className="flex justify-between gap-4">
             <dt className="text-[#64748B]">Бренд</dt>
             <dd className="font-medium text-[#0F172A]">{brandName}</dd>
           </div>
         ) : null}
-        {stockQuantity != null ? (
+        {showStock && stockQuantity != null ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B]">Остаток</dt>
+            <dt className="text-[#64748B]">{stockLabel}</dt>
             <dd className="font-medium text-[#0F172A]">{stockQuantity}</dd>
           </div>
         ) : null}
@@ -143,7 +164,7 @@ export function ListingContactCard({
           onClick={handleWriteToSeller}
         >
           <MessageSquare className="size-4" aria-hidden="true" />
-          Отправить заявку
+          {contactCtaLabel}
         </Button>
 
         <FavoriteButton

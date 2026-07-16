@@ -45,10 +45,12 @@ export function getMobileDrawerLinks(user: HeaderUser | null): NavLinkItem[] {
       links.push({ label: "Уведомления", href: "/notifications" });
       break;
     case "MODERATOR":
+      links.push({ label: "Обзор админки", href: "/admin" });
       links.push({ label: "Модерация", href: "/admin/moderation/listings" });
       links.push({ label: "Уведомления", href: "/notifications" });
       break;
     case "ADMIN":
+      links.push({ label: "Обзор админки", href: "/admin" });
       links.push({ label: "Пользователи", href: "/admin/users" });
       links.push({ label: "Модерация", href: "/admin/moderation/listings" });
       links.push({ label: "Уведомления", href: "/notifications" });

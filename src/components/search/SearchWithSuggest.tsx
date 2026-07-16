@@ -24,6 +24,7 @@ import {
   SEARCH_SUGGEST_MIN_LENGTH,
   type SearchSuggestResponse,
 } from "@/features/search/lib/search-suggest-types";
+import { resolveSearchVertical } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
 
 export type SearchWithSuggestProps = {
@@ -65,6 +66,7 @@ export function SearchWithSuggest({
   const resolvedPlaceholder =
     placeholder ?? (isHero ? "Что вы ищете?" : "Найти товары оптом...");
   const resolvedButtonLabel = buttonLabel ?? (isHero ? "Найти товары" : "Найти");
+  const searchVertical = resolveSearchVertical(pathname, searchParams);
 
   useEffect(() => {
     setQuery(urlQuery);
@@ -83,7 +85,7 @@ export function SearchWithSuggest({
     const controller = new AbortController();
 
     const timer = window.setTimeout(() => {
-      void fetchSearchSuggestions(trimmed, controller.signal)
+      void fetchSearchSuggestions(trimmed, controller.signal, searchVertical)
         .then((result) => {
           if (!controller.signal.aborted) {
             setSuggestions(result);
@@ -105,7 +107,7 @@ export function SearchWithSuggest({
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [query]);
+  }, [query, searchVertical]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -147,7 +149,16 @@ export function SearchWithSuggest({
     }
 
     const trimmed = nextQuery.trim();
-    router.push(trimmed ? `/listings?q=${encodeURIComponent(trimmed)}` : "/listings");
+    const vertical = resolveSearchVertical(pathname, searchParams);
+    const params = new URLSearchParams();
+    if (trimmed) {
+      params.set("q", trimmed);
+    }
+    if (vertical) {
+      params.set("vertical", vertical);
+    }
+    const queryString = params.toString();
+    router.push(queryString ? `/listings?${queryString}` : "/listings");
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -230,6 +241,7 @@ export function SearchWithSuggest({
               isOpen={isOpen}
               isLoading={isLoading}
               suggestions={suggestions}
+              catalogVertical={searchVertical}
               onSelect={handleSelectSuggestion}
             />
           </div>
@@ -274,6 +286,7 @@ export function SearchWithSuggest({
           isOpen={isOpen}
           isLoading={isLoading}
           suggestions={suggestions}
+          catalogVertical={searchVertical}
           onSelect={handleSelectSuggestion}
         />
       </div>

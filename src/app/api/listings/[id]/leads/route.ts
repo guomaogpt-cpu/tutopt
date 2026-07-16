@@ -34,6 +34,7 @@ export async function POST(request: Request, context: LeadRouteContext) {
         id: true,
         title: true,
         status: true,
+        vertical: true,
         sellerProfile: {
           select: {
             id: true,
@@ -70,6 +71,7 @@ export async function POST(request: Request, context: LeadRouteContext) {
       recipientId: listing.sellerProfile.user_id,
       actorId: user.id,
       listingTitle: listing.title,
+      vertical: listing.vertical,
     });
 
     return jsonData({ lead }, 201);

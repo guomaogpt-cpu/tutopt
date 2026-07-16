@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ListingStatus, UserRole } from "@prisma/client";
 import { ListingCharacteristics } from "@/components/listings/ListingCharacteristics";
@@ -7,7 +8,8 @@ import { ListingGallery } from "@/components/listings/ListingGallery";
 import { ListingSellerCard } from "@/components/listings/ListingSellerCard";
 import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
 import { SimilarListings } from "@/components/listings/SimilarListings";
-import { listingUnitOptions } from "@/features/listings/constants";
+import { AppBreadcrumbs } from "@/components/navigation/Breadcrumbs";
+import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { canViewListing } from "@/features/listings/lib/listing-access";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import {
@@ -15,24 +17,63 @@ import {
   getSellerPublishedListingCount,
   getSimilarListings,
 } from "@/features/listings/lib/listing-detail-data";
+import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { listingStatusLabels } from "@/features/listings/lib/listing-status";
+import {
+  formatListingCardPrice,
+  getListingDisplayFlags,
+  getListingPriceFieldLabel,
+  getListingStockLabel,
+  getListingUnitFieldLabel,
+  getListingUnitLabel,
+} from "@/features/listings/lib/listing-display";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { recordListingView } from "@/features/buyer/lib/listing-views";
 import { getCurrentUser } from "@/features/auth/lib/session";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { VERTICALS } from "@/features/verticals/verticals";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
+import { buildListingJsonLd } from "@/shared/seo/listing-json-ld";
+import {
+  SITE_NAME,
+  buildPageMetadata,
+  truncateSeoText,
+} from "@/shared/seo/seo.config";
 
 type ListingPageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: ListingPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const listing = await getListingDetail(id);
+
+  if (!listing) {
+    return {
+      title: `Объявление не найдено | ${SITE_NAME}`,
+    };
+  }
+
+  const priceLabel = formatListingPrice(listing.price, listing.currency);
+  const title = `${listing.title} — ${priceLabel} | ${SITE_NAME}`;
+  const description = listing.description.trim()
+    ? truncateSeoText(listing.description)
+    : `${listing.title}: объявление на Tutopt.`;
+  const firstImage = listing.images[0]
+    ? normalizeListingImageUrl(listing.images[0].url)
+    : undefined;
+
+  return buildPageMetadata({
+    title,
+    description,
+    path: `/listings/${listing.id}`,
+    type: "article",
+    images: firstImage ? [firstImage] : undefined,
+    noIndex: listing.status !== ListingStatus.PUBLISHED,
+  });
+}
 
 export default async function ListingPage({ params }: ListingPageProps) {
   const { id } = await params;
@@ -57,10 +98,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const favoriteIds = new Set(favoriteListingIds);
   const isFavorited = favoriteIds.has(listing.id);
 
-  const unitLabel =
-    listingUnitOptions.find((option) => option.value === listing.unit)?.label ?? listing.unit;
+  const unitLabel = getListingUnitLabel(listing.unit, listing.vertical);
+  const displayFlags = getListingDisplayFlags(listing.vertical);
+  const priceFieldLabel = getListingPriceFieldLabel(listing.vertical);
+  const unitFieldLabel = getListingUnitFieldLabel(listing.vertical);
 
-  const priceLabel = formatListingPrice(listing.price, listing.currency);
+  const priceLabel = formatListingCardPrice({
+    price: listing.price,
+    currency: listing.currency,
+    vertical: listing.vertical,
+  });
 
   const sellerProfile = listing.sellerProfile;
   const isOwner = user?.id === sellerProfile.user_id;
@@ -73,14 +120,51 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const sellerAvatar = sellerProfile.logo_url ?? sellerProfile.user.avatar_url;
   const sellerCity = sellerProfile.city?.name ?? listing.city?.name ?? null;
 
+  const vertical = VERTICALS[listing.vertical];
+  const breadcrumbItems = [
+    { label: "Главная", href: "/" },
+    { label: vertical.label, href: vertical.href },
+    ...(listing.category
+      ? [
+          {
+            label: listing.category.name,
+            href: `/listings?vertical=${listing.vertical}&category=${listing.category_id}`,
+          },
+        ]
+      : []),
+    { label: listing.title },
+  ];
+
+  const jsonLd =
+    listing.status === ListingStatus.PUBLISHED
+      ? buildListingJsonLd({
+          id: listing.id,
+          title: listing.title,
+          description: listing.description,
+          price: listing.price,
+          currency: listing.currency,
+          vertical: listing.vertical,
+          images: listing.images,
+        })
+      : null;
+
   const characteristicItems = [
     { label: "Категория", value: listing.category.name },
     ...(listing.city ? [{ label: "Город", value: listing.city.name }] : []),
-    ...(listing.brand ? [{ label: "Бренд", value: listing.brand.name }] : []),
-    { label: "Мин. партия", value: `${listing.moq} ${unitLabel.toLowerCase()}` },
-    { label: "Единица", value: unitLabel },
-    ...(listing.stock_quantity != null
-      ? [{ label: "Остаток", value: String(listing.stock_quantity) }]
+    ...(displayFlags.showBrand && listing.brand
+      ? [{ label: "Бренд", value: listing.brand.name }]
+      : []),
+    ...(displayFlags.showMoq
+      ? [{ label: displayFlags.moqLabel, value: `${listing.moq} ${unitLabel.toLowerCase()}` }]
+      : []),
+    { label: unitFieldLabel, value: unitLabel },
+    ...(displayFlags.showStock && listing.stock_quantity != null
+      ? [
+          {
+            label: getListingStockLabel(listing.vertical),
+            value: String(listing.stock_quantity),
+          },
+        ]
       : []),
   ];
 
@@ -90,13 +174,20 @@ export default async function ListingPage({ params }: ListingPageProps) {
       isAuthenticated={user !== null}
       isFavorited={isFavorited}
       priceLabel={priceLabel}
+      priceCaption={priceFieldLabel}
       moq={listing.moq}
       unitLabel={unitLabel}
       stockQuantity={listing.stock_quantity}
       cityName={listing.city?.name ?? null}
       brandName={listing.brand?.name ?? null}
       status={listing.status}
+      vertical={listing.vertical}
       showStatusBadge={showStatusBadge}
+      showMoq={displayFlags.showMoq}
+      moqLabel={displayFlags.moqLabel}
+      showBrand={displayFlags.showBrand}
+      showStock={displayFlags.showStock}
+      stockLabel={displayFlags.stockLabel}
       contactPhone={sellerProfile.contact_phone}
       whatsapp={sellerProfile.whatsapp}
       telegram={sellerProfile.telegram}
@@ -113,43 +204,31 @@ export default async function ListingPage({ params }: ListingPageProps) {
       sellerSince={sellerProfile.created_at}
       publishedListingCount={sellerListingCount}
       sellerId={sellerProfile.id}
+      vertical={listing.vertical}
     />
   );
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      {jsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      ) : null}
       <Container size="lg" className="min-w-0 max-w-[1280px]">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Главная</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/listings">Каталог</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/listings?category=${listing.category_id}`}>
-                {listing.category.name}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="line-clamp-1">{listing.title}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <AppBreadcrumbs items={breadcrumbItems} />
 
         <header className="mt-4 sm:mt-5">
-          <h1 className="text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
+          <div className="flex flex-wrap items-center gap-2">
+            <VerticalListingBadge vertical={listing.vertical} size="md" />
+            {showStatusBadge ? (
+              <Badge variant="warning">{listingStatusLabels[listing.status]}</Badge>
+            ) : null}
+          </div>
+          <h1 className="mt-2 text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
             {listing.title}
           </h1>
-          {showStatusBadge ? (
-            <Badge variant="warning" className="mt-2">
-              {listingStatusLabels[listing.status]}
-            </Badge>
-          ) : null}
         </header>
 
         <div className="mt-6 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1.85fr)_minmax(300px,1fr)] lg:items-start lg:gap-8">
@@ -164,10 +243,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
             <ListingCharacteristics items={characteristicItems} />
             <ListingDescription text={listing.description} />
             <ListingLeadForm
+              key={`${listing.id}-${listing.vertical}`}
               listingId={listing.id}
               sellerName={sellerName}
               moq={listing.moq}
               unitLabel={unitLabel}
+              vertical={listing.vertical}
               isAuthenticated={user !== null}
               isOwner={isOwner}
               defaultPhone={user?.phone}

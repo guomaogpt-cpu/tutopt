@@ -19,6 +19,8 @@ import {
   type ListingSort,
   type ListingsCatalogFilters,
 } from "@/features/listings/lib/listings-catalog";
+import { catalogShowsBrandFilter } from "@/features/listings/lib/vertical-form-config";
+import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -30,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import type { ListingVertical } from "@prisma/client";
 
 type ListingsCatalogToolbarProps = {
   filters: ListingsCatalogFilters;
@@ -53,7 +56,10 @@ export function ListingsCatalogToolbar({
   const [query, setQuery] = useState(filters.q);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const activeChips = getActiveFilterChips(filters, lookups);
+  const showBrandFilter = catalogShowsBrandFilter(filters.vertical);
+  const activeChips = getActiveFilterChips(filters, lookups).filter(
+    (chip) => showBrandFilter || chip.id !== "brand",
+  );
   const panelFiltersOnly = hasActiveCatalogFilters({
     ...filters,
     q: "",
@@ -124,7 +130,7 @@ export function ListingsCatalogToolbar({
     pushFilters({
       categoryId: draft.categoryId,
       cityId: draft.cityId,
-      brandId: draft.brandId,
+      brandId: showBrandFilter ? draft.brandId : "",
       priceMin: draft.priceMin,
       priceMax: draft.priceMax,
       withPhotos: draft.withPhotos,
@@ -147,6 +153,14 @@ export function ListingsCatalogToolbar({
     router.push("/listings");
   }
 
+  function handleVerticalChange(nextVertical: ListingVertical | null) {
+    pushFilters({
+      vertical: nextVertical,
+      categoryId: "",
+      brandId: "",
+    });
+  }
+
   return (
     <section className="space-y-3">
       <div
@@ -154,6 +168,43 @@ export function ListingsCatalogToolbar({
           "rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white/95 p-3 shadow-sm backdrop-blur-sm sm:p-4",
         )}
       >
+        <div
+          className="mb-3 flex gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          role="group"
+          aria-label="Раздел объявлений"
+        >
+          <button
+            type="button"
+            onClick={() => handleVerticalChange(null)}
+            className={cn(
+              "h-7 shrink-0 rounded-full px-2.5 text-xs font-medium transition",
+              filters.vertical === null
+                ? "bg-blue-50 text-blue-700 ring-1 ring-[#2563EB]/40"
+                : "bg-[#F8FAFC] text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:text-[#334155]",
+            )}
+          >
+            Все
+          </button>
+          {VERTICAL_LIST.map((vertical) => {
+            const isActive = filters.vertical === vertical.id;
+            return (
+              <button
+                key={vertical.id}
+                type="button"
+                onClick={() => handleVerticalChange(vertical.id)}
+                className={cn(
+                  "h-7 shrink-0 rounded-full px-2.5 text-xs font-medium transition",
+                  isActive
+                    ? "bg-blue-50 text-blue-700 ring-1 ring-[#2563EB]/40"
+                    : "bg-[#F8FAFC] text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:text-[#334155]",
+                )}
+              >
+                {vertical.label}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <form onSubmit={handleCatalogSubmit} className="min-w-0 flex-1">
             <label htmlFor="catalog-search" className="sr-only">
@@ -211,6 +262,7 @@ export function ListingsCatalogToolbar({
                 categories={categories}
                 cities={cities}
                 brands={brands}
+                showBrandFilter={showBrandFilter}
                 onApply={handleApplyFilters}
                 onReset={handleResetFilters}
               />

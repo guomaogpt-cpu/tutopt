@@ -4,12 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import type { ListingStatus } from "@prisma/client";
+import type { ListingStatus, ListingVertical } from "@prisma/client";
 import { ListingStatus as ListingStatusEnum, Prisma } from "@prisma/client";
 import { Package } from "lucide-react";
 import { ListingStatusBadge } from "@/components/seller/ListingStatusBadge";
+import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { formatListingDate, formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
+import { getModerationHint } from "@/features/admin/lib/moderation-vertical";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import {
@@ -26,6 +28,7 @@ export type ModerationListingRow = {
   id: string;
   title: string;
   status: ListingStatus;
+  vertical: ListingVertical;
   price: string;
   currency: string;
   created_at: string;
@@ -37,6 +40,8 @@ export type ModerationListingRow = {
 
 type ModerationListingsTableProps = {
   listings: ModerationListingRow[];
+  activeVertical?: ListingVertical | null;
+  emptyMessage?: string;
 };
 
 type ModerationFilter = "all" | "pending" | "published" | "rejected";
@@ -114,6 +119,7 @@ function ModerationListingCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <ListingStatusBadge status={listing.status} />
+            <VerticalListingBadge vertical={listing.vertical} size="md" />
           </div>
 
           <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#0F172A]">
@@ -148,6 +154,13 @@ function ModerationListingCard({
               </dd>
             </div>
           </dl>
+
+          {canModerate ? (
+            <p className="mt-3 rounded-xl bg-[#F8FAFC] px-3 py-2 text-xs leading-relaxed text-[#64748B]">
+              <span className="font-medium text-[#475569]">Подсказка модерации: </span>
+              {getModerationHint(listing.vertical)}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -185,7 +198,11 @@ function ModerationListingCard({
   );
 }
 
-export function ModerationListingsTable({ listings }: ModerationListingsTableProps) {
+export function ModerationListingsTable({
+  listings,
+  activeVertical = null,
+  emptyMessage = "Нет объявлений на модерации.",
+}: ModerationListingsTableProps) {
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState<ModerationFilter>("pending");
   const [query, setQuery] = useState("");
@@ -257,13 +274,21 @@ export function ModerationListingsTable({ listings }: ModerationListingsTablePro
         <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
           <Package className="size-6" aria-hidden="true" />
         </div>
-        <p className="mt-5 text-base font-semibold text-[#0F172A]">Нет объявлений для модерации</p>
+        <p className="mt-5 text-base font-semibold text-[#0F172A]">{emptyMessage}</p>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
-          Новые объявления продавцов появятся здесь.
+          {activeVertical
+            ? "Выберите другое направление или сбросьте фильтр."
+            : "Новые объявления продавцов появятся здесь."}
         </p>
-        <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
-          <Link href="/listings">Открыть каталог</Link>
-        </Button>
+        {activeVertical ? (
+          <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
+            <Link href="/admin/moderation/listings">Все направления</Link>
+          </Button>
+        ) : (
+          <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
+            <Link href="/listings">Открыть каталог</Link>
+          </Button>
+        )}
       </div>
     );
   }
@@ -351,7 +376,9 @@ export function ModerationListingsTable({ listings }: ModerationListingsTablePro
             <TabsContent key={filter.value} value={filter.value} className="mt-4 space-y-4">
               {tabListings.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-10 text-center">
-                  <p className="text-sm text-[#64748B]">В этой категории объявлений нет.</p>
+                  <p className="text-sm text-[#64748B]">
+                    {activeVertical ? emptyMessage : "В этой категории объявлений нет."}
+                  </p>
                 </div>
               ) : (
                 tabListings.map((listing) => (

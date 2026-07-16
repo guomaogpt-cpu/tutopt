@@ -27,8 +27,11 @@ export function slugify(text: string): string {
 export async function seedCategories(
   categories: CategorySeed[],
   parentId: string | null = null,
+  inheritedVertical: ListingVertical = ListingVertical.OPT,
 ): Promise<void> {
   for (const category of categories) {
+    const vertical = category.vertical ?? inheritedVertical;
+
     const created = await prisma.category.upsert({
       where: { slug: category.slug },
       update: {
@@ -37,7 +40,7 @@ export async function seedCategories(
         sort_order: category.sort_order,
         parent_id: parentId,
         is_active: true,
-        vertical: ListingVertical.OPT,
+        vertical,
       },
       create: {
         name: category.name,
@@ -46,12 +49,12 @@ export async function seedCategories(
         sort_order: category.sort_order,
         parent_id: parentId,
         is_active: true,
-        vertical: ListingVertical.OPT,
+        vertical,
       },
     });
 
     if (category.children?.length) {
-      await seedCategories(category.children, created.id);
+      await seedCategories(category.children, created.id, vertical);
     }
   }
 }

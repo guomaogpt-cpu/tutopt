@@ -1,9 +1,16 @@
 "use client";
 
+import type { ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ListingCard } from "@/components/listings/ListingCard";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import {
+  buildSellerProfileHref,
+  getSellerListingsEmptyMessage,
+  getSellerVerticalBrandLabel,
+  type SellerVerticalCounts,
+} from "@/features/sellers/lib/seller-vertical-profile";
 import { SearchInput } from "@/components/ui/search-input";
 import {
   Select,
@@ -12,9 +19,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 type SellerProfileListingsProps = {
   listings: ListingCardData[];
+  sellerPath: string;
+  activeVertical: ListingVertical | null;
+  sellerVerticals: ListingVertical[];
+  verticalCounts: SellerVerticalCounts;
+  totalListingCount: number;
   isAuthenticated?: boolean;
   favoriteListingIds?: string[];
 };
@@ -40,6 +53,11 @@ function sortListings(items: ListingCardData[], sort: SellerListingSort): Listin
 
 export function SellerProfileListings({
   listings,
+  sellerPath,
+  activeVertical,
+  sellerVerticals,
+  verticalCounts,
+  totalListingCount,
   isAuthenticated = false,
   favoriteListingIds = [],
 }: SellerProfileListingsProps) {
@@ -69,6 +87,12 @@ export function SellerProfileListings({
     return sortListings(filtered, sort);
   }, [listings, query, category, sort]);
 
+  const showVerticalChips = sellerVerticals.length > 0;
+  const emptyMessage = getSellerListingsEmptyMessage(activeVertical);
+  const publishedLabel = activeVertical
+    ? verticalCounts[activeVertical]
+    : totalListingCount;
+
   return (
     <section
       id="seller-listings"
@@ -77,30 +101,79 @@ export function SellerProfileListings({
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <h2 id="seller-listings-title" className="text-xl font-bold tracking-tight text-[#0F172A] sm:text-2xl">
-          Объявления продавца
+          Объявления
         </h2>
-        {listings.length > 0 ? (
+        {totalListingCount > 0 ? (
           <p className="text-sm text-[#64748B]">
-            Опубликовано:{" "}
-            <span className="font-medium text-[#0F172A]">{listings.length}</span>
+            {activeVertical ? "В направлении:" : "Опубликовано:"}{" "}
+            <span className="font-medium text-[#0F172A]">{publishedLabel}</span>
+            {activeVertical ? (
+              <span className="text-[#94A3B8]"> из {totalListingCount}</span>
+            ) : null}
           </p>
         ) : null}
       </div>
 
+      {showVerticalChips ? (
+        <div className="mt-4 -mx-1 overflow-x-auto px-1">
+          <div className="flex w-max min-w-full flex-wrap gap-2 sm:w-auto">
+            <Link
+              href={buildSellerProfileHref(sellerPath)}
+              className={cn(
+                "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
+                activeVertical === null
+                  ? "bg-[#2563EB] text-white"
+                  : "bg-white text-[#475569] ring-1 ring-slate-200 hover:ring-[#2563EB]/35",
+              )}
+            >
+              Все
+              <span className="ml-1.5 opacity-80">{totalListingCount}</span>
+            </Link>
+            {sellerVerticals.map((vertical) => {
+              const isActive = activeVertical === vertical;
+              return (
+                <Link
+                  key={vertical}
+                  href={buildSellerProfileHref(sellerPath, vertical)}
+                  className={cn(
+                    "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
+                    isActive
+                      ? "bg-[#2563EB] text-white"
+                      : "bg-white text-[#475569] ring-1 ring-slate-200 hover:ring-[#2563EB]/35",
+                  )}
+                >
+                  {getSellerVerticalBrandLabel(vertical)}
+                  <span className="ml-1.5 opacity-80">{verticalCounts[vertical]}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
       {listings.length === 0 ? (
         <div className="mt-6 rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white px-6 py-12 text-center shadow-sm">
-          <p className="text-base font-medium text-[#0F172A]">
-            У продавца пока нет опубликованных объявлений.
-          </p>
+          <p className="text-base font-medium text-[#0F172A]">{emptyMessage}</p>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
-            Загляните позже или посмотрите предложения других продавцов в каталоге.
+            {activeVertical
+              ? "Выберите другое направление или посмотрите все объявления продавца."
+              : "Загляните позже или посмотрите предложения других продавцов в каталоге."}
           </p>
-          <Link
-            href="/listings"
-            className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-[#2563EB] px-5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
-          >
-            Перейти в каталог
-          </Link>
+          {activeVertical ? (
+            <Link
+              href={buildSellerProfileHref(sellerPath)}
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-[#2563EB] px-5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
+            >
+              Все объявления
+            </Link>
+          ) : (
+            <Link
+              href="/listings"
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-[#2563EB] px-5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
+            >
+              Перейти в каталог
+            </Link>
+          )}
         </div>
       ) : (
         <>

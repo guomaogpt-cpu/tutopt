@@ -63,6 +63,11 @@ export function CategoryPicker({
   function handleRootSelect(rootId: string) {
     setSelectedRootId(rootId);
     setSearchQuery("");
+    const hasChildren = categories.some((category) => category.parent_id === rootId);
+    if (!hasChildren) {
+      onChange(rootId);
+      return;
+    }
     onChange("");
   }
 

@@ -1,6 +1,22 @@
-import { VERTICALS } from "@/features/verticals/verticals";
-import { VerticalStubPage } from "@/features/verticals/VerticalStubPage";
+import { ListingVertical } from "@prisma/client";
+import { VerticalLandingPage } from "@/components/verticals/VerticalLandingPage";
+import { getVerticalPageData } from "@/features/verticals/get-vertical-page-data";
+import { buildVerticalPageMetadata } from "@/shared/seo/seo.config";
 
-export default function ServicesVerticalPage() {
-  return <VerticalStubPage vertical={VERTICALS.SERVICES} />;
+export const metadata = buildVerticalPageMetadata(ListingVertical.SERVICES);
+
+export default async function ServicesVerticalPage() {
+  const data = await getVerticalPageData(ListingVertical.SERVICES);
+
+  return (
+    <VerticalLandingPage
+      vertical={ListingVertical.SERVICES}
+      title="ТутУслуги"
+      subtitle="Услуги, мастера и специалисты в Кыргызстане."
+      statusBadge="Раздел готовится к запуску"
+      categories={data.categories}
+      listings={data.listings}
+      publishedCount={data.publishedCount}
+    />
+  );
 }

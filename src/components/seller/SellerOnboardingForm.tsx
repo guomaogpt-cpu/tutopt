@@ -102,8 +102,8 @@ export function SellerOnboardingForm({
 
   return (
     <AuthFormCard
-      title="Завершите профиль продавца"
-      description="Укажите и подтвердите телефон, чтобы покупатели могли связаться с вами."
+      title="Профиль продавца"
+      description="Укажите данные, которые будут видны в ваших объявлениях и профиле. Подтвердите телефон, чтобы покупатели могли связаться с вами."
     >
       <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-5">
         <AuthAlert variant="error" messages={errors.form} />

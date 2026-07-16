@@ -1,3 +1,4 @@
+import type { ListingVertical } from "@prisma/client";
 import {
   EMPTY_SEARCH_SUGGEST_RESPONSE,
   type SearchSuggestResponse,
@@ -16,6 +17,7 @@ type ApiErrorBody = {
 export async function fetchSearchSuggestions(
   query: string,
   signal?: AbortSignal,
+  vertical?: ListingVertical | null,
 ): Promise<SearchSuggestResponse> {
   const trimmed = query.trim();
 
@@ -23,7 +25,12 @@ export async function fetchSearchSuggestions(
     return EMPTY_SEARCH_SUGGEST_RESPONSE;
   }
 
-  const response = await fetch(`/api/search/suggest?q=${encodeURIComponent(trimmed)}`, {
+  const params = new URLSearchParams({ q: trimmed });
+  if (vertical) {
+    params.set("vertical", vertical);
+  }
+
+  const response = await fetch(`/api/search/suggest?${params.toString()}`, {
     cache: "no-store",
     signal,
     headers: {

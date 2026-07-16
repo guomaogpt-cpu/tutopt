@@ -1,6 +1,12 @@
+import type { ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { BadgeCheck, Building2 } from "lucide-react";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
+import {
+  buildSellerProfileHref,
+  getListingSellerCardCtaLabel,
+  getSellerProfileLabel,
+} from "@/features/sellers/lib/seller-vertical-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +21,8 @@ type ListingSellerCardProps = {
   sellerSince: Date;
   publishedListingCount: number;
   sellerId: string;
+  vertical: ListingVertical;
+  messageSectionId?: string;
 };
 
 function getInitials(name: string): string {
@@ -37,8 +45,12 @@ export function ListingSellerCard({
   sellerSince,
   publishedListingCount,
   sellerId,
+  vertical,
+  messageSectionId = "listing-seller-message",
 }: ListingSellerCardProps) {
   const displayName = companyName.trim() || sellerName;
+  const roleLabel = getSellerProfileLabel(vertical);
+  const ctaLabel = getListingSellerCardCtaLabel(vertical);
 
   return (
     <div
@@ -57,7 +69,7 @@ export function ListingSellerCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="secondary" className="rounded-full text-[11px]">
-              Поставщик
+              {roleLabel}
             </Badge>
             {isVerified ? (
               <Badge variant="secondary" className="gap-1 rounded-full text-[11px]">
@@ -96,11 +108,18 @@ export function ListingSellerCard({
       </dl>
 
       <Button
-        variant="outline"
-        className="mt-4 h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)]"
+        className="mt-4 h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
         asChild
       >
-        <Link href={`/seller/${sellerId}`}>Все товары продавца</Link>
+        <a href={`#${messageSectionId}`}>{ctaLabel}</a>
+      </Button>
+
+      <Button
+        variant="outline"
+        className="mt-2 h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)]"
+        asChild
+      >
+        <Link href={buildSellerProfileHref(sellerId, vertical)}>Все объявления</Link>
       </Button>
     </div>
   );

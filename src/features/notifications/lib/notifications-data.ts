@@ -1,4 +1,5 @@
-import { NotificationType } from "@prisma/client";
+import { NotificationType, type ListingVertical } from "@prisma/client";
+import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { prisma } from "@/shared/lib/prisma";
 
 export const NOTIFICATIONS_LIMIT = 20;
@@ -90,14 +91,19 @@ export async function createNewLeadNotification(input: {
   recipientId: string;
   actorId: string;
   listingTitle: string;
+  vertical?: ListingVertical;
 }): Promise<void> {
+  const config = input.vertical
+    ? getLeadFormConfig(input.vertical)
+    : getLeadFormConfig("OPT");
+
   await prisma.notification.create({
     data: {
       recipient_id: input.recipientId,
       actor_id: input.actorId,
       type: NotificationType.NEW_LEAD,
-      title: "Новая заявка",
-      message: `Покупатель отправил заявку по объявлению «${input.listingTitle}»`,
+      title: config.notificationTitle,
+      message: config.notificationMessage(input.listingTitle),
       link: "/seller/leads",
     },
   });

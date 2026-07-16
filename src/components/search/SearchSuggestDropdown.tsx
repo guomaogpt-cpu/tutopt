@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { ListingVertical } from "@prisma/client";
 import {
   Building2,
   FolderTree,
@@ -23,8 +24,21 @@ type SearchSuggestDropdownProps = {
   isLoading: boolean;
   suggestions: SearchSuggestResponse;
   onSelect: () => void;
+  catalogVertical?: ListingVertical | null;
   className?: string;
 };
+
+function buildCatalogHref(
+  baseParams: Record<string, string>,
+  vertical?: ListingVertical | null,
+): string {
+  const params = new URLSearchParams(baseParams);
+  if (vertical) {
+    params.set("vertical", vertical);
+  }
+  const query = params.toString();
+  return query ? `/listings?${query}` : "/listings";
+}
 
 type SuggestGroupProps = {
   title: string;
@@ -91,6 +105,7 @@ export function SearchSuggestDropdown({
   isLoading,
   suggestions,
   onSelect,
+  catalogVertical = null,
   className,
 }: SearchSuggestDropdownProps) {
   if (!isOpen || query.trim().length < 2) {
@@ -141,7 +156,10 @@ export function SearchSuggestDropdown({
                 {suggestions.categories.map((category) => (
                   <SuggestItem
                     key={category.id}
-                    href={`/listings?category=${encodeURIComponent(category.id)}`}
+                    href={buildCatalogHref(
+                      { category: category.id },
+                      catalogVertical,
+                    )}
                     icon={<FolderTree className="size-4" aria-hidden="true" />}
                     title={category.name}
                     onSelect={onSelect}
@@ -155,7 +173,7 @@ export function SearchSuggestDropdown({
                 {suggestions.brands.map((brand) => (
                   <SuggestItem
                     key={brand.id}
-                    href={`/listings?brand=${encodeURIComponent(brand.id)}`}
+                    href={buildCatalogHref({ brand: brand.id }, catalogVertical)}
                     icon={<Tag className="size-4" aria-hidden="true" />}
                     title={brand.name}
                     onSelect={onSelect}

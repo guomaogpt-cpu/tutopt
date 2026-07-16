@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Inbox, Package } from "lucide-react";
 import { LeadStatusBadge } from "@/components/seller/LeadStatusBadge";
+import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import type { SellerLeadItem } from "@/features/leads/lib/leads-data";
+import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { Button } from "@/components/ui/button";
@@ -21,7 +23,7 @@ export function SellerLeadsTable({ leads }: SellerLeadsTableProps) {
         </div>
         <p className="mt-5 text-base font-semibold text-[#0F172A]">Пока нет заявок</p>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
-          Когда покупатели заинтересуются вашими товарами, заявки появятся здесь.
+          Когда клиенты будут писать по вашим объявлениям, они появятся здесь.
         </p>
         <Button
           variant="outline"
@@ -40,6 +42,7 @@ export function SellerLeadsTable({ leads }: SellerLeadsTableProps) {
         const imageUrl = lead.listing.image_url
           ? normalizeListingImageUrl(lead.listing.image_url)
           : null;
+        const leadConfig = getLeadFormConfig(lead.listing.vertical);
 
         return (
           <article
@@ -73,8 +76,14 @@ export function SellerLeadsTable({ leads }: SellerLeadsTableProps) {
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
-                      Товар
+                    <div className="flex flex-wrap items-center gap-2">
+                      <VerticalListingBadge vertical={lead.listing.vertical} />
+                      <p className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
+                        {leadConfig.sellerLeadTypeLabel}
+                      </p>
+                    </div>
+                    <p className="mt-2 text-xs font-medium uppercase tracking-wide text-[#64748B]">
+                      {leadConfig.listingLabel}
                     </p>
                     <h3 className="mt-1 text-base font-semibold text-[#0F172A]">
                       <Link
@@ -104,16 +113,18 @@ export function SellerLeadsTable({ leads }: SellerLeadsTableProps) {
                     ) : null}
                   </div>
 
-                  <div>
-                    <dt className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
-                      Количество
-                    </dt>
-                    <dd className="mt-1 font-medium text-[#0F172A]">{lead.quantity}</dd>
-                  </div>
+                  {leadConfig.showQuantity ? (
+                    <div>
+                      <dt className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
+                        {leadConfig.quantityLabel}
+                      </dt>
+                      <dd className="mt-1 font-medium text-[#0F172A]">{lead.quantity}</dd>
+                    </div>
+                  ) : null}
 
                   <div className="sm:col-span-2">
                     <dt className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
-                      Сообщение
+                      {leadConfig.messageLabel}
                     </dt>
                     <dd className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-[#334155]">
                       {lead.message ?? "—"}

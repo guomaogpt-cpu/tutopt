@@ -56,6 +56,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
       ];
     case "MODERATOR":
       return [
+        { label: "Обзор админки", href: "/admin", icon: LayoutDashboard },
         {
           label: "Модерация",
           href: "/admin/moderation/listings",
@@ -66,6 +67,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
       ];
     case "ADMIN":
       return [
+        { label: "Обзор админки", href: "/admin", icon: LayoutDashboard },
         { label: "Пользователи", href: "/admin/users", icon: User },
         {
           label: "Модерация",

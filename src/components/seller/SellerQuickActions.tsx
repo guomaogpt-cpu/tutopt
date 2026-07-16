@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { ExternalLink, Inbox, LayoutGrid, PlusCircle } from "lucide-react";
+import type { ListingVertical } from "@prisma/client";
+import { VERTICALS } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
 
 type SellerQuickActionsProps = {
   sellerProfileId: string | null;
+  verticalCounts?: Partial<Record<ListingVertical, number>>;
 };
 
 const cardClassName = cn(
@@ -15,7 +18,37 @@ const cardClassName = cn(
 const iconWrapClassName =
   "flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#2563EB]";
 
-export function SellerQuickActions({ sellerProfileId }: SellerQuickActionsProps) {
+const CREATE_LINKS: Array<{ vertical: ListingVertical; label: string; hint: string }> = [
+  {
+    vertical: "OPT",
+    label: "Создать оптовое объявление",
+    hint: VERTICALS.OPT.label,
+  },
+  {
+    vertical: "MARKET",
+    label: "Создать розничное объявление",
+    hint: VERTICALS.MARKET.label,
+  },
+  {
+    vertical: "SERVICES",
+    label: "Разместить услугу",
+    hint: VERTICALS.SERVICES.label,
+  },
+  {
+    vertical: "CARGO",
+    label: "Разместить перевозку",
+    hint: VERTICALS.CARGO.label,
+  },
+];
+
+export function SellerQuickActions({
+  sellerProfileId,
+  verticalCounts,
+}: SellerQuickActionsProps) {
+  const hasAnyListings =
+    verticalCounts != null &&
+    Object.values(verticalCounts).some((count) => (count ?? 0) > 0);
+
   return (
     <section aria-labelledby="seller-quick-actions-title">
       <h2 id="seller-quick-actions-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl">
@@ -77,6 +110,24 @@ export function SellerQuickActions({ sellerProfileId }: SellerQuickActionsProps)
             <p className="mt-0.5 text-xs text-[#64748B]">Смотреть рынок</p>
           </div>
         </Link>
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {CREATE_LINKS.map((item) => (
+          <Link
+            key={item.vertical}
+            href={VERTICALS[item.vertical].createListingHref}
+            className="rounded-xl border border-dashed border-[rgba(148,163,184,0.35)] bg-white/70 px-3 py-2.5 text-sm transition hover:border-[#2563EB]/40 hover:bg-white"
+          >
+            <p className="font-medium text-[#0F172A]">{item.label}</p>
+            <p className="mt-0.5 text-xs text-[#64748B]">
+              {item.hint}
+              {hasAnyListings && verticalCounts?.[item.vertical]
+                ? ` · ${verticalCounts[item.vertical]} в кабинете`
+                : null}
+            </p>
+          </Link>
+        ))}
       </div>
     </section>
   );

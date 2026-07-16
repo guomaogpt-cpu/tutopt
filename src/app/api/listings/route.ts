@@ -5,7 +5,7 @@ import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
 import { createListingSchema } from "@/features/listings/validators/listing.validators";
 import { DEFAULT_LISTING_VERTICAL } from "@/features/verticals/verticals";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
-import { ForbiddenError, NotFoundError } from "@/shared/lib/errors";
+import { ForbiddenError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
 
@@ -37,6 +37,14 @@ export async function POST(request: Request) {
 
     if (!category) {
       throw new NotFoundError("Category not found");
+    }
+
+    if (category.vertical !== vertical) {
+      throw new ValidationError("Категория не принадлежит выбранному разделу", {
+        fieldErrors: {
+          category_id: ["Выберите категорию из выбранного раздела"],
+        },
+      });
     }
 
     if (!city) {

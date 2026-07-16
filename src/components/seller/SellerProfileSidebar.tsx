@@ -16,14 +16,25 @@ import {
   User,
 } from "lucide-react";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
+import type { ListingVertical } from "@prisma/client";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import type { SellerProfileData } from "@/features/sellers/lib/seller-profile-data";
+import {
+  getSellerCtaLabel,
+  getSellerProfileDescription,
+  getSellerProfileLabel,
+  getSellerVerticalBrandLabel,
+  type SellerVerticalCounts,
+} from "@/features/sellers/lib/seller-vertical-profile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type SellerProfileSidebarProps = {
   profile: SellerProfileData;
   publishedListingCount: number;
+  primaryVertical: ListingVertical | null;
+  sellerVerticals: ListingVertical[];
+  verticalCounts: SellerVerticalCounts;
   isAuthenticated: boolean;
   contactPhone: string;
   contactEmail: string | null;
@@ -100,6 +111,9 @@ function ContactRow({ href, icon, label, external }: ContactRowProps) {
 export function SellerProfileSidebar({
   profile,
   publishedListingCount,
+  primaryVertical,
+  sellerVerticals,
+  verticalCounts,
   isAuthenticated,
   contactPhone,
   contactEmail,
@@ -113,6 +127,9 @@ export function SellerProfileSidebar({
   const showContactPerson =
     profile.user.name.trim().length > 0 && profile.user.name !== profile.company_name;
   const hasAnyContact = Boolean(contactPhone || contactEmail || whatsapp || telegram || website);
+  const roleLabel = getSellerProfileLabel(primaryVertical);
+  const roleDescription = getSellerProfileDescription(primaryVertical);
+  const ctaLabel = getSellerCtaLabel(primaryVertical);
 
   function handleLoginRedirect() {
     router.push(buildLoginUrl(getCurrentPathFromWindow()));
@@ -148,7 +165,7 @@ export function SellerProfileSidebar({
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-1.5">
                 <span className="rounded-full bg-[#F1F5F9] px-2.5 py-0.5 text-xs font-medium text-[#475569]">
-                  Поставщик
+                  {roleLabel}
                 </span>
                 {profile.is_verified ? (
                   <span className="inline-flex items-center gap-1 rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-xs font-medium text-[#2563EB]">
@@ -162,6 +179,8 @@ export function SellerProfileSidebar({
                 {profile.company_name}
               </h1>
 
+              <p className="mt-1 text-sm leading-snug text-[#64748B]">{roleDescription}</p>
+
               {profile.user.name !== profile.company_name ? (
                 <p className="mt-1 flex items-center gap-1.5 text-sm text-[#64748B]">
                   <Building2 className="size-3.5 shrink-0" aria-hidden="true" />
@@ -170,6 +189,24 @@ export function SellerProfileSidebar({
               ) : null}
             </div>
           </div>
+
+          {sellerVerticals.length > 0 ? (
+            <div className="mt-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-[#94A3B8]">
+                Направления
+              </p>
+              <ul className="mt-2 flex flex-wrap gap-1.5">
+                {sellerVerticals.map((vertical) => (
+                  <li key={vertical}>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-xs font-medium text-[#2563EB]">
+                      {getSellerVerticalBrandLabel(vertical)}
+                      <span className="text-[#64748B]">{verticalCounts[vertical]}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           <dl className="mt-4 space-y-1.5 text-sm text-[#64748B]">
             {locationLabel ? (
@@ -191,13 +228,13 @@ export function SellerProfileSidebar({
               href="#seller-contacts"
               className="inline-flex h-10 w-full items-center justify-center rounded-xl bg-[#2563EB] px-4 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
             >
-              Связаться
+              {ctaLabel}
             </Link>
             <Link
               href="#seller-listings"
               className="inline-flex h-10 w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-[#334155] transition hover:border-[#2563EB]/30 hover:text-[#2563EB] lg:hidden"
             >
-              Смотреть товары
+              Смотреть объявления
             </Link>
           </div>
         </div>
