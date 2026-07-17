@@ -23,7 +23,8 @@ export type AnalyticsEventName =
   | "listing_contact_cta_click"
   | "listing_seller_profile_click"
   | "listing_report_click"
-  | "similar_listing_click";
+  | "similar_listing_click"
+  | "seller_other_listing_click";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -49,6 +50,7 @@ export type AnalyticsEventParams = {
   source_vertical?: ListingVertical;
   target_vertical?: ListingVertical;
   same_category?: boolean;
+  same_seller?: boolean;
   target_type?: "listing" | "seller";
   reason?: string;
 };
@@ -263,6 +265,17 @@ export function trackSimilarListingClick(params: {
     source_vertical: params.sourceVertical,
     target_vertical: params.targetVertical,
     same_category: params.sameCategory,
+  });
+}
+
+export function trackSellerOtherListingClick(
+  sourceVertical: ListingVertical,
+  targetVertical: ListingVertical,
+): void {
+  trackEvent("seller_other_listing_click", {
+    source_vertical: sourceVertical,
+    target_vertical: targetVertical,
+    same_seller: true,
   });
 }
 

@@ -72,6 +72,7 @@ export async function getListingDetail(id: string) {
 const similarListingSelect = listingCardSelect;
 
 const SIMILAR_LISTINGS_LIMIT = 4;
+const SELLER_OTHER_LISTINGS_LIMIT = 4;
 
 export type SimilarListingsSource = {
   id: string;
@@ -132,6 +133,24 @@ export async function getSimilarListings(
   }
 
   return { listings: collected, sameCategoryIds };
+}
+
+export async function getSellerOtherListings(
+  sellerProfileId: string,
+  currentListingId: string,
+): Promise<ListingCardData[]> {
+  const listings = await prisma.listing.findMany({
+    where: {
+      seller_profile_id: sellerProfileId,
+      id: { not: currentListingId },
+      status: ListingStatus.PUBLISHED,
+    },
+    orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
+    take: SELLER_OTHER_LISTINGS_LIMIT,
+    select: listingCardSelect,
+  });
+
+  return serializeListingCards(listings);
 }
 
 export async function getSellerPublishedListingCount(sellerProfileId: string): Promise<number> {

@@ -8,6 +8,7 @@ import { ListingGallery } from "@/components/listings/ListingGallery";
 import { ListingSellerCard } from "@/components/listings/ListingSellerCard";
 import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
+import { SellerOtherListings } from "@/components/listings/SellerOtherListings";
 import { SimilarListings } from "@/components/listings/SimilarListings";
 import { ListingViewTracker } from "@/components/analytics/ListingViewTracker";
 import { RecentlyViewedTracker } from "@/components/listings/RecentlyViewedTracker";
@@ -31,6 +32,7 @@ import {
 } from "@/features/listings/lib/format-listing-price";
 import {
   getListingDetail,
+  getSellerOtherListings,
   getSellerPublishedListingCount,
   getSellerPublishedVerticals,
   getSimilarListings,
@@ -116,16 +118,18 @@ export default async function ListingPage({ params }: ListingPageProps) {
     await recordListingView(user.id, listing.id);
   }
 
-  const [similarListings, sellerListingCount, sellerVerticals] = await Promise.all([
-    getSimilarListings({
-      id: listing.id,
-      category_id: listing.category_id,
-      vertical: listing.vertical,
-      city_id: listing.city_id,
-    }),
-    getSellerPublishedListingCount(listing.sellerProfile.id),
-    getSellerPublishedVerticals(listing.sellerProfile.id),
-  ]);
+  const [similarListings, sellerOtherListings, sellerListingCount, sellerVerticals] =
+    await Promise.all([
+      getSimilarListings({
+        id: listing.id,
+        category_id: listing.category_id,
+        vertical: listing.vertical,
+        city_id: listing.city_id,
+      }),
+      getSellerOtherListings(listing.sellerProfile.id, listing.id),
+      getSellerPublishedListingCount(listing.sellerProfile.id),
+      getSellerPublishedVerticals(listing.sellerProfile.id),
+    ]);
 
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const favoriteIds = new Set(favoriteListingIds);
@@ -397,6 +401,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
             </div>
           </aside>
         </div>
+
+        <SellerOtherListings
+          listings={sellerOtherListings}
+          sellerId={listing.sellerProfile.id}
+          sourceVertical={listing.vertical}
+          isAuthenticated={user !== null}
+          favoriteListingIds={favoriteListingIds}
+        />
 
         <SimilarListings
           listings={similarListings.listings}
