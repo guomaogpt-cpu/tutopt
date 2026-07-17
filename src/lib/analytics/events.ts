@@ -24,7 +24,10 @@ export type AnalyticsEventName =
   | "listing_seller_profile_click"
   | "listing_report_click"
   | "similar_listing_click"
-  | "seller_other_listing_click";
+  | "seller_other_listing_click"
+  | "seller_profile_view"
+  | "seller_listing_click"
+  | "seller_vertical_filter_click";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -51,9 +54,24 @@ export type AnalyticsEventParams = {
   target_vertical?: ListingVertical;
   same_category?: boolean;
   same_seller?: boolean;
+  seller_has_profile?: boolean;
+  listing_count_bucket?: string;
   target_type?: "listing" | "seller";
   reason?: string;
 };
+
+export function getListingCountBucket(count: number): string {
+  if (count <= 0) {
+    return "0";
+  }
+  if (count <= 3) {
+    return "1-3";
+  }
+  if (count <= 10) {
+    return "4-10";
+  }
+  return "11+";
+}
 
 const SEARCH_QUERY_MAX_LENGTH = 80;
 
@@ -276,6 +294,34 @@ export function trackSellerOtherListingClick(
     source_vertical: sourceVertical,
     target_vertical: targetVertical,
     same_seller: true,
+  });
+}
+
+export function trackSellerProfileView(params: {
+  sellerHasProfile: boolean;
+  vertical?: ListingVertical | null;
+  listingCountBucket: string;
+}): void {
+  trackEvent("seller_profile_view", {
+    seller_has_profile: params.sellerHasProfile,
+    listing_count_bucket: params.listingCountBucket,
+    ...(params.vertical ? { vertical: params.vertical } : {}),
+  });
+}
+
+export function trackSellerListingClick(
+  vertical: ListingVertical,
+  listingCountBucket: string,
+): void {
+  trackEvent("seller_listing_click", {
+    vertical,
+    listing_count_bucket: listingCountBucket,
+  });
+}
+
+export function trackSellerVerticalFilterClick(vertical: ListingVertical | null): void {
+  trackEvent("seller_vertical_filter_click", {
+    ...(vertical ? { vertical } : {}),
   });
 }
 

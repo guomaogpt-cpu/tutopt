@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SellerProfileViewTracker } from "@/components/analytics/SellerProfileViewTracker";
 import { Container } from "@/components/layout/Container";
 import { SellerProfileListings } from "@/components/seller/SellerProfileListings";
 import { SellerProfileSidebar } from "@/components/seller/SellerProfileSidebar";
+import { SellerProfileStats } from "@/components/seller/SellerProfileStats";
+import { getListingCountBucket } from "@/lib/analytics/events";
+import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import {
@@ -56,12 +60,14 @@ export async function generateMetadata({
       : `/seller/${profile.id}`;
     const title = getSellerProfileSeoTitle(profile.company_name, primaryVertical);
     const description = truncateSeoText(
-      getSellerProfileSeoDescription({
-        sellerName: profile.company_name,
-        cityName,
-        listingCount: listings.length,
-        primaryVertical,
-      }),
+      profile.description && profile.description.trim().length >= 40
+        ? profile.description
+        : getSellerProfileSeoDescription({
+            sellerName: profile.company_name,
+            cityName,
+            listingCount: listings.length,
+            primaryVertical,
+          }),
     );
 
     return buildPageMetadata({
@@ -110,6 +116,13 @@ export default async function SellerProfilePage({
     : allListings;
 
   const sellerPath = profile.slug ?? profile.id;
+  const listingCountBucket = getListingCountBucket(publishedListingCount);
+  const sellerHasProfile = Boolean(
+    profile.description && profile.description.trim().length > 0,
+  );
+  const onPlatformSinceLabel = formatListingDate(
+    profile.user.created_at ?? profile.created_at,
+  );
 
   const sellerTrust = calculateSellerTrust({
     hasSellerProfile: true,
@@ -129,6 +142,11 @@ export default async function SellerProfilePage({
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <SellerProfileViewTracker
+        sellerHasProfile={sellerHasProfile}
+        primaryVertical={primaryVertical}
+        listingCountBucket={listingCountBucket}
+      />
       <Container className="max-w-[1280px] min-w-0">
         <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
           <ol className="flex flex-wrap items-center gap-1.5">
@@ -165,7 +183,13 @@ export default async function SellerProfilePage({
             trustLevelLabel={sellerTrust.levelLabel}
             trustSignals={sellerTrust.signals}
           />
-          <div className="order-2 min-w-0 lg:order-1">
+          <div className="order-2 flex min-w-0 flex-col gap-6 lg:order-1">
+            <SellerProfileStats
+              publishedListingCount={publishedListingCount}
+              sellerVerticals={sellerVerticals}
+              verticalCounts={verticalCounts}
+              onPlatformSinceLabel={onPlatformSinceLabel}
+            />
             <SellerProfileListings
               listings={listings}
               sellerPath={sellerPath}
@@ -175,6 +199,7 @@ export default async function SellerProfilePage({
               totalListingCount={publishedListingCount}
               isAuthenticated={user !== null}
               favoriteListingIds={favoriteListingIds}
+              listingCountBucket={listingCountBucket}
             />
           </div>
         </div>

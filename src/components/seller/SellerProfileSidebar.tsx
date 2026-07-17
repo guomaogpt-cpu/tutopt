@@ -185,6 +185,7 @@ export function SellerProfileSidebar({
                     Проверен
                   </span>
                 ) : null}
+                {trustLevel ? <SellerTrustBadge level={trustLevel} /> : null}
               </div>
 
               <h1 className="mt-2 text-xl font-bold tracking-tight text-[#0F172A] lg:text-2xl">
@@ -254,12 +255,9 @@ export function SellerProfileSidebar({
         <div className="divide-y divide-slate-200 border-t border-slate-200">
           {trustLevel && trustLevelLabel ? (
             <section aria-labelledby="seller-trust-title" className="p-5 lg:p-6">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 id="seller-trust-title" className="text-sm font-semibold text-[#0F172A]">
-                  О продавце
-                </h2>
-                <SellerTrustBadge level={trustLevel} />
-              </div>
+              <h2 id="seller-trust-title" className="text-sm font-semibold text-[#0F172A]">
+                Доверие к продавцу
+              </h2>
               <p className="mt-1.5 text-sm font-medium text-[#0F172A]">{trustLevelLabel}</p>
               {trustSignals.length > 0 ? (
                 <SellerTrustSignalsList signals={trustSignals} maxItems={5} className="mt-2" />
@@ -295,7 +293,7 @@ export function SellerProfileSidebar({
 
           <section aria-labelledby="seller-about-title" className="p-5 lg:p-6">
             <h2 id="seller-about-title" className="text-sm font-semibold text-[#0F172A]">
-              О компании
+              О продавце
             </h2>
             {profile.description ? (
               <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-[#334155]">
@@ -303,7 +301,7 @@ export function SellerProfileSidebar({
               </p>
             ) : (
               <p className="mt-2 text-sm leading-relaxed text-[#64748B]">
-                Продавец пока не заполнил подробную информацию.
+                Описание продавца пока не заполнено.
               </p>
             )}
 
@@ -315,6 +313,15 @@ export function SellerProfileSidebar({
                     <div className="min-w-0">
                       <dt className="text-xs text-[#64748B]">Контактное лицо</dt>
                       <dd className="font-medium text-[#0F172A]">{profile.user.name}</dd>
+                    </div>
+                  </div>
+                ) : null}
+                {locationLabel ? (
+                  <div className="flex items-start gap-2">
+                    <MapPin className="mt-0.5 size-3.5 shrink-0 text-[#64748B]" aria-hidden="true" />
+                    <div className="min-w-0">
+                      <dt className="text-xs text-[#64748B]">Город / регион</dt>
+                      <dd className="font-medium text-[#0F172A]">{locationLabel}</dd>
                     </div>
                   </div>
                 ) : null}

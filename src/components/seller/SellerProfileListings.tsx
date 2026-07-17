@@ -1,10 +1,15 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import type { ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ListingCard } from "@/components/listings/ListingCard";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import {
+  trackSellerListingClick,
+  trackSellerVerticalFilterClick,
+} from "@/lib/analytics/events";
 import {
   buildSellerProfileHref,
   getSellerListingsEmptyMessage,
@@ -30,9 +35,12 @@ type SellerProfileListingsProps = {
   totalListingCount: number;
   isAuthenticated?: boolean;
   favoriteListingIds?: string[];
+  listingCountBucket?: string;
 };
 
 type SellerListingSort = "newest" | "price_asc" | "price_desc";
+
+const VISIBLE_STEP = 12;
 
 function sortListings(items: ListingCardData[], sort: SellerListingSort): ListingCardData[] {
   const next = [...items];
@@ -60,11 +68,13 @@ export function SellerProfileListings({
   totalListingCount,
   isAuthenticated = false,
   favoriteListingIds = [],
+  listingCountBucket = "0",
 }: SellerProfileListingsProps) {
   const favoriteIds = new Set(favoriteListingIds);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState<SellerListingSort>("newest");
+  const [visibleCount, setVisibleCount] = useState(VISIBLE_STEP);
 
   const categories = useMemo(() => {
     const names = new Set<string>();
@@ -87,8 +97,20 @@ export function SellerProfileListings({
     return sortListings(filtered, sort);
   }, [listings, query, category, sort]);
 
+  const visibleListings = filteredListings.slice(0, visibleCount);
+  const hasMore = filteredListings.length > visibleCount;
+
   const showVerticalChips = sellerVerticals.length > 0;
   const emptyMessage = getSellerListingsEmptyMessage(activeVertical);
+
+  function handleListingClick(listing: ListingCardData, event: MouseEvent<HTMLDivElement>) {
+    const target = event.target;
+    if (!(target instanceof Element) || !target.closest('a[href^="/listings/"]')) {
+      return;
+    }
+
+    trackSellerListingClick(listing.vertical, listingCountBucket);
+  }
   const publishedLabel = activeVertical
     ? verticalCounts[activeVertical]
     : totalListingCount;
@@ -101,7 +123,7 @@ export function SellerProfileListings({
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <h2 id="seller-listings-title" className="text-xl font-bold tracking-tight text-[#0F172A] sm:text-2xl">
-          Объявления
+          Объявления продавца
         </h2>
         {totalListingCount > 0 ? (
           <p className="text-sm text-[#64748B]">
@@ -119,6 +141,7 @@ export function SellerProfileListings({
           <div className="flex w-max min-w-full flex-wrap gap-2 sm:w-auto">
             <Link
               href={buildSellerProfileHref(sellerPath)}
+              onClick={() => trackSellerVerticalFilterClick(null)}
               className={cn(
                 "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
                 activeVertical === null
@@ -135,6 +158,7 @@ export function SellerProfileListings({
                 <Link
                   key={vertical}
                   href={buildSellerProfileHref(sellerPath, vertical)}
+                  onClick={() => trackSellerVerticalFilterClick(vertical)}
                   className={cn(
                     "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
                     isActive
@@ -180,15 +204,27 @@ export function SellerProfileListings({
           <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white p-3 sm:flex-row sm:items-center sm:p-4">
             <SearchInput
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              onClear={() => setQuery("")}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setVisibleCount(VISIBLE_STEP);
+              }}
+              onClear={() => {
+                setQuery("");
+                setVisibleCount(VISIBLE_STEP);
+              }}
               placeholder="Поиск по объявлениям..."
               containerClassName="min-w-0 flex-1"
               className="h-11 rounded-xl bg-white"
             />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:shrink-0">
-              <Select value={category} onValueChange={setCategory}>
+              <Select
+              value={category}
+              onValueChange={(value) => {
+                setCategory(value);
+                setVisibleCount(VISIBLE_STEP);
+              }}
+            >
                 <SelectTrigger className="h-11 w-full rounded-xl bg-white sm:w-[180px]" aria-label="Категория">
                   <SelectValue placeholder="Категория" />
                 </SelectTrigger>
@@ -222,19 +258,41 @@ export function SellerProfileListings({
               </p>
             </div>
           ) : (
-            <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-              {filteredListings.map((listing) => (
-                <div key={listing.id} className="min-w-0 w-full">
-                  <ListingCard
-                    listing={listing}
-                    isAuthenticated={isAuthenticated}
-                    isFavorited={favoriteIds.has(listing.id)}
-                    variant="catalog"
-                  />
+            <>
+              <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                {visibleListings.map((listing) => (
+                  <div
+                    key={listing.id}
+                    className="min-w-0 w-full"
+                    onClickCapture={(event) => handleListingClick(listing, event)}
+                  >
+                    <ListingCard
+                      listing={listing}
+                      isAuthenticated={isAuthenticated}
+                      isFavorited={favoriteIds.has(listing.id)}
+                      variant="catalog"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {hasMore ? (
+                <div className="mt-6 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((count) => count + VISIBLE_STEP)}
+                    className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 text-sm font-semibold text-[#334155] transition hover:border-[#2563EB]/30 hover:text-[#2563EB]"
+                  >
+                    Показать ещё
+                  </button>
                 </div>
-              ))}
-            </div>
+              ) : null}
+            </>
           )}
+
+          <p className="mt-6 rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white px-4 py-3 text-sm leading-relaxed text-[#64748B]">
+            Чтобы связаться с продавцом, откройте интересующее объявление и отправьте заявку.
+          </p>
         </>
       )}
     </section>
