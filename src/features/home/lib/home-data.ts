@@ -1,4 +1,5 @@
 import { ListingStatus, ListingVertical } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { getDescendantIds } from "@/features/listings/lib/category-search";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import {
@@ -47,6 +48,7 @@ function countPublishedInTree(
 
 export async function getHomePageData(): Promise<HomePageData> {
   const totalListingsNeeded = HOME_LISTINGS_PRIMARY_LIMIT + HOME_LISTINGS_SECONDARY_LIMIT;
+  const notExpired = buildNotExpiredListingFilter();
 
   const [
     allCategories,
@@ -70,23 +72,35 @@ export async function getHomePageData(): Promise<HomePageData> {
       },
     }),
     prisma.listing.findMany({
-      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
+      where: {
+        status: ListingStatus.PUBLISHED,
+        vertical: ListingVertical.OPT,
+        AND: [notExpired],
+      },
       orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
       take: totalListingsNeeded,
       select: listingCardSelect,
     }),
     prisma.listing.groupBy({
       by: ["category_id"],
-      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
+      where: {
+        status: ListingStatus.PUBLISHED,
+        vertical: ListingVertical.OPT,
+        AND: [notExpired],
+      },
       _count: { _all: true },
     }),
     prisma.listing.count({
-      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
+      where: {
+        status: ListingStatus.PUBLISHED,
+        vertical: ListingVertical.OPT,
+        AND: [notExpired],
+      },
     }),
     prisma.sellerProfile.count({
       where: {
         listings: {
-          some: { status: ListingStatus.PUBLISHED },
+          some: { status: ListingStatus.PUBLISHED, AND: [notExpired] },
         },
       },
     }),

@@ -25,6 +25,8 @@ import {
 import { AppBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { canViewListing } from "@/features/listings/lib/listing-access";
+import { RenewListingButton } from "@/components/listings/RenewListingButton";
+import { getListingExpirationStatus } from "@/lib/listings/listing-expiration";
 import { getLeadRestrictionMessage } from "@/lib/security/user-restrictions";
 import {
   formatListingDate,
@@ -93,7 +95,9 @@ export async function generateMetadata({
       path: `/listings/${listing.id}`,
       type: "article",
       images: firstImage ? [firstImage] : undefined,
-      noIndex: listing.status !== ListingStatus.PUBLISHED,
+      noIndex:
+        listing.status !== ListingStatus.PUBLISHED ||
+        getListingExpirationStatus({ expires_at: listing.expires_at }) === "expired",
     });
   } catch (error) {
     console.error("[listings/[id]/metadata] Failed to load listing metadata", error);
@@ -160,6 +164,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const publishedDateLabel = listing.published_at
     ? formatListingDate(listing.published_at)
     : null;
+  const expirationStatus = getListingExpirationStatus({ expires_at: listing.expires_at });
+  const expiresDateLabel = listing.expires_at
+    ? formatListingDate(listing.expires_at)
+    : null;
+  const showOwnerRenewButton =
+    isOwner && user?.role === UserRole.SELLER && listing.status === ListingStatus.PUBLISHED;
 
   const sellerName = sellerProfile.user.name;
   const sellerAvatar = sellerProfile.logo_url ?? sellerProfile.user.avatar_url;
@@ -357,6 +367,32 @@ export default async function ListingPage({ params }: ListingPageProps) {
             ) : null}
           </p>
         </header>
+
+        {isOwner && (expiresDateLabel || expirationStatus === "expired") ? (
+          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              {expiresDateLabel ? (
+                <p className="font-medium text-[#0F172A]">
+                  Публикация до: {expiresDateLabel}
+                </p>
+              ) : null}
+              {expirationStatus === "expired" ? (
+                <p className="mt-0.5 text-[#DC2626]">
+                  Срок публикации истёк, объявление не видно покупателям.
+                </p>
+              ) : expirationStatus === "expiring_soon" ? (
+                <p className="mt-0.5 text-[#D97706]">Объявление скоро истечёт.</p>
+              ) : null}
+            </div>
+            {showOwnerRenewButton ? (
+              <RenewListingButton
+                listingId={listing.id}
+                vertical={listing.vertical}
+                className="shrink-0 sm:w-[160px]"
+              />
+            ) : null}
+          </div>
+        ) : null}
 
         {isAdminViewer && adminRisk ? (
           <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm">

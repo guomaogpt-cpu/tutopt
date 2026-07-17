@@ -2,6 +2,10 @@ import { ListingStatus } from "@prisma/client";
 import { requireStaff } from "@/features/admin/lib/require-admin";
 import { listingModerationSchema } from "@/features/admin/validators/listing-moderation.validators";
 import { createAuditLog } from "@/lib/audit/audit-log";
+import {
+  getDefaultListingExpirationDate,
+  isListingExpired,
+} from "@/lib/listings/listing-expiration";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
@@ -18,7 +22,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const listing = await prisma.listing.findUnique({
       where: { id },
-      select: { id: true, status: true, vertical: true },
+      select: { id: true, status: true, vertical: true, expires_at: true },
     });
 
     if (!listing) {
@@ -32,17 +36,25 @@ export async function PATCH(request: Request, context: RouteContext) {
     const nextStatus =
       input.action === "approve" ? ListingStatus.PUBLISHED : ListingStatus.REJECTED;
 
+    const now = new Date();
+    const needsFreshExpiration =
+      input.action === "approve" && (!listing.expires_at || isListingExpired(listing, now));
+
     const updatedListing = await prisma.listing.update({
       where: { id },
       data: {
         status: nextStatus,
-        ...(input.action === "approve" ? { published_at: new Date() } : {}),
+        ...(input.action === "approve" ? { published_at: now } : {}),
+        ...(needsFreshExpiration
+          ? { expires_at: getDefaultListingExpirationDate(now) }
+          : {}),
       },
       select: {
         id: true,
         title: true,
         status: true,
         published_at: true,
+        expires_at: true,
         updated_at: true,
       },
     });
@@ -59,6 +71,23 @@ export async function PATCH(request: Request, context: RouteContext) {
         status_after: nextStatus,
       },
     });
+
+    if (needsFreshExpiration) {
+      await createAuditLog({
+        actorId: staff.id,
+        actorRole: staff.role,
+        action: "listing.expire_publish_date_set",
+        targetType: "listing",
+        targetId: listing.id,
+        metadata: {
+          vertical: listing.vertical,
+          expires_before: listing.expires_at?.toISOString() ?? null,
+          expires_after: updatedListing.expires_at?.toISOString() ?? null,
+          status_before: listing.status,
+          status_after: nextStatus,
+        },
+      });
+    }
 
     return jsonData({ listing: updatedListing });
   });

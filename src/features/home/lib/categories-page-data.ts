@@ -1,4 +1,5 @@
 import { ListingStatus, ListingVertical } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { getDescendantIds } from "@/features/listings/lib/category-search";
 import type { HomeCategoryCard } from "@/features/home/lib/home-data";
 import type { CategoryItem } from "@/features/listings/types/category";
@@ -32,7 +33,11 @@ export async function getCategoriesPageData(): Promise<HomeCategoryCard[]> {
     }),
     prisma.listing.groupBy({
       by: ["category_id"],
-      where: { status: ListingStatus.PUBLISHED, vertical: ListingVertical.OPT },
+      where: {
+        status: ListingStatus.PUBLISHED,
+        vertical: ListingVertical.OPT,
+        AND: [buildNotExpiredListingFilter()],
+      },
       _count: { _all: true },
     }),
   ]);

@@ -1,4 +1,5 @@
 import { ListingStatus, type ListingUnit, type ListingVertical, type Prisma } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { parseListingVerticalParam } from "@/features/verticals/verticals";
 
 export const LISTINGS_PER_PAGE = 12;
@@ -87,6 +88,7 @@ export function buildListingsCatalogWhere(
 ): Prisma.ListingWhereInput {
   const where: Prisma.ListingWhereInput = {
     status: ListingStatus.PUBLISHED,
+    AND: [buildNotExpiredListingFilter()],
   };
 
   if (filters.q) {

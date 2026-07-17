@@ -1,4 +1,5 @@
 import { ListingStatus, type ListingVertical } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import {
   EMPTY_SEARCH_SUGGEST_RESPONSE,
@@ -24,12 +25,14 @@ export async function getSearchSuggestions(
 
   const contains = buildContainsFilter(trimmed);
   const verticalFilter = vertical ? { vertical } : {};
+  const notExpired = buildNotExpiredListingFilter();
 
   const [listings, categories, brands, sellers] = await Promise.all([
     prisma.listing.findMany({
       where: {
         status: ListingStatus.PUBLISHED,
         ...verticalFilter,
+        AND: [notExpired],
         OR: [
           { title: contains },
           { description: contains },
@@ -84,6 +87,7 @@ export async function getSearchSuggestions(
           some: {
             status: ListingStatus.PUBLISHED,
             ...verticalFilter,
+            AND: [notExpired],
           },
         },
       },

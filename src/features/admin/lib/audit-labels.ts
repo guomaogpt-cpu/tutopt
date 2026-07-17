@@ -2,6 +2,8 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   "listing.approve": "Одобрение объявления",
   "listing.reject": "Отклонение объявления",
   "listing.update": "Редактирование объявления",
+  "listing.renew": "Продление объявления",
+  "listing.expire_publish_date_set": "Установлен срок публикации",
   "user.block": "Блокировка пользователя",
   "user.unblock": "Разблокировка пользователя",
   "user.restrict_listings": "Ограничение объявлений",

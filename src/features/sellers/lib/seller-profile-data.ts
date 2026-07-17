@@ -1,4 +1,5 @@
 import { ListingStatus } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import {
   listingCardSelect,
@@ -50,6 +51,7 @@ export async function getSellerPublishedListings(
     where: {
       seller_profile_id: sellerProfileId,
       status: ListingStatus.PUBLISHED,
+      AND: [buildNotExpiredListingFilter()],
     },
     orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
     select: listingCardSelect,
@@ -63,6 +65,7 @@ export async function getSellerPublishedListingCount(sellerProfileId: string): P
     where: {
       seller_profile_id: sellerProfileId,
       status: ListingStatus.PUBLISHED,
+      AND: [buildNotExpiredListingFilter()],
     },
   });
 }

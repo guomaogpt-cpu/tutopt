@@ -304,6 +304,7 @@ model Listing {
   contact_count      Int             @default(0) @map("contact_count")
   published_at       DateTime?       @map("published_at") @db.Timestamptz
   expires_at         DateTime?       @map("expires_at") @db.Timestamptz
+  renewed_at         DateTime?       @map("renewed_at") @db.Timestamptz
   created_at         DateTime        @default(now()) @map("created_at") @db.Timestamptz
   updated_at         DateTime        @updatedAt @map("updated_at") @db.Timestamptz
 

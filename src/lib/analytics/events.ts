@@ -29,7 +29,8 @@ export type AnalyticsEventName =
   | "seller_listing_click"
   | "seller_vertical_filter_click"
   | "listing_edit_start"
-  | "listing_edit_submit";
+  | "listing_edit_submit"
+  | "listing_renew";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -60,6 +61,7 @@ export type AnalyticsEventParams = {
   listing_count_bucket?: string;
   status_before?: string;
   status_after?: string;
+  was_expired?: boolean;
   target_type?: "listing" | "seller";
   reason?: string;
 };
@@ -208,6 +210,20 @@ export function trackListingEditSubmit(
     vertical,
     status_before: statusBefore,
     status_after: statusAfter,
+  });
+}
+
+export function trackListingRenew(params: {
+  vertical: ListingVertical;
+  wasExpired: boolean;
+  statusBefore: string;
+  statusAfter: string;
+}): void {
+  trackEvent("listing_renew", {
+    vertical: params.vertical,
+    was_expired: params.wasExpired,
+    status_before: params.statusBefore,
+    status_after: params.statusAfter,
   });
 }
 

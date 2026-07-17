@@ -1,13 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ListingStatus, ListingVertical } from "@prisma/client";
-import { Eye, Package } from "lucide-react";
+import { ListingStatus as ListingStatusEnum } from "@prisma/client";
+import { CalendarClock, Eye, Package } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import { ListingQualityBadge } from "@/components/moderation/ListingQualityHints";
 import { ListingStatusBadge } from "@/components/seller/ListingStatusBadge";
+import { RenewListingButton } from "@/components/listings/RenewListingButton";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
+import { getListingExpirationStatus } from "@/lib/listings/listing-expiration";
 import type { QualityLevel } from "@/lib/moderation/listing-quality";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,6 +23,7 @@ export type SellerDashboardListing = {
   price: string;
   currency: string;
   created_at: string;
+  expires_at: string | null;
   view_count: number;
   image_url: string | null;
   qualityLevel: QualityLevel;
@@ -36,6 +40,19 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
     month: "short",
     year: "numeric",
   });
+
+  const isPublished = listing.status === ListingStatusEnum.PUBLISHED;
+  const expirationStatus = getListingExpirationStatus({ expires_at: listing.expires_at });
+  const expiresLabel = listing.expires_at
+    ? new Date(listing.expires_at).toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : null;
+  const showExpirationBadge =
+    isPublished && (expirationStatus === "expired" || expirationStatus === "expiring_soon");
+  const showRenewButton = isPublished && showExpirationBadge;
 
   return (
     <article
@@ -69,6 +86,18 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
         <div className="flex flex-wrap items-center gap-2">
           <ListingStatusBadge status={listing.status} />
           <VerticalListingBadge vertical={listing.vertical} />
+          {showExpirationBadge ? (
+            <span
+              className={cn(
+                "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                expirationStatus === "expired"
+                  ? "bg-red-100 text-red-800"
+                  : "bg-amber-100 text-amber-800",
+              )}
+            >
+              {expirationStatus === "expired" ? "Истекло" : "Скоро истечёт"}
+            </span>
+          ) : null}
         </div>
 
         <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#0F172A]">
@@ -88,6 +117,12 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
             {formatListingPrice(new Prisma.Decimal(listing.price), listing.currency)}
           </span>
           <span>{createdLabel}</span>
+          {expiresLabel ? (
+            <span className="inline-flex items-center gap-1">
+              <CalendarClock className="size-3.5" aria-hidden="true" />
+              Публикация до {expiresLabel}
+            </span>
+          ) : null}
           {listing.view_count > 0 ? (
             <span className="inline-flex items-center gap-1">
               <Eye className="size-3.5" aria-hidden="true" />
@@ -111,6 +146,13 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
         >
           <Link href={`/listings/${listing.id}/edit`}>Редактировать</Link>
         </Button>
+        {showRenewButton ? (
+          <RenewListingButton
+            listingId={listing.id}
+            vertical={listing.vertical}
+            className="w-full sm:w-[140px]"
+          />
+        ) : null}
       </div>
     </article>
   );

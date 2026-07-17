@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ListingStatus } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { getCategorySeoSlug } from "@/features/seo/category-seo-slug";
 import { getCitySeoSlug } from "@/features/seo/city-slug";
 import { VERTICAL_LIST, VERTICALS } from "@/features/verticals/verticals";
@@ -66,6 +67,7 @@ async function buildDynamicSitemapEntries(
       where: {
         status: ListingStatus.PUBLISHED,
         city_id: { not: null },
+        AND: [buildNotExpiredListingFilter(now)],
       },
       select: {
         category_id: true,
@@ -75,7 +77,10 @@ async function buildDynamicSitemapEntries(
       distinct: ["category_id", "city_id"],
     }),
     prisma.listing.findMany({
-      where: { status: ListingStatus.PUBLISHED },
+      where: {
+        status: ListingStatus.PUBLISHED,
+        AND: [buildNotExpiredListingFilter(now)],
+      },
       select: {
         id: true,
         updated_at: true,

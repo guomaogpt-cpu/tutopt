@@ -1,4 +1,5 @@
 import { ListingStatus, type ListingVertical } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import {
   listingCardSelect,
@@ -147,6 +148,7 @@ export async function getVerticalCategoryLandingData(options: {
     vertical: options.vertical,
     category_id: { in: categoryIds },
     ...(city ? { city_id: city.id } : {}),
+    AND: [buildNotExpiredListingFilter()],
   };
 
   const [listings, totalCount] = await Promise.all([

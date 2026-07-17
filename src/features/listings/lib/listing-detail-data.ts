@@ -1,4 +1,5 @@
 import { ListingStatus, type ListingVertical, type Prisma } from "@prisma/client";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import {
   listingCardSelect,
@@ -20,6 +21,8 @@ export const listingDetailSelect = {
   vertical: true,
   view_count: true,
   published_at: true,
+  expires_at: true,
+  renewed_at: true,
   created_at: true,
   category_id: true,
   city_id: true,
@@ -111,6 +114,7 @@ export async function getSimilarListings(
         ...where,
         id: { notIn: excludeIds },
         status: ListingStatus.PUBLISHED,
+        AND: [buildNotExpiredListingFilter()],
       },
       orderBy: { published_at: "desc" },
       take: remaining,
@@ -144,6 +148,7 @@ export async function getSellerOtherListings(
       seller_profile_id: sellerProfileId,
       id: { not: currentListingId },
       status: ListingStatus.PUBLISHED,
+      AND: [buildNotExpiredListingFilter()],
     },
     orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
     take: SELLER_OTHER_LISTINGS_LIMIT,
@@ -158,6 +163,7 @@ export async function getSellerPublishedListingCount(sellerProfileId: string): P
     where: {
       seller_profile_id: sellerProfileId,
       status: ListingStatus.PUBLISHED,
+      AND: [buildNotExpiredListingFilter()],
     },
   });
 }
@@ -169,6 +175,7 @@ export async function getSellerPublishedVerticals(
     where: {
       seller_profile_id: sellerProfileId,
       status: ListingStatus.PUBLISHED,
+      AND: [buildNotExpiredListingFilter()],
     },
     distinct: ["vertical"],
     select: { vertical: true },
