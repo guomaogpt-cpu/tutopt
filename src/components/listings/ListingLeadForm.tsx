@@ -28,6 +28,7 @@ type ListingLeadFormProps = {
   vertical: ListingVertical;
   isAuthenticated: boolean;
   isOwner: boolean;
+  restrictionMessage?: string | null;
   defaultPhone?: string | null;
   defaultEmail?: string | null;
 };
@@ -40,6 +41,7 @@ export function ListingLeadForm({
   vertical,
   isAuthenticated,
   isOwner,
+  restrictionMessage = null,
   defaultPhone = "",
   defaultEmail = "",
 }: ListingLeadFormProps) {
@@ -169,8 +171,29 @@ export function ListingLeadForm({
           </h3>
           <p className="mt-2 text-sm text-[#64748B]">{config.loginPrompt(sellerName)}</p>
           <Button className="mt-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]" onClick={handleLoginRedirect}>
-            Войти
+            Войдите, чтобы отправить заявку
           </Button>
+        </div>
+      </Section>
+    );
+  }
+
+  if (!isOwner && restrictionMessage) {
+    return (
+      <Section
+        spacing="none"
+        id="listing-seller-message"
+        className="scroll-mt-28"
+        aria-labelledby="listing-lead-restricted-title"
+      >
+        <div className="rounded-[22px] border border-amber-200 bg-amber-50 p-5 sm:p-6">
+          <h3
+            id="listing-lead-restricted-title"
+            className="text-lg font-semibold text-amber-900"
+          >
+            {config.title}
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-amber-800">{restrictionMessage}</p>
         </div>
       </Section>
     );
@@ -212,6 +235,9 @@ export function ListingLeadForm({
 
       <div className={leadCardClassName}>
         <p className="text-sm text-[#64748B]">{config.subtitle}</p>
+        <p className="mt-1 text-xs text-[#94A3B8]">
+          Отправьте заявку — продавец увидит её в своём кабинете.
+        </p>
 
         <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
           <div

@@ -11,10 +11,24 @@ import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
 import { SimilarListings } from "@/components/listings/SimilarListings";
 import { ListingViewTracker } from "@/components/analytics/ListingViewTracker";
 import { RecentlyViewedTracker } from "@/components/listings/RecentlyViewedTracker";
+import Link from "next/link";
+import { ListingVerticalHint } from "@/components/listings/ListingVerticalHint";
+import {
+  ListingQualityHints,
+  ListingRiskBadge,
+} from "@/components/moderation/ListingQualityHints";
+import {
+  getListingModerationRisk,
+  getListingRiskLevelLabel,
+} from "@/lib/moderation/listing-quality";
 import { AppBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { canViewListing } from "@/features/listings/lib/listing-access";
-import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
+import { getLeadRestrictionMessage } from "@/lib/security/user-restrictions";
+import {
+  formatListingDate,
+  formatListingPrice,
+} from "@/features/listings/lib/format-listing-price";
 import {
   getListingDetail,
   getSellerPublishedListingCount,
@@ -30,6 +44,7 @@ import {
   getListingStockLabel,
   getListingUnitFieldLabel,
   getListingUnitLabel,
+  getListingVerticalBadgeLabel,
 } from "@/features/listings/lib/listing-display";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { recordListingView } from "@/features/buyer/lib/listing-views";
@@ -102,7 +117,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
   }
 
   const [similarListings, sellerListingCount, sellerVerticals] = await Promise.all([
-    getSimilarListings(listing.id, listing.category_id),
+    getSimilarListings({
+      id: listing.id,
+      category_id: listing.category_id,
+      vertical: listing.vertical,
+      city_id: listing.city_id,
+    }),
     getSellerPublishedListingCount(listing.sellerProfile.id),
     getSellerPublishedVerticals(listing.sellerProfile.id),
   ]);
@@ -124,10 +144,18 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const sellerProfile = listing.sellerProfile;
   const isOwner = user?.id === sellerProfile.user_id;
-  const isPrivilegedViewer =
-    isOwner || user?.role === UserRole.ADMIN || user?.role === UserRole.MODERATOR;
+  const isAdminViewer =
+    user?.role === UserRole.ADMIN || user?.role === UserRole.MODERATOR;
+  const isPrivilegedViewer = isOwner || isAdminViewer;
   const showStatusBadge =
     listing.status !== ListingStatus.PUBLISHED && isPrivilegedViewer;
+
+  const leadRestrictedMessage =
+    user && !isOwner ? getLeadRestrictionMessage(user) : null;
+  const hasPrice = Number(listing.price.toString()) > 0;
+  const publishedDateLabel = listing.published_at
+    ? formatListingDate(listing.published_at)
+    : null;
 
   const sellerName = sellerProfile.user.name;
   const sellerAvatar = sellerProfile.logo_url ?? sellerProfile.user.avatar_url;
@@ -148,6 +176,20 @@ export default async function ListingPage({ params }: ListingPageProps) {
     activeVerticals: sellerVerticals,
     hasCompletedOnboarding: Boolean(sellerProfile.user.phone),
   });
+
+  const qualityInput = {
+    title: listing.title,
+    description: listing.description,
+    price: listing.price.toString(),
+    cityName: listing.city?.name ?? null,
+    categoryName: listing.category.name,
+    vertical: listing.vertical,
+    imageCount: listing.images.length,
+    moq: listing.moq,
+    unit: listing.unit,
+  };
+
+  const adminRisk = isAdminViewer ? getListingModerationRisk(qualityInput) : null;
 
   const vertical = VERTICALS[listing.vertical];
   const breadcrumbItems = [
@@ -178,8 +220,10 @@ export default async function ListingPage({ params }: ListingPageProps) {
       : null;
 
   const characteristicItems = [
+    { label: "Направление", value: getListingVerticalBadgeLabel(listing.vertical) },
     { label: "Категория", value: listing.category.name },
     ...(listing.city ? [{ label: "Город", value: listing.city.name }] : []),
+    { label: priceFieldLabel, value: priceLabel },
     ...(displayFlags.showBrand && listing.brand
       ? [{ label: "Бренд", value: listing.brand.name }]
       : []),
@@ -194,6 +238,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
             value: String(listing.stock_quantity),
           },
         ]
+      : []),
+    ...(publishedDateLabel
+      ? [{ label: "Дата публикации", value: publishedDateLabel }]
       : []),
   ];
 
@@ -220,6 +267,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
       contactPhone={sellerProfile.contact_phone}
       whatsapp={sellerProfile.whatsapp}
       telegram={sellerProfile.telegram}
+      hasPrice={hasPrice}
+      isOwnListing={isOwner}
     />
   );
 
@@ -230,7 +279,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
       avatarUrl={sellerAvatar}
       isVerified={sellerProfile.is_verified}
       sellerCity={sellerCity}
-      sellerSince={sellerProfile.created_at}
+      sellerSinceLabel={formatListingDate(sellerProfile.created_at)}
       publishedListingCount={sellerListingCount}
       sellerId={sellerProfile.id}
       listingId={listing.id}
@@ -239,6 +288,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
       trustLevelLabel={sellerTrust.levelLabel}
       trustSignals={sellerTrust.signals}
       isAuthenticated={user !== null}
+      hasPrice={hasPrice}
+      isOwnListing={isOwner}
     />
   );
 
@@ -273,11 +324,43 @@ export default async function ListingPage({ params }: ListingPageProps) {
             {showStatusBadge ? (
               <Badge variant="warning">{listingStatusLabels[listing.status]}</Badge>
             ) : null}
+            {isOwner ? <Badge variant="secondary">Ваше объявление</Badge> : null}
           </div>
           <h1 className="mt-2 text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
             {listing.title}
           </h1>
+          <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#64748B]">
+            <span>{listing.category.name}</span>
+            {listing.city ? (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>{listing.city.name}</span>
+              </>
+            ) : null}
+            {publishedDateLabel ? (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>Опубликовано {publishedDateLabel}</span>
+              </>
+            ) : null}
+          </p>
         </header>
+
+        {isAdminViewer && adminRisk ? (
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm">
+            <span className="font-semibold text-[#0F172A]">Для модерации</span>
+            <Badge variant={listing.status === ListingStatus.PUBLISHED ? "success" : "warning"}>
+              {listingStatusLabels[listing.status]}
+            </Badge>
+            <ListingRiskBadge risk={adminRisk} label={getListingRiskLevelLabel(adminRisk)} />
+            <Link
+              href="/admin/moderation/listings"
+              className="font-medium text-[#2563EB] underline-offset-2 hover:underline"
+            >
+              Открыть модерацию
+            </Link>
+          </div>
+        ) : null}
 
         <div className="mt-6 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1.85fr)_minmax(300px,1fr)] lg:items-start lg:gap-8">
           <div className="min-w-0 space-y-6">
@@ -290,6 +373,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
             <ListingCharacteristics items={characteristicItems} />
             <ListingDescription text={listing.description} />
+            {!isOwner ? <ListingVerticalHint vertical={listing.vertical} /> : null}
             <ListingLeadForm
               key={`${listing.id}-${listing.vertical}`}
               listingId={listing.id}
@@ -299,9 +383,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
               vertical={listing.vertical}
               isAuthenticated={user !== null}
               isOwner={isOwner}
+              restrictionMessage={leadRestrictedMessage}
               defaultPhone={user?.phone}
               defaultEmail={user?.email}
             />
+            {isOwner ? <ListingQualityHints input={qualityInput} /> : null}
           </div>
 
           <aside className="hidden min-w-0 lg:block">
@@ -313,9 +399,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
         </div>
 
         <SimilarListings
-          listings={similarListings}
+          listings={similarListings.listings}
           isAuthenticated={user !== null}
           favoriteListingIds={favoriteListingIds}
+          sourceVertical={listing.vertical}
+          sameCategoryIds={similarListings.sameCategoryIds}
         />
       </Container>
     </main>

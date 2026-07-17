@@ -19,7 +19,11 @@ export type AnalyticsEventName =
   | "saved_search_open"
   | "recently_viewed_open"
   | "recently_viewed_remove"
-  | "recently_viewed_clear";
+  | "recently_viewed_clear"
+  | "listing_contact_cta_click"
+  | "listing_seller_profile_click"
+  | "listing_report_click"
+  | "similar_listing_click";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -40,7 +44,11 @@ export type AnalyticsEventParams = {
   has_query?: boolean;
   has_category?: boolean;
   has_price?: boolean;
+  is_own_listing?: boolean;
   is_active?: boolean;
+  source_vertical?: ListingVertical;
+  target_vertical?: ListingVertical;
+  same_category?: boolean;
   target_type?: "listing" | "seller";
   reason?: string;
 };
@@ -219,6 +227,42 @@ export function trackRecentlyViewed(
   trackEvent(eventName, {
     ...(params?.hasPrice !== undefined ? { has_price: params.hasPrice } : {}),
     ...(params?.vertical ? { vertical: params.vertical } : {}),
+  });
+}
+
+export function trackListingDetailAction(
+  action: "contact_cta" | "seller_profile" | "report",
+  params: {
+    vertical?: ListingVertical | null;
+    hasPrice?: boolean;
+    isOwnListing?: boolean;
+  },
+): void {
+  const eventName: AnalyticsEventName =
+    action === "contact_cta"
+      ? "listing_contact_cta_click"
+      : action === "seller_profile"
+        ? "listing_seller_profile_click"
+        : "listing_report_click";
+
+  trackEvent(eventName, {
+    ...(params.vertical ? { vertical: params.vertical } : {}),
+    ...(params.hasPrice !== undefined ? { has_price: params.hasPrice } : {}),
+    ...(params.isOwnListing !== undefined
+      ? { is_own_listing: params.isOwnListing }
+      : {}),
+  });
+}
+
+export function trackSimilarListingClick(params: {
+  sourceVertical: ListingVertical;
+  targetVertical: ListingVertical;
+  sameCategory: boolean;
+}): void {
+  trackEvent("similar_listing_click", {
+    source_vertical: params.sourceVertical,
+    target_vertical: params.targetVertical,
+    same_category: params.sameCategory,
   });
 }
 

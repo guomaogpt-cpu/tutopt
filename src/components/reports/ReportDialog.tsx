@@ -38,6 +38,7 @@ type ReportDialogProps = {
   isAuthenticated: boolean;
   triggerClassName?: string;
   triggerLabel?: string;
+  onTriggerClick?: () => void;
 };
 
 export function ReportDialog({
@@ -48,6 +49,7 @@ export function ReportDialog({
   isAuthenticated,
   triggerClassName,
   triggerLabel = "Пожаловаться",
+  onTriggerClick,
 }: ReportDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -61,6 +63,9 @@ export function ReportDialog({
     targetType === "listing" ? "Пожаловаться на объявление" : "Пожаловаться на продавца";
 
   function handleOpenChange(next: boolean) {
+    if (next && !open) {
+      onTriggerClick?.();
+    }
     setOpen(next);
     if (!next) {
       setReason("");

@@ -1,4 +1,4 @@
-import { ListingStatus, type ListingVertical } from "@prisma/client";
+import { ListingStatus, type ListingVertical, type Prisma } from "@prisma/client";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import {
   listingCardSelect,
@@ -22,6 +22,7 @@ export const listingDetailSelect = {
   published_at: true,
   created_at: true,
   category_id: true,
+  city_id: true,
   category: { select: { name: true, slug: true } },
   city: { select: { name: true } },
   brand: { select: { name: true } },
@@ -70,22 +71,67 @@ export async function getListingDetail(id: string) {
 
 const similarListingSelect = listingCardSelect;
 
-export async function getSimilarListings(
-  listingId: string,
-  categoryId: string,
-): Promise<ListingCardData[]> {
-  const listings = await prisma.listing.findMany({
-    where: {
-      id: { not: listingId },
-      category_id: categoryId,
-      status: ListingStatus.PUBLISHED,
-    },
-    orderBy: { published_at: "desc" },
-    take: 4,
-    select: similarListingSelect,
-  });
+const SIMILAR_LISTINGS_LIMIT = 4;
 
-  return serializeListingCards(listings);
+export type SimilarListingsSource = {
+  id: string;
+  category_id: string;
+  vertical: ListingVertical;
+  city_id: string | null;
+};
+
+export type SimilarListingsResult = {
+  listings: ListingCardData[];
+  /** Ids of similar listings that share the source listing's category. */
+  sameCategoryIds: string[];
+};
+
+/**
+ * Tiered lookup, up to 3 small queries:
+ * 1. same category + same vertical
+ * 2. same vertical
+ * 3. same city (any vertical), if the listing has a city
+ */
+export async function getSimilarListings(
+  source: SimilarListingsSource,
+): Promise<SimilarListingsResult> {
+  const collected: ListingCardData[] = [];
+  const excludeIds = [source.id];
+  const sameCategoryIds: string[] = [];
+
+  async function fetchTier(where: Prisma.ListingWhereInput): Promise<void> {
+    const remaining = SIMILAR_LISTINGS_LIMIT - collected.length;
+    if (remaining <= 0) {
+      return;
+    }
+
+    const rows = await prisma.listing.findMany({
+      where: {
+        ...where,
+        id: { notIn: excludeIds },
+        status: ListingStatus.PUBLISHED,
+      },
+      orderBy: { published_at: "desc" },
+      take: remaining,
+      select: similarListingSelect,
+    });
+
+    for (const card of serializeListingCards(rows)) {
+      collected.push(card);
+      excludeIds.push(card.id);
+    }
+  }
+
+  await fetchTier({ category_id: source.category_id, vertical: source.vertical });
+  sameCategoryIds.push(...collected.map((card) => card.id));
+
+  await fetchTier({ vertical: source.vertical });
+
+  if (source.city_id) {
+    await fetchTier({ city_id: source.city_id });
+  }
+
+  return { listings: collected, sameCategoryIds };
 }
 
 export async function getSellerPublishedListingCount(sellerProfileId: string): Promise<number> {

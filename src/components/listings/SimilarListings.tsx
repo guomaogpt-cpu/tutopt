@@ -1,21 +1,47 @@
+"use client";
+
+import type { ListingVertical } from "@prisma/client";
 import { ListingCard } from "@/components/listings/ListingCard";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import { trackSimilarListingClick } from "@/lib/analytics/events";
 
 type SimilarListingsProps = {
   listings: ListingCardData[];
   isAuthenticated?: boolean;
   favoriteListingIds?: string[];
+  sourceVertical?: ListingVertical | null;
+  sameCategoryIds?: string[];
 };
 
 export function SimilarListings({
   listings,
   isAuthenticated = false,
   favoriteListingIds = [],
+  sourceVertical = null,
+  sameCategoryIds = [],
 }: SimilarListingsProps) {
   const favoriteIds = new Set(favoriteListingIds);
+  const sameCategorySet = new Set(sameCategoryIds);
 
   if (listings.length === 0) {
     return null;
+  }
+
+  function handleCardClick(listing: ListingCardData, event: React.MouseEvent) {
+    if (!sourceVertical) {
+      return;
+    }
+
+    const target = event.target;
+    if (!(target instanceof Element) || !target.closest('a[href^="/listings/"]')) {
+      return;
+    }
+
+    trackSimilarListingClick({
+      sourceVertical,
+      targetVertical: listing.vertical,
+      sameCategory: sameCategorySet.has(listing.id),
+    });
   }
 
   return (
@@ -29,7 +55,11 @@ export function SimilarListings({
 
       <div className="grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {listings.map((listing) => (
-          <div key={listing.id} className="min-w-0 w-full">
+          <div
+            key={listing.id}
+            className="min-w-0 w-full"
+            onClickCapture={(event) => handleCardClick(listing, event)}
+          >
             <ListingCard
               listing={listing}
               isAuthenticated={isAuthenticated}

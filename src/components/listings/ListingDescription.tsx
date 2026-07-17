@@ -12,12 +12,9 @@ type ListingDescriptionProps = {
 
 export function ListingDescription({ text }: ListingDescriptionProps) {
   const [expanded, setExpanded] = useState(false);
-  const isLong = text.length > COLLAPSED_LENGTH;
+  const hasText = text.trim().length > 0;
+  const isLong = hasText && text.length > COLLAPSED_LENGTH;
   const displayText = !isLong || expanded ? text : `${text.slice(0, COLLAPSED_LENGTH).trimEnd()}…`;
-
-  if (!text.trim()) {
-    return null;
-  }
 
   return (
     <section aria-labelledby="listing-description-title">
@@ -33,9 +30,13 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
           "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-sm sm:p-6",
         )}
       >
-        <p className="whitespace-pre-wrap text-base leading-relaxed text-[#334155]">
-          {displayText}
-        </p>
+        {hasText ? (
+          <p className="whitespace-pre-wrap text-base leading-relaxed text-[#334155]">
+            {displayText}
+          </p>
+        ) : (
+          <p className="text-sm text-[#94A3B8]">Описание не указано</p>
+        )}
         {isLong ? (
           <Button
             type="button"

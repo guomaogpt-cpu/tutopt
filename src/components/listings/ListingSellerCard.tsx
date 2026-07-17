@@ -1,9 +1,11 @@
+"use client";
+
 import type { ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { BadgeCheck, Building2 } from "lucide-react";
 import { SellerTrustCompactBlock } from "@/components/seller/SellerTrustBlock";
 import { ReportDialog } from "@/components/reports/ReportDialog";
-import { formatListingDate } from "@/features/listings/lib/format-listing-price";
+import { trackListingDetailAction } from "@/lib/analytics/events";
 import {
   buildSellerProfileHref,
   getListingSellerCardCtaLabel,
@@ -21,7 +23,7 @@ type ListingSellerCardProps = {
   avatarUrl: string | null;
   isVerified: boolean;
   sellerCity: string | null;
-  sellerSince: Date;
+  sellerSinceLabel: string;
   publishedListingCount: number;
   sellerId: string;
   listingId: string;
@@ -31,6 +33,8 @@ type ListingSellerCardProps = {
   trustLevelLabel?: string;
   trustSignals?: SellerTrustSignal[];
   isAuthenticated?: boolean;
+  hasPrice?: boolean;
+  isOwnListing?: boolean;
 };
 
 function getInitials(name: string): string {
@@ -50,7 +54,7 @@ export function ListingSellerCard({
   avatarUrl,
   isVerified,
   sellerCity,
-  sellerSince,
+  sellerSinceLabel,
   publishedListingCount,
   sellerId,
   listingId,
@@ -60,10 +64,13 @@ export function ListingSellerCard({
   trustLevelLabel,
   trustSignals = [],
   isAuthenticated = false,
+  hasPrice = false,
+  isOwnListing = false,
 }: ListingSellerCardProps) {
   const displayName = companyName.trim() || sellerName;
   const roleLabel = getSellerProfileLabel(vertical);
   const ctaLabel = getListingSellerCardCtaLabel(vertical);
+  const analyticsParams = { vertical, hasPrice, isOwnListing };
 
   return (
     <div
@@ -125,7 +132,7 @@ export function ListingSellerCard({
         ) : null}
         <div className="flex justify-between gap-4">
           <dt className="text-[#64748B]">На платформе с</dt>
-          <dd className="font-medium text-[#0F172A]">{formatListingDate(sellerSince)}</dd>
+          <dd className="font-medium text-[#0F172A]">{sellerSinceLabel}</dd>
         </div>
       </dl>
 
@@ -133,7 +140,12 @@ export function ListingSellerCard({
         className="mt-4 h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
         asChild
       >
-        <a href={`#${messageSectionId}`}>{ctaLabel}</a>
+        <a
+          href={`#${messageSectionId}`}
+          onClick={() => trackListingDetailAction("contact_cta", analyticsParams)}
+        >
+          {ctaLabel}
+        </a>
       </Button>
 
       <Button
@@ -141,7 +153,12 @@ export function ListingSellerCard({
         className="mt-2 h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)]"
         asChild
       >
-        <Link href={buildSellerProfileHref(sellerId, vertical)}>Все объявления</Link>
+        <Link
+          href={buildSellerProfileHref(sellerId, vertical)}
+          onClick={() => trackListingDetailAction("seller_profile", analyticsParams)}
+        >
+          Профиль продавца
+        </Link>
       </Button>
 
       <div className="mt-3 border-t border-[rgba(148,163,184,0.14)] pt-3 text-center">
@@ -151,6 +168,7 @@ export function ListingSellerCard({
           isAuthenticated={isAuthenticated}
           vertical={vertical}
           triggerLabel="Пожаловаться"
+          onTriggerClick={() => trackListingDetailAction("report", analyticsParams)}
         />
       </div>
     </div>

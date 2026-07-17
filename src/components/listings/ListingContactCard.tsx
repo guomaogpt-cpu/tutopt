@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { MessageSquare, Phone, Send } from "lucide-react";
 import { ListingStatus, type ListingStatus as ListingStatusType, type ListingVertical } from "@prisma/client";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
+import { trackListingDetailAction } from "@/lib/analytics/events";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { listingStatusLabels } from "@/features/listings/lib/listing-status";
@@ -34,6 +35,8 @@ type ListingContactCardProps = {
   whatsapp: string | null;
   telegram: string | null;
   messageSectionId?: string;
+  hasPrice?: boolean;
+  isOwnListing?: boolean;
 };
 
 function digitsOnly(value: string): string {
@@ -91,6 +94,8 @@ export function ListingContactCard({
   whatsapp,
   telegram,
   messageSectionId = "listing-seller-message",
+  hasPrice = false,
+  isOwnListing = false,
 }: ListingContactCardProps) {
   const router = useRouter();
 
@@ -99,6 +104,11 @@ export function ListingContactCard({
   }
 
   function handleWriteToSeller() {
+    trackListingDetailAction("contact_cta", {
+      vertical,
+      hasPrice,
+      isOwnListing,
+    });
     const section = document.getElementById(messageSectionId);
     section?.scrollIntoView({ behavior: "smooth", block: "start" });
     const textarea = section?.querySelector("textarea");
