@@ -329,6 +329,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
               <Badge variant="warning">{listingStatusLabels[listing.status]}</Badge>
             ) : null}
             {isOwner ? <Badge variant="secondary">Ваше объявление</Badge> : null}
+            {isOwner ? (
+              <Link
+                href={`/listings/${listing.id}/edit`}
+                className="inline-flex h-8 items-center rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-[#334155] transition hover:border-[#2563EB]/30 hover:text-[#2563EB]"
+              >
+                Редактировать
+              </Link>
+            ) : null}
           </div>
           <h1 className="mt-2 text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
             {listing.title}

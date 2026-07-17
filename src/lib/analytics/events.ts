@@ -27,7 +27,9 @@ export type AnalyticsEventName =
   | "seller_other_listing_click"
   | "seller_profile_view"
   | "seller_listing_click"
-  | "seller_vertical_filter_click";
+  | "seller_vertical_filter_click"
+  | "listing_edit_start"
+  | "listing_edit_submit";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -56,6 +58,8 @@ export type AnalyticsEventParams = {
   same_seller?: boolean;
   seller_has_profile?: boolean;
   listing_count_bucket?: string;
+  status_before?: string;
+  status_after?: string;
   target_type?: "listing" | "seller";
   reason?: string;
 };
@@ -183,6 +187,28 @@ export function trackCreateListingStart(vertical: ListingVertical): void {
 
 export function trackCreateListingSubmit(vertical: ListingVertical): void {
   trackEvent("create_listing_submit", { vertical });
+}
+
+export function trackListingEditStart(
+  vertical: ListingVertical,
+  statusBefore: string,
+): void {
+  trackEvent("listing_edit_start", {
+    vertical,
+    status_before: statusBefore,
+  });
+}
+
+export function trackListingEditSubmit(
+  vertical: ListingVertical,
+  statusBefore: string,
+  statusAfter: string,
+): void {
+  trackEvent("listing_edit_submit", {
+    vertical,
+    status_before: statusBefore,
+    status_after: statusAfter,
+  });
 }
 
 export function trackLeadSubmit(vertical: ListingVertical): void {

@@ -104,6 +104,13 @@ export function SellerDashboardListingCard({ listing }: SellerDashboardListingCa
         >
           <Link href={`/listings/${listing.id}`}>Открыть</Link>
         </Button>
+        <Button
+          asChild
+          variant="outline"
+          className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-[140px]"
+        >
+          <Link href={`/listings/${listing.id}/edit`}>Редактировать</Link>
+        </Button>
       </div>
     </article>
   );

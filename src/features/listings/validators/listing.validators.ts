@@ -55,3 +55,8 @@ export const createListingSchema = z.object({
 });
 
 export type CreateListingInput = z.infer<typeof createListingSchema>;
+
+// Editing exposes the same seller-controlled fields as creation. Keeping one
+// schema prevents create and update validation rules from drifting apart.
+export const updateListingSchema = createListingSchema;
+export type UpdateListingInput = z.infer<typeof updateListingSchema>;

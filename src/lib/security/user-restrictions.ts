@@ -67,6 +67,16 @@ export function getCreateListingRestrictionMessage(user: UserRestrictionSource):
   return null;
 }
 
+export function getEditListingRestrictionMessage(user: UserRestrictionSource): string | null {
+  if (isUserBlocked(user)) {
+    return "Аккаунт заблокирован. Редактирование объявлений недоступно.";
+  }
+  if (hasTimestamp(user.listing_restricted_at)) {
+    return "Редактирование объявлений временно ограничено.";
+  }
+  return null;
+}
+
 export function getLeadRestrictionMessage(user: UserRestrictionSource): string | null {
   if (isUserBlocked(user)) {
     return "Аккаунт заблокирован. Отправка заявок недоступна.";

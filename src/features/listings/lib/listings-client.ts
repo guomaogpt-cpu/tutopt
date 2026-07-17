@@ -1,4 +1,7 @@
-import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
+import type {
+  CreateListingInput,
+  UpdateListingInput,
+} from "@/features/listings/validators/listing.validators";
 
 type ApiErrorBody = {
   error: {
@@ -15,6 +18,7 @@ type CreateListingSuccessBody = {
   data: {
     listing: {
       id: string;
+      status?: string;
     };
   };
 };
@@ -64,6 +68,26 @@ export async function createListingRequest(
 ): Promise<CreateListingSuccessBody["data"]> {
   const response = await fetch("/api/listings", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  const body = (await response.json()) as CreateListingSuccessBody | ApiErrorBody;
+
+  if (!response.ok) {
+    const errors = mapApiErrors(body as ApiErrorBody);
+    throw new ListingRequestError(errors.form[0] ?? "Request failed", errors);
+  }
+
+  return (body as CreateListingSuccessBody).data;
+}
+
+export async function updateListingRequest(
+  listingId: string,
+  input: UpdateListingInput,
+): Promise<CreateListingSuccessBody["data"]> {
+  const response = await fetch(`/api/listings/${listingId}`, {
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { ListingUnit, ListingVertical } from "@prisma/client";
+import type { ListingStatus, ListingUnit, ListingVertical } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
@@ -17,6 +17,7 @@ import {
   createListingRequest,
   getListingFieldError,
   type ListingFormErrors,
+  updateListingRequest,
 } from "@/features/listings/lib/listings-client";
 import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-config";
 import type { CategoryItem } from "@/features/listings/types/category";
@@ -28,6 +29,8 @@ import {
 import {
   trackCreateListingStart,
   trackCreateListingSubmit,
+  trackListingEditStart,
+  trackListingEditSubmit,
 } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -48,6 +51,26 @@ type NewListingFormProps = {
   brands: SelectOption[];
   initialVertical?: ListingVertical;
   initialCategoryId?: string;
+  mode?: "create" | "edit";
+  listingId?: string;
+  initialValues?: ListingFormInitialValues;
+  cancelHref?: string;
+};
+
+export type ListingFormInitialValues = {
+  title: string;
+  description: string;
+  vertical: ListingVertical;
+  categoryId: string;
+  price: string;
+  currency: string;
+  moq: number;
+  unit: ListingUnit;
+  cityId: string;
+  brandId: string | null;
+  stockQuantity: number | null;
+  imageUrls: string[];
+  status: ListingStatus;
 };
 
 const emptyErrors: ListingFormErrors = { form: [], fields: {} };
@@ -88,23 +111,36 @@ export function NewListingForm({
   brands,
   initialVertical = DEFAULT_LISTING_VERTICAL,
   initialCategoryId,
+  mode = "create",
+  listingId,
+  initialValues,
+  cancelHref = "/seller/dashboard",
 }: NewListingFormProps) {
   const router = useRouter();
-  const [vertical, setVertical] = useState<ListingVertical>(initialVertical);
+  const resolvedInitialVertical = initialValues?.vertical ?? initialVertical;
+  const [vertical, setVertical] = useState<ListingVertical>(resolvedInitialVertical);
   const formConfig = getVerticalFormConfig(vertical);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(initialValues?.title ?? "");
+  const [description, setDescription] = useState(initialValues?.description ?? "");
   const [categoryId, setCategoryId] = useState(() =>
-    resolveInitialCategoryId(categories, initialVertical, initialCategoryId),
+    resolveInitialCategoryId(
+      categories,
+      resolvedInitialVertical,
+      initialValues?.categoryId ?? initialCategoryId,
+    ),
   );
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [price, setPrice] = useState("");
-  const [currency, setCurrency] = useState("KGS");
-  const [moq, setMoq] = useState("1");
-  const [unit, setUnit] = useState<ListingUnit>(formConfig.defaultUnit);
-  const [cityId, setCityId] = useState("");
-  const [brandId, setBrandId] = useState("");
-  const [stockQuantity, setStockQuantity] = useState("");
+  const [imageUrls, setImageUrls] = useState<string[]>(initialValues?.imageUrls ?? []);
+  const [price, setPrice] = useState(initialValues?.price ?? "");
+  const [currency, setCurrency] = useState(initialValues?.currency ?? "KGS");
+  const [moq, setMoq] = useState(String(initialValues?.moq ?? 1));
+  const [unit, setUnit] = useState<ListingUnit>(
+    initialValues?.unit ?? formConfig.defaultUnit,
+  );
+  const [cityId, setCityId] = useState(initialValues?.cityId ?? "");
+  const [brandId, setBrandId] = useState(initialValues?.brandId ?? "");
+  const [stockQuantity, setStockQuantity] = useState(
+    initialValues?.stockQuantity == null ? "" : String(initialValues.stockQuantity),
+  );
   const [errors, setErrors] = useState<ListingFormErrors>(emptyErrors);
   const [clientError, setClientError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -116,8 +152,12 @@ export function NewListingForm({
   );
 
   useEffect(() => {
-    trackCreateListingStart(initialVertical);
-  }, [initialVertical]);
+    if (mode === "edit" && initialValues) {
+      trackListingEditStart(initialValues.vertical, initialValues.status);
+      return;
+    }
+    trackCreateListingStart(resolvedInitialVertical);
+  }, [initialValues, mode, resolvedInitialVertical]);
 
   useEffect(() => {
     const allowed = formConfig.unitOptions.some((option) => option.value === unit);
@@ -201,8 +241,10 @@ export function NewListingForm({
       return;
     }
 
-    const serverImageUrls = imageUrls.filter((url) =>
-      url.startsWith("/api/uploads/listings/"),
+    const serverImageUrls = imageUrls.filter(
+      (url) =>
+        url.startsWith("/api/uploads/listings/") ||
+        url.startsWith("/uploads/listings/"),
     );
 
     if (serverImageUrls.length === 0) {
@@ -224,7 +266,7 @@ export function NewListingForm({
     setIsSubmitting(true);
 
     try {
-      const result = await createListingRequest({
+      const payload: CreateListingInput = {
         title: title.trim(),
         description: description.trim(),
         price: Number(price),
@@ -238,9 +280,21 @@ export function NewListingForm({
           formConfig.showStock && stockQuantity ? Number(stockQuantity) : null,
         vertical,
         image_urls: serverImageUrls,
-      });
+      };
+      const result =
+        mode === "edit" && listingId
+          ? await updateListingRequest(listingId, payload)
+          : await createListingRequest(payload);
 
-      trackCreateListingSubmit(vertical);
+      if (mode === "edit" && initialValues) {
+        trackListingEditSubmit(
+          vertical,
+          initialValues.status,
+          result.listing.status ?? initialValues.status,
+        );
+      } else {
+        trackCreateListingSubmit(vertical);
+      }
       router.push(`/listings/${result.listing.id}`);
       router.refresh();
     } catch (error) {
@@ -248,7 +302,11 @@ export function NewListingForm({
         setErrors(error.formErrors);
       } else {
         setErrors({
-          form: ["Не удалось создать объявление. Попробуйте позже."],
+          form: [
+            mode === "edit"
+              ? "Не удалось сохранить изменения. Попробуйте позже."
+              : "Не удалось создать объявление. Попробуйте позже.",
+          ],
           fields: {},
         });
       }
@@ -532,18 +590,20 @@ export function NewListingForm({
               {isSubmitting ? (
                 <>
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                  Отправка...
+                  {mode === "edit" ? "Сохранение..." : "Отправка..."}
                 </>
               ) : (
-                "Отправить на модерацию"
+                mode === "edit" ? "Сохранить изменения" : "Отправить на модерацию"
               )}
             </Button>
             <p className="mt-3 text-center text-sm text-[#64748B]">
-              После отправки объявление будет проверено модератором.
+              {mode === "edit"
+                ? "После редактирования объявление может быть отправлено на повторную модерацию."
+                : "После отправки объявление будет проверено модератором."}
             </p>
             <div className="mt-4 text-center">
               <Link
-                href="/seller/dashboard"
+                href={cancelHref}
                 className="text-sm font-medium text-[#64748B] transition hover:text-[#2563EB]"
               >
                 Отмена
