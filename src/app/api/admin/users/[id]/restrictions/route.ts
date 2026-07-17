@@ -1,6 +1,7 @@
 import { UserRole } from "@prisma/client";
 import { requireAdmin } from "@/features/admin/lib/require-admin";
 import { userRestrictionActionSchema } from "@/features/admin/validators/user-restriction.validators";
+import { createAuditLog } from "@/lib/audit/audit-log";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
@@ -104,6 +105,17 @@ export async function PATCH(request: Request, context: RouteContext) {
       adminId: admin.id,
       targetUserId: target.id,
       action: input.action,
+    });
+
+    await createAuditLog({
+      actorId: admin.id,
+      actorRole: admin.role,
+      action: `user.${input.action}`,
+      targetType: "user",
+      targetId: target.id,
+      metadata: {
+        ...(input.action === "block" ? { reason } : {}),
+      },
     });
 
     return jsonData({ user: updated });

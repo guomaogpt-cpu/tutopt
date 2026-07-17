@@ -38,6 +38,13 @@ const navItems = [
     match: "prefix" as const,
     prefix: "/admin/users",
   },
+  {
+    label: "Журнал",
+    href: "/admin/audit",
+    roles: [UserRole.ADMIN],
+    match: "prefix" as const,
+    prefix: "/admin/audit",
+  },
 ] as const;
 
 export function AdminNav({ user }: AdminNavProps) {

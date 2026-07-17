@@ -1,6 +1,7 @@
 import { ListingStatus } from "@prisma/client";
 import { requireStaff } from "@/features/admin/lib/require-admin";
 import { listingModerationSchema } from "@/features/admin/validators/listing-moderation.validators";
+import { createAuditLog } from "@/lib/audit/audit-log";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
@@ -11,13 +12,13 @@ type RouteContext = {
 
 export async function PATCH(request: Request, context: RouteContext) {
   return withApiHandler(async () => {
-    await requireStaff();
+    const staff = await requireStaff();
     const { id } = await context.params;
     const input = await parseJsonBody(request, listingModerationSchema);
 
     const listing = await prisma.listing.findUnique({
       where: { id },
-      select: { id: true, status: true },
+      select: { id: true, status: true, vertical: true },
     });
 
     if (!listing) {
@@ -43,6 +44,19 @@ export async function PATCH(request: Request, context: RouteContext) {
         status: true,
         published_at: true,
         updated_at: true,
+      },
+    });
+
+    await createAuditLog({
+      actorId: staff.id,
+      actorRole: staff.role,
+      action: input.action === "approve" ? "listing.approve" : "listing.reject",
+      targetType: "listing",
+      targetId: listing.id,
+      metadata: {
+        vertical: listing.vertical,
+        status_before: listing.status,
+        status_after: nextStatus,
       },
     });
 

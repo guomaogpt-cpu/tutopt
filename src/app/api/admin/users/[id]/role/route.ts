@@ -1,6 +1,6 @@
 import { UserRole } from "@prisma/client";
-import { logUserRoleChanged } from "@/features/admin/lib/audit-log";
 import { requireAdmin } from "@/features/admin/lib/require-admin";
+import { createAuditLog } from "@/lib/audit/audit-log";
 import { changeUserRoleSchema } from "@/features/admin/validators/user-role.validators";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, NotFoundError } from "@/shared/lib/errors";
@@ -88,7 +88,17 @@ export async function PATCH(request: Request, context: RouteContext) {
       },
     });
 
-    await logUserRoleChanged(admin.id, targetUserId, targetUser.role, nextRole);
+    await createAuditLog({
+      actorId: admin.id,
+      actorRole: admin.role,
+      action: "user.role_change",
+      targetType: "user",
+      targetId: targetUserId,
+      metadata: {
+        old_role: targetUser.role,
+        new_role: nextRole,
+      },
+    });
 
     return jsonData({ user: updatedUser });
   });

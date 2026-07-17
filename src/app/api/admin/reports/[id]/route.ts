@@ -1,6 +1,7 @@
 import { ReportStatus } from "@prisma/client";
 import { requireStaff } from "@/features/admin/lib/require-admin";
 import { updateReportStatusSchema } from "@/features/reports/validators/report.validators";
+import { createAuditLog } from "@/lib/audit/audit-log";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
@@ -17,7 +18,13 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const report = await prisma.report.findUnique({
       where: { id },
-      select: { id: true, status: true },
+      select: {
+        id: true,
+        status: true,
+        reason: true,
+        listing_id: true,
+        seller_profile_id: true,
+      },
     });
 
     if (!report) {
@@ -43,6 +50,19 @@ export async function PATCH(request: Request, context: RouteContext) {
         status: true,
         reviewed_at: true,
         resolved_by: true,
+      },
+    });
+
+    await createAuditLog({
+      actorId: staff.id,
+      actorRole: staff.role,
+      action: input.action === "resolve" ? "report.review" : "report.dismiss",
+      targetType: "report",
+      targetId: report.id,
+      metadata: {
+        report_reason: report.reason,
+        listing_id: report.listing_id,
+        seller_profile_id: report.seller_profile_id,
       },
     });
 

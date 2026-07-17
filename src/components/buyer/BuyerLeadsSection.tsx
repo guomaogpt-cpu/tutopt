@@ -12,18 +12,22 @@ import { cn } from "@/lib/utils";
 
 type BuyerLeadsSectionProps = {
   leads: BuyerLeadItem[];
+  totalCount?: number;
 };
 
-export function BuyerLeadsSection({ leads }: BuyerLeadsSectionProps) {
+export function BuyerLeadsSection({ leads, totalCount }: BuyerLeadsSectionProps) {
+  const total = totalCount ?? leads.length;
+
   return (
     <section id="buyer-leads" className="scroll-mt-24" aria-labelledby="buyer-leads-title">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <h2 id="buyer-leads-title" className="text-lg font-bold text-[#0F172A] sm:text-xl">
           Мои заявки
         </h2>
-        {leads.length > 0 ? (
+        {total > 0 ? (
           <p className="text-sm text-[#64748B]">
-            Всего: <span className="font-medium text-[#0F172A]">{leads.length}</span>
+            Всего: <span className="font-medium text-[#0F172A]">{total}</span>
+            {total > leads.length ? ` · показаны последние ${leads.length}` : null}
           </p>
         ) : null}
       </div>

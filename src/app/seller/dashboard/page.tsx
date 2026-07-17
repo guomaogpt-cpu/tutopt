@@ -3,15 +3,25 @@ import { UserRole, ListingStatus, LeadStatus } from "@prisma/client";
 import { redirect } from "next/navigation";
 import {
   AlertCircle,
+  CalendarDays,
   CheckCircle2,
   Clock,
   Inbox,
+  LayoutGrid,
+  MailPlus,
+  MapPin,
+  Package,
 } from "lucide-react";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
+import { SellerAccountStatusCard } from "@/components/seller/SellerAccountStatusCard";
 import { SellerDashboardListings } from "@/components/seller/SellerDashboardListings";
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
 import { SellerProfileCompletenessCard } from "@/components/seller/SellerProfileCompletenessCard";
 import { SellerQuickActions } from "@/components/seller/SellerQuickActions";
+import {
+  SellerRecentLeads,
+  type SellerRecentLead,
+} from "@/components/seller/SellerRecentLeads";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
@@ -19,6 +29,7 @@ import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onbo
 import { countSellerVerticals } from "@/features/sellers/lib/seller-vertical-profile";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import { calculateListingQuality } from "@/lib/moderation/listing-quality";
+import { getUserRestrictionLabels } from "@/lib/security/user-restrictions";
 import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { prisma } from "@/shared/lib/prisma";
 import { Button } from "@/components/ui/button";
@@ -103,14 +114,31 @@ export default async function SellerDashboardPage() {
 
   const listings = sellerProfile?.listings ?? [];
 
-  const newLeadsCount = sellerProfile
-    ? await prisma.lead.count({
-        where: {
-          seller_profile_id: sellerProfile.id,
-          status: LeadStatus.NEW,
-        },
-      })
-    : 0;
+  const [newLeadsCount, totalLeadsCount, recentLeads] = sellerProfile
+    ? await Promise.all([
+        prisma.lead.count({
+          where: {
+            seller_profile_id: sellerProfile.id,
+            status: LeadStatus.NEW,
+          },
+        }),
+        prisma.lead.count({
+          where: { seller_profile_id: sellerProfile.id },
+        }),
+        prisma.lead.findMany({
+          where: { seller_profile_id: sellerProfile.id },
+          orderBy: { created_at: "desc" },
+          take: 5,
+          select: {
+            id: true,
+            status: true,
+            created_at: true,
+            buyer: { select: { name: true } },
+            listing: { select: { id: true, title: true, vertical: true } },
+          },
+        }),
+      ])
+    : [0, 0, []];
 
   const publishedCount = listings.filter((item) => item.status === ListingStatus.PUBLISHED).length;
   const pendingCount = listings.filter(
@@ -170,7 +198,30 @@ export default async function SellerDashboardPage() {
     };
   });
 
+  const restrictionLabels = getUserRestrictionLabels(user);
+  const hasRestrictions = restrictionLabels.some((label) => label !== "Активен");
+
+  const serializedRecentLeads: SellerRecentLead[] = recentLeads.map((lead) => ({
+    id: lead.id,
+    status: lead.status,
+    created_at: lead.created_at,
+    buyerName: lead.buyer.name,
+    listingId: lead.listing.id,
+    listingTitle: lead.listing.title,
+    listingVertical: lead.listing.vertical,
+  }));
+
+  const activeVerticalsCount = VERTICAL_LIST.filter(
+    (item) => verticalCounts[item.id] > 0,
+  ).length;
+
   const stats = [
+    {
+      label: "Всего объявлений",
+      value: listings.length,
+      icon: Package,
+      iconClassName: "bg-[#F1F5F9] text-[#64748B]",
+    },
     {
       label: "Активные объявления",
       value: publishedCount,
@@ -190,9 +241,21 @@ export default async function SellerDashboardPage() {
       iconClassName: "bg-[#FEF2F2] text-[#DC2626]",
     },
     {
+      label: "Заявки всего",
+      value: totalLeadsCount,
+      icon: MailPlus,
+      iconClassName: "bg-[#F1F5F9] text-[#64748B]",
+    },
+    {
       label: "Новые заявки",
       value: newLeadsCount,
       icon: Inbox,
+      iconClassName: "bg-[#EFF6FF] text-[#2563EB]",
+    },
+    {
+      label: "Направления с объявлениями",
+      value: activeVerticalsCount,
+      icon: LayoutGrid,
       iconClassName: "bg-[#EFF6FF] text-[#2563EB]",
     },
   ];
@@ -202,15 +265,45 @@ export default async function SellerDashboardPage() {
     ? `/seller/${sellerProfile.slug ?? sellerProfile.id}`
     : null;
 
+  const sellerCityName = sellerProfile?.city?.name ?? user.city;
+  const memberSinceLabel = user.created_at.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const profileIncomplete = sellerTrust.level === "incomplete";
+
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
       <Container size="lg" className="max-w-[1280px] min-w-0">
         <PageHeader className="pb-0">
           <PageHeaderContent>
-            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Кабинет продавца</PageTitle>
+            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">
+              {sellerProfile?.company_name ?? user.name}
+            </PageTitle>
             <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
-              Управляйте объявлениями и заявками покупателей
+              Кабинет продавца — объявления и заявки покупателей
             </PageSubtitle>
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-[#64748B]">
+              <span className="inline-flex items-center rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-xs font-medium text-[#2563EB]">
+                Продавец
+              </span>
+              {sellerCityName ? (
+                <span className="inline-flex items-center gap-1">
+                  <MapPin className="size-3.5" aria-hidden="true" />
+                  {sellerCityName}
+                </span>
+              ) : null}
+              <span className="inline-flex items-center gap-1">
+                <CalendarDays className="size-3.5" aria-hidden="true" />
+                На платформе с {memberSinceLabel}
+              </span>
+            </div>
+            {profileIncomplete ? (
+              <p className="mt-2 text-sm font-medium text-[#D97706]">
+                Профиль продавца заполнен не полностью.
+              </p>
+            ) : null}
           </PageHeaderContent>
           <PageHeaderActions className="w-full sm:w-auto">
             <Button
@@ -223,6 +316,11 @@ export default async function SellerDashboardPage() {
         </PageHeader>
 
         <div className="mt-6 space-y-8 lg:mt-8 lg:space-y-10">
+          <SellerAccountStatusCard
+            labels={restrictionLabels}
+            hasRestrictions={hasRestrictions}
+          />
+
           <SellerDashboardStatCards stats={stats} />
 
           <SellerProfileCompletenessCard
@@ -266,6 +364,7 @@ export default async function SellerDashboardPage() {
             sellerProfileId={sellerProfile?.id ?? null}
             verticalCounts={verticalCounts}
           />
+          <SellerRecentLeads leads={serializedRecentLeads} />
           <SellerDashboardListings listings={serializedListings} />
         </div>
       </Container>
