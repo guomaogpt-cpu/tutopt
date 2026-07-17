@@ -15,7 +15,7 @@ import { LeadStatus } from "@prisma/client";
 import { BuyerFavoritesSection } from "@/components/buyer/BuyerFavoritesSection";
 import { BuyerLeadsSection } from "@/components/buyer/BuyerLeadsSection";
 import { BuyerQuickActions } from "@/components/buyer/BuyerQuickActions";
-import { BuyerRecentViewsSection } from "@/components/buyer/BuyerRecentViewsSection";
+import { RecentlyViewedPanel } from "@/components/buyer/RecentlyViewedPanel";
 import { SavedSearchesPanel } from "@/components/buyer/SavedSearchesPanel";
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
 import { getBuyerDashboardData } from "@/features/buyer/lib/buyer-dashboard-data";
@@ -246,10 +246,7 @@ export default async function BuyerDashboardPage() {
             listings={data.favoriteListings}
             favoriteListingIds={data.favoriteListingIds}
           />
-          <BuyerRecentViewsSection
-            listings={data.recentViewedListings}
-            favoriteListingIds={data.favoriteListingIds}
-          />
+          <RecentlyViewedPanel />
           <BuyerQuickActions />
         </div>
       </Container>

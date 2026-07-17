@@ -16,7 +16,10 @@ export type AnalyticsEventName =
   | "report_submit"
   | "saved_search_create"
   | "saved_search_remove"
-  | "saved_search_open";
+  | "saved_search_open"
+  | "recently_viewed_open"
+  | "recently_viewed_remove"
+  | "recently_viewed_clear";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -36,6 +39,7 @@ export type AnalyticsEventParams = {
   search_length?: number;
   has_query?: boolean;
   has_category?: boolean;
+  has_price?: boolean;
   is_active?: boolean;
   target_type?: "listing" | "seller";
   reason?: string;
@@ -195,6 +199,26 @@ export function trackSavedSearch(
     has_query: params.hasQuery,
     has_category: params.hasCategory,
     ...(params.vertical ? { vertical: params.vertical } : {}),
+  });
+}
+
+export function trackRecentlyViewed(
+  action: "open" | "remove" | "clear",
+  params?: {
+    vertical?: ListingVertical | null;
+    hasPrice?: boolean;
+  },
+): void {
+  const eventName: AnalyticsEventName =
+    action === "open"
+      ? "recently_viewed_open"
+      : action === "remove"
+        ? "recently_viewed_remove"
+        : "recently_viewed_clear";
+
+  trackEvent(eventName, {
+    ...(params?.hasPrice !== undefined ? { has_price: params.hasPrice } : {}),
+    ...(params?.vertical ? { vertical: params.vertical } : {}),
   });
 }
 

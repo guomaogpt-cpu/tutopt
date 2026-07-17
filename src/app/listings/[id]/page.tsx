@@ -10,6 +10,7 @@ import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
 import { SimilarListings } from "@/components/listings/SimilarListings";
 import { ListingViewTracker } from "@/components/analytics/ListingViewTracker";
+import { RecentlyViewedTracker } from "@/components/listings/RecentlyViewedTracker";
 import { AppBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { canViewListing } from "@/features/listings/lib/listing-access";
@@ -244,6 +245,19 @@ export default async function ListingPage({ params }: ListingPageProps) {
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
       <ListingViewTracker listingId={listing.id} vertical={listing.vertical} />
+      {listing.status === ListingStatus.PUBLISHED ? (
+        <RecentlyViewedTracker
+          listingId={listing.id}
+          title={listing.title}
+          vertical={listing.vertical}
+          price={listing.price.toString()}
+          currency={listing.currency}
+          city={listing.city?.name ?? null}
+          imageUrl={
+            listing.images[0] ? normalizeListingImageUrl(listing.images[0].url) : null
+          }
+        />
+      ) : null}
       {jsonLd ? (
         <script
           type="application/ld+json"
