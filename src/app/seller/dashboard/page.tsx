@@ -367,7 +367,10 @@ export default async function SellerDashboardPage() {
             verticalCounts={verticalCounts}
           />
           <SellerRecentLeads leads={serializedRecentLeads} />
-          <SellerDashboardListings listings={serializedListings} />
+          <SellerDashboardListings
+            listings={serializedListings.slice(0, 5)}
+            totalCount={serializedListings.length}
+          />
         </div>
       </Container>
     </main>

@@ -30,7 +30,9 @@ export type AnalyticsEventName =
   | "seller_vertical_filter_click"
   | "listing_edit_start"
   | "listing_edit_submit"
-  | "listing_renew";
+  | "listing_renew"
+  | "seller_listings_filter_change"
+  | "seller_listing_action_click";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -64,6 +66,8 @@ export type AnalyticsEventParams = {
   was_expired?: boolean;
   target_type?: "listing" | "seller";
   reason?: string;
+  status_filter?: string;
+  action?: string;
 };
 
 export function getListingCountBucket(count: number): string {
@@ -224,6 +228,28 @@ export function trackListingRenew(params: {
     was_expired: params.wasExpired,
     status_before: params.statusBefore,
     status_after: params.statusAfter,
+  });
+}
+
+export function trackSellerListingsFilterChange(params: {
+  statusFilter: string;
+  vertical: ListingVertical | null;
+}): void {
+  trackEvent("seller_listings_filter_change", {
+    status_filter: params.statusFilter,
+    ...(params.vertical ? { vertical: params.vertical } : {}),
+  });
+}
+
+export function trackSellerListingActionClick(params: {
+  action: string;
+  vertical: ListingVertical;
+  statusFilter?: string;
+}): void {
+  trackEvent("seller_listing_action_click", {
+    action: params.action,
+    vertical: params.vertical,
+    ...(params.statusFilter ? { status_filter: params.statusFilter } : {}),
   });
 }
 

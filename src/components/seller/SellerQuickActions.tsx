@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, Inbox, LayoutGrid, PlusCircle } from "lucide-react";
+import { ExternalLink, Inbox, LayoutGrid, ListChecks, PlusCircle } from "lucide-react";
 import type { ListingVertical } from "@prisma/client";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
@@ -63,6 +63,16 @@ export function SellerQuickActions({
           <div className="min-w-0">
             <p className="font-semibold text-[#0F172A]">Подать объявление</p>
             <p className="mt-0.5 text-xs text-[#64748B]">Создать новое предложение</p>
+          </div>
+        </Link>
+
+        <Link href="/seller/listings" className={cardClassName}>
+          <div className={iconWrapClassName}>
+            <ListChecks className="size-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-[#0F172A]">Мои объявления</p>
+            <p className="mt-0.5 text-xs text-[#64748B]">Управление и продление</p>
           </div>
         </Link>
 
