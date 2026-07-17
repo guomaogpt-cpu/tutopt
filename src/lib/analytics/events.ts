@@ -13,7 +13,10 @@ export type AnalyticsEventName =
   | "seller_onboarding_complete"
   | "moderation_approve"
   | "moderation_reject"
-  | "report_submit";
+  | "report_submit"
+  | "saved_search_create"
+  | "saved_search_remove"
+  | "saved_search_open";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -32,6 +35,7 @@ export type AnalyticsEventParams = {
   search_query?: string;
   search_length?: number;
   has_query?: boolean;
+  has_category?: boolean;
   is_active?: boolean;
   target_type?: "listing" | "seller";
   reason?: string;
@@ -169,6 +173,28 @@ export function trackModerationAction(
   trackEvent(action === "approve" ? "moderation_approve" : "moderation_reject", {
     ...(vertical ? { vertical } : {}),
     ...(listingId ? { listing_id: listingId } : {}),
+  });
+}
+
+export function trackSavedSearch(
+  action: "create" | "remove" | "open",
+  params: {
+    vertical?: ListingVertical | null;
+    hasQuery: boolean;
+    hasCategory: boolean;
+  },
+): void {
+  const eventName: AnalyticsEventName =
+    action === "create"
+      ? "saved_search_create"
+      : action === "remove"
+        ? "saved_search_remove"
+        : "saved_search_open";
+
+  trackEvent(eventName, {
+    has_query: params.hasQuery,
+    has_category: params.hasCategory,
+    ...(params.vertical ? { vertical: params.vertical } : {}),
   });
 }
 

@@ -7,6 +7,7 @@ import {
   CatalogFiltersPanel,
   type FilterDraft,
 } from "@/components/listings/CatalogFiltersPanel";
+import { SaveSearchButton } from "@/components/listings/SaveSearchButton";
 import {
   getActiveFilterChips,
   type CatalogLookupMaps,
@@ -283,6 +284,8 @@ export function ListingsCatalogToolbar({
                 onReset={handleResetFilters}
               />
             </div>
+
+            <SaveSearchButton filters={filters} lookups={lookups} />
           </div>
         </div>
 

@@ -16,6 +16,7 @@ import { BuyerFavoritesSection } from "@/components/buyer/BuyerFavoritesSection"
 import { BuyerLeadsSection } from "@/components/buyer/BuyerLeadsSection";
 import { BuyerQuickActions } from "@/components/buyer/BuyerQuickActions";
 import { BuyerRecentViewsSection } from "@/components/buyer/BuyerRecentViewsSection";
+import { SavedSearchesPanel } from "@/components/buyer/SavedSearchesPanel";
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
 import { getBuyerDashboardData } from "@/features/buyer/lib/buyer-dashboard-data";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -239,6 +240,7 @@ export default async function BuyerDashboardPage() {
             </p>
           ) : null}
 
+          <SavedSearchesPanel />
           <BuyerLeadsSection leads={recentLeads} totalCount={leadsCount} />
           <BuyerFavoritesSection
             listings={data.favoriteListings}
