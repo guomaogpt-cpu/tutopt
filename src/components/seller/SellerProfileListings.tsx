@@ -259,7 +259,7 @@ export function SellerProfileListings({
             </div>
           ) : (
             <>
-              <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+              <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:grid-cols-2 md:gap-4 lg:grid-cols-3 2xl:grid-cols-4">
                 {visibleListings.map((listing) => (
                   <div
                     key={listing.id}

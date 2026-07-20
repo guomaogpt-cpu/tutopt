@@ -11,13 +11,13 @@ export type ListingDisplayMetaItem = {
 export function getListingVerticalBadgeLabel(vertical: ListingVertical): string {
   switch (vertical) {
     case "OPT":
-      return "Опт";
+      return "ТутОпт";
     case "MARKET":
-      return "Маркет";
+      return "ТутМаркет";
     case "SERVICES":
-      return "Услуга";
+      return "ТутУслуги";
     case "CARGO":
-      return "Карго";
+      return "ТутКарго";
     default:
       return "Объявление";
   }

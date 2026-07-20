@@ -140,7 +140,7 @@ export function RecentlyViewedPanel() {
                   <Link
                     href={item.url}
                     onClick={() => handleOpen(item)}
-                    className="relative size-14 shrink-0 overflow-hidden rounded-xl border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] sm:size-16"
+                    className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-[#EEF2F7] sm:size-16"
                   >
                     {item.imageUrl ? (
                       <Image
@@ -152,32 +152,37 @@ export function RecentlyViewedPanel() {
                         sizes="64px"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-[#94A3B8]">
-                        <Package className="size-5" aria-hidden="true" />
+                      <div className="flex h-full items-center justify-center text-[#CBD5E1]">
+                        <Package className="size-5" strokeWidth={1.5} aria-hidden="true" />
                       </div>
                     )}
                   </Link>
 
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      {vertical ? <VerticalListingBadge vertical={vertical} /> : null}
-                      {viewedLabel ? (
-                        <span className="text-xs text-[#94A3B8]">{viewedLabel}</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {vertical ? <VerticalListingBadge vertical={vertical} /> : null}
+                        {viewedLabel ? (
+                          <span className="text-xs text-[#94A3B8]">{viewedLabel}</span>
+                        ) : null}
+                      </div>
+                      {priceLabel ? (
+                        <p className="mt-1 text-sm font-bold tracking-tight text-[#0F172A]">
+                          {priceLabel}
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-sm font-medium text-[#94A3B8]">Цена не указана</p>
+                      )}
+                      <Link
+                        href={item.url}
+                        onClick={() => handleOpen(item)}
+                        className="mt-0.5 block truncate text-sm font-medium text-[#334155] transition hover:text-[#2563EB]"
+                      >
+                        {item.title}
+                      </Link>
+                      {item.city ? (
+                        <p className="mt-0.5 truncate text-xs text-[#94A3B8]">{item.city}</p>
                       ) : null}
                     </div>
-                    <Link
-                      href={item.url}
-                      onClick={() => handleOpen(item)}
-                      className="mt-1 block truncate text-sm font-semibold text-[#0F172A] transition hover:text-[#2563EB]"
-                    >
-                      {item.title}
-                    </Link>
-                    <p className="truncate text-xs text-[#64748B]">
-                      {priceLabel ? <span className="font-medium">{priceLabel}</span> : null}
-                      {priceLabel && item.city ? " · " : null}
-                      {item.city}
-                    </p>
-                  </div>
 
                   <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                     <Button

@@ -130,13 +130,14 @@ export function SellerListingManageCard({
   return (
     <article
       className={cn(
-        "flex min-w-0 flex-col gap-4 rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]",
+        "flex min-w-0 flex-col gap-4 rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white p-4 shadow-[0_4px_14px_rgba(15,23,42,0.04)]",
         "lg:flex-row lg:items-center lg:p-5",
+        "transition-shadow hover:shadow-[0_8px_22px_rgba(15,23,42,0.06)]",
       )}
     >
       <Link
         href={`/listings/${listing.id}`}
-        className="relative mx-auto size-24 shrink-0 overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] lg:mx-0 lg:size-28"
+        className="relative mx-auto size-24 shrink-0 overflow-hidden rounded-xl bg-[#EEF2F7] lg:mx-0 lg:size-28"
       >
         {listing.image_url ? (
           <Image
@@ -148,9 +149,8 @@ export function SellerListingManageCard({
             sizes="112px"
           />
         ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-1 text-[11px] text-[#94A3B8]">
-            <Package className="size-5" aria-hidden="true" />
-            Нет фото
+          <div className="flex h-full flex-col items-center justify-center gap-1 text-[#CBD5E1]">
+            <Package className="size-6" strokeWidth={1.5} aria-hidden="true" />
           </div>
         )}
       </Link>
@@ -184,7 +184,7 @@ export function SellerListingManageCard({
         />
 
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#64748B]">
-          <span className="font-semibold text-[#0F172A]">{listing.priceLabel}</span>
+          <span className="text-base font-bold tracking-tight text-[#0F172A]">{listing.priceLabel}</span>
           <span>{listing.categoryName}</span>
           {listing.cityName ? <span>{listing.cityName}</span> : null}
           <span>{dateLabel}</span>

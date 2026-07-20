@@ -61,7 +61,7 @@ export function SellerOtherListings({
         </Link>
       </div>
 
-      <div className="grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
         {listings.map((listing) => (
           <div
             key={listing.id}
@@ -72,7 +72,7 @@ export function SellerOtherListings({
               listing={listing}
               isAuthenticated={isAuthenticated}
               isFavorited={favoriteIds.has(listing.id)}
-              variant="catalog"
+              variant="home"
             />
           </div>
         ))}
