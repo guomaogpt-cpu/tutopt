@@ -43,7 +43,7 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     homeCardDescription: "Розничные товары и объявления",
     metaTitle: "ТутМаркет — розничные объявления Кыргызстана",
     metaDescription: "Розничные товары, частные объявления и предложения магазинов.",
-    comingSoon: true,
+    comingSoon: false,
   },
   SERVICES: {
     id: ListingVertical.SERVICES,
@@ -57,7 +57,7 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     homeCardDescription: "Мастера, специалисты и компании",
     metaTitle: "ТутУслуги — услуги и специалисты Кыргызстана",
     metaDescription: "Услуги, мастера, ремонт, обучение и бизнес-сервисы.",
-    comingSoon: true,
+    comingSoon: false,
   },
   CARGO: {
     id: ListingVertical.CARGO,
@@ -71,7 +71,7 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     homeCardDescription: "Грузоперевозки и логистика",
     metaTitle: "ТутКарго — грузоперевозки и логистика",
     metaDescription: "Грузоперевозки, доставка, склады и логистика в Кыргызстане.",
-    comingSoon: true,
+    comingSoon: false,
   },
 };
 

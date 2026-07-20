@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  ArrowRight,
   Package,
   ShoppingBag,
   Truck,
@@ -29,45 +30,40 @@ const VERTICAL_ICONS: Record<ListingVertical, LucideIcon> = {
 const VERTICAL_CARD_STYLES: Record<
   ListingVertical,
   {
-    activeBorder: string;
-    activeBg: string;
-    activeShadow: string;
-    activeIcon: string;
-    activeBadge: string;
-    hoverBorder: string;
+    card: string;
+    icon: string;
+    badge: string;
+    cta: string;
+    activeRing: string;
   }
 > = {
   OPT: {
-    activeBorder: "border-blue-300",
-    activeBg: "bg-blue-100",
-    activeShadow: "shadow-sm",
-    activeIcon: "bg-white text-blue-600",
-    activeBadge: "bg-blue-600 text-white",
-    hoverBorder: "hover:border-blue-300",
+    card: "border-blue-200/80 bg-gradient-to-br from-blue-50 to-white hover:border-blue-300",
+    icon: "bg-blue-100 text-blue-600",
+    badge: "bg-blue-600 text-white",
+    cta: "text-blue-700",
+    activeRing: "ring-2 ring-blue-300",
   },
   MARKET: {
-    activeBorder: "border-indigo-300",
-    activeBg: "bg-indigo-100",
-    activeShadow: "shadow-sm",
-    activeIcon: "bg-white text-indigo-600",
-    activeBadge: "bg-indigo-600 text-white",
-    hoverBorder: "hover:border-indigo-300",
+    card: "border-indigo-200/80 bg-gradient-to-br from-indigo-50 to-white hover:border-indigo-300",
+    icon: "bg-indigo-100 text-indigo-600",
+    badge: "bg-indigo-600 text-white",
+    cta: "text-indigo-700",
+    activeRing: "ring-2 ring-indigo-300",
   },
   SERVICES: {
-    activeBorder: "border-teal-300",
-    activeBg: "bg-teal-100",
-    activeShadow: "shadow-sm",
-    activeIcon: "bg-white text-teal-700",
-    activeBadge: "bg-teal-700 text-white",
-    hoverBorder: "hover:border-teal-300",
+    card: "border-teal-200/80 bg-gradient-to-br from-teal-50 to-white hover:border-teal-300",
+    icon: "bg-teal-100 text-teal-700",
+    badge: "bg-teal-700 text-white",
+    cta: "text-teal-700",
+    activeRing: "ring-2 ring-teal-300",
   },
   CARGO: {
-    activeBorder: "border-rose-300",
-    activeBg: "bg-rose-100",
-    activeShadow: "shadow-sm",
-    activeIcon: "bg-white text-rose-600",
-    activeBadge: "bg-rose-600 text-white",
-    hoverBorder: "hover:border-rose-300",
+    card: "border-rose-200/80 bg-gradient-to-br from-rose-50 to-white hover:border-rose-300",
+    icon: "bg-rose-100 text-rose-600",
+    badge: "bg-rose-600 text-white",
+    cta: "text-rose-700",
+    activeRing: "ring-2 ring-rose-300",
   },
 };
 
@@ -91,8 +87,11 @@ export function VerticalCards({
   return (
     <div className={cn("min-w-0", className)}>
       {showTitle ? (
-        <div className="mb-4 max-w-2xl">
-          <h2 className="text-base font-bold tracking-tight text-[#334155] sm:text-lg">
+        <div className="mb-4 max-w-2xl sm:mb-5">
+          <h2
+            id="home-verticals-heading"
+            className="text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl"
+          >
             Выберите, что вы ищете
           </h2>
           <p className="mt-1.5 text-sm leading-relaxed text-[#64748B] sm:text-[15px]">
@@ -101,7 +100,7 @@ export function VerticalCards({
         </div>
       ) : null}
 
-      <ul className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4">
         {VERTICAL_LIST.map((vertical) => (
           <li key={vertical.id} className="min-w-0">
             <VerticalCard
@@ -126,7 +125,62 @@ type VerticalCardProps = {
 
 function VerticalCard({ vertical, isActive, compact, trackingSource }: VerticalCardProps) {
   const Icon = VERTICAL_ICONS[vertical.id];
-  const cardStyles = VERTICAL_CARD_STYLES[vertical.id];
+  const styles = VERTICAL_CARD_STYLES[vertical.id];
+
+  if (compact) {
+    return (
+      <Link
+        href={vertical.href}
+        aria-current={isActive ? "page" : undefined}
+        onClick={() => {
+          if (trackingSource) {
+            trackVerticalClick(vertical.id, trackingSource);
+          }
+        }}
+        className={cn(
+          "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border p-3.5",
+          "shadow-[0_6px_16px_rgba(15,23,42,0.04)] transition duration-200",
+          "hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]",
+          styles.card,
+          isActive && styles.activeRing,
+        )}
+      >
+        <div className="flex items-start gap-3">
+          <span
+            className={cn(
+              "flex size-10 shrink-0 items-center justify-center rounded-xl",
+              styles.icon,
+            )}
+          >
+            <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold text-[#0F172A]">{vertical.label}</span>
+              {isActive ? (
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                    styles.badge,
+                  )}
+                >
+                  Активно
+                </span>
+              ) : null}
+              {!isActive && vertical.comingSoon ? (
+                <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-[10px] font-medium text-[#64748B]">
+                  Скоро
+                </span>
+              ) : null}
+            </div>
+            <p className="mt-1 text-xs leading-snug text-[#64748B]">
+              {vertical.homeCardDescription}
+            </p>
+          </div>
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link
@@ -138,55 +192,46 @@ function VerticalCard({ vertical, isActive, compact, trackingSource }: VerticalC
         }
       }}
       className={cn(
-        "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border bg-white",
+        "group relative flex h-full min-h-[168px] min-w-0 flex-col overflow-hidden rounded-2xl border p-5",
         "shadow-[0_8px_20px_rgba(15,23,42,0.04)] transition duration-200",
-        isActive
-          ? cn(
-              cardStyles.activeBorder,
-              cardStyles.activeBg,
-              cardStyles.activeShadow,
-              cardStyles.hoverBorder,
-            )
-          : "border-[rgba(148,163,184,0.18)] hover:border-[rgba(148,163,184,0.35)]",
-        compact ? "p-3.5" : "p-4",
+        "hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(15,23,42,0.1)]",
+        styles.card,
+        isActive && styles.activeRing,
       )}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start justify-between gap-3">
         <span
           className={cn(
-            "flex size-10 shrink-0 items-center justify-center rounded-xl",
-            isActive ? cardStyles.activeIcon : "bg-[#F1F5F9] text-[#475569]",
+            "flex size-12 shrink-0 items-center justify-center rounded-2xl",
+            styles.icon,
           )}
         >
-          <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
+          <Icon className="size-6" strokeWidth={1.75} aria-hidden="true" />
         </span>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold text-[#0F172A] sm:text-[15px]">
-              {vertical.label}
-            </span>
-            {isActive ? (
-              <span
-                className={cn(
-                  "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                  cardStyles.activeBadge,
-                )}
-              >
-                Активно
-              </span>
-            ) : null}
-            {!isActive && vertical.comingSoon ? (
-              <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-[10px] font-medium text-[#64748B]">
-                Скоро
-              </span>
-            ) : null}
-          </div>
-          <p className="mt-1 text-xs leading-snug text-[#64748B] sm:text-[13px]">
-            {vertical.homeCardDescription}
-          </p>
-        </div>
+        {vertical.comingSoon ? (
+          <span className="rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-medium text-[#64748B] ring-1 ring-slate-200">
+            Скоро
+          </span>
+        ) : null}
       </div>
+
+      <div className="mt-4 min-w-0 flex-1">
+        <p className="text-base font-bold text-[#0F172A]">{vertical.label}</p>
+        <p className="mt-1.5 text-sm leading-snug text-[#64748B]">
+          {vertical.homeCardDescription}
+        </p>
+      </div>
+
+      <span
+        className={cn(
+          "mt-4 inline-flex items-center gap-1 text-sm font-semibold transition",
+          "group-hover:gap-1.5",
+          styles.cta,
+        )}
+      >
+        Перейти
+        <ArrowRight className="size-4" aria-hidden="true" />
+      </span>
     </Link>
   );
 }

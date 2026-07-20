@@ -49,19 +49,24 @@ export function RecentListingsSection({
   createListingHref,
 }: RecentListingsSectionProps) {
   return (
-    <section data-home-section="listings" className="bg-white pb-6 pt-8">
+    <section data-home-section="listings" className="bg-white pb-5 pt-7 sm:pt-8">
       <Container size="lg">
-        <div className="mb-6 flex items-end justify-between gap-3">
+        <div className="mb-5 flex items-end justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[#2563EB]">
               Витрина
             </p>
-            <h2 className="mt-0.5 text-xl font-bold tracking-tight text-[#111827] sm:text-2xl">
+            <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl">
               Новые объявления
             </h2>
           </div>
           {listings.length > 0 ? (
-            <Button variant="ghost" size="sm" className="w-fit text-[#2563EB] hover:text-[#1D4ED8]" asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-10 rounded-xl border-[rgba(148,163,184,0.22)] bg-white font-semibold text-[#2563EB] hover:bg-[#EFF6FF]"
+              asChild
+            >
               <Link href="/listings">
                 Смотреть все
                 <ArrowRight className="size-4" aria-hidden="true" />
@@ -111,11 +116,16 @@ export function HomeMoreListingsSection({
   return (
     <section className="bg-white pb-8 pt-0">
       <Container size="lg">
-        <div className="mb-6 flex items-end justify-between gap-3">
-          <h2 className="text-xl font-bold tracking-tight text-[#111827] sm:text-2xl">
+        <div className="mb-5 flex items-end justify-between gap-3">
+          <h2 className="text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl">
             Последние добавленные
           </h2>
-          <Button variant="ghost" size="sm" className="w-fit text-[#2563EB] hover:text-[#1D4ED8]" asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-10 rounded-xl border-[rgba(148,163,184,0.22)] bg-white font-semibold text-[#2563EB] hover:bg-[#EFF6FF]"
+            asChild
+          >
             <Link href="/listings">
               Смотреть все
               <ArrowRight className="size-4" aria-hidden="true" />

@@ -27,7 +27,8 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 ### Главная `/`
 - **Заголовок:** «Товары, услуги и логистика — на одной платформе»
 - **Подзаголовок:** «Ищите товары, услуги, поставщиков и перевозчиков в понятных разделах.»
-- **Быстрые входы:** Товары, Опт, Услуги, Грузоперевозки
+- **Быстрые входы:** Товары → MARKET catalog, Опт → `/opt`, Услуги → `/services`,
+  Грузоперевозки → `/cargo`
 
 ### `/opt`
 - **Заголовок:** «Оптовые товары и поставщики Кыргызстана»
@@ -47,7 +48,7 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 
 ## Цветовая логика
 
-Цвета vertical держатся локально в `VerticalHero.tsx` и
+Цвета vertical держатся локально в `VerticalHero.tsx`, `VerticalCards.tsx` и
 `VerticalLandingPage.tsx` (без `vertical-theme`). Главная использует
 multi-vertical gradient (`PLATFORM_HERO_GRADIENT` в `hero-assets.ts`).
 
@@ -57,15 +58,46 @@ multi-vertical gradient (`PLATFORM_HERO_GRADIENT` в `hero-assets.ts`).
 хотя платформа уже включает четыре направления. Оптовый visual и copy
 остались, но привязаны к `/opt`, где они уместны.
 
+## Homepage UX improvements
+
+### Quick entry buttons
+Слабые outline-теги заменены на pill cards с icon + label и мягким
+цветовым tint по направлению. На градиенте hero они читаются как быстрые
+входы в разделы, а не как декоративные chips. Hover: лёгкий подъём и
+усиление tint.
+
+### Popular search chips
+Под поиском строка «Популярное:» с статическими запросами
+(iPhone, мебель, цемент, доставка, электрик, грузоперевозки) →
+`/listings?q=…`. Это стартовый UX; позже можно заменить на данные из
+аналитики.
+
+### Hero marketplace preview
+Справа на desktop — декоративные floating mini-cards (не из БД):
+«Товары рядом», «Услуги мастеров», «Оптовые партии», «Грузоперевозки».
+На mobile скрыты (`lg:block`), чтобы не перегружать экран.
+
+### Vertical cards
+Блок «Выберите, что вы ищете» усилен: выше карточки, tinted background,
+цветной icon container, hover lift, CTA «Перейти». Badge «Скоро» снят —
+разделы уже рабочие (landing + catalog + create).
+
+### Hierarchy / spacing
+Секции сближены; заголовки и CTA («Все категории», «Смотреть все»)
+заметнее. Preview listings используют marketplace `ListingCard`.
+
 ## Навигация
 
-Desktop header: «Каталог», «Опт», «Продавцы» (без перегруза).
-Mobile drawer: все четыре vertical + категории.
+Desktop header: Каталог · Опт · Маркет · Услуги · Карго · Продавцы
+(компактный padding). Mobile drawer наследует те же ссылки + категории.
 
 ## Later
 
+- персональные рекомендации;
+- реальные популярные запросы из аналитики;
+- городские подборки;
+- featured listings;
+- dynamic marketplace stats;
 - отдельные иллюстрации для каждого раздела;
-- персонализированная главная;
 - SEO landing pages by city/category;
-- featured listings by vertical;
 - custom category blocks per vertical.

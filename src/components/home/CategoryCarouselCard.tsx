@@ -98,14 +98,14 @@ export function CategoryCarouselCard({ category }: CategoryCarouselCardProps) {
     >
       <div
         className={cn(
-          "box-border flex h-[124px] w-[148px] shrink-0 flex-col items-center justify-center gap-2 overflow-hidden rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[rgba(255,255,255,0.58)] p-2 text-center backdrop-blur-[14px]",
+          "box-border flex h-[132px] w-[152px] shrink-0 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white p-2.5 text-center shadow-[0_4px_14px_rgba(15,23,42,0.04)]",
           "transition-all duration-200 ease-out",
-          "hover:-translate-y-0.5 hover:border-[rgba(37,99,235,0.28)] hover:bg-[rgba(255,255,255,0.78)]",
-          "sm:h-[132px] sm:w-[168px]",
+          "hover:-translate-y-1 hover:border-[rgba(37,99,235,0.28)] hover:shadow-[0_12px_24px_rgba(37,99,235,0.1)]",
+          "sm:h-[140px] sm:w-[168px]",
         )}
       >
         <span
-          className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+          className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB] transition group-hover/card:bg-[#DBEAFE]"
           aria-hidden="true"
         >
           <Icon className="size-7 sm:size-[30px]" strokeWidth={1.65} />
@@ -115,8 +115,8 @@ export function CategoryCarouselCard({ category }: CategoryCarouselCardProps) {
 
         <p
           className={cn(
-            "max-w-[128px] truncate text-center text-[11px] font-normal leading-[1.2] sm:text-xs",
-            isEmpty ? "text-[#94A3B8]" : "text-[#64748B]",
+            "max-w-[128px] truncate rounded-full px-2 py-0.5 text-center text-[11px] font-medium leading-[1.2] sm:text-xs",
+            isEmpty ? "bg-[#F8FAFC] text-[#94A3B8]" : "bg-[#EFF6FF] text-[#2563EB]",
           )}
         >
           {countLabel}

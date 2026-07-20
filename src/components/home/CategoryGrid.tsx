@@ -18,13 +18,13 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
   return (
     <section
       data-home-section="categories"
-      className="overflow-x-clip bg-[#F5F7FA] py-12"
+      className="overflow-x-clip bg-[#F5F7FA] py-8 sm:py-9"
       id="categories"
     >
       <Container size="lg">
-        <div className="mb-5 flex items-end justify-between gap-3">
+        <div className="mb-4 flex items-end justify-between gap-3 sm:mb-5">
           <div className="max-w-2xl">
-            <h2 className="text-base font-bold tracking-tight text-[#334155] sm:text-lg">
+            <h2 className="text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl">
               Популярные категории
             </h2>
             <p className="mt-1.5 text-sm leading-relaxed text-[#64748B]">
@@ -34,8 +34,8 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
           <Button
             variant="outline"
             className={cn(
-              "h-9 shrink-0 rounded-full border-[rgba(148,163,184,0.18)] bg-[rgba(255,255,255,0.72)] px-3.5 text-sm font-medium text-[#475569] shadow-none backdrop-blur-sm",
-              "hover:border-[rgba(148,163,184,0.18)] hover:bg-white hover:text-[#2563EB]",
+              "h-10 shrink-0 rounded-xl border-[rgba(148,163,184,0.22)] bg-white px-3.5 text-sm font-semibold text-[#2563EB] shadow-none",
+              "hover:border-[#2563EB]/30 hover:bg-[#EFF6FF] hover:text-[#1D4ED8]",
             )}
             asChild
           >
