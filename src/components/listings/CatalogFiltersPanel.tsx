@@ -203,11 +203,20 @@ type FilterActionsProps = {
 function FilterActions({ onReset, onApply, className }: FilterActionsProps) {
   return (
     <div className={`flex gap-3 ${className ?? ""}`}>
-      <Button type="button" variant="outline" className="flex-1" onClick={onReset}>
+      <Button
+        type="button"
+        variant="outline"
+        className="h-11 flex-1 rounded-xl"
+        onClick={onReset}
+      >
         Сбросить
       </Button>
-      <Button type="button" className="flex-1" onClick={onApply}>
-        Показать
+      <Button
+        type="button"
+        className="h-11 flex-1 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
+        onClick={onApply}
+      >
+        Применить
       </Button>
     </div>
   );
@@ -299,10 +308,10 @@ export function CatalogFiltersPanel({
   }
 
   return (
-    <Card className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,24rem)] max-h-[min(32rem,calc(100vh-8rem))] overflow-hidden shadow-lg">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b px-4 py-3">
-        <CardTitle className="flex items-center gap-2 text-base">
-          <SlidersHorizontal className="size-4 text-muted-foreground" aria-hidden="true" />
+    <Card className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,24rem)] max-h-[min(32rem,calc(100vh-8rem))] overflow-hidden rounded-2xl border-[rgba(148,163,184,0.18)] shadow-[0_12px_32px_rgba(15,23,42,0.12)]">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[rgba(148,163,184,0.12)] px-4 py-3">
+        <CardTitle className="flex items-center gap-2 text-base text-[#0F172A]">
+          <SlidersHorizontal className="size-4 text-[#64748B]" aria-hidden="true" />
           Фильтры
         </CardTitle>
         <Button type="button" variant="ghost" size="icon" onClick={onClose} aria-label="Закрыть">

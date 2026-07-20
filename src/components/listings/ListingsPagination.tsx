@@ -28,14 +28,14 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
   const pages = getPaginationRange(filters.page, totalPages);
 
   return (
-    <Pagination aria-label="Пагинация каталога" className="mt-8">
-      <PaginationContent className="flex-wrap gap-1 sm:gap-2">
+    <Pagination aria-label="Пагинация каталога" className="mt-8 sm:mt-10">
+      <PaginationContent className="flex-wrap justify-center gap-1.5 sm:gap-2">
         {filters.page > 1 ? (
           <PaginationItem>
             <Button
               variant="outline"
               size="default"
-              className="h-9 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-2.5 pr-3"
+              className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-2.5 pr-3 shadow-none"
               asChild
             >
               <Link
@@ -54,7 +54,7 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
             <PaginationItem key={`ellipsis-${index}`}>
               <span
                 aria-hidden
-                className="flex size-9 items-center justify-center text-muted-foreground sm:size-10"
+                className="flex size-10 items-center justify-center text-[#94A3B8]"
               >
                 <MoreHorizontal className="size-4" />
               </span>
@@ -65,8 +65,9 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
                 variant={page === filters.page ? "outline" : "ghost"}
                 size="icon"
                 className={cn(
-                  "size-9 min-w-9 rounded-xl sm:size-10 sm:min-w-10",
-                  page === filters.page && "border-[#2563EB]/30 bg-[#EFF6FF] text-[#2563EB]",
+                  "size-10 min-w-10 rounded-xl",
+                  page === filters.page &&
+                    "border-[#2563EB]/30 bg-[#EFF6FF] font-semibold text-[#2563EB] shadow-none hover:bg-[#EFF6FF]",
                 )}
                 asChild
               >
@@ -86,7 +87,7 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
             <Button
               variant="outline"
               size="default"
-              className="h-9 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-3 pr-2.5"
+              className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-3 pr-2.5 shadow-none"
               asChild
             >
               <Link

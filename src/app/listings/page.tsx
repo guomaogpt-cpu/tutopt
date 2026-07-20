@@ -22,7 +22,6 @@ import {
 } from "@/features/auth/lib/login-redirect";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { VERTICALS } from "@/features/verticals/verticals";
-import { getCatalogVerticalCopy } from "@/features/listings/lib/listing-display";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
 import {
@@ -77,17 +76,17 @@ export async function generateMetadata({
     }
 
     return buildPageMetadata({
-      title: "Объявления Кыргызстана | Tutopt",
+      title: "Каталог объявлений — Tutopt",
       description:
-        "Каталог объявлений Tutopt: опт, розница, услуги и грузоперевозки в Кыргызстане.",
+        "Товары, услуги, поставщики и грузоперевозки в Кыргызстане.",
       path: "/listings",
     });
   } catch (error) {
     console.error("[listings/metadata] Failed to load catalog metadata", error);
     return buildPageMetadata({
-      title: "Объявления Кыргызстана | Tutopt",
+      title: "Каталог объявлений — Tutopt",
       description:
-        "Каталог объявлений Tutopt: опт, розница, услуги и грузоперевозки в Кыргызстане.",
+        "Товары, услуги, поставщики и грузоперевозки в Кыргызстане.",
       path: "/listings",
     });
   }
@@ -149,19 +148,16 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const createListingHref = getCreateListingHref(headerUser);
   const showCreateListingCTA = shouldShowCreateListingCTA(headerUser);
   const activeVertical = filters.vertical ? VERTICALS[filters.vertical] : null;
-  const catalogCopy = getCatalogVerticalCopy(filters.vertical);
-  const pageTitle = catalogCopy.title;
-  const pageSubtitle = catalogCopy.description;
 
   const breadcrumbItems = activeVertical
     ? [
         { label: "Главная", href: "/" },
         { label: activeVertical.label, href: activeVertical.href },
-        { label: "Объявления" },
+        { label: "Каталог" },
       ]
     : [
         { label: "Главная", href: "/" },
-        { label: "Объявления" },
+        { label: "Каталог" },
       ];
 
   return (
@@ -171,9 +167,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
         <header className="mb-5 sm:mb-6">
           <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
-            {pageTitle}
+            Каталог объявлений
           </h1>
-          <p className="mt-1.5 text-sm text-[#64748B] sm:text-base">{pageSubtitle}</p>
+          <p className="mt-1.5 max-w-2xl text-sm text-[#64748B] sm:text-base">
+            Ищите товары, услуги, поставщиков и перевозчиков по всему Кыргызстану.
+          </p>
         </header>
 
         <ListingsCatalogToolbar

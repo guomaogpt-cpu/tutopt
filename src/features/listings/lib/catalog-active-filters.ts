@@ -1,5 +1,6 @@
 import type { ListingsCatalogFilters } from "@/features/listings/lib/listings-catalog";
 import { buildListingsCatalogQueryString } from "@/features/listings/lib/listings-catalog";
+import { VERTICALS } from "@/features/verticals/verticals";
 
 export type CatalogLookupMaps = {
   categories: Record<string, string>;
@@ -27,6 +28,14 @@ export function getActiveFilterChips(
     });
   }
 
+  if (filters.vertical) {
+    chips.push({
+      id: "vertical",
+      label: VERTICALS[filters.vertical].label,
+      clearPatch: { vertical: null, categoryId: "", brandId: "" },
+    });
+  }
+
   if (filters.categoryId) {
     chips.push({
       id: "category",
@@ -38,7 +47,7 @@ export function getActiveFilterChips(
   if (filters.cityId) {
     chips.push({
       id: "city",
-      label: `Город: ${lookups.cities[filters.cityId] ?? "Выбран"}`,
+      label: lookups.cities[filters.cityId] ?? "Город",
       clearPatch: { cityId: "" },
     });
   }
@@ -54,7 +63,7 @@ export function getActiveFilterChips(
   if (filters.priceMin) {
     chips.push({
       id: "priceFrom",
-      label: `Цена от: ${filters.priceMin}`,
+      label: `Цена от ${filters.priceMin}`,
       clearPatch: { priceMin: "" },
     });
   }
@@ -62,7 +71,7 @@ export function getActiveFilterChips(
   if (filters.priceMax) {
     chips.push({
       id: "priceTo",
-      label: `Цена до: ${filters.priceMax}`,
+      label: `Цена до ${filters.priceMax}`,
       clearPatch: { priceMax: "" },
     });
   }
@@ -83,4 +92,15 @@ export function buildCatalogHref(
   patch: Partial<ListingsCatalogFilters> = {},
 ): string {
   return `/listings${buildListingsCatalogQueryString(filters, { ...patch, page: 1 })}`;
+}
+
+export function getCatalogAnalyticsContext(filters: ListingsCatalogFilters) {
+  return {
+    vertical: filters.vertical,
+    hasQuery: Boolean(filters.q),
+    hasCategory: Boolean(filters.categoryId),
+    hasCity: Boolean(filters.cityId),
+    hasPrice: Boolean(filters.priceMin || filters.priceMax),
+    sort: filters.sort,
+  };
 }

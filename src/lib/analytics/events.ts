@@ -32,7 +32,12 @@ export type AnalyticsEventName =
   | "listing_edit_submit"
   | "listing_renew"
   | "seller_listings_filter_change"
-  | "seller_listing_action_click";
+  | "seller_listing_action_click"
+  | "catalog_search_submit"
+  | "catalog_filter_change"
+  | "catalog_sort_change"
+  | "catalog_vertical_tab_click"
+  | "catalog_reset_filters";
 
 export type AnalyticsVerticalSource =
   | "homepage"
@@ -52,7 +57,9 @@ export type AnalyticsEventParams = {
   search_length?: number;
   has_query?: boolean;
   has_category?: boolean;
+  has_city?: boolean;
   has_price?: boolean;
+  sort?: string;
   is_own_listing?: boolean;
   is_active?: boolean;
   source_vertical?: ListingVertical;
@@ -251,6 +258,56 @@ export function trackSellerListingActionClick(params: {
     vertical: params.vertical,
     ...(params.statusFilter ? { status_filter: params.statusFilter } : {}),
   });
+}
+
+type CatalogAnalyticsContext = {
+  vertical: ListingVertical | null;
+  hasQuery: boolean;
+  hasCategory: boolean;
+  hasCity: boolean;
+  hasPrice: boolean;
+  sort: string;
+};
+
+function catalogAnalyticsParams(ctx: CatalogAnalyticsContext): AnalyticsEventParams {
+  return {
+    ...(ctx.vertical ? { vertical: ctx.vertical } : {}),
+    has_query: ctx.hasQuery,
+    has_category: ctx.hasCategory,
+    has_city: ctx.hasCity,
+    has_price: ctx.hasPrice,
+    sort: ctx.sort,
+  };
+}
+
+export function trackCatalogSearchSubmit(ctx: CatalogAnalyticsContext): void {
+  trackEvent("catalog_search_submit", catalogAnalyticsParams(ctx));
+}
+
+export function trackCatalogFilterChange(ctx: CatalogAnalyticsContext): void {
+  trackEvent("catalog_filter_change", catalogAnalyticsParams(ctx));
+}
+
+export function trackCatalogSortChange(ctx: CatalogAnalyticsContext): void {
+  trackEvent("catalog_sort_change", catalogAnalyticsParams(ctx));
+}
+
+export function trackCatalogVerticalTabClick(
+  vertical: ListingVertical | null,
+  ctx: Omit<CatalogAnalyticsContext, "vertical">,
+): void {
+  trackEvent("catalog_vertical_tab_click", {
+    ...(vertical ? { vertical } : {}),
+    has_query: ctx.hasQuery,
+    has_category: ctx.hasCategory,
+    has_city: ctx.hasCity,
+    has_price: ctx.hasPrice,
+    sort: ctx.sort,
+  });
+}
+
+export function trackCatalogResetFilters(ctx: CatalogAnalyticsContext): void {
+  trackEvent("catalog_reset_filters", catalogAnalyticsParams(ctx));
 }
 
 export function trackLeadSubmit(vertical: ListingVertical): void {
