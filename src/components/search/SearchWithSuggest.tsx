@@ -65,8 +65,8 @@ export function SearchWithSuggest({
 
   const isHero = variant === "hero";
   const resolvedPlaceholder =
-    placeholder ?? (isHero ? "Что вы ищете?" : "Найти товары оптом...");
-  const resolvedButtonLabel = buttonLabel ?? (isHero ? "Найти товары" : "Найти");
+    placeholder ?? (isHero ? "Что вы ищете?" : "Найти товары, услуги…");
+  const resolvedButtonLabel = buttonLabel ?? (isHero ? "Найти" : "Найти");
   const searchVertical = resolveSearchVertical(pathname, searchParams);
 
   useEffect(() => {

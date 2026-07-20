@@ -11,9 +11,6 @@ export default async function ServicesVerticalPage() {
   return (
     <VerticalLandingPage
       vertical={ListingVertical.SERVICES}
-      title="ТутУслуги"
-      subtitle="Услуги, мастера и специалисты в Кыргызстане."
-      statusBadge="Раздел готовится к запуску"
       categories={data.categories}
       listings={data.listings}
       publishedCount={data.publishedCount}

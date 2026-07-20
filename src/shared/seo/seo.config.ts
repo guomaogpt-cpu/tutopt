@@ -5,10 +5,10 @@ import { getAbsoluteUrl } from "@/shared/seo/absolute-url";
 
 export const SITE_NAME = "Tutopt";
 
-export const DEFAULT_TITLE = "Tutopt — оптовые объявления Кыргызстана";
+export const DEFAULT_TITLE = "Tutopt — объявления, товары и услуги Кыргызстана";
 
 export const DEFAULT_DESCRIPTION =
-  "B2B classified-платформа оптовых объявлений, поставщиков и товаров для бизнеса в Кыргызстане.";
+  "Платформа объявлений Кыргызстана: оптовые товары, розничные предложения, услуги и грузоперевозки в одном месте.";
 
 export const VERTICAL_CATALOG_SEO: Record<
   ListingVertical,

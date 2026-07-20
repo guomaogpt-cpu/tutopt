@@ -73,7 +73,7 @@ export function RecentListingsSection({
         {listings.length === 0 ? (
           <EmptyState
             title="Пока нет опубликованных объявлений"
-            description="Станьте первым поставщиком — разместите предложение и дождитесь модерации."
+            description="Разместите объявление бесплатно и дождитесь модерации — оно появится в каталоге."
             className="border-[#E5E7EB] bg-white"
             action={
               <Button className="bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>

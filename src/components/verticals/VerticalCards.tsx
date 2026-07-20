@@ -93,10 +93,10 @@ export function VerticalCards({
       {showTitle ? (
         <div className="mb-4 max-w-2xl">
           <h2 className="text-base font-bold tracking-tight text-[#334155] sm:text-lg">
-            Выберите направление
+            Выберите, что вы ищете
           </h2>
           <p className="mt-1.5 text-sm leading-relaxed text-[#64748B] sm:text-[15px]">
-            Товары, услуги и логистика разделены по понятным разделам.
+            Опт, розница, услуги и логистика — в понятных разделах платформы.
           </p>
         </div>
       ) : null}

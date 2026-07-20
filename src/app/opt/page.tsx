@@ -11,8 +11,6 @@ export default async function OptVerticalPage() {
   return (
     <VerticalLandingPage
       vertical={ListingVertical.OPT}
-      title="ТутОпт"
-      subtitle="Оптовые товары и поставщики Кыргызстана"
       categories={data.categories}
       listings={data.listings}
       publishedCount={data.publishedCount}

@@ -11,9 +11,6 @@ export default async function MarketVerticalPage() {
   return (
     <VerticalLandingPage
       vertical={ListingVertical.MARKET}
-      title="ТутМаркет"
-      subtitle="Розничные товары, магазины и частные объявления."
-      statusBadge="Раздел готовится к запуску"
       categories={data.categories}
       listings={data.listings}
       publishedCount={data.publishedCount}

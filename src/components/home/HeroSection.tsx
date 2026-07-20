@@ -1,29 +1,16 @@
-import {
-  BadgePercent,
-  Handshake,
-  Package,
-  ShieldCheck,
-  Store,
-  TrendingUp,
-  Truck,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { HomeHeroSearch } from "@/components/home/HomeHeroSearch";
 import {
-  HERO_BACKGROUND_IMAGE,
-  HERO_OVERLAY_GRADIENT,
-  HERO_OVERLAY_GRADIENT_MOBILE,
+  PLATFORM_HERO_BENEFITS,
+  PLATFORM_QUICK_ENTRIES,
+} from "@/features/verticals/vertical-hero-content";
+import {
+  PLATFORM_HERO_GRADIENT,
+  PLATFORM_HERO_OVERLAY,
 } from "@/features/home/lib/hero-assets";
 import type { HomePageStats } from "@/features/home/lib/home-data";
 import { cn } from "@/lib/utils";
-
-const BENEFITS: { icon: LucideIcon; label: string }[] = [
-  { icon: Truck, label: "Прямые поставщики" },
-  { icon: BadgePercent, label: "Выгодные цены" },
-  { icon: ShieldCheck, label: "Проверенные продавцы" },
-  { icon: Handshake, label: "Без посредников" },
-];
 
 type HeroSectionProps = {
   stats: HomePageStats;
@@ -32,111 +19,53 @@ type HeroSectionProps = {
 /** Temporarily hide hero stat cards; keep stats prop for existing page data flow. */
 const SHOW_HERO_STATS = false;
 
-function formatStatValue(value: number): string {
-  return value.toLocaleString("ru-RU");
-}
-
-type HeroStatCardProps = {
-  label: string;
-  value: number;
-  icon: LucideIcon;
-  variant: "desktop" | "mobile";
-};
-
-function HeroStatCard({ label, value, icon: Icon, variant }: HeroStatCardProps) {
-  if (variant === "mobile") {
-    return (
-      <div
-        className={cn(
-          "flex h-[76px] min-w-0 flex-col justify-between rounded-2xl border border-white/22 p-2.5",
-          "bg-[rgba(255,255,255,0.14)] backdrop-blur-[12px]",
-        )}
-      >
-        <Icon className="size-3.5 text-white/90" strokeWidth={1.75} aria-hidden="true" />
-        <div className="min-w-0">
-          <p className="text-xl font-bold leading-none text-white">{formatStatValue(value)}</p>
-          <p className="mt-0.5 line-clamp-2 text-[10px] leading-tight text-white/85">{label}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={cn(
-        "flex h-[82px] w-full flex-col justify-between rounded-[18px] border border-white/24 px-4 py-3.5",
-        "bg-[rgba(255,255,255,0.16)] backdrop-blur-[12px]",
-      )}
-    >
-      <Icon className="size-[18px] text-white/90" strokeWidth={1.75} aria-hidden="true" />
-      <div className="min-w-0">
-        <p className="text-[26px] font-bold leading-none text-white">{formatStatValue(value)}</p>
-        <p className="mt-0.5 text-[13px] leading-snug text-white/85">{label}</p>
-      </div>
-    </div>
-  );
-}
-
 export function HeroSection({ stats }: HeroSectionProps) {
   void stats;
-
-  const statCards = SHOW_HERO_STATS
-    ? ([
-        { label: "Товаров", value: stats.listingsCount, icon: Package },
-        { label: "Поставщиков", value: stats.sellersCount, icon: Store },
-        { label: "Активных объявлений", value: stats.listingsCount, icon: TrendingUp },
-      ] as const)
-    : null;
+  void SHOW_HERO_STATS;
 
   return (
     <section
       data-home-section="hero"
       className="relative isolate overflow-x-clip"
     >
-      {/* Background — only bgZul */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center bg-no-repeat md:bg-[center_right]"
-        style={{ backgroundImage: `url("${HERO_BACKGROUND_IMAGE}")` }}
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{ background: PLATFORM_HERO_GRADIENT }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{ background: PLATFORM_HERO_OVERLAY }}
         aria-hidden="true"
       />
 
-      {/* Overlay — clipped to hero bounds */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[1] md:hidden"
-        style={{ background: HERO_OVERLAY_GRADIENT_MOBILE }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-0 z-[1] hidden md:block"
-        style={{ background: HERO_OVERLAY_GRADIENT }}
-        aria-hidden="true"
-      />
-
-      {/* Content */}
       <div className="relative z-10 px-4 py-8 md:px-0 md:py-16 lg:py-20">
         <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
           <div className="flex min-w-0 flex-col">
-            <div className="min-w-0 max-w-[760px] text-white md:max-w-[1000px]">
+            <div className="min-w-0 max-w-[760px] text-white md:max-w-[860px]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-white/75 sm:text-sm">
+                Tutopt — объявления Кыргызстана
+              </p>
               <h1
                 className={cn(
-                  "text-[1.625rem] font-bold leading-[1.12] text-white",
+                  "mt-2 text-[1.625rem] font-bold leading-[1.12] text-white",
                   "md:text-[42px] md:font-extrabold md:leading-[1.05] md:tracking-tight",
                   "max-w-[720px]",
                 )}
               >
-                Оптовые товары Кыргызстана
+                Товары, услуги и логистика — на одной платформе
               </h1>
               <p
                 className={cn(
-                  "mt-2 max-w-[720px] text-[15px] leading-[1.45] text-white/[0.86]",
-                  "md:mt-3 md:text-lg md:leading-normal md:text-white/[0.88]",
+                  "mt-2 max-w-[640px] text-[15px] leading-[1.45] text-white/[0.88]",
+                  "md:mt-3 md:text-lg md:leading-normal",
                 )}
               >
-                Находите поставщиков напрямую и развивайте свой бизнес.
+                Ищите товары, услуги, поставщиков и перевозчиков в понятных разделах.
               </p>
 
               <div className="mt-4 w-full min-w-0 md:mt-7">
-                <HomeHeroSearch />
+                <HomeHeroSearch placeholder="Что вы ищете?" buttonLabel="Найти" />
               </div>
 
               <ul
@@ -145,11 +74,11 @@ export function HeroSection({ stats }: HeroSectionProps) {
                   "md:mt-5 md:flex md:flex-wrap md:gap-x-6 md:gap-y-2",
                 )}
               >
-                {BENEFITS.map(({ icon: Icon, label }) => (
+                {PLATFORM_HERO_BENEFITS.map(({ icon: Icon, label }) => (
                   <li
                     key={label}
                     className={cn(
-                      "flex min-w-0 items-start gap-1.5 text-xs leading-tight text-white/[0.82]",
+                      "flex min-w-0 items-start gap-1.5 text-xs leading-tight text-white/[0.86]",
                       "md:items-center md:whitespace-nowrap md:text-sm md:text-white/[0.88]",
                     )}
                   >
@@ -162,37 +91,23 @@ export function HeroSection({ stats }: HeroSectionProps) {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-5 flex flex-wrap gap-2 md:mt-6">
+                {PLATFORM_QUICK_ENTRIES.map((entry) => (
+                  <Link
+                    key={entry.href}
+                    href={entry.href}
+                    className={cn(
+                      "inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5",
+                      "text-sm font-medium text-white backdrop-blur-sm transition",
+                      "hover:border-white/40 hover:bg-white/20",
+                    )}
+                  >
+                    {entry.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-
-            {SHOW_HERO_STATS && statCards ? (
-              <>
-                <div className="mt-5 min-w-0 md:hidden">
-                  <div className="grid grid-cols-3 gap-2">
-                    {statCards.map((item) => (
-                      <HeroStatCard
-                        key={`mobile-${item.label}`}
-                        label={item.label}
-                        value={item.value}
-                        icon={item.icon}
-                        variant="mobile"
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-5 hidden min-w-0 flex-col gap-3 md:mt-0 md:flex md:w-[280px] lg:w-[300px]">
-                  {statCards.map((item) => (
-                    <HeroStatCard
-                      key={item.label}
-                      label={item.label}
-                      value={item.value}
-                      icon={item.icon}
-                      variant="desktop"
-                    />
-                  ))}
-                </div>
-              </>
-            ) : null}
           </div>
         </Container>
       </div>

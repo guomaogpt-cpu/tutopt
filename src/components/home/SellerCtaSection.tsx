@@ -16,10 +16,11 @@ export function SellerCtaSection({ createListingHref }: SellerCtaSectionProps) {
           <CardContent className="flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div className="min-w-0">
               <h2 className="text-xl font-bold tracking-tight text-[#111827] sm:text-2xl">
-                Продаёте оптом?
+                Продаёте товары или услуги?
               </h2>
               <p className="mt-2 max-w-xl text-sm text-[#6B7280] sm:text-base">
-                Разместите объявление бесплатно и получайте заявки от покупателей.
+                Разместите объявление бесплатно и получайте заявки от покупателей по всему
+                Кыргызстану.
               </p>
             </div>
             <Button

@@ -54,7 +54,7 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     href: "/services",
     listingsHref: "/listings?vertical=SERVICES",
     createListingHref: "/listings/new?vertical=SERVICES",
-    homeCardDescription: "Услуги и специалисты",
+    homeCardDescription: "Мастера, специалисты и компании",
     metaTitle: "ТутУслуги — услуги и специалисты Кыргызстана",
     metaDescription: "Услуги, мастера, ремонт, обучение и бизнес-сервисы.",
     comingSoon: true,

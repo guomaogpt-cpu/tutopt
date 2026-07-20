@@ -7,6 +7,7 @@ export type NavLinkItem = {
 
 export const HEADER_PRIMARY_LINKS: NavLinkItem[] = [
   { label: "Каталог", href: "/listings" },
+  { label: "Опт", href: "/opt" },
   { label: "Продавцы", href: "/sellers" },
 ];
 
@@ -24,6 +25,9 @@ export function isNavLinkActive(pathname: string, href: string): boolean {
 export function getMobileDrawerLinks(user: HeaderUser | null): NavLinkItem[] {
   const links: NavLinkItem[] = [
     ...HEADER_PRIMARY_LINKS,
+    { label: "Маркет", href: "/market" },
+    { label: "Услуги", href: "/services" },
+    { label: "Карго", href: "/cargo" },
     { label: "Категории", href: "/categories" },
   ];
 

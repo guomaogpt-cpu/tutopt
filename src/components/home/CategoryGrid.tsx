@@ -22,10 +22,15 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
       id="categories"
     >
       <Container size="lg">
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <h2 className="text-base font-bold tracking-tight text-[#334155] sm:text-lg">
-            Популярные категории
-          </h2>
+        <div className="mb-5 flex items-end justify-between gap-3">
+          <div className="max-w-2xl">
+            <h2 className="text-base font-bold tracking-tight text-[#334155] sm:text-lg">
+              Популярные категории
+            </h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-[#64748B]">
+              Начните с популярных разделов или используйте поиск.
+            </p>
+          </div>
           <Button
             variant="outline"
             className={cn(

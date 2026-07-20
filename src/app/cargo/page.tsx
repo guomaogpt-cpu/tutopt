@@ -11,9 +11,6 @@ export default async function CargoVerticalPage() {
   return (
     <VerticalLandingPage
       vertical={ListingVertical.CARGO}
-      title="ТутКарго"
-      subtitle="Грузоперевозки, доставка и логистика."
-      statusBadge="Раздел готовится к запуску"
       categories={data.categories}
       listings={data.listings}
       publishedCount={data.publishedCount}
