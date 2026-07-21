@@ -5,9 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export const BRAND_LOGO_SRC = "/images/tutvse.jpeg";
-/** Prefer tutvse.png when available; jpeg is current active until PNG is added. */
-/** Previous logo kept on disk at /images/tutopt-logo.png (not deleted). */
+export const BRAND_LOGO_SRC = "/images/vsetut.png";
+/** Previous logos kept on disk: tutvse.jpeg, tutopt-logo.png (not deleted). */
 
 const variantSizeClasses = {
   header: "h-9 w-auto md:h-10",
@@ -37,7 +36,7 @@ export function BrandLogo({
   ) : (
     <Image
       src={BRAND_LOGO_SRC}
-      alt="Tutopt"
+      alt="VseTut"
       width={170}
       height={44}
       priority={priority}
@@ -51,7 +50,7 @@ export function BrandLogo({
       <Link
         href={href}
         className="flex shrink-0 items-center"
-        aria-label="Tutopt — на главную"
+        aria-label="VseTut — на главную"
       >
         {logoContent}
       </Link>

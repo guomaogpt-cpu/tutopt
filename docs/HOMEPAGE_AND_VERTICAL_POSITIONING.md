@@ -37,9 +37,8 @@ Integrated marketplace entry (`HomepagePaperEntry`):
 - PNG / paperBoard не active layout.
 
 Большой `HeroSection` скрыт, код не удалён.
-Header logo: `/images/tutvse.jpeg` (alt «Tutopt»);
-`tutvse.png` пока не найден — при появлении в `public/images/`
-можно переключить src. Старый `tutopt-logo.png` не удалён.
+Header logo: `/images/vsetut.png` (alt «VseTut»).
+Предыдущие файлы `tutvse.jpeg` и `tutopt-logo.png` не удалены.
 
 *(Сохранённый copy в `HeroSection`, на случай возврата:)*
 - **Label:** «Tutopt — объявления Кыргызстана»
@@ -125,8 +124,8 @@ sticky mobile bottom nav.
 - цвета: violet / emerald / blue / orange;
 - lead-текст увеличен;
 - PNG / paperBoard не active layout;
-- header logo: `tutvse.jpeg` (ожидаемый `tutvse.png` не найден);
-  старый `tutopt-logo.png` сохранён.
+- header logo: `vsetut.png` (alt «VseTut»);
+  `tutvse.jpeg` и `tutopt-logo.png` сохранены.
 
 Категории на главной не показываются. `HeroSection` /
 `HomeMarketplaceEntry` / `VerticalCards` на главной не рендерятся.
