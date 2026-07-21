@@ -1,4 +1,4 @@
-import { HomeVerticalsSection } from "@/components/home/HomeVerticalsSection";
+import { HomeMarketplaceEntry } from "@/components/home/HomeMarketplaceEntry";
 import {
   HomeMoreListingsSection,
   RecentListingsSection,
@@ -14,7 +14,7 @@ import {
   buildPageMetadata,
 } from "@/shared/seo/seo.config";
 
-// Homepage hero temporarily hidden after UX review
+// Old homepage hero hidden after new marketplace entry design
 // import { HeroSection } from "@/components/home/HeroSection";
 
 export const dynamic = "force-dynamic";
@@ -34,10 +34,10 @@ export default async function HomePage() {
 
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA]">
-      {/* Homepage hero temporarily hidden after UX review
+      {/* Old homepage hero hidden after new marketplace entry design
       <HeroSection stats={stats} />
       */}
-      <HomeVerticalsSection />
+      <HomeMarketplaceEntry />
       <RecentListingsSection
         listings={listings}
         isAuthenticated={user !== null}
