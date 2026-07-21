@@ -29,11 +29,11 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 ## Hero-copy (текущие тексты)
 
 ### Главная `/`
-Активный entry — **HTML/CSS paper layout** (`HomepagePaperEntry`):
-- верхний лист с воздухом: «ОБЪЯВЛЕНИЯ» + поиск;
-- пунктирная линия + scissors (desktop/tablet);
-- 4 отрывные карточки с отдельными тенями;
-- PNG не active layout (только reference);
+Integrated marketplace entry (`HomepagePaperEntry`):
+- hero row на фоне страницы (без большого paperBoard-плаката);
+- один HTML-поиск справа / ниже;
+- 4 самостоятельные карточки направлений;
+- PNG / paperBoard **не** active layout;
 - сразу ниже — «Новые объявления».
 
 Большой `HeroSection` скрыт, код не удалён.
@@ -111,22 +111,22 @@ sticky mobile bottom nav.
 ### Paper banner entry на главной
 Компонент `HomepagePaperEntry`.
 
-**HTML/CSS rebuild + polish после визуального ревью:**
-- PNG `public/images/homepage-paper-banner.png` **не active layout**
-  (оставлен как reference);
-- больше воздуха между верхней панелью и dashed line / карточками;
-- усилены тени board (`0_24px_70px…`) и отдельных tear-off карточек;
-- карточки — отдельные «листочки» с gap и hover lift (без rotate/skew);
-- dashed/scissors line ниже контента; scissors скрыты на mobile;
-- опциональный CSS pin сверху board (desktop);
-- ambient radial wash на фоне секции;
-- responsive: 1 → 2×2 → 4; search один HTML-элемент;
-- «Новые объявления» сразу ниже с умеренным spacing.
+**Интеграция в marketplace layout:**
+- отказались от большого paperBoard — он выглядел как отдельный
+  баннер/плакат внутри сайта;
+- hero row и direction cards — отдельные части страницы на общем фоне
+  `#F8FAFC`;
+- search — один HTML `SearchWithSuggest`;
+- direction cards — самостоятельные white cards (radius ~20px, soft shadow,
+  описания, accent bar): Опт `/opt`, Объявления `/market`, Услуги `/services`,
+  Карго `/cargo`;
+- лёгкая hairline между hero и карточками (не paper cut / scissors);
+- «Новые объявления» ближе к entry;
+- PNG `homepage-paper-banner.png` и paperBoard experiment не active layout
+  (файл PNG оставлен как reference).
 
-Направления: Опт `/opt`, Объявления `/market`, Услуги `/services`,
-Карго `/cargo`. Без «Маркет / ТутМаркет». Категории на главной не
-показываются. `HeroSection` / `HomeMarketplaceEntry` / `VerticalCards`
-на главной не рендерятся.
+Категории на главной не показываются. `HeroSection` /
+`HomeMarketplaceEntry` / `VerticalCards` на главной не рендерятся.
 
 ### (Архив) Hero compact mode / preview / chips
 Ранее hero был уменьшен, правый preview стал сеткой 2×2, quick entries и

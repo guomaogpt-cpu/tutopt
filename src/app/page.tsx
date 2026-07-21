@@ -36,10 +36,11 @@ export default async function HomePage() {
   const createListingHref = getCreateListingHref(headerUser);
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-[#F6F7F9]">
-      {/* Old homepage hero hidden after paper banner entry design
+    <main className="min-w-0 overflow-x-clip bg-[#F8FAFC]">
+      {/* Old homepage hero hidden — paperBoard experiment disabled
       <HeroSection stats={stats} />
       */}
+      {/* PNG / paperBoard not used as active layout */}
       <HomepagePaperEntry />
       <RecentListingsSection
         listings={listings}
