@@ -30,11 +30,10 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 
 ### Главная `/`
 Активный entry — **HTML/CSS paper layout** (`HomepagePaperEntry`):
-- верхний лист: «ОБЪЯВЛЕНИЯ» + подзаголовок + один HTML-поиск;
-- пунктирная линия + scissors marks;
-- 4 бумажные карточки: Опт · Объявления · Услуги · Карго;
-- PNG `homepage-paper-banner.png` **не используется** как active layout
-  (файл оставлен как референс);
+- верхний лист с воздухом: «ОБЪЯВЛЕНИЯ» + поиск;
+- пунктирная линия + scissors (desktop/tablet);
+- 4 отрывные карточки с отдельными тенями;
+- PNG не active layout (только reference);
 - сразу ниже — «Новые объявления».
 
 Большой `HeroSection` скрыт, код не удалён.
@@ -112,17 +111,17 @@ sticky mobile bottom nav.
 ### Paper banner entry на главной
 Компонент `HomepagePaperEntry`.
 
-**HTML/CSS rebuild (адаптивность):**
-- PNG `public/images/homepage-paper-banner.png` больше **не active layout**
-  (оставлен как reference; комментарий в `page.tsx` /
-  `HomepagePaperEntry`);
-- причина: PNG-подложка плохо масштабировалась и ломала зоны поиска/карточек;
-- paperBoard — белая HTML-карточка с мягкой тенью и CSS-градиентом «бумаги»;
-- search — обычный `SearchWithSuggest` в верхней панели;
-- 4 направления — ровная responsive grid (1 → 2×2 → 4), без rotate/skew;
-- dashed cut-line + lucide `Scissors` marks;
-- mobile упрощён той же сеткой, без картинки;
-- «Новые объявления» сразу ниже с малыми отступами.
+**HTML/CSS rebuild + polish после визуального ревью:**
+- PNG `public/images/homepage-paper-banner.png` **не active layout**
+  (оставлен как reference);
+- больше воздуха между верхней панелью и dashed line / карточками;
+- усилены тени board (`0_24px_70px…`) и отдельных tear-off карточек;
+- карточки — отдельные «листочки» с gap и hover lift (без rotate/skew);
+- dashed/scissors line ниже контента; scissors скрыты на mobile;
+- опциональный CSS pin сверху board (desktop);
+- ambient radial wash на фоне секции;
+- responsive: 1 → 2×2 → 4; search один HTML-элемент;
+- «Новые объявления» сразу ниже с умеренным spacing.
 
 Направления: Опт `/opt`, Объявления `/market`, Услуги `/services`,
 Карго `/cargo`. Без «Маркет / ТутМаркет». Категории на главной не
