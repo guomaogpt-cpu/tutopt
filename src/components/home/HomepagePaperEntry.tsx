@@ -27,24 +27,14 @@ type EntryCard = {
 
 const ENTRY_CARDS: EntryCard[] = [
   {
-    id: "OPT",
-    label: "Опт",
-    description: "Оптовые товары и поставщики",
-    href: "/opt",
-    icon: Package,
-    accentBar: "bg-violet-500",
-    iconWrap: "bg-violet-50",
-    iconColor: "text-violet-600",
-  },
-  {
     id: "MARKET",
     label: "Объявления",
     description: "Товары от частных лиц и компаний",
     href: "/market",
     icon: Megaphone,
-    accentBar: "bg-emerald-500",
-    iconWrap: "bg-emerald-50",
-    iconColor: "text-emerald-600",
+    accentBar: "bg-violet-500",
+    iconWrap: "bg-violet-50",
+    iconColor: "text-violet-600",
   },
   {
     id: "SERVICES",
@@ -52,6 +42,16 @@ const ENTRY_CARDS: EntryCard[] = [
     description: "Мастера, специалисты и компании",
     href: "/services",
     icon: Briefcase,
+    accentBar: "bg-emerald-500",
+    iconWrap: "bg-emerald-50",
+    iconColor: "text-emerald-600",
+  },
+  {
+    id: "OPT",
+    label: "Опт",
+    description: "Оптовые товары и поставщики",
+    href: "/opt",
+    icon: Package,
     accentBar: "bg-blue-500",
     iconWrap: "bg-blue-50",
     iconColor: "text-blue-600",
@@ -86,7 +86,7 @@ export function HomepagePaperEntry() {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           <p
             id="home-marketplace-lead"
-            className="min-w-0 max-w-xl text-base font-semibold leading-snug text-[#0F172A] sm:text-[17px]"
+            className="min-w-0 max-w-xl text-xl font-bold leading-snug text-[#0F172A] sm:text-2xl lg:text-3xl"
           >
             Покупайте, продавайте, находите услуги
           </p>

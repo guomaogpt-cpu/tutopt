@@ -6,6 +6,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export const BRAND_LOGO_SRC = "/images/tutvse.jpeg";
+/** Prefer tutvse.png when available; jpeg is current active until PNG is added. */
 /** Previous logo kept on disk at /images/tutopt-logo.png (not deleted). */
 
 const variantSizeClasses = {

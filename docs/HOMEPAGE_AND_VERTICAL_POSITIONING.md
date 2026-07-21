@@ -30,17 +30,16 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 
 ### Главная `/`
 Integrated marketplace entry (`HomepagePaperEntry`):
-- без label «TUTOPT» и без большого h1 «ОБЪЯВЛЕНИЯ»;
-- компактная строка: короткий текст + поиск;
-- 4 самостоятельные карточки направлений;
-- нормальный отступ снизу entry → «Новые объявления»
-  (`pb-6` / `sm:pb-8` / `lg:pb-10`);
-- PNG / paperBoard не active layout;
-- сразу ниже — «Новые объявления».
+- короткий lead-текст крупнее (`text-xl` → `lg:text-3xl`, bold);
+- карточки: **Объявления → Услуги → Опт → Карго**;
+- цвета: Объявления violet, Услуги emerald, Опт blue, Карго orange;
+- отступ снизу entry → «Новые объявления»;
+- PNG / paperBoard не active layout.
 
 Большой `HeroSection` скрыт, код не удалён.
 Header logo: `/images/tutvse.jpeg` (alt «Tutopt»);
-старый `/images/tutopt-logo.png` не удалялся.
+`tutvse.png` пока не найден — при появлении в `public/images/`
+можно переключить src. Старый `tutopt-logo.png` не удалён.
 
 *(Сохранённый copy в `HeroSection`, на случай возврата:)*
 - **Label:** «Tutopt — объявления Кыргызстана»
@@ -122,9 +121,12 @@ sticky mobile bottom nav.
 - spacing сверху секции и между строкой/карточками выровнен (`pt-4` / `mt-4`);
 - direction cards сохранены (стиль, описания, accents);
 - «Новые объявления» с отступом после entry (`pb-6`–`lg:pb-10`);
-- PNG / paperBoard не active layout (PNG файл — reference);
-- header logo обновлён на `/images/tutvse.jpeg`, старый
-  `tutopt-logo.png` сохранён.
+- порядок карточек: Объявления, Услуги, Опт, Карго;
+- цвета: violet / emerald / blue / orange;
+- lead-текст увеличен;
+- PNG / paperBoard не active layout;
+- header logo: `tutvse.jpeg` (ожидаемый `tutvse.png` не найден);
+  старый `tutopt-logo.png` сохранён.
 
 Категории на главной не показываются. `HeroSection` /
 `HomeMarketplaceEntry` / `VerticalCards` на главной не рендерятся.
