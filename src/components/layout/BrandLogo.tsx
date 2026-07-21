@@ -5,10 +5,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export const BRAND_LOGO_SRC = "/images/tutopt-logo.png";
+export const BRAND_LOGO_SRC = "/images/tutvse.jpeg";
+/** Previous logo kept on disk at /images/tutopt-logo.png (not deleted). */
 
 const variantSizeClasses = {
-  header: "h-8 w-auto md:h-10",
+  header: "h-9 w-auto md:h-10",
   footer: "h-8 w-auto md:h-9",
   default: "h-9 w-auto",
 } as const;

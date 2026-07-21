@@ -78,7 +78,7 @@ export function HomepagePaperEntry() {
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F8FAFC] pb-1 pt-4 sm:pt-4"
+      className="overflow-x-clip bg-[#F8FAFC] pb-6 pt-4 sm:pb-8 sm:pt-4 lg:pb-10"
       aria-labelledby="home-marketplace-lead"
     >
       <Container size="lg">
