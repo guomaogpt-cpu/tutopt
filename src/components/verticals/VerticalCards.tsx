@@ -100,7 +100,14 @@ export function VerticalCards({
         </div>
       ) : null}
 
-      <ul className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4">
+      <ul
+        className={cn(
+          "grid min-w-0 gap-2.5 sm:gap-3",
+          compact
+            ? "grid-cols-2 lg:grid-cols-4"
+            : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+        )}
+      >
         {VERTICAL_LIST.map((vertical) => (
           <li key={vertical.id} className="min-w-0">
             <VerticalCard
@@ -138,29 +145,31 @@ function VerticalCard({ vertical, isActive, compact, trackingSource }: VerticalC
           }
         }}
         className={cn(
-          "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border p-3.5",
-          "shadow-[0_6px_16px_rgba(15,23,42,0.04)] transition duration-200",
-          "hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]",
+          "group relative flex h-full min-w-0 flex-col overflow-hidden rounded-xl border p-2.5 sm:p-3",
+          "shadow-[0_4px_12px_rgba(15,23,42,0.03)] transition duration-200",
+          "hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(15,23,42,0.07)]",
           styles.card,
           isActive && styles.activeRing,
         )}
       >
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-2.5">
           <span
             className={cn(
-              "flex size-10 shrink-0 items-center justify-center rounded-xl",
+              "flex size-8 shrink-0 items-center justify-center rounded-lg",
               styles.icon,
             )}
           >
-            <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
+            <Icon className="size-4" strokeWidth={1.75} aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm font-semibold text-[#0F172A]">{vertical.label}</span>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[13px] font-semibold leading-tight text-[#0F172A] sm:text-sm">
+                {vertical.label}
+              </span>
               {isActive ? (
                 <span
                   className={cn(
-                    "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                    "rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide",
                     styles.badge,
                   )}
                 >
@@ -168,12 +177,12 @@ function VerticalCard({ vertical, isActive, compact, trackingSource }: VerticalC
                 </span>
               ) : null}
               {!isActive && vertical.comingSoon ? (
-                <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-[10px] font-medium text-[#64748B]">
+                <span className="rounded-full bg-[#F1F5F9] px-1.5 py-0.5 text-[9px] font-medium text-[#64748B]">
                   Скоро
                 </span>
               ) : null}
             </div>
-            <p className="mt-1 text-xs leading-snug text-[#64748B]">
+            <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-[#64748B] sm:text-xs">
               {vertical.homeCardDescription}
             </p>
           </div>

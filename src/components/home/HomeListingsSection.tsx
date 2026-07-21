@@ -49,9 +49,9 @@ export function RecentListingsSection({
   createListingHref,
 }: RecentListingsSectionProps) {
   return (
-    <section data-home-section="listings" className="bg-white pb-5 pt-7 sm:pt-8">
+    <section data-home-section="listings" className="bg-white pb-5 pt-4 sm:pt-5">
       <Container size="lg">
-        <div className="mb-5 flex items-end justify-between gap-3">
+        <div className="mb-3.5 flex items-end justify-between gap-3 sm:mb-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[#2563EB]">
               Витрина

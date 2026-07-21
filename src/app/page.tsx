@@ -1,4 +1,3 @@
-import { HeroSection } from "@/components/home/HeroSection";
 import { HomeVerticalsSection } from "@/components/home/HomeVerticalsSection";
 import {
   HomeMoreListingsSection,
@@ -15,6 +14,9 @@ import {
   buildPageMetadata,
 } from "@/shared/seo/seo.config";
 
+// Homepage hero temporarily hidden after UX review
+// import { HeroSection } from "@/components/home/HeroSection";
+
 export const dynamic = "force-dynamic";
 
 export const metadata = buildPageMetadata({
@@ -25,14 +27,16 @@ export const metadata = buildPageMetadata({
 
 export default async function HomePage() {
   const user = await getCurrentUser();
-  const { listings, moreListings, stats } = await getHomePageData();
+  const { listings, moreListings } = await getHomePageData();
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const headerUser = user ? { id: user.id, name: user.name, role: user.role } : null;
   const createListingHref = getCreateListingHref(headerUser);
 
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA]">
+      {/* Homepage hero temporarily hidden after UX review
       <HeroSection stats={stats} />
+      */}
       <HomeVerticalsSection />
       <RecentListingsSection
         listings={listings}
