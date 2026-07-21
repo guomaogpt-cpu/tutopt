@@ -45,7 +45,7 @@ export const VERTICAL_HERO_CONTENT: Record<ListingVertical, VerticalHeroContent>
     ],
   },
   MARKET: {
-    title: "ТутМаркет — товары и объявления",
+    title: "Объявления — товары рядом с вами",
     subtitle:
       "Покупайте и продавайте товары рядом с вами: техника, мебель, одежда, товары для дома и многое другое.",
     searchPlaceholder: "Найти товар или объявление…",
@@ -94,18 +94,17 @@ export type PlatformQuickEntry = {
   label: string;
   href: string;
   icon: LucideIcon;
-  /** Soft tint classes for pill on dark hero */
   pillClassName: string;
 };
 
 export const PLATFORM_QUICK_ENTRIES: PlatformQuickEntry[] = [
   {
     id: "market",
-    label: "Товары",
-    href: "/listings?vertical=MARKET",
+    label: "Объявления",
+    href: "/market",
     icon: ShoppingBag,
     pillClassName:
-      "bg-indigo-500/25 text-white ring-1 ring-indigo-200/40 hover:bg-indigo-400/40 hover:ring-indigo-100/60",
+      "bg-indigo-500/20 text-white ring-1 ring-white/25 hover:bg-indigo-400/30 hover:ring-white/40",
   },
   {
     id: "opt",
@@ -113,7 +112,7 @@ export const PLATFORM_QUICK_ENTRIES: PlatformQuickEntry[] = [
     href: "/opt",
     icon: Package,
     pillClassName:
-      "bg-blue-500/25 text-white ring-1 ring-blue-200/40 hover:bg-blue-400/40 hover:ring-blue-100/60",
+      "bg-blue-500/20 text-white ring-1 ring-white/25 hover:bg-blue-400/30 hover:ring-white/40",
   },
   {
     id: "services",
@@ -121,62 +120,35 @@ export const PLATFORM_QUICK_ENTRIES: PlatformQuickEntry[] = [
     href: "/services",
     icon: Wrench,
     pillClassName:
-      "bg-teal-500/25 text-white ring-1 ring-teal-200/40 hover:bg-teal-400/40 hover:ring-teal-100/60",
+      "bg-teal-500/20 text-white ring-1 ring-white/25 hover:bg-teal-400/30 hover:ring-white/40",
   },
   {
     id: "cargo",
-    label: "Грузоперевозки",
+    label: "Карго",
     href: "/cargo",
     icon: Truck,
     pillClassName:
-      "bg-rose-500/25 text-white ring-1 ring-rose-200/40 hover:bg-rose-400/40 hover:ring-rose-100/60",
+      "bg-rose-500/20 text-white ring-1 ring-white/25 hover:bg-rose-400/30 hover:ring-white/40",
   },
 ];
 
+/** Compact popular chips under hero search (keep short to avoid competing with quick entries). */
 export const PLATFORM_POPULAR_SEARCHES = [
   { label: "iPhone", q: "iPhone" },
   { label: "мебель", q: "мебель" },
-  { label: "цемент", q: "цемент" },
   { label: "доставка", q: "доставка" },
-  { label: "электрик", q: "электрик" },
   { label: "грузоперевозки", q: "грузоперевозки" },
 ] as const;
 
 export type HeroPreviewCard = {
   title: string;
-  badge: string;
   icon: LucideIcon;
-  tintClassName: string;
-  badgeClassName: string;
 };
 
+/** Neat 2×2 decorative preview — same size cards, no floating offsets. */
 export const PLATFORM_HERO_PREVIEW_CARDS: HeroPreviewCard[] = [
-  {
-    title: "Товары рядом",
-    badge: "ТутМаркет",
-    icon: ShoppingBag,
-    tintClassName: "from-indigo-500/30 to-violet-500/10",
-    badgeClassName: "bg-indigo-500/30 text-indigo-50",
-  },
-  {
-    title: "Услуги мастеров",
-    badge: "ТутУслуги",
-    icon: Wrench,
-    tintClassName: "from-teal-500/30 to-emerald-500/10",
-    badgeClassName: "bg-teal-500/30 text-teal-50",
-  },
-  {
-    title: "Оптовые партии",
-    badge: "ТутОпт",
-    icon: Package,
-    tintClassName: "from-blue-500/30 to-sky-500/10",
-    badgeClassName: "bg-blue-500/30 text-blue-50",
-  },
-  {
-    title: "Грузоперевозки",
-    badge: "ТутКарго",
-    icon: Truck,
-    tintClassName: "from-rose-500/30 to-orange-500/10",
-    badgeClassName: "bg-rose-500/30 text-rose-50",
-  },
+  { title: "Все разделы", icon: Sparkles },
+  { title: "Удобный поиск", icon: Search },
+  { title: "По всему Кыргызстану", icon: MapPin },
+  { title: "Бесплатное размещение", icon: ShieldCheck },
 ];

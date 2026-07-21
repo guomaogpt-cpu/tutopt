@@ -13,7 +13,7 @@ export function getListingVerticalBadgeLabel(vertical: ListingVertical): string 
     case "OPT":
       return "ТутОпт";
     case "MARKET":
-      return "ТутМаркет";
+      return "Объявления";
     case "SERVICES":
       return "ТутУслуги";
     case "CARGO":
@@ -29,7 +29,7 @@ export function getListingVerticalLabel(vertical: ListingVertical): string {
     case "OPT":
       return "ТутОпт";
     case "MARKET":
-      return "ТутМаркет";
+      return "Объявления";
     case "SERVICES":
       return "ТутУслуги";
     case "CARGO":
@@ -188,10 +188,10 @@ export function getCatalogVerticalCopy(
       };
     case "MARKET":
       return {
-        title: "Розничные объявления",
-        description: "Товары от магазинов и частных продавцов.",
-        emptyTitle: "В ТутМаркет пока нет объявлений.",
-        emptyDescription: "Разместите розничное объявление и найдите покупателей.",
+        title: "Объявления",
+        description: "Товары от частных лиц и компаний.",
+        emptyTitle: "В разделе объявлений пока пусто.",
+        emptyDescription: "Разместите объявление и найдите покупателей.",
       };
     case "SERVICES":
       return {

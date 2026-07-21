@@ -5,13 +5,12 @@ export type NavLinkItem = {
   href: string;
 };
 
+/** Desktop primary nav: directions only (no Catalog / Sellers). */
 export const HEADER_PRIMARY_LINKS: NavLinkItem[] = [
-  { label: "Каталог", href: "/listings" },
   { label: "Опт", href: "/opt" },
-  { label: "Маркет", href: "/market" },
+  { label: "Объявления", href: "/market" },
   { label: "Услуги", href: "/services" },
   { label: "Карго", href: "/cargo" },
-  { label: "Продавцы", href: "/sellers" },
 ];
 
 export function isNavLinkActive(pathname: string, href: string): boolean {

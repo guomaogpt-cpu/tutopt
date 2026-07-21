@@ -1,4 +1,3 @@
-import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { HeroSection } from "@/components/home/HeroSection";
 import { HomeVerticalsSection } from "@/components/home/HomeVerticalsSection";
 import {
@@ -26,7 +25,7 @@ export const metadata = buildPageMetadata({
 
 export default async function HomePage() {
   const user = await getCurrentUser();
-  const { categories, listings, moreListings, stats } = await getHomePageData();
+  const { listings, moreListings, stats } = await getHomePageData();
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const headerUser = user ? { id: user.id, name: user.name, role: user.role } : null;
   const createListingHref = getCreateListingHref(headerUser);
@@ -35,7 +34,6 @@ export default async function HomePage() {
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA]">
       <HeroSection stats={stats} />
       <HomeVerticalsSection />
-      <CategoryGrid categories={categories} />
       <RecentListingsSection
         listings={listings}
         isAuthenticated={user !== null}
