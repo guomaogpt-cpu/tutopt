@@ -29,11 +29,12 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 ## Hero-copy (текущие тексты)
 
 ### Главная `/`
-Лёгкий marketplace entry (не gradient-баннер):
-- заголовок **«ОБЪЯВЛЕНИЯ»**
-- подзаголовок «Покупайте, продавайте, находите услуги»
-- поиск → `/listings?q=…`
-- 4 бумажные карточки: Опт · Объявления · Услуги · Карго
+Paper banner entry (`HomepagePaperEntry`):
+- фон: `public/images/homepage-paper-banner.png` (если файл есть)
+- заголовок **«ОБЪЯВЛЕНИЯ»** + подзаголовок
+- поиск в зоне cutout справа
+- 4 tear-off вкладки: Опт · Объявления · Услуги · Карго
+- mobile / нет файла → упрощённый fallback без картинки
 - сразу ниже — «Новые объявления»
 
 Большой `HeroSection` скрыт, код не удалён.
@@ -105,25 +106,30 @@ sticky mobile bottom nav.
 ### Большой homepage hero — скрыт
 Большой gradient hero **не рендерится** на `/`.
 Код `HeroSection` **не удалён** (комментарий в `src/app/page.tsx`:
-«Old homepage hero hidden after new marketplace entry design»).
+«Old homepage hero hidden after paper banner entry design»).
 Оптовый hero на `/opt` не затронут.
 
-### Marketplace entry на главной
-Компонент `HomeMarketplaceEntry`:
-- светлый фон, без градиент-баннера;
-- крупный заголовок «ОБЪЯВЛЕНИЯ» + подзаголовок;
-- поиск справа (desktop) / ниже (mobile);
-- dashed separator;
-- 4 бумажные карточки направлений (Опт `/opt`, Объявления `/market`,
-  Услуги `/services`, Карго `/cargo`) с иконкой и цветной линией;
-- блок «Выберите, что вы ищете» / старые tinted `VerticalCards` на главной
-  не используются;
-- «Маркет / ТутМаркет» на главной не используются — только «Объявления»;
-- «Новые объявления» сразу после entry-блока;
-- популярные категории и ссылка «Все категории» на главной не показываются
-  (категории → `/categories`).
+### Paper banner entry на главной
+Компонент `HomepagePaperEntry` + helper
+`src/features/home/lib/homepage-paper-banner.ts`:
+
+- ожидаемый asset: `public/images/homepage-paper-banner.png`
+  (URL `/images/homepage-paper-banner.png`);
+- наличие check: `homepage-paper-banner.server.ts` (`existsSync`);
+- desktop/tablet: CSS `background-image`, поверх — заголовок, поиск,
+  4 кликабельные вкладки (прозрачный overlay, без тяжёлых карточек);
+- направления: Опт `/opt`, Объявления `/market`, Услуги `/services`,
+  Карго `/cargo`;
+- «Объявления» вместо «Маркет / ТутМаркет»;
+- mobile: упрощённый fallback без фоновой картинки;
+- если файла нет: тот же fallback на всех ширинах (страница не падает);
+- блок «Выберите, что вы ищете» / `VerticalCards` / `HomeMarketplaceEntry`
+  на главной не рендерятся;
+- популярные категории на главной не показываются (`/categories`);
+- «Новые объявления» сразу после entry.
 
 `VerticalCards` по-прежнему используется на vertical-лендингах.
+`HomeMarketplaceEntry` сохранён, но с главной не вызывается.
 
 ### (Архив) Hero compact mode / preview / chips
 Ранее hero был уменьшен, правый preview стал сеткой 2×2, quick entries и
