@@ -39,7 +39,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
             )}
             asChild
           >
-            <Link href="/listings">
+            <Link href="/categories">
               Все категории
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>

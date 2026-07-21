@@ -1,9 +1,16 @@
-import { ListingStatus, ListingVertical } from "@prisma/client";
+import { ListingStatus, type ListingVertical } from "@prisma/client";
 import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { getDescendantIds } from "@/features/listings/lib/category-search";
-import type { HomeCategoryCard } from "@/features/home/lib/home-data";
 import type { CategoryItem } from "@/features/listings/types/category";
 import { prisma } from "@/shared/lib/prisma";
+
+export type CategoriesDirectoryItem = {
+  id: string;
+  name: string;
+  slug: string;
+  vertical: ListingVertical;
+  listingsCount: number;
+};
 
 function countPublishedInTree(
   categoryIds: Set<string>,
@@ -18,10 +25,16 @@ function countPublishedInTree(
   return total;
 }
 
-export async function getCategoriesPageData(): Promise<HomeCategoryCard[]> {
+/**
+ * Root active categories across all verticals, with published listing counts
+ * (including descendants). One groupBy — no heavy per-category queries.
+ */
+export async function getCategoriesPageData(): Promise<CategoriesDirectoryItem[]> {
+  const notExpired = buildNotExpiredListingFilter();
+
   const [allCategories, publishedByCategory] = await Promise.all([
     prisma.category.findMany({
-      where: { is_active: true, vertical: ListingVertical.OPT },
+      where: { is_active: true },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
       select: {
         id: true,
@@ -29,14 +42,14 @@ export async function getCategoriesPageData(): Promise<HomeCategoryCard[]> {
         slug: true,
         parent_id: true,
         vertical: true,
+        icon: true,
       },
     }),
     prisma.listing.groupBy({
       by: ["category_id"],
       where: {
         status: ListingStatus.PUBLISHED,
-        vertical: ListingVertical.OPT,
-        AND: [buildNotExpiredListingFilter()],
+        AND: [notExpired],
       },
       _count: { _all: true },
     }),
@@ -51,7 +64,7 @@ export async function getCategoriesPageData(): Promise<HomeCategoryCard[]> {
     name: category.name,
     slug: category.slug,
     parent_id: category.parent_id,
-    icon: null,
+    icon: category.icon,
     vertical: category.vertical,
   }));
 
@@ -64,6 +77,7 @@ export async function getCategoriesPageData(): Promise<HomeCategoryCard[]> {
       id: root.id,
       name: root.name,
       slug: root.slug,
+      vertical: root.vertical,
       listingsCount: countPublishedInTree(treeIds, countByCategory),
     };
   });
