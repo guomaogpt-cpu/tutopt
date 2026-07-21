@@ -37,11 +37,9 @@ Integrated marketplace entry (`HomepagePaperEntry`):
 - PNG / paperBoard не active layout.
 
 Большой `HeroSection` скрыт, код не удалён.
-Header logo: текстовый wordmark **VseTut** (без PNG).
-Файл `public/images/vsetut.png` (1672×941) — баннер/мокап листовки с
-лишним canvas, не чистый логотип; в header не используется.
-Нужен новый исходник: PNG с прозрачным фоном (без шахматной подложки и
-лишних полей), только знак + текст, ~400×120 px, или SVG.
+Header logo: `/images/vsetut.png` (alt «VseTut»),
+`object-contain`, высота ~36–40px, max-width ~140–160px.
+Старые logo-файлы не используются.
 
 *(Сохранённый copy в `HeroSection`, на случай возврата:)*
 - **Label:** «Tutopt — объявления Кыргызстана»
@@ -127,8 +125,7 @@ sticky mobile bottom nav.
 - цвета: violet / emerald / blue / orange;
 - lead-текст увеличен;
 - PNG / paperBoard не active layout;
-- header logo: текстовый **VseTut** (PNG-баннер `vsetut.png` отключён —
-  лишний canvas / мокап листовки; нужен чистый экспорт ~400×120 или SVG).
+- header logo: `/images/vsetut.png` (alt «VseTut», object-contain).
 
 Категории на главной не показываются. `HeroSection` /
 `HomeMarketplaceEntry` / `VerticalCards` на главной не рендерятся.
