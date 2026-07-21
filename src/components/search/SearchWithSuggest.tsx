@@ -265,7 +265,7 @@ export function SearchWithSuggest({
   return (
     <form onSubmit={handleSubmit} className={cn("flex min-w-0 items-center gap-2", className)}>
       <label htmlFor={inputId} className="sr-only">
-        Поиск товаров оптом
+        Поиск объявлений
       </label>
       <div ref={containerRef} className="relative min-w-0 flex-1">
         <SearchInput
@@ -283,7 +283,7 @@ export function SearchWithSuggest({
           aria-controls={dropdownId}
           aria-autocomplete="list"
           containerClassName="w-full"
-          className={cn("h-11 rounded-xl bg-white", inputClassName)}
+          className={cn("h-10 rounded-xl bg-white", inputClassName)}
         />
         <SearchSuggestDropdown
           id={dropdownId}
@@ -299,7 +299,7 @@ export function SearchWithSuggest({
         type="submit"
         size="icon"
         disabled={disabled}
-        className="shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
+        className="h-10 w-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
         aria-label={resolvedButtonLabel}
       >
         <Search className="size-4" aria-hidden="true" />
@@ -307,7 +307,7 @@ export function SearchWithSuggest({
       <Button
         type="submit"
         disabled={disabled}
-        className="hidden shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:inline-flex"
+        className="hidden h-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:inline-flex"
       >
         {resolvedButtonLabel}
       </Button>

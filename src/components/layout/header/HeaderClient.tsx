@@ -12,7 +12,8 @@ import {
 } from "@/features/auth/lib/login-redirect";
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import {
-  getMobileDrawerLinks,
+  getHeaderNavActiveClass,
+  getMobileAccountLinks,
   HEADER_PRIMARY_LINKS,
   isNavLinkActive,
 } from "@/features/navigation/lib/header-nav";
@@ -39,8 +40,8 @@ type MobileNavItem = {
   href: string;
 };
 
-function buildMobileNavItems(user: HeaderUser | null): MobileNavItem[] {
-  const items = getMobileDrawerLinks(user).map((link) => ({
+function buildMobileAccountItems(user: HeaderUser | null): MobileNavItem[] {
+  const items = getMobileAccountLinks(user).map((link) => ({
     label: link.label,
     href: link.href,
   }));
@@ -54,20 +55,11 @@ function buildMobileNavItems(user: HeaderUser | null): MobileNavItem[] {
     href: getCreateListingHref(user),
   };
 
-  if (items.some((item) => item.label === createListingItem.label)) {
+  if (items.some((item) => item.href === createListingItem.href)) {
     return items;
   }
 
-  const catalogIndex = items.findIndex((item) => item.href === "/listings");
-  if (catalogIndex === -1) {
-    return [...items, createListingItem];
-  }
-
-  return [
-    ...items.slice(0, catalogIndex + 1),
-    createListingItem,
-    ...items.slice(catalogIndex + 1),
-  ];
+  return [...items, createListingItem];
 }
 
 export function HeaderClient({ user }: HeaderClientProps) {
@@ -76,7 +68,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const mobileItems = buildMobileNavItems(user);
+  const mobileAccountItems = buildMobileAccountItems(user);
 
   async function handleMobileLogout() {
     setIsLoggingOut(true);
@@ -94,7 +86,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/80">
       <Container>
-        <div className="flex h-16 min-w-0 items-center gap-2 lg:h-[72px] lg:gap-4">
+        <div className="flex h-14 min-w-0 items-center gap-2 lg:h-[72px] lg:gap-3">
           <BrandLogo variant="header" priority />
 
           <nav
@@ -111,31 +103,32 @@ export function HeaderClient({ user }: HeaderClientProps) {
             ))}
           </nav>
 
-          <div className="hidden min-w-0 flex-1 justify-center lg:flex">
+          <div className="hidden min-w-0 flex-1 justify-center px-2 lg:flex">
             <Suspense
               fallback={
-                <HeaderSearch
-                  className="w-full max-w-[420px]"
-                  syncDisabled
-                />
+                <HeaderSearch className="w-full max-w-[380px]" syncDisabled />
               }
             >
-              <HeaderSearch className="w-full max-w-[420px]" />
+              <HeaderSearch className="w-full max-w-[380px]" />
             </Suspense>
           </div>
 
-          <div className="hidden min-w-0 shrink-0 items-center gap-1.5 lg:flex xl:gap-2">
+          <div className="hidden min-w-0 shrink-0 items-center gap-1.5 lg:flex">
             {user ? <FavoritesButton /> : null}
             {user ? <HeaderNotificationsBell /> : null}
 
             {!user ? (
               <>
-                <Button variant="ghost" className="shrink-0 font-medium" asChild>
+                <Button
+                  variant="ghost"
+                  className="h-10 shrink-0 font-medium"
+                  asChild
+                >
                   <Link href="/login">Войти</Link>
                 </Button>
                 <Button
                   variant="outline"
-                  className="shrink-0 border-[#E5E7EB] font-medium"
+                  className="h-10 shrink-0 border-[#E5E7EB] font-medium"
                   asChild
                 >
                   <Link href="/register">Регистрация</Link>
@@ -150,11 +143,17 @@ export function HeaderClient({ user }: HeaderClientProps) {
             {user ? <FavoritesButton /> : null}
             {user ? <HeaderNotificationsBell /> : null}
 
+            {!user ? (
+              <Button variant="ghost" className="h-10 shrink-0 px-2.5 font-medium" asChild>
+                <Link href="/login">Войти</Link>
+              </Button>
+            ) : null}
+
             <Button
               type="button"
               variant="outline"
               size="icon"
-              className="shrink-0 border-[#E5E7EB]"
+              className="h-10 w-10 shrink-0 border-[#E5E7EB]"
               aria-expanded={mobileOpen}
               aria-controls="mobile-header-menu"
               aria-label={mobileOpen ? "Закрыть меню" : "Открыть меню"}
@@ -168,6 +167,15 @@ export function HeaderClient({ user }: HeaderClientProps) {
             </Button>
           </div>
         </div>
+
+        {/* Mobile search — separate row so the top bar stays light */}
+        <div className="border-t border-slate-100 pb-2.5 pt-2 lg:hidden">
+          <Suspense
+            fallback={<HeaderSearch id="header-search-mobile" syncDisabled />}
+          >
+            <HeaderSearch id="header-search-mobile" />
+          </Suspense>
+        </div>
       </Container>
 
       <Drawer open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -176,32 +184,48 @@ export function HeaderClient({ user }: HeaderClientProps) {
           side="right"
           className="p-0 [&>button]:right-3 [&>button]:top-3"
         >
-          <DrawerHeader className="flex h-16 shrink-0 flex-row items-center border-b px-4 pr-12 text-left">
+          <DrawerHeader className="flex h-14 shrink-0 flex-row items-center border-b px-4 pr-12 text-left">
             <DrawerTitle className="truncate text-sm font-semibold">
               {user ? user.name : "Меню"}
             </DrawerTitle>
           </DrawerHeader>
 
           <nav className="flex-1 overflow-y-auto overflow-x-hidden p-4">
-            <ul className="flex flex-col gap-1">
-              {mobileItems.map((item) => (
-                <li key={`${item.label}:${item.href}`}>
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      "h-auto w-full justify-start px-3 py-3 font-medium",
-                      isNavLinkActive(pathname, item.href) &&
-                        "bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-700",
-                    )}
-                    asChild
-                  >
-                    <Link href={item.href} onClick={() => setMobileOpen(false)}>
-                      {item.label}
-                    </Link>
-                  </Button>
+            <p className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              Направления
+            </p>
+            <ul className="flex flex-col gap-0.5">
+              {HEADER_PRIMARY_LINKS.map((item) => (
+                <li key={item.href}>
+                  <MobileDrawerLink
+                    href={item.href}
+                    label={item.label}
+                    isActive={isNavLinkActive(pathname, item.href)}
+                    onNavigate={() => setMobileOpen(false)}
+                  />
                 </li>
               ))}
             </ul>
+
+            {mobileAccountItems.length > 0 ? (
+              <>
+                <p className="mb-1.5 mt-5 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  Аккаунт
+                </p>
+                <ul className="flex flex-col gap-0.5">
+                  {mobileAccountItems.map((item) => (
+                    <li key={`${item.label}:${item.href}`}>
+                      <MobileDrawerLink
+                        href={item.href}
+                        label={item.label}
+                        isActive={isNavLinkActive(pathname, item.href)}
+                        onNavigate={() => setMobileOpen(false)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
 
             {user ? (
               <Button
@@ -215,13 +239,13 @@ export function HeaderClient({ user }: HeaderClientProps) {
                 Выйти
               </Button>
             ) : (
-              <div className="mt-4 grid gap-2">
-                <Button variant="outline" asChild>
+              <div className="mt-5 grid gap-2">
+                <Button variant="outline" className="h-10" asChild>
                   <Link href="/login" onClick={() => setMobileOpen(false)}>
                     Войти
                   </Link>
                 </Button>
-                <Button className="bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
+                <Button className="h-10 bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
                   <Link href="/register" onClick={() => setMobileOpen(false)}>
                     Регистрация
                   </Link>
@@ -247,8 +271,7 @@ function HeaderNavLink({ href, label, isActive }: HeaderNavLinkProps) {
       href={href}
       className={cn(
         "shrink-0 rounded-lg px-2 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 xl:px-2.5 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-100",
-        isActive &&
-          "bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-700 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-950 dark:hover:text-blue-300",
+        isActive && getHeaderNavActiveClass(href),
       )}
     >
       {label}
@@ -256,9 +279,43 @@ function HeaderNavLink({ href, label, isActive }: HeaderNavLinkProps) {
   );
 }
 
+type MobileDrawerLinkProps = {
+  href: string;
+  label: string;
+  isActive: boolean;
+  onNavigate: () => void;
+};
+
+function MobileDrawerLink({
+  href,
+  label,
+  isActive,
+  onNavigate,
+}: MobileDrawerLinkProps) {
+  return (
+    <Button
+      variant="ghost"
+      className={cn(
+        "h-auto w-full justify-start px-3 py-3 font-medium",
+        isActive && getHeaderNavActiveClass(href),
+      )}
+      asChild
+    >
+      <Link href={href} onClick={onNavigate}>
+        {label}
+      </Link>
+    </Button>
+  );
+}
+
 function FavoritesButton() {
   return (
-    <Button variant="outline" size="icon" className="shrink-0 border-[#E5E7EB]" asChild>
+    <Button
+      variant="outline"
+      size="icon"
+      className="h-10 w-10 shrink-0 border-[#E5E7EB]"
+      asChild
+    >
       <Link href="/favorites" aria-label="Избранное" title="Избранное">
         <Heart className="size-4" aria-hidden="true" />
       </Link>

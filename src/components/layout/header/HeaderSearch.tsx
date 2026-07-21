@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { cn } from "@/lib/utils";
 
-const HEADER_SEARCH_PLACEHOLDER = "Найти товар...";
+const HEADER_SEARCH_PLACEHOLDER = "Найти товар, услугу или доставку...";
 
 type HeaderSearchProps = {
   id?: string;
@@ -37,20 +37,20 @@ function HeaderSearchStatic({
   return (
     <form className={cn("flex min-w-0 items-center gap-2", className)}>
       <label htmlFor={id} className="sr-only">
-        Поиск товаров оптом
+        Поиск объявлений
       </label>
       <SearchInput
         id={id}
         disabled
         placeholder={HEADER_SEARCH_PLACEHOLDER}
         containerClassName="min-w-0 flex-1"
-        className={cn("h-11 rounded-xl bg-white", inputClassName)}
+        className={cn("h-10 rounded-xl bg-white", inputClassName)}
       />
       <Button
         type="button"
         disabled
         size="icon"
-        className="shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
+        className="h-10 w-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
         aria-label="Найти"
       >
         <Search className="size-4" aria-hidden="true" />
@@ -58,7 +58,7 @@ function HeaderSearchStatic({
       <Button
         type="button"
         disabled
-        className="hidden shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:inline-flex"
+        className="hidden h-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:inline-flex"
       >
         Найти
       </Button>

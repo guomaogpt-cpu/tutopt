@@ -54,7 +54,7 @@ export function HeaderNotificationsBell() {
     <Button
       variant="outline"
       size="icon"
-      className="relative shrink-0"
+      className="relative h-10 w-10 shrink-0 border-[#E5E7EB]"
       asChild
     >
       <Link

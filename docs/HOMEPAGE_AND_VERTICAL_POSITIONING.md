@@ -71,9 +71,30 @@ multi-vertical gradient (`PLATFORM_HERO_GRADIENT` в `hero-assets.ts`).
 
 ### Header
 Desktop header содержит только направления: **Опт · Объявления · Услуги · Карго**.
-Пункты «Каталог» и «Продавцы» убраны. Поиск, избранное, уведомления и
-profile сохранены. В mobile drawer дополнительно есть «Категории»
-(`/categories`).
+Пункты «Каталог», «Продавцы» и «Категории» в header **не показываются**.
+«Маркет / ТутМаркет» заменены на **«Объявления»**. Поиск, избранное,
+уведомления и profile сохранены. Mobile: отдельная строка поиска + drawer
+с направлениями и аккаунтом. Подробности: `docs/HEADER_NAVIGATION.md`.
+
+### Header navigation (Phase 40)
+
+Почему убрали «Каталог»: главная и поиск ведут в объявления; отдельный
+пункт перегружал header и дублировал поиск.
+
+Почему убрали «Продавцы»: не основной вход marketplace; страница `/sellers`
+остаётся доступной по прямой ссылке / footer при необходимости.
+
+Почему «Маркет» → «Объявления»: понятнее пользователям; полное «ТутМаркет»
+не используется в header.
+
+Что осталось: Опт, Объявления, Услуги, Карго + search + favorites /
+notifications / profile.
+
+Mobile: top bar (logo, actions, burger) + search row; drawer —
+направления, затем role-based аккаунт, выход / login.
+
+Later: mega menu, categories dropdown, city selector, saved searches,
+sticky mobile bottom nav.
 
 ### Большой homepage hero — временно скрыт
 После UX review большой gradient hero **не рендерится** на `/`.
