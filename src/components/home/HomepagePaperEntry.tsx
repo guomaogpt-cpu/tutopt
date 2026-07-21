@@ -72,31 +72,24 @@ const ENTRY_CARDS: EntryCard[] = [
  * Integrated marketplace entry for `/`.
  * paperBoard experiment disabled — no outer poster wrapper / PNG layout.
  * PNG paper banner kept as reference only.
+ * Compact: no “TUTOPT” label / no large “ОБЪЯВЛЕНИЯ” heading.
  */
 export function HomepagePaperEntry() {
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F8FAFC] pb-1 pt-5 sm:pt-6"
-      aria-labelledby="home-marketplace-heading"
+      className="overflow-x-clip bg-[#F8FAFC] pb-1 pt-4 sm:pt-4"
+      aria-labelledby="home-marketplace-lead"
     >
       <Container size="lg">
-        {/* Hero row — native page content, not a poster box */}
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
-          <div className="min-w-0 max-w-xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-              Tutopt
-            </p>
-            <h1
-              id="home-marketplace-heading"
-              className="mt-1.5 text-[1.75rem] font-extrabold uppercase leading-none tracking-tight text-[#0F172A] sm:text-3xl lg:text-[2.4rem]"
-            >
-              Объявления
-            </h1>
-            <p className="mt-2.5 text-sm leading-relaxed text-[#64748B] sm:text-[15px]">
-              Покупайте, продавайте, находите услуги
-            </p>
-          </div>
+        {/* Compact top row: short lead + search */}
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+          <p
+            id="home-marketplace-lead"
+            className="min-w-0 max-w-xl text-base font-semibold leading-snug text-[#0F172A] sm:text-[17px]"
+          >
+            Покупайте, продавайте, находите услуги
+          </p>
 
           <div className="w-full min-w-0 lg:max-w-[440px]">
             <SearchWithSuggest
@@ -108,14 +101,11 @@ export function HomepagePaperEntry() {
           </div>
         </div>
 
-        {/* Light separator — not a paper cut line */}
-        <div
-          className="my-5 border-t border-slate-200/80 sm:my-6"
-          aria-hidden="true"
-        />
-
-        {/* Standalone direction cards */}
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4">
+        {/* Same visual rhythm as section top padding */}
+        <ul
+          className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
+          aria-label="Направления"
+        >
           {ENTRY_CARDS.map((card) => {
             const Icon = card.icon;
             return (

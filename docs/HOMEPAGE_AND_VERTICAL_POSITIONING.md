@@ -30,10 +30,10 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 
 ### Главная `/`
 Integrated marketplace entry (`HomepagePaperEntry`):
-- hero row на фоне страницы (без большого paperBoard-плаката);
-- один HTML-поиск справа / ниже;
+- без label «TUTOPT» и без большого h1 «ОБЪЯВЛЕНИЯ»;
+- компактная строка: короткий текст + поиск;
 - 4 самостоятельные карточки направлений;
-- PNG / paperBoard **не** active layout;
+- PNG / paperBoard не active layout;
 - сразу ниже — «Новые объявления».
 
 Большой `HeroSection` скрыт, код не удалён.
@@ -111,19 +111,14 @@ sticky mobile bottom nav.
 ### Paper banner entry на главной
 Компонент `HomepagePaperEntry`.
 
-**Интеграция в marketplace layout:**
-- отказались от большого paperBoard — он выглядел как отдельный
-  баннер/плакат внутри сайта;
-- hero row и direction cards — отдельные части страницы на общем фоне
-  `#F8FAFC`;
-- search — один HTML `SearchWithSuggest`;
-- direction cards — самостоятельные white cards (radius ~20px, soft shadow,
-  описания, accent bar): Опт `/opt`, Объявления `/market`, Услуги `/services`,
-  Карго `/cargo`;
-- лёгкая hairline между hero и карточками (не paper cut / scissors);
-- «Новые объявления» ближе к entry;
-- PNG `homepage-paper-banner.png` и paperBoard experiment не active layout
-  (файл PNG оставлен как reference).
+**Интеграция в marketplace layout + compact polish:**
+- отказались от большого paperBoard — выглядел как баннер внутри сайта;
+- с главной убраны label «TUTOPT» и большой заголовок «ОБЪЯВЛЕНИЯ»;
+- верх: короткий текст «Покупайте, продавайте, находите услуги» + search;
+- spacing сверху секции и между строкой/карточками выровнен (`pt-4` / `mt-4`);
+- direction cards сохранены (стиль, описания, accents);
+- «Новые объявления» ближе;
+- PNG / paperBoard не active layout (PNG файл — reference).
 
 Категории на главной не показываются. `HeroSection` /
 `HomeMarketplaceEntry` / `VerticalCards` на главной не рендерятся.
