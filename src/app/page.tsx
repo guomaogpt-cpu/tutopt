@@ -8,7 +8,6 @@ import { getCurrentUser } from "@/features/auth/lib/session";
 import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { getHomePageData } from "@/features/home/lib/home-data";
-import { isHomepagePaperBannerAvailable } from "@/features/home/lib/homepage-paper-banner.server";
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_TITLE,
@@ -17,6 +16,9 @@ import {
 
 // Old homepage hero hidden after paper banner entry design
 // import { HeroSection } from "@/components/home/HeroSection";
+
+// PNG paper banner kept as reference, active layout is HTML/CSS for responsiveness
+// public/images/homepage-paper-banner.png — not rendered on homepage
 
 export const dynamic = "force-dynamic";
 
@@ -32,14 +34,13 @@ export default async function HomePage() {
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const headerUser = user ? { id: user.id, name: user.name, role: user.role } : null;
   const createListingHref = getCreateListingHref(headerUser);
-  const paperBannerAvailable = isHomepagePaperBannerAvailable();
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA]">
+    <main className="min-w-0 overflow-x-clip bg-[#F6F7F9]">
       {/* Old homepage hero hidden after paper banner entry design
       <HeroSection stats={stats} />
       */}
-      <HomepagePaperEntry bannerAvailable={paperBannerAvailable} />
+      <HomepagePaperEntry />
       <RecentListingsSection
         listings={listings}
         isAuthenticated={user !== null}

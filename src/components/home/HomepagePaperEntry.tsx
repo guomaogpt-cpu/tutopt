@@ -1,17 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   Briefcase,
   Megaphone,
   Package,
+  Scissors,
   Truck,
   type LucideIcon,
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
-import { HOMEPAGE_PAPER_BANNER_PUBLIC_PATH } from "@/features/home/lib/homepage-paper-banner";
 import { trackVerticalClick } from "@/lib/analytics/events";
 import { cn } from "@/lib/utils";
 
@@ -64,153 +63,123 @@ const ENTRY_CARDS: EntryCard[] = [
   },
 ];
 
-type HomepagePaperEntryProps = {
-  bannerAvailable: boolean;
-};
-
 /**
- * Stable homepage entry after visual review:
- * - title + one search as normal HTML (never pixel-fit onto the banner cutout)
- * - paper image as decorative backdrop (desktop/tablet, limited height)
- * - 4 even HTML direction cards
+ * HTML/CSS paper entry for `/`.
+ * PNG paper banner kept as reference, active layout is HTML/CSS for responsiveness.
  */
-export function HomepagePaperEntry({ bannerAvailable }: HomepagePaperEntryProps) {
+export function HomepagePaperEntry() {
   return (
     <section
       data-home-section="paper-entry"
-      className="overflow-x-clip bg-[#F5F7FA] pb-1 pt-4 sm:pt-5"
+      className="overflow-x-clip bg-[#F6F7F9] pb-1 pt-4 sm:pt-5"
       aria-labelledby="home-paper-heading"
     >
       <Container size="lg" className="max-w-[1280px]">
-        {/* Title + search — single HTML row */}
-        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
-          <div className="min-w-0 max-w-xl">
-            <h1
-              id="home-paper-heading"
-              className="text-[1.75rem] font-extrabold uppercase leading-none tracking-tight text-[#0F172A] sm:text-3xl lg:text-[2.5rem]"
-            >
-              Объявления
-            </h1>
-            <p className="mt-2 text-sm leading-snug text-[#64748B] sm:text-[15px]">
-              Покупайте, продавайте, находите услуги
-            </p>
-          </div>
-
-          <div className="w-full min-w-0 lg:max-w-[440px]">
-            <SearchWithSuggest
-              id="home-paper-search"
-              variant="header"
-              placeholder="Поиск объявлений, услуг и компаний..."
-              buttonLabel="Найти"
-            />
-          </div>
-        </div>
-
-        <div className="mt-4 sm:mt-5">
-          {bannerAvailable ? (
-            <div className="relative mx-auto hidden max-w-[1180px] md:block">
-              {/* Decorative paper — cropped to tabs area, limited height */}
-              <div className="relative mx-auto h-[300px] overflow-hidden lg:h-[340px]">
-                <Image
-                  src={HOMEPAGE_PAPER_BANNER_PUBLIC_PATH}
-                  alt=""
-                  fill
-                  priority
-                  sizes="(max-width: 1280px) 100vw, 1180px"
-                  className="pointer-events-none object-cover object-bottom"
-                  aria-hidden="true"
-                />
-              </div>
-
-              {/* Even HTML cards on the tear-off zone */}
-              <ul
-                className="absolute inset-x-3 bottom-3 z-10 grid grid-cols-4 gap-2.5 sm:inset-x-4 sm:bottom-4 lg:inset-x-5 lg:bottom-5 lg:gap-3"
-                aria-label="Направления"
+        <div
+          className={cn(
+            "overflow-hidden rounded-sm border border-slate-200/80",
+            "shadow-[0_10px_28px_rgba(15,23,42,0.06)]",
+            "bg-[linear-gradient(180deg,#FFFEFC_0%,#FBFBFA_100%)]",
+          )}
+        >
+          {/* Top paper sheet */}
+          <div className="flex flex-col gap-4 px-5 py-6 sm:px-7 sm:py-7 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-10 lg:py-8">
+            <div className="min-w-0 max-w-xl">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Tutopt
+              </p>
+              <h1
+                id="home-paper-heading"
+                className="mt-1 text-[1.75rem] font-extrabold uppercase leading-none tracking-tight text-[#0F172A] sm:text-3xl lg:text-[2.5rem]"
               >
-                {ENTRY_CARDS.map((card) => (
-                  <li key={card.id} className="min-w-0">
-                    <DirectionCard card={card} compact />
-                  </li>
-                ))}
-              </ul>
+                Объявления
+              </h1>
+              <p className="mt-2 text-sm leading-snug text-[#64748B] sm:text-[15px]">
+                Покупайте, продавайте, находите услуги
+              </p>
             </div>
-          ) : null}
 
-          {/* Mobile / no-banner: no image, simple grid */}
+            <div className="w-full min-w-0 lg:max-w-[440px]">
+              <SearchWithSuggest
+                id="home-paper-search"
+                variant="header"
+                placeholder="Поиск объявлений, услуг и компаний..."
+                buttonLabel="Найти"
+              />
+            </div>
+          </div>
+
+          {/* Dashed cut line + scissors marks */}
+          <div className="relative px-4 sm:px-6 lg:px-8" aria-hidden="true">
+            <div className="border-t border-dashed border-slate-300/90" />
+            <div className="pointer-events-none absolute inset-x-6 top-0 flex -translate-y-1/2 justify-around sm:inset-x-10 lg:inset-x-14">
+              {ENTRY_CARDS.map((card) => (
+                <span
+                  key={card.id}
+                  className="inline-flex size-5 items-center justify-center rounded-full bg-[#FFFEFC] text-slate-400"
+                >
+                  <Scissors className="size-3.5 rotate-90" strokeWidth={1.75} />
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Tear-off direction cards */}
           <ul
-            className={cn(
-              "grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3",
-              bannerAvailable && "md:hidden",
-            )}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
             aria-label="Направления"
           >
-            {ENTRY_CARDS.map((card) => (
-              <li key={card.id} className="min-w-0">
-                <DirectionCard card={card} />
-              </li>
-            ))}
+            {ENTRY_CARDS.map((card, index) => {
+              const Icon = card.icon;
+              return (
+                <li
+                  key={card.id}
+                  className={cn(
+                    "min-w-0 border-t border-dashed border-slate-200/90",
+                    index % 2 === 1 && "sm:border-l sm:border-dashed sm:border-slate-200/90",
+                    index > 0 && "lg:border-l lg:border-dashed lg:border-slate-200/90",
+                  )}
+                >
+                  <Link
+                    href={card.href}
+                    onClick={() => {
+                      trackVerticalClick(card.id, "homepage");
+                    }}
+                    className={cn(
+                      "group relative flex h-full min-h-[112px] flex-col items-center justify-center px-4 py-5 text-center",
+                      "transition duration-200",
+                      "hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_8px_18px_rgba(15,23,42,0.06)]",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400/50",
+                      "sm:min-h-[120px] sm:py-6 lg:min-h-[128px]",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "mb-2.5 flex size-10 items-center justify-center rounded-xl lg:size-11",
+                        card.iconWrap,
+                        card.iconColor,
+                      )}
+                      aria-hidden="true"
+                    >
+                      <Icon className="size-5" strokeWidth={1.75} />
+                    </span>
+                    <span className="text-[15px] font-bold tracking-tight text-[#0F172A]">
+                      {card.label}
+                    </span>
+                    <span
+                      className={cn(
+                        "mt-3 h-[3px] w-9 rounded-full",
+                        card.accentLine,
+                      )}
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </Container>
     </section>
-  );
-}
-
-function DirectionCard({
-  card,
-  compact = false,
-}: {
-  card: EntryCard;
-  compact?: boolean;
-}) {
-  const Icon = card.icon;
-
-  return (
-    <Link
-      href={card.href}
-      onClick={() => {
-        trackVerticalClick(card.id, "homepage");
-      }}
-      className={cn(
-        "group relative flex flex-col items-center justify-center overflow-hidden text-center",
-        "rounded-2xl border border-slate-200/90 bg-white",
-        "shadow-[0_6px_16px_rgba(15,23,42,0.05)] transition duration-200",
-        "hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_10px_22px_rgba(15,23,42,0.08)]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2",
-        compact
-          ? "min-h-[108px] px-2 py-3.5 lg:min-h-[118px] lg:px-3 lg:py-4"
-          : "min-h-[96px] px-3 py-4",
-      )}
-    >
-      <span
-        className={cn(
-          "mb-2 flex items-center justify-center rounded-xl",
-          compact ? "size-9 lg:size-10" : "size-10",
-          card.iconWrap,
-          card.iconColor,
-        )}
-        aria-hidden="true"
-      >
-        <Icon
-          className={compact ? "size-4 lg:size-[18px]" : "size-5"}
-          strokeWidth={1.75}
-        />
-      </span>
-      <span
-        className={cn(
-          "font-bold tracking-tight text-[#0F172A]",
-          compact ? "text-[13px] lg:text-sm" : "text-[15px]",
-        )}
-      >
-        {card.label}
-      </span>
-      <span
-        className={cn(
-          "absolute inset-x-8 bottom-0 h-[3px] rounded-t-full",
-          card.accentLine,
-        )}
-        aria-hidden="true"
-      />
-    </Link>
   );
 }

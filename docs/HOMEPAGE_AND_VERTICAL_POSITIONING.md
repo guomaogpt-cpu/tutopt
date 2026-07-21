@@ -29,13 +29,12 @@ Hero-компонент: `src/components/verticals/VerticalHero.tsx`.
 ## Hero-copy (текущие тексты)
 
 ### Главная `/`
-Стабильный paper entry (`HomepagePaperEntry`) после визуального ревью:
-- заголовок **«ОБЪЯВЛЕНИЯ»** + подзаголовок и **один** поиск — обычная HTML-сетка
-  (не поверх cutout на картинке);
-- `homepage-paper-banner.png` — декоративная подложка под 4 направлениями
-  (ограниченная высота, `object-cover object-bottom`);
-- 4 HTML-карточки: Опт · Объявления · Услуги · Карго;
-- mobile — без картинки, простой список/сетка;
+Активный entry — **HTML/CSS paper layout** (`HomepagePaperEntry`):
+- верхний лист: «ОБЪЯВЛЕНИЯ» + подзаголовок + один HTML-поиск;
+- пунктирная линия + scissors marks;
+- 4 бумажные карточки: Опт · Объявления · Услуги · Карго;
+- PNG `homepage-paper-banner.png` **не используется** как active layout
+  (файл оставлен как референс);
 - сразу ниже — «Новые объявления».
 
 Большой `HeroSection` скрыт, код не удалён.
@@ -111,22 +110,24 @@ sticky mobile bottom nav.
 Оптовый hero на `/opt` не затронут.
 
 ### Paper banner entry на главной
-Компонент `HomepagePaperEntry` + helpers
-`homepage-paper-banner.ts` / `homepage-paper-banner.server.ts`.
+Компонент `HomepagePaperEntry`.
 
-**Исправление после визуального ревью:**
-- отказались от pixel-perfect наложения поиска на cutout изображения;
-- поиск — обычная HTML-вёрстка справа от заголовка (один input в entry);
-- paper image — декоративная подложка (`max-h` ~300–340px,
-  `object-cover object-bottom`), не fullscreen;
-- 4 направления — ровная HTML-сетка поверх нижней зоны картинки;
-- mobile — картинка скрыта, упрощённый layout;
-- «Новые объявления» подняты выше (меньше отступов).
+**HTML/CSS rebuild (адаптивность):**
+- PNG `public/images/homepage-paper-banner.png` больше **не active layout**
+  (оставлен как reference; комментарий в `page.tsx` /
+  `HomepagePaperEntry`);
+- причина: PNG-подложка плохо масштабировалась и ломала зоны поиска/карточек;
+- paperBoard — белая HTML-карточка с мягкой тенью и CSS-градиентом «бумаги»;
+- search — обычный `SearchWithSuggest` в верхней панели;
+- 4 направления — ровная responsive grid (1 → 2×2 → 4), без rotate/skew;
+- dashed cut-line + lucide `Scissors` marks;
+- mobile упрощён той же сеткой, без картинки;
+- «Новые объявления» сразу ниже с малыми отступами.
 
 Направления: Опт `/opt`, Объявления `/market`, Услуги `/services`,
 Карго `/cargo`. Без «Маркет / ТутМаркет». Категории на главной не
 показываются. `HeroSection` / `HomeMarketplaceEntry` / `VerticalCards`
-на главной не рендерятся (компоненты сохранены).
+на главной не рендерятся.
 
 ### (Архив) Hero compact mode / preview / chips
 Ранее hero был уменьшен, правый preview стал сеткой 2×2, quick entries и
