@@ -276,9 +276,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
       showBrand={displayFlags.showBrand}
       showStock={displayFlags.showStock}
       stockLabel={displayFlags.stockLabel}
-      contactPhone={sellerProfile.contact_phone}
-      whatsapp={sellerProfile.whatsapp}
-      telegram={sellerProfile.telegram}
+      contactPhone={user ? sellerProfile.contact_phone : null}
+      whatsapp={user ? sellerProfile.whatsapp : null}
+      telegram={user ? sellerProfile.telegram : null}
       hasPrice={hasPrice}
       isOwnListing={isOwner}
     />

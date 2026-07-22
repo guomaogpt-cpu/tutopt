@@ -42,7 +42,7 @@ type SellerProfileSidebarProps = {
   sellerVerticals: ListingVertical[];
   verticalCounts: SellerVerticalCounts;
   isAuthenticated: boolean;
-  contactPhone: string;
+  contactPhone: string | null;
   contactEmail: string | null;
   whatsapp: string | null;
   telegram: string | null;

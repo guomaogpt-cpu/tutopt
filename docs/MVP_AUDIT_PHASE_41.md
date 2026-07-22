@@ -139,12 +139,12 @@ Seller management видит все свои статусы — корректн
 
 | Phase | Фокус |
 |-------|--------|
-| **42** | ~~Seller flow stabilization~~ — **done** (`docs/SELLER_FLOW_STABILIZATION.md`) |
-| **43** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **44** | Saved searches UX polish + consistency с catalog filters |
-| **45** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **46** | Shared `buildPublicListingWhere` adoption во всех public queries |
-| **47** | Listing quality / moderation queue UX (не дизайн главной) |
+| **42** | ~~Seller flow stabilization~~ — **done** |
+| **43** | ~~Buyer flow stabilization~~ — **done** (`docs/BUYER_FLOW_STABILIZATION.md`) |
+| **44** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **45** | Saved searches polish + catalog filter consistency |
+| **46** | Buyer dashboard role gate / seller-vs-buyer IA |
+| **47** | Shared `buildPublicListingWhere` adoption |
 | **48** | Production hardening: rate limits, monitoring, uploads volume |
 | **49** | SEO content / category landing quality |
 | **50** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
@@ -161,7 +161,15 @@ Seller management видит все свои статусы — корректн
 
 UI / schema / uploads / auth architecture не менялись.
 
+## Buyer flow follow-up — Phase 43
+
+Выполнено в Phase 43 (см. `docs/BUYER_FLOW_STABILIZATION.md`):
+
+- Guest PII fix: контакты продавца не сериализуются в client props на `/listings/[id]` и `/seller/[id]`.
+- `/compare` по-прежнему отсутствует (нет UI-ссылок; не stub).
+- Catalog / favorites / leads / saved searches / recently viewed / notifications — критических поломок не найдено.
+
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **готова как MVP**.  
-UI заморожен. Seller flow стабилизирован (Phase 42). Следующий приоритет — `/compare` или вырезать, saved searches, ops hardening.
+UI заморожен. Seller (42) и Buyer (43) flows стабилизированы. Следующий приоритет — `/compare` или вырезать, saved searches polish, ops hardening.

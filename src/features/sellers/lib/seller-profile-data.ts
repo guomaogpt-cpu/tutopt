@@ -35,6 +35,23 @@ export const sellerProfileSelect = {
 
 export type SellerProfileData = NonNullable<Awaited<ReturnType<typeof getSellerProfileByParam>>>;
 
+/** Strip PII before passing seller profile into client components for guests. */
+export function sanitizeSellerProfileForGuest(
+  profile: SellerProfileData,
+): SellerProfileData {
+  return {
+    ...profile,
+    contact_phone: "",
+    contact_email: null,
+    whatsapp: null,
+    telegram: null,
+    user: {
+      ...profile.user,
+      phone: null,
+    },
+  };
+}
+
 export async function getSellerProfileByParam(param: string) {
   return prisma.sellerProfile.findFirst({
     where: {

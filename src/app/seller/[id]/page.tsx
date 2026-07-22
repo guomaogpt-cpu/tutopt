@@ -14,6 +14,7 @@ import {
   getSellerProfileByParam,
   getSellerPublishedListingCount,
   getSellerPublishedListings,
+  sanitizeSellerProfileForGuest,
 } from "@/features/sellers/lib/seller-profile-data";
 import {
   countSellerVerticals,
@@ -140,6 +141,11 @@ export default async function SellerProfilePage({
     hasCompletedOnboarding: Boolean(profile.user.phone),
   });
 
+  const isAuthenticated = user !== null;
+  const publicProfile = isAuthenticated
+    ? profile
+    : sanitizeSellerProfileForGuest(profile);
+
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
       <SellerProfileViewTracker
@@ -168,16 +174,16 @@ export default async function SellerProfilePage({
 
         <div className="mt-6 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-8">
           <SellerProfileSidebar
-            profile={profile}
+            profile={publicProfile}
             publishedListingCount={publishedListingCount}
             primaryVertical={primaryVertical}
             sellerVerticals={sellerVerticals}
             verticalCounts={verticalCounts}
-            isAuthenticated={user !== null}
-            contactPhone={profile.contact_phone}
-            contactEmail={profile.contact_email}
-            whatsapp={profile.whatsapp}
-            telegram={profile.telegram}
+            isAuthenticated={isAuthenticated}
+            contactPhone={isAuthenticated ? profile.contact_phone : null}
+            contactEmail={isAuthenticated ? profile.contact_email : null}
+            whatsapp={isAuthenticated ? profile.whatsapp : null}
+            telegram={isAuthenticated ? profile.telegram : null}
             website={profile.website}
             trustLevel={sellerTrust.level}
             trustLevelLabel={sellerTrust.levelLabel}
