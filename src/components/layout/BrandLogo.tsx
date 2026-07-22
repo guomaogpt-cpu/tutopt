@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 export const BRAND_LOGO_SRC = "/images/vsetut.png";
 
 const variantSizeClasses = {
-  header: "h-10 w-auto max-w-[160px] md:h-12 md:max-w-[200px] lg:h-14 lg:max-w-[220px]",
+  header:
+    "h-[60px] w-auto max-w-[240px] md:h-[72px] md:max-w-[300px] lg:h-[84px] lg:max-w-[330px]",
   footer: "h-9 w-auto max-w-[140px] md:h-10 md:max-w-[160px]",
   default: "h-10 w-auto max-w-[160px]",
 } as const;
@@ -31,8 +32,8 @@ export function BrandLogo({
     <Image
       src={BRAND_LOGO_SRC}
       alt="ВсеТут"
-      width={220}
-      height={56}
+      width={330}
+      height={84}
       priority={priority}
       className={cn("object-contain", variantSizeClasses[variant], className)}
     />
