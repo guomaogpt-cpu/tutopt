@@ -3,33 +3,34 @@ import type { ListingVertical } from "@prisma/client";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { getAbsoluteUrl } from "@/shared/seo/absolute-url";
 
-export const SITE_NAME = "Tutopt";
+export const SITE_NAME = "ВсеТут";
 
-export const DEFAULT_TITLE = "Tutopt — объявления, товары и услуги Кыргызстана";
+export const DEFAULT_TITLE = "ВсеТут — объявления, услуги, опт и карго";
 
 export const DEFAULT_DESCRIPTION =
-  "Платформа объявлений Кыргызстана: оптовые товары, розничные предложения, услуги и грузоперевозки в одном месте.";
+  "Объявления, услуги, оптовые товары и карго в Кыргызстане — ищите и размещайте предложения на ВсеТут.";
+
+export const TITLE_TEMPLATE = `%s | ${SITE_NAME}`;
 
 export const VERTICAL_CATALOG_SEO: Record<
   ListingVertical,
   { title: string; description: string }
 > = {
   OPT: {
-    title: "Оптовые объявления Кыргызстана — ТутОпт",
-    description:
-      "Оптовые товары, поставщики и предложения для бизнеса в Кыргызстане.",
+    title: "Опт — ВсеТут",
+    description: "Оптовые товары и предложения для бизнеса в Кыргызстане.",
   },
   MARKET: {
-    title: "Объявления Кыргызстана — товары от частных лиц и компаний",
-    description: "Розничные товары, частные объявления и предложения магазинов.",
+    title: "Объявления — ВсеТут",
+    description: "Частные и коммерческие объявления в Кыргызстане.",
   },
   SERVICES: {
-    title: "Услуги и специалисты Кыргызстана — ТутУслуги",
-    description: "Услуги, мастера, ремонт, обучение и бизнес-сервисы.",
+    title: "Услуги — ВсеТут",
+    description: "Услуги для частных лиц и бизнеса в Кыргызстане.",
   },
   CARGO: {
-    title: "Грузоперевозки и логистика Кыргызстана — ТутКарго",
-    description: "Грузоперевозки, доставка, склады и логистика в Кыргызстане.",
+    title: "Карго — ВсеТут",
+    description: "Карго, доставка и логистика в Кыргызстане.",
   },
 };
 
@@ -66,7 +67,9 @@ export function buildPageMetadata({
     .filter(Boolean);
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     alternates: {
       canonical: url,
@@ -100,6 +103,18 @@ export function buildVerticalPageMetadata(vertical: ListingVertical): Metadata {
     path: seo.path,
     type: "website",
   });
+}
+
+/** Metadata for auth / dashboard / admin pages — never indexed. */
+export function buildPrivatePageMetadata(
+  title: string,
+  description = "Личный раздел ВсеТут.",
+): Metadata {
+  return {
+    title,
+    description,
+    robots: { index: false, follow: false },
+  };
 }
 
 export function truncateSeoText(text: string, maxLength = 155): string {

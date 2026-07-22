@@ -6,6 +6,12 @@ import { getUserNotifications } from "@/features/notifications/lib/notifications
 import { Container } from "@/components/ui/container";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Уведомления",
+  "Уведомления аккаунта ВсеТут.",
+);
 
 export const dynamic = "force-dynamic";
 

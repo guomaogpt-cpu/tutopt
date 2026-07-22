@@ -18,6 +18,12 @@ import { BuyerQuickActions } from "@/components/buyer/BuyerQuickActions";
 import { RecentlyViewedPanel } from "@/components/buyer/RecentlyViewedPanel";
 import { SavedSearchesPanel } from "@/components/buyer/SavedSearchesPanel";
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Кабинет покупателя",
+  "Кабинет покупателя ВсеТут.",
+);
 import { getBuyerDashboardData } from "@/features/buyer/lib/buyer-dashboard-data";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";

@@ -18,6 +18,12 @@ import { SellerDashboardListings } from "@/components/seller/SellerDashboardList
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
 import { SellerProfileCompletenessCard } from "@/components/seller/SellerProfileCompletenessCard";
 import { SellerQuickActions } from "@/components/seller/SellerQuickActions";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Кабинет продавца",
+  "Кабинет продавца ВсеТут.",
+);
 import {
   SellerRecentLeads,
   type SellerRecentLead,

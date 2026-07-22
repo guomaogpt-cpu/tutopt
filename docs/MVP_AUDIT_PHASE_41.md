@@ -144,10 +144,11 @@ Seller management видит все свои статусы — корректн
 | **44** | ~~Admin/moderation stabilization~~ — **done** |
 | **45** | ~~Production stability~~ — **done** |
 | **46** | ~~Mobile/responsive~~ — **done** (`docs/MOBILE_RESPONSIVE_STABILIZATION.md`) |
-| **47** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **48** | Saved searches polish + catalog filter consistency |
-| **49** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **50** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
+| **47** | ~~SEO/indexing~~ — **done** (`docs/SEO_INDEXING_STABILIZATION.md`) |
+| **48** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **49** | Saved searches polish + catalog filter consistency |
+| **50** | Buyer dashboard role gate / seller-vs-buyer IA |
+| **51** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
 
 ## Seller flow follow-up — Phase 42
 
@@ -198,7 +199,17 @@ UI / schema / uploads / auth architecture не менялись.
 - Home listings + listing title/description — narrow-screen safety.
 - Без редизайна desktop UI / logo file / nav labels.
 
+## SEO/indexing follow-up — Phase 47
+
+Выполнено в Phase 47 (см. `docs/SEO_INDEXING_STABILIZATION.md`):
+
+- Brand в metadata: **ВсеТут**; title template; public vertical titles выровнены.
+- Private/auth/admin: `noindex,nofollow` via `buildPrivatePageMetadata` / admin layout.
+- Sitemap: static URLs always + `/categories`; DB dynamic в try/catch; `force-dynamic`.
+- Robots: расширенный Disallow + absolute sitemap URL.
+- Listing/seller metadata: safe fallbacks, noindex for non-public / missing.
+
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **готова как MVP**.  
-UI заморожен. Flows 42–46 стабилизированы. Следующий приоритет — `/compare` или вырезать.
+UI заморожен. Flows 42–47 стабилизированы. Следующий приоритет — `/compare` или вырезать.

@@ -3,6 +3,12 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { AuthFormCard } from "@/components/auth/AuthFormCard";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { isGoogleAuthConfigured } from "@/shared/config/env";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Вход",
+  "Вход в аккаунт ВсеТут.",
+);
 
 function LoginFormFallback() {
   return (

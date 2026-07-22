@@ -154,20 +154,22 @@ export function getSellerListingsEmptyMessage(
 }
 
 export function getSellerProfileSeoTitle(
-  sellerName: string,
+  sellerName: string | null | undefined,
   primaryVertical: ListingVertical | null,
 ): string {
+  const name = sellerName?.trim() || "Продавец";
+
   switch (primaryVertical) {
     case "OPT":
-      return `${sellerName} — поставщик на ТутОпт`;
+      return `${name} — поставщик на ТутОпт`;
     case "SERVICES":
-      return `${sellerName} — услуги на ТутУслуги`;
+      return `${name} — услуги на ТутУслуги`;
     case "CARGO":
-      return `${sellerName} — перевозки на ТутКарго`;
+      return `${name} — перевозки на ТутКарго`;
     case "MARKET":
-      return `${sellerName} — продавец на ТутМаркет`;
+      return `${name} — продавец на ВсеТут`;
     default:
-      return `${sellerName} — профиль на Tutopt`;
+      return `${name} — профиль на ВсеТут`;
   }
 }
 
@@ -187,7 +189,7 @@ export function getSellerProfileSeoDescription(options: {
         ? `${listingCount} объявления`
         : `${listingCount} объявлений`;
 
-  return `${sellerName}${place} — ${role} на Tutopt. ${countLabel}. ${getSellerProfileDescription(primaryVertical)}`;
+  return `${sellerName}${place} — ${role} на ВсеТут. ${countLabel}. ${getSellerProfileDescription(primaryVertical)}`;
 }
 
 export function buildSellerProfileHref(

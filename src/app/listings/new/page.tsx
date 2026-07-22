@@ -17,6 +17,12 @@ import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Новое объявление",
+  "Создание объявления на ВсеТут.",
+);
 
 type NewListingPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

@@ -43,8 +43,8 @@ export async function generateMetadata({
 
     if (filters.q) {
       return buildPageMetadata({
-        title: `Поиск: ${filters.q} — объявления Кыргызстана | ${SITE_NAME}`,
-        description: `Результаты поиска «${filters.q}» на Tutopt — объявления Кыргызстана.`,
+        title: `Поиск: ${filters.q} — объявления | ${SITE_NAME}`,
+        description: `Результаты поиска «${filters.q}» на ВсеТут — объявления в Кыргызстане.`,
         path: "/listings",
       });
     }
@@ -57,8 +57,8 @@ export async function generateMetadata({
 
       if (category) {
         return buildPageMetadata({
-          title: `${category.name} — объявления Кыргызстана | ${SITE_NAME}`,
-          description: `${category.name}: объявления на Tutopt в Кыргызстане.`,
+          title: `${category.name} — объявления | ${SITE_NAME}`,
+          description: `${category.name}: объявления на ВсеТут в Кыргызстане.`,
           path: filters.vertical
             ? `/listings?vertical=${filters.vertical}`
             : "/listings",
@@ -76,17 +76,17 @@ export async function generateMetadata({
     }
 
     return buildPageMetadata({
-      title: "Каталог объявлений — Tutopt",
+      title: "Объявления — ВсеТут",
       description:
-        "Товары, услуги, поставщики и грузоперевозки в Кыргызстане.",
+        "Поиск объявлений, товаров, услуг и оптовых предложений в Кыргызстане.",
       path: "/listings",
     });
   } catch (error) {
     console.error("[listings/metadata] Failed to load catalog metadata", error);
     return buildPageMetadata({
-      title: "Каталог объявлений — Tutopt",
+      title: "Объявления — ВсеТут",
       description:
-        "Товары, услуги, поставщики и грузоперевозки в Кыргызстане.",
+        "Поиск объявлений, товаров, услуг и оптовых предложений в Кыргызстане.",
       path: "/listings",
     });
   }

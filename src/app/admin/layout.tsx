@@ -1,11 +1,18 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { Container } from "@/components/layout/Container";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { isStaffRole } from "@/features/admin/lib/require-admin";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata: Metadata = buildPrivatePageMetadata(
+  "Админ",
+  "Административная панель ВсеТут.",
+);
 
 async function getAdminReturnPath(): Promise<string> {
   const headersList = await headers();

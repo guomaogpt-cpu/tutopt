@@ -5,17 +5,30 @@ import { Header } from "@/components/layout/Header";
 import { AppProviders } from "@/components/providers";
 import { getSiteBaseUrl } from "@/shared/seo/absolute-url";
 import { getSiteVerificationMetadata } from "@/shared/seo/site-verification";
-import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, SITE_NAME } from "@/shared/seo/seo.config";
+import {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_TITLE,
+  SITE_NAME,
+  TITLE_TEMPLATE,
+} from "@/shared/seo/seo.config";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteBaseUrl()),
-  title: DEFAULT_TITLE,
+  title: {
+    default: DEFAULT_TITLE,
+    template: TITLE_TEMPLATE,
+  },
   description: DEFAULT_DESCRIPTION,
   openGraph: {
     siteName: SITE_NAME,
     locale: "ru_KG",
     type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
   },
   ...getSiteVerificationMetadata(),
 };

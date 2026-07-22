@@ -11,6 +11,12 @@ import {
   resolveNextParam,
 } from "@/features/auth/lib/login-redirect";
 import { getEnv, isGoogleAuthConfigured } from "@/shared/config/env";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Регистрация",
+  "Регистрация на ВсеТут.",
+);
 
 function RegisterFormFallback() {
   return (

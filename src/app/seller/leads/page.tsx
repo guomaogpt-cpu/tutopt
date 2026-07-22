@@ -17,6 +17,12 @@ import {
   PageHeaderContent,
 } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Заявки",
+  "Заявки покупателей для продавца на ВсеТут.",
+);
 
 export const dynamic = "force-dynamic";
 

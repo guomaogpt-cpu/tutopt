@@ -12,6 +12,12 @@ import {
   PageHeaderContent,
 } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Избранное",
+  "Избранные объявления на ВсеТут.",
+);
 
 export default async function FavoritesPage() {
   const user = await getCurrentUser();

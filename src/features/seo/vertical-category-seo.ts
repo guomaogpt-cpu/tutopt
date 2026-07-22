@@ -72,18 +72,18 @@ function buildTitle(
         : `${name} оптом в Кыргызстане — объявления поставщиков | ТутОпт`;
     case "MARKET":
       return cityName
-        ? `${name} в ${cityName} — объявления | ТутМаркет`
-        : `${name} в Кыргызстане — объявления | ТутМаркет`;
+        ? `${name} в ${cityName} — объявления | ВсеТут`
+        : `${name} в Кыргызстане — объявления | ВсеТут`;
     case "SERVICES":
       return cityName
-        ? `${name} в ${cityName} — услуги | ТутУслуги`
-        : `${name} в Кыргызстане — услуги специалистов | ТутУслуги`;
+        ? `${name} в ${cityName} — услуги | ВсеТут`
+        : `${name} в Кыргызстане — услуги | ВсеТут`;
     case "CARGO":
       return cityName
-        ? `${name} в ${cityName} — перевозки и логистика | ТутКарго`
-        : `${name} в Кыргызстане — логистика и перевозки | ТутКарго`;
+        ? `${name} в ${cityName} — карго и логистика | ВсеТут`
+        : `${name} в Кыргызстане — карго и логистика | ВсеТут`;
     default:
-      return `${name} | Tutopt`;
+      return `${name} | ВсеТут`;
   }
 }
 
@@ -95,7 +95,7 @@ export function buildSeoLandingMetadata(
   const path = buildSeoLandingPath(category, city);
   const place = city ? formatCityInPhrase(city) : "Кыргызстане";
   const description = truncateSeoText(
-    `${category.name} в ${place} — раздел ${vertical.label}. Найдите актуальные предложения, поставщиков и объявления в Кыргызстане на Tutopt.`,
+    `${category.name} в ${place} — раздел ${vertical.label}. Найдите актуальные предложения, поставщиков и объявления в Кыргызстане на ВсеТут.`,
   );
 
   return buildPageMetadata({

@@ -85,7 +85,7 @@ export async function generateMetadata({
     const title = `${listing.title} — ${priceLabel} | ${SITE_NAME}`;
     const description = listing.description.trim()
       ? truncateSeoText(listing.description)
-      : `${listing.title}: объявление на Tutopt.`;
+      : `${listing.title}: объявление на ВсеТут.`;
     const firstImage = listing.images[0]
       ? normalizeListingImageUrl(listing.images[0].url)
       : undefined;
@@ -101,7 +101,8 @@ export async function generateMetadata({
     console.error("[listings/[id]/metadata] Failed to load listing metadata", error);
     return {
       title: `Объявление | ${SITE_NAME}`,
-      description: "Объявление на платформе Tutopt.",
+      description: "Объявление на платформе ВсеТут.",
+      robots: { index: false, follow: false },
     };
   }
 }

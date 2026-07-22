@@ -26,9 +26,8 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     listingsHref: "/listings?vertical=OPT",
     createListingHref: "/listings/new?vertical=OPT",
     homeCardDescription: "Оптовые товары и поставщики",
-    metaTitle: "ТутОпт — оптовые товары и поставщики Кыргызстана",
-    metaDescription:
-      "Оптовые объявления, поставщики и товары для бизнеса в Кыргызстане.",
+    metaTitle: "Опт — ВсеТут",
+    metaDescription: "Оптовые товары и предложения в Кыргызстане.",
     comingSoon: false,
   },
   MARKET: {
@@ -41,8 +40,8 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     listingsHref: "/listings?vertical=MARKET",
     createListingHref: "/listings/new?vertical=MARKET",
     homeCardDescription: "Товары от частных лиц и компаний",
-    metaTitle: "Объявления Кыргызстана — Tutopt",
-    metaDescription: "Товары от частных лиц и компаний в Кыргызстане.",
+    metaTitle: "Объявления — ВсеТут",
+    metaDescription: "Частные и коммерческие объявления в Кыргызстане.",
     comingSoon: false,
   },
   SERVICES: {
@@ -55,8 +54,8 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     listingsHref: "/listings?vertical=SERVICES",
     createListingHref: "/listings/new?vertical=SERVICES",
     homeCardDescription: "Мастера, специалисты и компании",
-    metaTitle: "ТутУслуги — услуги и специалисты Кыргызстана",
-    metaDescription: "Услуги, мастера, ремонт, обучение и бизнес-сервисы.",
+    metaTitle: "Услуги — ВсеТут",
+    metaDescription: "Услуги для частных лиц и бизнеса в Кыргызстане.",
     comingSoon: false,
   },
   CARGO: {
@@ -69,8 +68,8 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     listingsHref: "/listings?vertical=CARGO",
     createListingHref: "/listings/new?vertical=CARGO",
     homeCardDescription: "Грузоперевозки и логистика",
-    metaTitle: "ТутКарго — грузоперевозки и логистика",
-    metaDescription: "Грузоперевозки, доставка, склады и логистика в Кыргызстане.",
+    metaTitle: "Карго — ВсеТут",
+    metaDescription: "Карго, доставка и логистика в Кыргызстане.",
     comingSoon: false,
   },
 };

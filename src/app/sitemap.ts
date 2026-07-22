@@ -45,6 +45,12 @@ function buildStaticSitemapEntries(now: Date): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.8,
     },
+    {
+      url: getAbsoluteUrl("/categories"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
   ];
 }
 
@@ -174,12 +180,6 @@ async function buildDynamicSitemapEntries(
     ...staticEntries,
     {
       url: getAbsoluteUrl("/sellers"),
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
-      url: getAbsoluteUrl("/categories"),
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.6,

@@ -7,6 +7,12 @@ import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { getEnv } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Онбординг продавца",
+  "Заполнение профиля продавца на ВсеТут.",
+);
 
 type SellerOnboardingPageProps = {
   searchParams: Promise<{ next?: string }>;

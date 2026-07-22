@@ -24,7 +24,7 @@ export function buildListingJsonLd(listing: ListingJsonLdInput): Record<string, 
   const images = listing.images
     .map((image) => getAbsoluteUrl(normalizeListingImageUrl(image.url)))
     .filter(Boolean);
-  const description = listing.description.trim() || `${listing.title}: объявление на Tutopt.`;
+  const description = listing.description.trim() || `${listing.title}: объявление на ВсеТут.`;
 
   if (listing.vertical === "SERVICES" || listing.vertical === "CARGO") {
     const service: Record<string, unknown> = {

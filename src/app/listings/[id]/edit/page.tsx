@@ -16,15 +16,16 @@ import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getEditListingRestrictionMessage } from "@/lib/security/user-restrictions";
 import { prisma } from "@/shared/lib/prisma";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 type EditListingPageProps = {
   params: Promise<{ id: string }>;
 };
 
-export const metadata: Metadata = {
-  title: "Редактировать объявление | Tutopt",
-  robots: { index: false, follow: false },
-};
+export const metadata: Metadata = buildPrivatePageMetadata(
+  "Редактировать объявление",
+  "Редактирование объявления на ВсеТут.",
+);
 
 export default async function EditListingPage({ params }: EditListingPageProps) {
   const { id } = await params;

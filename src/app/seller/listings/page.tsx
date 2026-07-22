@@ -18,6 +18,12 @@ import {
   parseSellerListingsParams,
 } from "@/features/sellers/lib/seller-listings";
 import { calculateListingQuality } from "@/lib/moderation/listing-quality";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Мои объявления",
+  "Управление объявлениями продавца на ВсеТут.",
+);
 import { getUserRestrictionLabels } from "@/lib/security/user-restrictions";
 import { prisma } from "@/shared/lib/prisma";
 import { Button } from "@/components/ui/button";

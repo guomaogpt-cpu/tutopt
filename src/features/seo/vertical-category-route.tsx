@@ -23,14 +23,20 @@ export async function generateVerticalCategoryMetadata(
     const category = await findCategoryForVerticalSeo(vertical, categorySlug);
 
     if (!category) {
-      return { title: "Раздел не найден" };
+      return {
+        title: "Раздел не найден",
+        robots: { index: false, follow: false },
+      };
     }
 
     let city = null;
     if (citySlug) {
       city = await findCityForSeoSlug(citySlug);
       if (!city) {
-        return { title: "Город не найден" };
+        return {
+          title: "Город не найден",
+          robots: { index: false, follow: false },
+        };
       }
     }
 
@@ -38,8 +44,9 @@ export async function generateVerticalCategoryMetadata(
   } catch (error) {
     console.error("[seo/metadata] Failed to load category landing metadata", error);
     return {
-      title: "Раздел | Tutopt",
-      description: "Объявления на платформе Tutopt.",
+      title: "Раздел | ВсеТут",
+      description: "Объявления на платформе ВсеТут.",
+      robots: { index: false, follow: false },
     };
   }
 }

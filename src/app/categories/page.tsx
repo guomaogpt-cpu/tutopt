@@ -6,8 +6,8 @@ import { getCategoriesPageData } from "@/features/home/lib/categories-page-data"
 import { buildPageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPageMetadata({
-  title: "Категории объявлений — Tutopt",
-  description: "Категории товаров, услуг, опта и грузоперевозок в Кыргызстане.",
+  title: "Категории — ВсеТут",
+  description: "Категории товаров, услуг, опта и карго в Кыргызстане.",
   path: "/categories",
 });
 

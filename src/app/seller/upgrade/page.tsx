@@ -6,6 +6,12 @@ import { getCurrentUser } from "@/features/auth/lib/session";
 import { hasVerifiedSellerPhone } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl, isSafeInternalPath } from "@/features/auth/lib/login-redirect";
 import { getEnv } from "@/shared/config/env";
+import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+
+export const metadata = buildPrivatePageMetadata(
+  "Стать продавцом",
+  "Подключение профиля продавца на ВсеТут.",
+);
 
 type SellerUpgradePageProps = {
   searchParams: Promise<{ next?: string }>;
