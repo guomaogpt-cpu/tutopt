@@ -3,6 +3,7 @@ import {
   listingCardSelect,
   serializeListingCard,
 } from "@/features/listings/lib/serialize-listing-card";
+import { buildPublicListingWhere } from "@/lib/listings/listing-expiration";
 import { prisma } from "@/shared/lib/prisma";
 
 export const favoriteListingSelect = listingCardSelect;
@@ -19,7 +20,10 @@ export async function getUserFavoriteListingIds(userId: string): Promise<string[
 
 export async function getUserFavoriteListings(userId: string): Promise<ListingCardData[]> {
   const favorites = await prisma.favorite.findMany({
-    where: { user_id: userId },
+    where: {
+      user_id: userId,
+      listing: buildPublicListingWhere(),
+    },
     orderBy: { created_at: "desc" },
     select: {
       listing: {
@@ -36,7 +40,10 @@ export async function getUserFavoritesPageData(userId: string): Promise<{
   lastAddedAt: Date | null;
 }> {
   const favorites = await prisma.favorite.findMany({
-    where: { user_id: userId },
+    where: {
+      user_id: userId,
+      listing: buildPublicListingWhere(),
+    },
     orderBy: { created_at: "desc" },
     select: {
       created_at: true,

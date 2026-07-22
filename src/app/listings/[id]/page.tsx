@@ -74,9 +74,10 @@ export async function generateMetadata({
     const { id } = await params;
     const listing = await getListingDetail(id);
 
-    if (!listing) {
+    if (!listing || !canViewListing(listing, null)) {
       return {
         title: `Объявление не найдено | ${SITE_NAME}`,
+        robots: { index: false, follow: false },
       };
     }
 
@@ -95,9 +96,6 @@ export async function generateMetadata({
       path: `/listings/${listing.id}`,
       type: "article",
       images: firstImage ? [firstImage] : undefined,
-      noIndex:
-        listing.status !== ListingStatus.PUBLISHED ||
-        getListingExpirationStatus({ expires_at: listing.expires_at }) === "expired",
     });
   } catch (error) {
     console.error("[listings/[id]/metadata] Failed to load listing metadata", error);

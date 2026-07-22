@@ -15,6 +15,7 @@ import {
   type AuthFormErrors,
 } from "@/features/auth/lib/auth-client";
 import { resolveNextParam } from "@/features/auth/lib/login-redirect";
+import { defaultPostAuthPath } from "@/features/auth/validators/seller-onboarding.validators";
 import { cn } from "@/lib/utils";
 
 const emptyErrors: AuthFormErrors = { form: [], fields: {} };
@@ -49,10 +50,11 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
     setIsSubmitting(true);
 
     try {
-      await loginRequest(phone, password, rememberMe);
+      const data = await loginRequest(phone, password, rememberMe);
       setSuccessMessage("Вход выполнен успешно. Перенаправление...");
+      const destination = defaultPostAuthPath(data.user.role, nextPath);
       window.setTimeout(() => {
-        router.push(nextPath);
+        router.push(destination);
         router.refresh();
       }, 800);
     } catch (error) {

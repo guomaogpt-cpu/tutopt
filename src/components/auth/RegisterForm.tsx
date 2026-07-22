@@ -18,6 +18,7 @@ import {
 } from "@/features/auth/lib/auth-client";
 import { resolveNextParam } from "@/features/auth/lib/login-redirect";
 import type { RegisterInput } from "@/features/auth/validators/auth.validators";
+import { defaultPostAuthPath } from "@/features/auth/validators/seller-onboarding.validators";
 import { cn } from "@/lib/utils";
 import { authInputClassName } from "@/components/auth/auth-form-styles";
 
@@ -75,10 +76,11 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
     };
 
     try {
-      await registerRequest(payload);
+      const data = await registerRequest(payload);
       setSuccessMessage("Регистрация успешна. Перенаправление...");
+      const destination = defaultPostAuthPath(data.user.role, nextPath);
       window.setTimeout(() => {
-        router.push(nextPath);
+        router.push(destination);
         router.refresh();
       }, 800);
     } catch (error) {

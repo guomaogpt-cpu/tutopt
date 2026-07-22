@@ -37,6 +37,16 @@ export function buildNotExpiredListingFilter(
   };
 }
 
+/** Shared public catalog/detail filter: published and not expired. */
+export function buildPublicListingWhere(
+  now: Date = new Date(),
+): Prisma.ListingWhereInput {
+  return {
+    status: ListingStatus.PUBLISHED,
+    AND: [buildNotExpiredListingFilter(now)],
+  };
+}
+
 /** Renewal always counts from "now", not from the previous expiration date. */
 export function getRenewedExpirationDate(now: Date = new Date()): Date {
   return getDefaultListingExpirationDate(now);
@@ -51,7 +61,7 @@ export function isListingExpired(
   if (!expiresAt) {
     return false;
   }
-  return expiresAt.getTime() < now.getTime();
+  return expiresAt.getTime() <= now.getTime();
 }
 
 export function isListingExpiringSoon(
@@ -63,7 +73,7 @@ export function isListingExpiringSoon(
     return false;
   }
   const remaining = expiresAt.getTime() - now.getTime();
-  return remaining >= 0 && remaining <= LISTING_EXPIRING_SOON_DAYS * DAY_MS;
+  return remaining > 0 && remaining <= LISTING_EXPIRING_SOON_DAYS * DAY_MS;
 }
 
 export function getListingExpirationStatus(
@@ -74,7 +84,7 @@ export function getListingExpirationStatus(
   if (!expiresAt) {
     return "no_expiration";
   }
-  if (expiresAt.getTime() < now.getTime()) {
+  if (expiresAt.getTime() <= now.getTime()) {
     return "expired";
   }
   if (isListingExpiringSoon(listing, now)) {

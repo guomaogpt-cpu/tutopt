@@ -7,6 +7,7 @@ import {
   createLeadSchema,
 } from "@/features/leads/validators/lead.validators";
 import { createNewLeadNotification } from "@/features/notifications/lib/notifications-data";
+import { isListingExpired } from "@/lib/listings/listing-expiration";
 import { validateLeadContent } from "@/lib/moderation/content-checks";
 import { assertLeadCreateRateLimits } from "@/lib/security/rate-limit";
 import { getLeadRestrictionMessage } from "@/lib/security/user-restrictions";
@@ -58,6 +59,7 @@ export async function POST(request: Request, context: LeadRouteContext) {
         title: true,
         status: true,
         vertical: true,
+        expires_at: true,
         sellerProfile: {
           select: {
             id: true,
@@ -77,6 +79,10 @@ export async function POST(request: Request, context: LeadRouteContext) {
 
     if (listing.status !== ListingStatus.PUBLISHED) {
       throw new ForbiddenError("Заявки принимаются только по опубликованным объявлениям");
+    }
+
+    if (isListingExpired({ expires_at: listing.expires_at })) {
+      throw new ForbiddenError("Объявление истекло — заявки больше не принимаются");
     }
 
     assertLeadCreateRateLimits(user.id, listing.id);
