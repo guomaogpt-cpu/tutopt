@@ -6,19 +6,13 @@ import { cn } from "@/lib/utils";
 
 export const BRAND_LOGO_SRC = "/images/vsetut.png";
 
-const iconSizeClasses = {
-  header: "h-10 w-auto md:h-12 lg:h-14",
-  footer: "h-8 w-auto md:h-9",
-  default: "h-9 w-auto",
+const variantSizeClasses = {
+  header: "h-10 w-auto max-w-[120px] md:h-12 md:max-w-[140px] lg:h-14 lg:max-w-[160px]",
+  footer: "h-9 w-auto max-w-[110px] md:h-10 md:max-w-[120px]",
+  default: "h-10 w-auto max-w-[120px]",
 } as const;
 
-const textSizeClasses = {
-  header: "text-xl font-extrabold tracking-tight md:text-2xl lg:text-[26px]",
-  footer: "text-lg font-extrabold tracking-tight md:text-xl",
-  default: "text-xl font-extrabold tracking-tight",
-} as const;
-
-type BrandLogoVariant = keyof typeof iconSizeClasses;
+type BrandLogoVariant = keyof typeof variantSizeClasses;
 
 type BrandLogoProps = {
   className?: string;
@@ -34,29 +28,14 @@ export function BrandLogo({
   variant = "default",
 }: BrandLogoProps) {
   const logoContent = (
-    <span
-      className={cn(
-        "inline-flex shrink-0 items-center gap-2 md:gap-2.5",
-        className,
-      )}
-    >
-      <Image
-        src={BRAND_LOGO_SRC}
-        alt="Все тут"
-        width={56}
-        height={56}
-        priority={priority}
-        className={cn("object-contain", iconSizeClasses[variant])}
-      />
-      <span
-        className={cn(
-          "leading-none text-slate-900 dark:text-slate-100",
-          textSizeClasses[variant],
-        )}
-      >
-        Все тут
-      </span>
-    </span>
+    <Image
+      src={BRAND_LOGO_SRC}
+      alt="ВсеТут"
+      width={160}
+      height={56}
+      priority={priority}
+      className={cn("object-contain", variantSizeClasses[variant], className)}
+    />
   );
 
   if (href) {
@@ -64,7 +43,7 @@ export function BrandLogo({
       <Link
         href={href}
         className="flex shrink-0 items-center"
-        aria-label="Все тут — на главную"
+        aria-label="ВсеТут — на главную"
       >
         {logoContent}
       </Link>
