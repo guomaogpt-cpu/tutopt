@@ -86,7 +86,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/80">
       <Container>
-        <div className="flex h-[72px] min-w-0 items-center gap-2 lg:h-[96px] lg:gap-3">
+        <div className="flex h-[64px] min-w-0 items-center gap-1.5 sm:gap-2 lg:h-[96px] lg:gap-3">
           <BrandLogo variant="header" priority />
 
           <nav

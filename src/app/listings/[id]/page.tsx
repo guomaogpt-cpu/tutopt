@@ -346,7 +346,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </Link>
             ) : null}
           </div>
-          <h1 className="mt-2 text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
+          <h1 className="mt-2 break-words text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
             {listing.title}
           </h1>
           <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#64748B]">

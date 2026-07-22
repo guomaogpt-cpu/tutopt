@@ -20,7 +20,7 @@ export function HomeListingsGrid({
   const favoriteIds = new Set(favoriteListingIds);
 
   return (
-    <div className="grid w-full min-w-0 grid-cols-2 gap-3.5 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
       {listings.map((listing) => (
         <div key={listing.id} className="min-w-0 w-full">
           <ListingCard

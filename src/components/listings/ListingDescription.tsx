@@ -31,7 +31,7 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
         )}
       >
         {hasText ? (
-          <p className="whitespace-pre-wrap text-base leading-relaxed text-[#334155]">
+          <p className="break-words whitespace-pre-wrap text-base leading-relaxed text-[#334155]">
             {displayText}
           </p>
         ) : (

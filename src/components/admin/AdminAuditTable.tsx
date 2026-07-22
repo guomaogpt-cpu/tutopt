@@ -97,15 +97,16 @@ export function AdminAuditTable({ logs }: AdminAuditTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <SearchInput
           value={actorQuery}
           onChange={(event) => setActorQuery(event.target.value)}
           placeholder="Поиск по имени сотрудника"
-          className="sm:max-w-xs"
+          containerClassName="min-w-0 w-full sm:max-w-xs sm:flex-1"
+          className="h-11"
         />
         <Select value={actionFilter} onValueChange={setActionFilter}>
-          <SelectTrigger className="h-11 w-full rounded-xl sm:w-64">
+          <SelectTrigger className="h-11 w-full min-w-0 rounded-xl sm:w-auto sm:min-w-[12rem]">
             <SelectValue placeholder="Действие" />
           </SelectTrigger>
           <SelectContent>
@@ -118,7 +119,7 @@ export function AdminAuditTable({ logs }: AdminAuditTableProps) {
           </SelectContent>
         </Select>
         <Select value={targetFilter} onValueChange={setTargetFilter}>
-          <SelectTrigger className="h-11 w-full rounded-xl sm:w-48">
+          <SelectTrigger className="h-11 w-full min-w-0 rounded-xl sm:w-auto sm:min-w-[10rem]">
             <SelectValue placeholder="Тип объекта" />
           </SelectTrigger>
           <SelectContent>

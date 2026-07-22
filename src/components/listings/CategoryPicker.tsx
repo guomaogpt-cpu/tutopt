@@ -108,10 +108,10 @@ export function CategoryPicker({
                 variant="outline"
                 disabled={disabled}
                 onClick={() => handleRootSelect(root.id)}
-                className="h-auto flex-col gap-3 px-4 py-5 text-center hover:border-primary/40"
+                className="h-auto min-w-0 flex-col gap-3 whitespace-normal px-3 py-4 text-center hover:border-primary/40 sm:px-4 sm:py-5"
               >
                 <span className="text-3xl">{getCategoryEmoji(root)}</span>
-                <span className="text-sm font-semibold leading-snug">{root.name}</span>
+                <span className="break-words text-sm font-semibold leading-snug">{root.name}</span>
               </Button>
             ))}
           </div>

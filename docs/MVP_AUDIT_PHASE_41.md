@@ -142,11 +142,11 @@ Seller management видит все свои статусы — корректн
 | **42** | ~~Seller flow stabilization~~ — **done** |
 | **43** | ~~Buyer flow stabilization~~ — **done** |
 | **44** | ~~Admin/moderation stabilization~~ — **done** |
-| **45** | ~~Production stability~~ — **done** (`docs/PRODUCTION_STABILITY_AUDIT.md`) |
-| **46** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **47** | Saved searches polish + catalog filter consistency |
-| **48** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **49** | Shared `buildPublicListingWhere` adoption |
+| **45** | ~~Production stability~~ — **done** |
+| **46** | ~~Mobile/responsive~~ — **done** (`docs/MOBILE_RESPONSIVE_STABILIZATION.md`) |
+| **47** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **48** | Saved searches polish + catalog filter consistency |
+| **49** | Buyer dashboard role gate / seller-vs-buyer IA |
 | **50** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
 
 ## Seller flow follow-up — Phase 42
@@ -189,7 +189,16 @@ UI / schema / uploads / auth architecture не менялись.
 - Demo OTP: код не пишется в production console.
 - Docs: deploy workflow + production checklist обновлены.
 
+## Mobile/responsive follow-up — Phase 46
+
+Выполнено в Phase 46 (см. `docs/MOBILE_RESPONSIVE_STABILIZATION.md`):
+
+- Header logo max-width на узких экранах (desktop sizes сохранены).
+- CategoryPicker / seller listing actions / audit filters — overflow/wrap fixes.
+- Home listings + listing title/description — narrow-screen safety.
+- Без редизайна desktop UI / logo file / nav labels.
+
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **готова как MVP**.  
-UI заморожен. Flows 42–45 стабилизированы. Следующий приоритет — `/compare` или вырезать, ops polish.
+UI заморожен. Flows 42–46 стабилизированы. Следующий приоритет — `/compare` или вырезать.

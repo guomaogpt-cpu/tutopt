@@ -205,7 +205,7 @@ export function SellerListingManageCard({
         {error ? <p className="mt-2 text-xs text-[#DC2626]">{error}</p> : null}
       </div>
 
-      <div className="grid w-full shrink-0 grid-cols-2 gap-2 lg:w-[300px]">
+      <div className="grid w-full min-w-0 shrink-0 grid-cols-1 gap-2 min-[380px]:grid-cols-2 lg:w-[300px] [&_a]:min-w-0 [&_button]:min-w-0 [&_button]:whitespace-normal [&_a]:whitespace-normal">
         <Button
           asChild
           variant="outline"

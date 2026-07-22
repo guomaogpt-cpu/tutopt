@@ -8,7 +8,7 @@ export const BRAND_LOGO_SRC = "/images/vsetut.png";
 
 const variantSizeClasses = {
   header:
-    "h-[60px] w-auto max-w-[240px] md:h-[72px] md:max-w-[300px] lg:h-[84px] lg:max-w-[330px]",
+    "h-[52px] w-auto max-w-[min(55vw,180px)] sm:h-[60px] sm:max-w-[220px] md:h-[72px] md:max-w-[300px] lg:h-[84px] lg:max-w-[330px]",
   footer: "h-9 w-auto max-w-[140px] md:h-10 md:max-w-[160px]",
   default: "h-10 w-auto max-w-[160px]",
 } as const;
@@ -43,7 +43,7 @@ export function BrandLogo({
     return (
       <Link
         href={href}
-        className="flex shrink-0 items-center"
+        className="flex min-w-0 shrink-0 items-center"
         aria-label="ВсеТут — на главную"
       >
         {logoContent}
