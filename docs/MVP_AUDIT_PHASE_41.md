@@ -141,12 +141,12 @@ Seller management видит все свои статусы — корректн
 |-------|--------|
 | **42** | ~~Seller flow stabilization~~ — **done** |
 | **43** | ~~Buyer flow stabilization~~ — **done** |
-| **44** | ~~Admin/moderation stabilization~~ — **done** (`docs/ADMIN_MODERATION_STABILIZATION.md`) |
-| **45** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **46** | Saved searches polish + catalog filter consistency |
-| **47** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **48** | Shared `buildPublicListingWhere` adoption |
-| **49** | Production hardening: rate limits, monitoring, uploads volume |
+| **44** | ~~Admin/moderation stabilization~~ — **done** |
+| **45** | ~~Production stability~~ — **done** (`docs/PRODUCTION_STABILITY_AUDIT.md`) |
+| **46** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **47** | Saved searches polish + catalog filter consistency |
+| **48** | Buyer dashboard role gate / seller-vs-buyer IA |
+| **49** | Shared `buildPublicListingWhere` adoption |
 | **50** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
 
 ## Seller flow follow-up — Phase 42
@@ -179,7 +179,17 @@ UI / schema / uploads / auth architecture не менялись.
 - Audit label `listing.create`.
 - `/admin/settings` и `/admin/reports/[id]` page — gaps (не stub).
 
+## Production stability follow-up — Phase 45
+
+Выполнено в Phase 45 (см. `docs/PRODUCTION_STABILITY_AUDIT.md`):
+
+- Deploy: Nixpacks + `postinstall prisma generate` + release `migrate deploy`.
+- Schema в этой фазе **не** менялась → новых migrations нет.
+- Health: поле `service`.
+- Demo OTP: код не пишется в production console.
+- Docs: deploy workflow + production checklist обновлены.
+
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **готова как MVP**.  
-UI заморожен. Seller (42), Buyer (43), Admin (44) flows стабилизированы. Следующий приоритет — `/compare` или вырезать, ops hardening.
+UI заморожен. Flows 42–45 стабилизированы. Следующий приоритет — `/compare` или вырезать, ops polish.

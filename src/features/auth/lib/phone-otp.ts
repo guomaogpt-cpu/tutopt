@@ -84,7 +84,10 @@ export async function sendPhoneOtp(phoneInput: string): Promise<SendOtpResult> {
     console.warn(`DEV OTP for ${phone}: ${code}`);
     logger.info("DEV OTP generated", { phone });
   } else if (demoMode) {
-    console.warn(`DEMO OTP for ${phone}: ${code}`);
+    // Do not print the OTP code in production logs — it is returned in the API body when demo mode is on.
+    console.warn(
+      "DEMO OTP mode enabled — set DEMO_OTP_ENABLED=false before real users; OTP is only in the API response",
+    );
     logger.warn("DEMO OTP mode enabled — disable DEMO_OTP_ENABLED before real launch", {
       phone,
     });

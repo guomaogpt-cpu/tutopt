@@ -56,12 +56,14 @@ Railway → **tutopt** → **Deployments** — дождаться successful dep
 **После каждого deploy:**
 
 1. Дождаться successful Railway deployment
-2. Если были migrations: `npx prisma migrate deploy` (или проверить release command)
-3. Если seed менялся: `npm run db:seed` (только осознанно)
-4. Открыть `/api/health` — `ok: true`, `database: ok`
-5. Открыть `/sitemap.xml`
-6. Открыть `/robots.txt`
+2. Release command уже запускает `npx prisma migrate deploy` (`railway.toml`) — при сбое выполнить вручную
+3. Seed **только если** менялся `prisma/seed.ts` / справочники: `npm run db:seed`
+4. Открыть `/api/health` — `ok: true`, `service: "tutopt"`, `database: ok`
+5. Проверить Railway Variables: `NEXT_PUBLIC_APP_URL`, `UPLOAD_DIR`, `DEMO_OTP_ENABLED`
+6. Открыть `/sitemap.xml` и `/robots.txt`
 7. Пройти smoke test из [`PRODUCTION_CHECKLIST.md`](./PRODUCTION_CHECKLIST.md)
+
+Полный production audit: [`PRODUCTION_STABILITY_AUDIT.md`](./PRODUCTION_STABILITY_AUDIT.md).
 
 ---
 

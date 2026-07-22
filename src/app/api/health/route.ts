@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 
 type HealthResponse = {
   ok: boolean;
+  service: string;
   app: string;
   environment: string;
   timestamp: string;
@@ -28,6 +29,7 @@ export async function GET() {
 
   const body: HealthResponse = {
     ok,
+    service: "tutopt",
     app: "tutopt",
     environment,
     timestamp,

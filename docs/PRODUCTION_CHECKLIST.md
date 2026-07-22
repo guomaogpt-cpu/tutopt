@@ -8,15 +8,16 @@
 
 - [ ] Build successful (Railway → Deployments)
 - [ ] Deploy successful, service online
-- [ ] `/api/health` возвращает `{ "ok": true, "database": "ok" }`
+- [ ] Release: `npx prisma migrate deploy` succeeded (`railway.toml` releaseCommand)
+- [ ] `/api/health` возвращает `{ "ok": true, "service": "tutopt", "database": "ok" }`
 - [ ] Нет критических ошибок в View Logs
 
 ---
 
 ## 2. Database
 
-- [ ] `npx prisma migrate deploy` отработал (release command в `railway.toml`)
-- [ ] Если seed менялся: `npm run db:seed` (только осознанно)
+- [ ] Migrations applied via **only** `npx prisma migrate deploy` (never `migrate dev` / `db push` / reset on Railway)
+- [ ] Seed **only if** seed/справочники менялись: `npm run db:seed`
 - [ ] Данные не удалены, категории и объявления на месте
 - [ ] `ListingVertical` enum и поля `vertical` работают
 
@@ -25,9 +26,10 @@
 ## 3. Uploads
 
 - [ ] `UPLOAD_DIR` настроен (например `/app/uploads`)
-- [ ] Railway volume attached, если используется persistent storage
-- [ ] Фото объявлений открываются через API route `/api/uploads/...`
+- [ ] Railway volume attached to `/app/uploads`
+- [ ] Фото объявлений открываются через `/api/uploads/...`
 - [ ] Загрузка нового фото при создании объявления работает
+- [ ] Archive/delete listing **не** удаляет файлы с диска
 
 ---
 
@@ -36,8 +38,11 @@
 - [ ] Вход по телефону + паролю (`/login`)
 - [ ] Google OAuth redirect (`/api/auth/google/callback`)
 - [ ] Seller onboarding (`/seller/onboarding`)
-- [ ] `DEMO_OTP_ENABLED=false` перед реальными пользователями
-- [ ] Demo OTP mode работает только если явно включён (тестовый сайт)
+- [ ] **`DEMO_OTP_ENABLED=false` (или unset) перед реальными пользователями**
+- [ ] Если demo OTP включён — только временный тест; OTP не должен попадать в production logs как код
+- [ ] `OTP_SECRET` задан отдельно от `DATABASE_URL` (рекомендуется)
+
+Полный env/deploy audit: [`PRODUCTION_STABILITY_AUDIT.md`](./PRODUCTION_STABILITY_AUDIT.md).
 
 ---
 
