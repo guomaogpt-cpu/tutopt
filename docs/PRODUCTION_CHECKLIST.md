@@ -131,6 +131,7 @@ curl https://tutopt-production.up.railway.app/api/health
 ```json
 {
   "ok": true,
+  "service": "tutopt",
   "app": "tutopt",
   "environment": "production",
   "timestamp": "2026-07-16T...",
@@ -143,6 +144,7 @@ curl https://tutopt-production.up.railway.app/api/health
 ```json
 {
   "ok": false,
+  "service": "tutopt",
   "app": "tutopt",
   "environment": "production",
   "timestamp": "2026-07-16T...",
