@@ -111,7 +111,7 @@ export function canOwnerRenewListing(
   user: RenewUserSource,
   listing: RenewListingSource,
 ): boolean {
-  if (user.role !== UserRole.SELLER) {
+  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
     return false;
   }
   if (isUserBlocked(user)) {

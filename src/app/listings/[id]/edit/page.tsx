@@ -34,7 +34,7 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
   if (!user) {
     redirect(buildLoginUrl(editPath));
   }
-  if (user.role !== UserRole.SELLER) {
+  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
     notFound();
   }
   if (needsSellerOnboarding({ role: user.role, phone: user.phone })) {

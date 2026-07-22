@@ -21,7 +21,7 @@ export async function POST(_request: Request, context: RouteContext) {
     const user = await requireAuth();
     const { id } = await context.params;
 
-    if (user.role !== UserRole.SELLER) {
+    if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
       throw new ForbiddenError("Продлевать объявления может только продавец.");
     }
     if (isUserBlocked(user)) {

@@ -3,7 +3,7 @@ import { isValidKgPhone } from "@/features/auth/lib/phone";
 /** Fake placeholder from older Google SELLER flow — treat as incomplete. */
 const PLACEHOLDER_PHONE = "+996000000000";
 
-export function isSellerPhoneComplete(phone: string | null | undefined): boolean {
+export function isSellerPhoneComplete(phone: string | null | undefined): phone is string {
   if (!phone) {
     return false;
   }

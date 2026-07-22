@@ -62,6 +62,7 @@ export function getMobileAccountLinks(user: HeaderUser | null): NavLinkItem[] {
     case "SELLER":
       return [
         { label: "Кабинет продавца", href: "/seller/dashboard" },
+        { label: "Мои объявления", href: "/seller/listings" },
         { label: "Заявки", href: "/seller/leads" },
         { label: "Подать объявление", href: "/listings/new" },
         { label: "Избранное", href: "/favorites" },

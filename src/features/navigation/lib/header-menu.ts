@@ -3,6 +3,7 @@ import {
   Heart,
   Inbox,
   LayoutDashboard,
+  List,
   LogOut,
   PlusCircle,
   Shield,
@@ -49,6 +50,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
     case "SELLER":
       return [
         { label: "Кабинет продавца", href: "/seller/dashboard", icon: LayoutDashboard },
+        { label: "Мои объявления", href: "/seller/listings", icon: List },
         { label: "Заявки", href: "/seller/leads", icon: Inbox },
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
         { label: "Уведомления", href: "/notifications", icon: Inbox },

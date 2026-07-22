@@ -93,6 +93,7 @@ export function buildSellerListingsWhere(
       where.status = ListingStatus.ARCHIVED;
       break;
     case "expired":
+      where.status = ListingStatus.PUBLISHED;
       where.expires_at = { lt: now };
       break;
     case "all":

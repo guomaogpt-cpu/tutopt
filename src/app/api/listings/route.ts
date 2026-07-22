@@ -4,6 +4,7 @@ import { findRecentDuplicateListing } from "@/features/listings/lib/listing-dupl
 import { ensureSellerProfile } from "@/features/listings/lib/seller-profile";
 import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
 import { createListingSchema } from "@/features/listings/validators/listing.validators";
+import { createAuditLog } from "@/lib/audit/audit-log";
 import { validateListingContent } from "@/lib/moderation/content-checks";
 import { assertListingCreateRateLimit } from "@/lib/security/rate-limit";
 import { getCreateListingRestrictionMessage } from "@/lib/security/user-restrictions";
@@ -139,6 +140,18 @@ export async function POST(request: Request) {
       listingId: listing.id,
       sellerId: sellerProfile.id,
       vertical: listing.vertical,
+    });
+
+    await createAuditLog({
+      actorId: user.id,
+      actorRole: user.role,
+      action: "listing.create",
+      targetType: "listing",
+      targetId: listing.id,
+      metadata: {
+        vertical: listing.vertical,
+        status: listing.status,
+      },
     });
 
     return jsonData({ listing }, 201);

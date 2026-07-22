@@ -27,9 +27,9 @@ export async function PATCH(request: Request, context: RouteContext) {
     const user = await requireAuth();
     const { id } = await context.params;
 
-    if (user.role !== UserRole.SELLER) {
-      throw new ForbiddenError("Редактировать объявления может только продавец.");
-    }
+    if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+    throw new ForbiddenError("Редактировать объявления может только продавец.");
+  }
 
     const restrictionMessage = getEditListingRestrictionMessage(user);
     if (restrictionMessage) {

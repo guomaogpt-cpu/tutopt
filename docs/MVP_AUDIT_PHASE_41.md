@@ -139,17 +139,29 @@ Seller management видит все свои статусы — корректн
 
 | Phase | Фокус |
 |-------|--------|
-| **42** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **43** | Saved searches UX polish + consistency с catalog filters |
-| **44** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **45** | Shared `buildPublicListingWhere` adoption во всех public queries (refactor без behavior change) |
-| **46** | Listing quality / moderation queue UX (не дизайн главной) |
-| **47** | Production hardening: rate limits review, monitoring, backup uploads volume |
-| **48** | SEO content pages / category landing quality |
-| **49** | Seller trust signals + storefront completeness |
-| **50** | Soft-delete / trash retention policy (если нужна отдельная от ARCHIVED) |
+| **42** | ~~Seller flow stabilization~~ — **done** (`docs/SELLER_FLOW_STABILIZATION.md`) |
+| **43** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **44** | Saved searches UX polish + consistency с catalog filters |
+| **45** | Buyer dashboard role gate / seller-vs-buyer IA |
+| **46** | Shared `buildPublicListingWhere` adoption во всех public queries |
+| **47** | Listing quality / moderation queue UX (не дизайн главной) |
+| **48** | Production hardening: rate limits, monitoring, uploads volume |
+| **49** | SEO content / category landing quality |
+| **50** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
+
+## Seller flow follow-up — Phase 42
+
+Выполнено в Phase 42 (см. `docs/SELLER_FLOW_STABILIZATION.md`):
+
+- ADMIN может edit/archive/restore/renew свои объявления (как create).
+- Create API требует полный KG phone / onboarding (`isSellerPhoneComplete`).
+- Audit `listing.create`.
+- Nav: «Мои объявления» → `/seller/listings`.
+- Фильтр «Истёкшие» только для `PUBLISHED`.
+
+UI / schema / uploads / auth architecture не менялись.
 
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **готова как MVP**.  
-UI заморожен. Следующий приоритет — недостающие product gaps (`/compare`) и operational hardening, не микродизайн.
+UI заморожен. Seller flow стабилизирован (Phase 42). Следующий приоритет — `/compare` или вырезать, saved searches, ops hardening.

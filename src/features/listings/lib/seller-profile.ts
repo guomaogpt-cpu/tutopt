@@ -1,4 +1,5 @@
 import { AuthProvider, type SellerProfile, type User } from "@prisma/client";
+import { isSellerPhoneComplete } from "@/features/auth/lib/seller-onboarding";
 import type { PublicUser } from "@/features/auth/lib/session";
 import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
 import { NotFoundError, ValidationError } from "@/shared/lib/errors";
@@ -51,9 +52,9 @@ export async function createSellerProfileForUser(
 }
 
 export async function ensureSellerProfile(user: PublicUser): Promise<SellerProfile> {
-  if (!user.phone) {
+  if (!isSellerPhoneComplete(user.phone)) {
     throw new ValidationError(
-      "Укажите телефон в профиле продавца, прежде чем создавать объявления.",
+      "Завершите onboarding продавца и подтвердите телефон, прежде чем создавать объявления.",
     );
   }
 
