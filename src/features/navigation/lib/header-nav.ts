@@ -72,6 +72,7 @@ export function getMobileAccountLinks(user: HeaderUser | null): NavLinkItem[] {
       return [
         { label: "Обзор админки", href: "/admin" },
         { label: "Модерация", href: "/admin/moderation/listings" },
+        { label: "Жалобы", href: "/admin/reports" },
         { label: "Уведомления", href: "/notifications" },
       ];
     case "ADMIN":
@@ -79,6 +80,7 @@ export function getMobileAccountLinks(user: HeaderUser | null): NavLinkItem[] {
         { label: "Обзор админки", href: "/admin" },
         { label: "Пользователи", href: "/admin/users" },
         { label: "Модерация", href: "/admin/moderation/listings" },
+        { label: "Жалобы", href: "/admin/reports" },
         { label: "Уведомления", href: "/notifications" },
       ];
     default:

@@ -26,6 +26,7 @@ import {
   getAuditTargetTypeLabel,
 } from "@/features/admin/lib/audit-labels";
 import { VERTICAL_LIST, VERTICALS } from "@/features/verticals/verticals";
+import { buildPublicListingWhere } from "@/lib/listings/listing-expiration";
 import { prisma } from "@/shared/lib/prisma";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
@@ -67,6 +68,8 @@ export default async function AdminDashboardPage() {
   const isAdmin = user.role === UserRole.ADMIN;
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
+  const publicPublishedWhere = buildPublicListingWhere();
+
   const [
     pendingCount,
     openReportsCount,
@@ -79,11 +82,11 @@ export default async function AdminDashboardPage() {
     prisma.listing.count({ where: { status: ListingStatus.PENDING_MODERATION } }),
     prisma.report.count({ where: { status: ReportStatus.OPEN } }),
     prisma.listing.count(),
-    prisma.listing.count({ where: { status: ListingStatus.PUBLISHED } }),
+    prisma.listing.count({ where: publicPublishedWhere }),
     prisma.listing.groupBy({ by: ["vertical"], _count: { _all: true } }),
     prisma.listing.groupBy({
       by: ["vertical"],
-      where: { status: ListingStatus.PUBLISHED },
+      where: publicPublishedWhere,
       _count: { _all: true },
     }),
     prisma.listing.groupBy({

@@ -1,4 +1,5 @@
 export const AUDIT_ACTION_LABELS: Record<string, string> = {
+  "listing.create": "Создание объявления",
   "listing.approve": "Одобрение объявления",
   "listing.reject": "Отклонение объявления",
   "listing.update": "Редактирование объявления",

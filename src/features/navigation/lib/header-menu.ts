@@ -64,6 +64,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
           href: "/admin/moderation/listings",
           icon: Shield,
         },
+        { label: "Жалобы", href: "/admin/reports", icon: Inbox },
         { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
@@ -76,6 +77,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
           href: "/admin/moderation/listings",
           icon: Shield,
         },
+        { label: "Жалобы", href: "/admin/reports", icon: Inbox },
         { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];

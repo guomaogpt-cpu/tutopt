@@ -140,13 +140,13 @@ Seller management видит все свои статусы — корректн
 | Phase | Фокус |
 |-------|--------|
 | **42** | ~~Seller flow stabilization~~ — **done** |
-| **43** | ~~Buyer flow stabilization~~ — **done** (`docs/BUYER_FLOW_STABILIZATION.md`) |
-| **44** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **45** | Saved searches polish + catalog filter consistency |
-| **46** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **47** | Shared `buildPublicListingWhere` adoption |
-| **48** | Production hardening: rate limits, monitoring, uploads volume |
-| **49** | SEO content / category landing quality |
+| **43** | ~~Buyer flow stabilization~~ — **done** |
+| **44** | ~~Admin/moderation stabilization~~ — **done** (`docs/ADMIN_MODERATION_STABILIZATION.md`) |
+| **45** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **46** | Saved searches polish + catalog filter consistency |
+| **47** | Buyer dashboard role gate / seller-vs-buyer IA |
+| **48** | Shared `buildPublicListingWhere` adoption |
+| **49** | Production hardening: rate limits, monitoring, uploads volume |
 | **50** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
 
 ## Seller flow follow-up — Phase 42
@@ -169,7 +169,17 @@ UI / schema / uploads / auth architecture не менялись.
 - `/compare` по-прежнему отсутствует (нет UI-ссылок; не stub).
 - Catalog / favorites / leads / saved searches / recently viewed / notifications — критических поломок не найдено.
 
+## Admin/moderation follow-up — Phase 44
+
+Выполнено в Phase 44 (см. `docs/ADMIN_MODERATION_STABILIZATION.md`):
+
+- Критических security/visibility багов не найдено; guards API/layout OK.
+- Dashboard «опубликованные» counts = PUBLISHED + not expired.
+- Header/mobile: ссылка «Жалобы» для staff.
+- Audit label `listing.create`.
+- `/admin/settings` и `/admin/reports/[id]` page — gaps (не stub).
+
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **готова как MVP**.  
-UI заморожен. Seller (42) и Buyer (43) flows стабилизированы. Следующий приоритет — `/compare` или вырезать, saved searches polish, ops hardening.
+UI заморожен. Seller (42), Buyer (43), Admin (44) flows стабилизированы. Следующий приоритет — `/compare` или вырезать, ops hardening.
