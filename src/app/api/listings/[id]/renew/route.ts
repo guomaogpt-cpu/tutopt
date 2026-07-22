@@ -6,7 +6,7 @@ import {
   getRenewedExpirationDate,
   isListingExpired,
 } from "@/lib/listings/listing-expiration";
-import { isUserBlocked } from "@/lib/security/user-restrictions";
+import { isUserBlocked, getEditListingRestrictionMessage } from "@/lib/security/user-restrictions";
 import { jsonData, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
@@ -26,6 +26,10 @@ export async function POST(_request: Request, context: RouteContext) {
     }
     if (isUserBlocked(user)) {
       throw new ForbiddenError("Аккаунт заблокирован. Продление объявлений недоступно.");
+    }
+    const restrictionMessage = getEditListingRestrictionMessage(user);
+    if (restrictionMessage) {
+      throw new ForbiddenError(restrictionMessage);
     }
 
     const listing = await prisma.listing.findUnique({

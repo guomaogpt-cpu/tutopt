@@ -57,6 +57,7 @@ import { VERTICALS } from "@/features/verticals/verticals";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { buildListingJsonLd } from "@/shared/seo/listing-json-ld";
+import { serializeJsonLd } from "@/shared/seo/serialize-json-ld";
 import {
   SITE_NAME,
   buildPageMetadata,
@@ -325,7 +326,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
       {jsonLd ? (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       ) : null}
       <Container size="lg" className="min-w-0 max-w-[1280px]">

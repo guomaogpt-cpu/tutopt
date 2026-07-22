@@ -145,10 +145,11 @@ Seller management видит все свои статусы — корректн
 | **45** | ~~Production stability~~ — **done** |
 | **46** | ~~Mobile/responsive~~ — **done** (`docs/MOBILE_RESPONSIVE_STABILIZATION.md`) |
 | **47** | ~~SEO/indexing~~ — **done** (`docs/SEO_INDEXING_STABILIZATION.md`) |
-| **48** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **49** | Saved searches polish + catalog filter consistency |
-| **50** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **51** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
+| **48** | ~~Security/anti-spam~~ — **done** (`docs/SECURITY_ANTISPAM_STABILIZATION.md`) |
+| **49** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **50** | Saved searches polish + catalog filter consistency |
+| **51** | Buyer dashboard role gate / seller-vs-buyer IA |
+| **52** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
 
 ## Seller flow follow-up — Phase 42
 
@@ -209,7 +210,17 @@ UI / schema / uploads / auth architecture не менялись.
 - Robots: расширенный Disallow + absolute sitemap URL.
 - Listing/seller metadata: safe fallbacks, noindex for non-public / missing.
 
+## Security/anti-spam follow-up — Phase 48
+
+Выполнено в Phase 48 (см. `docs/SECURITY_ANTISPAM_STABILIZATION.md`):
+
+- Rate limits: OTP, login, register, password reset, upload, favorites, listing update (+ existing listing/lead/report).
+- Upload: listing restriction + magic-byte MIME check.
+- Renew/restore: listing restriction; JSON-LD XSS escape.
+- Forgot-password: token no longer logged in full URL.
+- Gaps: Redis rate limit, CSRF/origin hardening, duplicate-report DB constraint.
+
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **готова как MVP**.  
-UI заморожен. Flows 42–47 стабилизированы. Следующий приоритет — `/compare` или вырезать.
+UI заморожен. Flows 42–48 стабилизированы. Следующий приоритет — `/compare` или вырезать.

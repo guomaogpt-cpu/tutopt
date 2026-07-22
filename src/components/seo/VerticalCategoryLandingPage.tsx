@@ -18,6 +18,7 @@ import {
 } from "@/features/seo/vertical-category-seo";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
+import { serializeJsonLd } from "@/shared/seo/serialize-json-ld";
 
 const VERTICAL_SEO_STYLES: Record<
   ListingVertical,
@@ -88,12 +89,12 @@ export function VerticalCategoryLandingPage({
     <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       {itemListJsonLd ? (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(itemListJsonLd) }}
         />
       ) : null}
 

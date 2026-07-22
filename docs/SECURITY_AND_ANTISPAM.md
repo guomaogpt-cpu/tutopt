@@ -62,6 +62,8 @@
 
 OTP rate limit **не изменялся** (`src/features/auth/lib/phone-otp.ts`).
 
+> **Update (Phase 48):** см. `docs/SECURITY_ANTISPAM_STABILIZATION.md` — добавлены in-memory limits на OTP/login/register/password reset/upload/favorites/listing update; magic-byte upload check; JSON-LD escape.
+
 ### Проверка дублей объявлений
 
 Файл: `src/features/listings/lib/listing-duplicate-check.ts`

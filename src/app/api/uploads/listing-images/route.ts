@@ -2,6 +2,8 @@ import { UserRole } from "@prisma/client";
 import { requireAuth } from "@/features/auth/lib/session";
 import { saveListingImageFile } from "@/features/listings/lib/save-upload";
 import { isUploadFileLike } from "@/features/listings/lib/upload-file-like";
+import { assertUploadRateLimit } from "@/lib/security/rate-limit";
+import { getCreateListingRestrictionMessage } from "@/lib/security/user-restrictions";
 import { jsonData, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, ValidationError } from "@/shared/lib/errors";
 
@@ -12,6 +14,13 @@ export async function POST(request: Request) {
     if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
       throw new ForbiddenError("Only sellers can upload listing images");
     }
+
+    const restrictionMessage = getCreateListingRestrictionMessage(user);
+    if (restrictionMessage) {
+      throw new ForbiddenError(restrictionMessage);
+    }
+
+    assertUploadRateLimit(user.id);
 
     const formData = await request.formData();
     const file = formData.get("file");

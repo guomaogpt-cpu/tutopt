@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { requireAuth } from "@/features/auth/lib/session";
+import { assertFavoriteToggleRateLimit } from "@/lib/security/rate-limit";
 import { jsonData, withApiHandler } from "@/shared/lib/api-route";
 import { NotFoundError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
@@ -35,6 +36,7 @@ async function ensureListingExists(listingId: string) {
 export async function POST(_request: Request, context: FavoriteRouteContext) {
   return withApiHandler(async () => {
     const user = await requireAuth();
+    assertFavoriteToggleRateLimit(user.id);
     const listingId = await getListingId(context);
 
     await ensureListingExists(listingId);
@@ -60,6 +62,7 @@ export async function POST(_request: Request, context: FavoriteRouteContext) {
 export async function DELETE(_request: Request, context: FavoriteRouteContext) {
   return withApiHandler(async () => {
     const user = await requireAuth();
+    assertFavoriteToggleRateLimit(user.id);
     const listingId = await getListingId(context);
 
     await prisma.favorite.deleteMany({

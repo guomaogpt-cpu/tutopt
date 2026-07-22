@@ -1,6 +1,8 @@
 import { verifyPassword } from "@/features/auth/lib/password";
 import { createSession, publicUserSelect } from "@/features/auth/lib/session";
 import { loginSchema } from "@/features/auth/validators/auth.validators";
+import { getClientIpFromRequest } from "@/lib/security/client-ip";
+import { assertLoginRateLimits } from "@/lib/security/rate-limit";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, UnauthorizedError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
@@ -9,6 +11,8 @@ import { prisma } from "@/shared/lib/prisma";
 export async function POST(request: Request) {
   return withApiHandler(async () => {
     const input = await parseJsonBody(request, loginSchema);
+    const ip = getClientIpFromRequest(request);
+    assertLoginRateLimits(input.phone, ip);
 
     const user = await prisma.user.findUnique({
       where: { phone: input.phone },

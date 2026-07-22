@@ -4,6 +4,7 @@ import { slugifyTitle } from "@/features/listings/lib/slug";
 import { updateListingSchema } from "@/features/listings/validators/listing.validators";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import { validateListingContent } from "@/lib/moderation/content-checks";
+import { assertListingUpdateRateLimit } from "@/lib/security/rate-limit";
 import { getEditListingRestrictionMessage } from "@/lib/security/user-restrictions";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import {
@@ -35,6 +36,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (restrictionMessage) {
       throw new ForbiddenError(restrictionMessage);
     }
+
+    assertListingUpdateRateLimit(user.id);
 
     const input = await parseJsonBody(request, updateListingSchema);
     const vertical = input.vertical;

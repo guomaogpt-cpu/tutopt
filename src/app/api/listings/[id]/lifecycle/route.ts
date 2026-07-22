@@ -2,7 +2,7 @@ import { ListingStatus, UserRole } from "@prisma/client";
 import { z } from "zod";
 import { requireAuth } from "@/features/auth/lib/session";
 import { createAuditLog } from "@/lib/audit/audit-log";
-import { isUserBlocked } from "@/lib/security/user-restrictions";
+import { isUserBlocked, getEditListingRestrictionMessage } from "@/lib/security/user-restrictions";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
@@ -35,6 +35,14 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     const input = await parseJsonBody(request, lifecycleSchema);
+
+    // Restore re-enters moderation like create/edit — respect listing restriction.
+    if (input.action === "restore") {
+      const restrictionMessage = getEditListingRestrictionMessage(user);
+      if (restrictionMessage) {
+        throw new ForbiddenError(restrictionMessage);
+      }
+    }
 
     const listing = await prisma.listing.findUnique({
       where: { id },

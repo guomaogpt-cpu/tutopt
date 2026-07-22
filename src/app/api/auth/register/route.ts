@@ -4,6 +4,8 @@ import { verifyPhoneVerificationToken } from "@/features/auth/lib/phone-otp";
 import { createSession, publicUserSelect } from "@/features/auth/lib/session";
 import { createSellerProfileForUser } from "@/features/listings/lib/seller-profile";
 import { registerSchema } from "@/features/auth/validators/auth.validators";
+import { getClientIpFromRequest } from "@/lib/security/client-ip";
+import { assertRegisterRateLimit } from "@/lib/security/rate-limit";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ConflictError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
@@ -11,6 +13,9 @@ import { prisma } from "@/shared/lib/prisma";
 
 export async function POST(request: Request) {
   return withApiHandler(async () => {
+    const ip = getClientIpFromRequest(request);
+    assertRegisterRateLimit(ip);
+
     const input = await parseJsonBody(request, registerSchema);
 
     if (input.role !== UserRole.BUYER && input.role !== UserRole.SELLER) {

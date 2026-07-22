@@ -2,6 +2,8 @@ import { AuthProvider } from "@prisma/client";
 import { hashPassword } from "@/features/auth/lib/password";
 import { hashToken } from "@/features/auth/lib/tokens";
 import { resetPasswordSchema } from "@/features/auth/validators/auth.validators";
+import { getClientIpFromRequest } from "@/lib/security/client-ip";
+import { assertResetPasswordRateLimit } from "@/lib/security/rate-limit";
 import { jsonMessage, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ValidationError } from "@/shared/lib/errors";
 import { logger } from "@/shared/lib/logger";
@@ -9,6 +11,9 @@ import { prisma } from "@/shared/lib/prisma";
 
 export async function POST(request: Request) {
   return withApiHandler(async () => {
+    const ip = getClientIpFromRequest(request);
+    assertResetPasswordRateLimit(ip);
+
     const input = await parseJsonBody(request, resetPasswordSchema);
     const tokenHash = hashToken(input.token);
 
