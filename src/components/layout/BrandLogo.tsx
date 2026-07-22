@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 export const BRAND_LOGO_SRC = "/images/vsetut.png";
 
 const variantSizeClasses = {
-  header: "h-10 w-auto max-w-[120px] md:h-12 md:max-w-[140px] lg:h-14 lg:max-w-[160px]",
-  footer: "h-9 w-auto max-w-[110px] md:h-10 md:max-w-[120px]",
-  default: "h-10 w-auto max-w-[120px]",
+  header: "h-10 w-auto max-w-[160px] md:h-12 md:max-w-[200px] lg:h-14 lg:max-w-[220px]",
+  footer: "h-9 w-auto max-w-[140px] md:h-10 md:max-w-[160px]",
+  default: "h-10 w-auto max-w-[160px]",
 } as const;
 
 type BrandLogoVariant = keyof typeof variantSizeClasses;
@@ -31,7 +31,7 @@ export function BrandLogo({
     <Image
       src={BRAND_LOGO_SRC}
       alt="ВсеТут"
-      width={160}
+      width={220}
       height={56}
       priority={priority}
       className={cn("object-contain", variantSizeClasses[variant], className)}
