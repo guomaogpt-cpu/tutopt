@@ -47,7 +47,7 @@ export function ServicesLandingPage({
               В ТутУслугах пока нет объявлений
             </div>
           ) : (
-            <div className="grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {listings.map((listing) => (
                 <div key={listing.id} className="min-w-0 w-full">
                   <ListingCard listing={listing} variant="catalog" />
