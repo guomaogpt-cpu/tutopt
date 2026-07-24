@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 
 export type SearchWithSuggestProps = {
   id?: string;
-  variant?: "header" | "hero";
+  variant?: "header" | "hero" | "phrase";
   placeholder?: string;
   buttonLabel?: string;
   className?: string;
@@ -64,9 +64,11 @@ export function SearchWithSuggest({
   );
 
   const isHero = variant === "hero";
+  const isPhrase = variant === "phrase";
   const resolvedPlaceholder =
-    placeholder ?? (isHero ? "Что вы ищете?" : "Найти товары, услуги…");
-  const resolvedButtonLabel = buttonLabel ?? (isHero ? "Найти" : "Найти");
+    placeholder ??
+    (isHero || isPhrase ? "Что вы ищете?" : "Найти товары, услуги…");
+  const resolvedButtonLabel = buttonLabel ?? "Найти";
   const searchVertical = resolveSearchVertical(pathname, searchParams);
 
   useEffect(() => {
@@ -205,19 +207,33 @@ export function SearchWithSuggest({
     }
   }
 
-  if (isHero) {
+  if (isHero || isPhrase) {
+    const compact = isPhrase;
+
     return (
       <form
         onSubmit={handleSubmit}
-        className={cn("w-full min-w-0 max-w-[760px] overflow-x-clip", className)}
+        className={cn(
+          "w-full min-w-0 overflow-x-clip",
+          compact ? "max-w-none" : "max-w-[760px]",
+          className,
+        )}
       >
         <label htmlFor={inputId} className="sr-only">
-          Поиск оптовых товаров
+          {compact ? "Поиск объявлений" : "Поиск оптовых товаров"}
         </label>
-        <div className="flex flex-col md:flex-row md:items-stretch">
+        <div
+          className={cn(
+            "flex flex-col",
+            compact ? "gap-2 sm:flex-row sm:items-stretch sm:gap-0" : "md:flex-row md:items-stretch",
+          )}
+        >
           <div ref={containerRef} className="relative z-20 min-w-0 w-full flex-1">
             <Search
-              className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-[18px] -translate-y-1/2 text-muted-foreground md:left-4 md:size-5"
+              className={cn(
+                "pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-muted-foreground",
+                compact ? "size-4" : "size-[18px] md:left-4 md:size-5",
+              )}
               aria-hidden="true"
             />
             <input
@@ -235,8 +251,10 @@ export function SearchWithSuggest({
               aria-controls={dropdownId}
               aria-autocomplete="list"
               className={cn(
-                "h-12 w-full min-w-0 rounded-[14px] border border-input bg-white py-0 pl-10 pr-3 text-[15px] text-slate-900 shadow-sm transition placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                "md:h-14 md:rounded-l-2xl md:rounded-r-none md:border-r-0 md:pl-12 md:pr-4",
+                "w-full min-w-0 border border-input bg-white py-0 text-[15px] text-slate-900 shadow-sm transition placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                compact
+                  ? "h-11 rounded-xl pl-10 pr-3 sm:rounded-l-xl sm:rounded-r-none sm:border-r-0"
+                  : "h-12 rounded-[14px] pl-10 pr-3 md:h-14 md:rounded-l-2xl md:rounded-r-none md:border-r-0 md:pl-12 md:pr-4",
                 inputClassName,
               )}
             />
@@ -253,7 +271,12 @@ export function SearchWithSuggest({
           <Button
             type="submit"
             disabled={disabled}
-            className="mt-2.5 h-12 w-full shrink-0 rounded-[14px] bg-[#2563EB] px-5 hover:bg-[#1D4ED8] md:mt-0 md:h-14 md:w-[180px] md:rounded-l-none md:rounded-r-2xl"
+            className={cn(
+              "shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8]",
+              compact
+                ? "h-11 w-full rounded-xl px-5 sm:mt-0 sm:w-auto sm:min-w-[7.5rem] sm:rounded-l-none sm:rounded-r-xl"
+                : "mt-2.5 h-12 w-full rounded-[14px] px-5 md:mt-0 md:h-14 md:w-[180px] md:rounded-l-none md:rounded-r-2xl",
+            )}
           >
             {resolvedButtonLabel}
           </Button>

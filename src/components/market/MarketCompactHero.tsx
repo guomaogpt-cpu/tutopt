@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ListingVertical } from "@prisma/client";
 import { ChevronRight, LayoutGrid } from "lucide-react";
-import { HomeHeroSearch } from "@/components/home/HomeHeroSearch";
+import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import {
@@ -20,6 +20,9 @@ import { getMarketCategoryVisual } from "@/features/market/market-category-visua
 import { getCategorySeoSlug } from "@/features/seo/category-seo-slug";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
+
+/** Added by product as tutoby.png; filename on disk is totoby.png. */
+export const MARKET_HERO_BACKGROUND_IMAGE = "/images/totoby.png";
 
 export type MarketCategoryItem = {
   id: string;
@@ -50,21 +53,37 @@ export function MarketCompactHero({ categories }: MarketCompactHeroProps) {
   }, [categories]);
 
   return (
-    <section className="border-b border-indigo-200 bg-gradient-to-br from-indigo-600 via-indigo-500 to-violet-500 shadow-sm">
-      <div className="px-4 py-8 md:px-0 md:py-10">
-        <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
-            Объявления
-          </h1>
+    <section className="relative overflow-hidden border-b border-indigo-200/40 shadow-sm">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-cover bg-no-repeat"
+        style={{
+          backgroundImage: `url("${MARKET_HERO_BACKGROUND_IMAGE}")`,
+          backgroundPosition: "center right",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/10 to-transparent"
+      />
 
-          <div className="mt-4 w-full min-w-0">
-            <HomeHeroSearch
+      <div className="relative px-4 py-8 md:px-0 md:py-10">
+        <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
+          <div className="flex w-full max-w-5xl min-w-0 flex-col gap-3 md:flex-row md:items-center md:gap-4">
+            <h1 className="shrink-0 text-lg font-medium leading-tight text-white drop-shadow-sm md:text-xl">
+              Ищите{" "}
+              <span className="font-bold text-white">объявления</span>
+            </h1>
+
+            <SearchWithSuggest
+              variant="phrase"
               placeholder="Найти товар или объявление..."
               buttonLabel="Найти"
+              className="min-w-0 flex-1"
             />
           </div>
 
-          <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 md:flex md:flex-wrap">
+          <div className="mt-4 grid max-w-5xl grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 md:flex md:flex-wrap">
             <Button
               className="h-11 w-full rounded-xl bg-white text-indigo-700 hover:bg-white/95 active:scale-[0.98] md:w-auto"
               asChild
@@ -76,7 +95,7 @@ export function MarketCompactHero({ categories }: MarketCompactHeroProps) {
               <DrawerTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/35 bg-white/10 px-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 active:scale-[0.98] md:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/45 bg-white/15 px-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/25 active:scale-[0.98] md:w-auto"
                 >
                   <LayoutGrid className="size-4 shrink-0" aria-hidden="true" />
                   Категории
