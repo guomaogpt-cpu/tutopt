@@ -1,4 +1,3 @@
-import type { LucideIcon } from "lucide-react";
 import {
   Baby,
   Car,
@@ -11,17 +10,9 @@ import {
   Sofa,
   WashingMachine,
 } from "lucide-react";
+import type { VerticalCategoryVisual } from "@/features/verticals/vertical-category-visual-types";
 
-export type MarketCategoryVisual = {
-  icon: LucideIcon;
-  /** Soft pastel tint for icon chip + card hover */
-  chipClassName: string;
-  iconClassName: string;
-  featured: boolean;
-  featuredOrder: number;
-};
-
-const BY_SEO_SLUG: Record<string, MarketCategoryVisual> = {
+const BY_SEO_SLUG: Record<string, VerticalCategoryVisual> = {
   "telefony-i-elektronika": {
     icon: Smartphone,
     chipClassName: "bg-violet-100",
@@ -94,7 +85,7 @@ const BY_SEO_SLUG: Record<string, MarketCategoryVisual> = {
   },
 };
 
-const FALLBACK: MarketCategoryVisual = {
+const FALLBACK: VerticalCategoryVisual = {
   icon: Home,
   chipClassName: "bg-violet-100",
   iconClassName: "text-violet-700",
@@ -102,6 +93,9 @@ const FALLBACK: MarketCategoryVisual = {
   featuredOrder: 100,
 };
 
-export function getMarketCategoryVisual(seoSlug: string): MarketCategoryVisual {
+export function getMarketCategoryVisual(
+  seoSlug: string,
+  _dbSlug?: string,
+): VerticalCategoryVisual {
   return BY_SEO_SLUG[seoSlug] ?? FALLBACK;
 }

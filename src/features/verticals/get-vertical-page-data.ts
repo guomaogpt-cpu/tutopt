@@ -32,7 +32,7 @@ export async function getVerticalPageData(
         parent_id: null,
       },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
-      take: verticalId === "MARKET" ? 24 : 12,
+      take: verticalId === "MARKET" || verticalId === "OPT" ? 24 : 12,
       select: { id: true, name: true, slug: true, vertical: true },
     }),
     prisma.listing.findMany({

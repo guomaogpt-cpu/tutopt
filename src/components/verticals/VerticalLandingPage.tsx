@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ListingVertical } from "@prisma/client";
 import { ListingCard } from "@/components/listings/ListingCard";
 import { MarketCategoryHighlights } from "@/components/market/MarketCategoryHighlights";
+import { OptCategoryHighlights } from "@/components/opt/OptCategoryHighlights";
 import { VerticalHero } from "@/components/verticals/VerticalHero";
 import { VerticalCards } from "@/components/verticals/VerticalCards";
 import { Container } from "@/components/ui/container";
@@ -108,6 +109,8 @@ export function VerticalLandingPage({
 
         {verticalId === "MARKET" ? (
           <MarketCategoryHighlights categories={categories} />
+        ) : verticalId === "OPT" ? (
+          <OptCategoryHighlights categories={categories} />
         ) : (
           <section aria-labelledby="vertical-categories-heading">
               <h2
