@@ -1,5 +1,5 @@
 import { ListingVertical } from "@prisma/client";
-import { VerticalLandingPage } from "@/components/verticals/VerticalLandingPage";
+import { OptLandingPage } from "@/components/opt/OptLandingPage";
 import { getVerticalPageData } from "@/features/verticals/get-vertical-page-data";
 import { buildVerticalPageMetadata } from "@/shared/seo/seo.config";
 
@@ -9,11 +9,6 @@ export default async function OptVerticalPage() {
   const data = await getVerticalPageData(ListingVertical.OPT);
 
   return (
-    <VerticalLandingPage
-      vertical={ListingVertical.OPT}
-      categories={data.categories}
-      listings={data.listings}
-      publishedCount={data.publishedCount}
-    />
+    <OptLandingPage categories={data.categories} listings={data.listings} />
   );
 }

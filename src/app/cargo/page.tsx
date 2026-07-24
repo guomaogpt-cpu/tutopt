@@ -1,5 +1,5 @@
 import { ListingVertical } from "@prisma/client";
-import { VerticalLandingPage } from "@/components/verticals/VerticalLandingPage";
+import { CargoLandingPage } from "@/components/cargo/CargoLandingPage";
 import { getVerticalPageData } from "@/features/verticals/get-vertical-page-data";
 import { buildVerticalPageMetadata } from "@/shared/seo/seo.config";
 
@@ -9,11 +9,6 @@ export default async function CargoVerticalPage() {
   const data = await getVerticalPageData(ListingVertical.CARGO);
 
   return (
-    <VerticalLandingPage
-      vertical={ListingVertical.CARGO}
-      categories={data.categories}
-      listings={data.listings}
-      publishedCount={data.publishedCount}
-    />
+    <CargoLandingPage categories={data.categories} listings={data.listings} />
   );
 }
