@@ -52,7 +52,7 @@ export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
   }, [categories]);
 
   return (
-    <section className="relative overflow-hidden border-b border-teal-200/40 shadow-sm">
+    <section className="relative min-h-[300px] overflow-hidden border-b border-teal-200/40 shadow-sm md:h-[300px]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-no-repeat"
@@ -63,10 +63,10 @@ export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/10 to-transparent"
+        className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/10 to-transparent"
       />
 
-      <div className="relative px-4 py-8 md:px-0 md:py-10">
+      <div className="relative flex min-h-[300px] items-center px-4 py-6 md:h-full md:px-0 md:py-0">
         <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
           <div className="flex w-full max-w-5xl min-w-0 flex-col gap-3 md:flex-row md:items-center md:gap-4">
             <h1 className="shrink-0 text-lg font-medium leading-tight text-white drop-shadow-sm md:text-xl">
