@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ListingVertical } from "@prisma/client";
 import { ListingCard } from "@/components/listings/ListingCard";
-import { MarketCategoryHighlights } from "@/components/market/MarketCategoryHighlights";
 import { OptCategoryHighlights } from "@/components/opt/OptCategoryHighlights";
 import { VerticalHero } from "@/components/verticals/VerticalHero";
 import { VerticalCards } from "@/components/verticals/VerticalCards";
@@ -107,45 +106,43 @@ export function VerticalLandingPage({
           </div>
         </section>
 
-        {verticalId === "MARKET" ? (
-          <MarketCategoryHighlights categories={categories} />
-        ) : verticalId === "OPT" ? (
+        {verticalId === "OPT" ? (
           <OptCategoryHighlights categories={categories} />
         ) : (
           <section aria-labelledby="vertical-categories-heading">
-              <h2
-                id="vertical-categories-heading"
-                className="text-lg font-semibold tracking-tight text-[#0F172A]"
-              >
-                Категории
-              </h2>
+            <h2
+              id="vertical-categories-heading"
+              className="text-lg font-semibold tracking-tight text-[#0F172A]"
+            >
+              Категории
+            </h2>
 
-              {categories.length === 0 ? (
-                <div className="mt-4 rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white px-5 py-7 text-sm text-[#64748B]">
-                  Категории появятся после запуска раздела
-                </div>
-              ) : (
-                <ul className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4">
-                  {categories.map((category) => {
-                    const seoHref = `/${config.slug}/${getCategorySeoSlug(category)}`;
+            {categories.length === 0 ? (
+              <div className="mt-4 rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white px-5 py-7 text-sm text-[#64748B]">
+                Категории появятся после запуска раздела
+              </div>
+            ) : (
+              <ul className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4">
+                {categories.map((category) => {
+                  const seoHref = `/${config.slug}/${getCategorySeoSlug(category)}`;
 
-                    return (
-                      <li key={category.id} className="min-w-0">
-                        <Link
-                          href={seoHref}
-                          className={cn(
-                            "flex h-full min-h-[56px] items-center rounded-2xl border border-slate-200 bg-white py-3 pl-3.5 pr-3.5 text-sm font-medium text-[#334155] shadow-[0_4px_12px_rgba(15,23,42,0.03)] transition-colors",
-                            styles.categoryAccent,
-                            styles.categoryHover,
-                          )}
-                        >
-                          <span className="line-clamp-2">{category.name}</span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
+                  return (
+                    <li key={category.id} className="min-w-0">
+                      <Link
+                        href={seoHref}
+                        className={cn(
+                          "flex h-full min-h-[56px] items-center rounded-2xl border border-slate-200 bg-white py-3 pl-3.5 pr-3.5 text-sm font-medium text-[#334155] shadow-[0_4px_12px_rgba(15,23,42,0.03)] transition-colors",
+                          styles.categoryAccent,
+                          styles.categoryHover,
+                        )}
+                      >
+                        <span className="line-clamp-2">{category.name}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </section>
         )}
 
