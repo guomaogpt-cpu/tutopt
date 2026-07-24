@@ -75,7 +75,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-slate-200 py-6 dark:border-slate-800">
-          <p className="text-sm text-slate-500 dark:text-slate-500">© 2026 Tutopt. Все права защищены.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-500">© 2026 ВсеТут. Все права защищены.</p>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-500">
             Оптовые объявления для бизнеса в Кыргызстане.
           </p>

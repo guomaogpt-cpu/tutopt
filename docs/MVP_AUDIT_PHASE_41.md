@@ -147,10 +147,11 @@ Seller management видит все свои статусы — корректн
 | **47** | ~~SEO/indexing~~ — **done** (`docs/SEO_INDEXING_STABILIZATION.md`) |
 | **48** | ~~Security/anti-spam~~ — **done** (`docs/SECURITY_ANTISPAM_STABILIZATION.md`) |
 | **49** | ~~Final smoke checklist / launch blockers~~ — **done** (`docs/FINAL_SMOKE_TEST_CHECKLIST.md`, `docs/LAUNCH_BLOCKERS.md`) |
-| **50** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
-| **51** | Saved searches polish + catalog filter consistency |
-| **52** | Buyer dashboard role gate / seller-vs-buyer IA |
-| **53** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
+| **50** | ~~Final cleanup before launch~~ — **done** (`docs/LAUNCH_READINESS_SUMMARY.md`) |
+| **51** | Compare MVP (`/compare`) или явно вырезать из docs/roadmap |
+| **52** | Saved searches polish + catalog filter consistency |
+| **53** | Buyer dashboard role gate / seller-vs-buyer IA |
+| **54** | Soft-delete / trash retention (если нужна отдельно от ARCHIVED) |
 
 ## Seller flow follow-up — Phase 42
 
@@ -229,7 +230,17 @@ UI / schema / uploads / auth architecture не менялись.
 - Code audit: **no critical launch blockers** found; `/compare` and soft-delete remain known non-blockers.
 - **Code checks passed. Manual smoke test is still required.**
 
+## Final cleanup — Phase 50
+
+Выполнено в Phase 50 (см. `docs/LAUNCH_READINESS_SUMMARY.md`):
+
+- Удалены dead mock/home helpers (`PopularListings`, `QuickCategories`, `ForWhomSection`, unused SearchBar, public/home mock-data, unused paper-banner helpers).
+- Удалены неиспользуемые temp images (`ChatGPT Image…`, `bgTil.png`); logo `vsetut.png` и `bgZul.png` сохранены.
+- Brand: активные UI/SEO-тексты Tutopt → ВсеТут; ТутМаркет → Объявления в moderation copy.
+- API: `normalizeError` не отдаёт raw Error/Prisma message клиенту; upload 404 log без путей диска.
+- **Code cleanup completed. Manual smoke test still required before launch.**
+
 ## Current MVP state (кратко)
 
 Платформа с 4 направлениями, каталогом, CRUD объявлений, moderation, leads, favorites, dashboards, auth, Railway deploy — **MVP code-ready**.  
-UI заморожен. Flows 42–49 documented. Launch требует ручной smoke на production. Следующий backlog — `/compare` или вырезать.
+UI заморожен. Flows 41–50 documented. Launch требует ручной smoke на production. Следующий backlog — `/compare` или вырезать.

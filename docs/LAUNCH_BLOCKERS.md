@@ -42,6 +42,11 @@ Deliverables:
 - `docs/LAUNCH_BLOCKERS.md` — this status doc
 - Roadmap note in `docs/MVP_AUDIT_PHASE_41.md`
 
+## Phase 50 cleanup note
+
+Final pre-launch cleanup (dead mock components, unused temp images, brand ВсеТут in active UI/copy, safer API error messages, quieter upload 404 logs).  
+See `docs/LAUNCH_READINESS_SUMMARY.md`. No schema/migration. Manual smoke still required.
+
 ---
 
 ## Remaining manual checks

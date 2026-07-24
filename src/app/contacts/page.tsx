@@ -8,7 +8,7 @@ export default function ContactsPage() {
         <PublicPageHeader
           eyebrow="Связь"
           title="Контакты"
-          description="Свяжитесь с командой Tutopt по вопросам сотрудничества и поддержки."
+          description="Свяжитесь с командой ВсеТут по вопросам сотрудничества и поддержки."
         />
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:max-w-3xl">

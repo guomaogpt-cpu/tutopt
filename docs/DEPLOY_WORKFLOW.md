@@ -1,6 +1,6 @@
 # Deploy Workflow (Railway)
 
-Инструкция по дальнейшей работе с production deploy Tutopt на Railway.
+Инструкция по дальнейшей работе с production deploy ВсеТут на Railway.
 
 Первичный сетап: [`README_DEPLOY.md`](../README_DEPLOY.md).
 
@@ -8,7 +8,7 @@
 
 ## 1. Как работает текущий deploy
 
-- Проект Tutopt подключён к Railway через **GitHub Repository**.
+- Проект ВсеТут (репозиторий tutopt) подключён к Railway через **GitHub Repository**.
 - Production URL: [https://tutopt-production.up.railway.app](https://tutopt-production.up.railway.app)
 - Push в ветку `main` запускает Railway deploy.
 - Railway сам делает **build / redeploy** после push.
@@ -86,8 +86,8 @@ Railway → **tutopt** → **Deployments** — дождаться successful dep
 | Health check | `/api/health` |
 | Sitemap | `/sitemap.xml` |
 | Robots | `/robots.txt` |
-| ТутОпт | `/opt` |
-| ТутМаркет | `/market` |
+| Опт (ТутОпт) | `/opt` |
+| Объявления | `/market` |
 | ТутУслуги | `/services` |
 | ТутКарго | `/cargo` |
 

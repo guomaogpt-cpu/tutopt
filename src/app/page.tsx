@@ -14,11 +14,7 @@ import {
   buildPageMetadata,
 } from "@/shared/seo/seo.config";
 
-// Old homepage hero hidden after paper banner entry design
-// import { HeroSection } from "@/components/home/HeroSection";
-
-// PNG paper banner kept as reference, active layout is HTML/CSS for responsiveness
-// public/images/homepage-paper-banner.png — not rendered on homepage
+// Legacy HeroSection intentionally kept in codebase but not rendered.
 
 export const dynamic = "force-dynamic";
 
@@ -37,10 +33,6 @@ export default async function HomePage() {
 
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F8FAFC]">
-      {/* Old homepage hero hidden — paperBoard experiment disabled
-      <HeroSection stats={stats} />
-      */}
-      {/* PNG / paperBoard not used as active layout */}
       <HomepagePaperEntry />
       <RecentListingsSection
         listings={listings}

@@ -2,7 +2,6 @@ import { readFile, stat } from "fs/promises";
 import { NextResponse } from "next/server";
 import {
   getImageContentType,
-  getUploadRootDir,
   resolveSafeUploadPath,
 } from "@/features/listings/lib/upload-paths";
 
@@ -10,54 +9,33 @@ type RouteParams = {
   params: Promise<{ path: string[] }>;
 };
 
-function notFoundResponse(details: {
-  uploadDir: string;
-  requestedPath: string;
-  filePath: string | null;
-}) {
-  console.warn("[uploads] not found", details);
+function notFoundResponse(requestedPath: string) {
+  console.warn("[uploads] not found", { requestedPath });
   return new NextResponse("Not found", { status: 404 });
 }
 
 export async function GET(_request: Request, { params }: RouteParams) {
   const { path: pathParts } = await params;
-  const uploadDir = getUploadRootDir();
   const requestedPath = pathParts?.join("/") ?? "";
 
   if (!pathParts || pathParts.length === 0) {
-    return notFoundResponse({
-      uploadDir,
-      requestedPath,
-      filePath: null,
-    });
+    return notFoundResponse(requestedPath);
   }
 
   const absolutePath = resolveSafeUploadPath(pathParts);
   if (!absolutePath) {
-    return notFoundResponse({
-      uploadDir,
-      requestedPath,
-      filePath: null,
-    });
+    return notFoundResponse(requestedPath);
   }
 
   const contentType = getImageContentType(absolutePath);
   if (!contentType) {
-    return notFoundResponse({
-      uploadDir,
-      requestedPath,
-      filePath: absolutePath,
-    });
+    return notFoundResponse(requestedPath);
   }
 
   try {
     const fileStat = await stat(absolutePath);
     if (!fileStat.isFile()) {
-      return notFoundResponse({
-        uploadDir,
-        requestedPath,
-        filePath: absolutePath,
-      });
+      return notFoundResponse(requestedPath);
     }
 
     const buffer = await readFile(absolutePath);
@@ -71,10 +49,6 @@ export async function GET(_request: Request, { params }: RouteParams) {
       },
     });
   } catch {
-    return notFoundResponse({
-      uploadDir,
-      requestedPath,
-      filePath: absolutePath,
-    });
+    return notFoundResponse(requestedPath);
   }
 }

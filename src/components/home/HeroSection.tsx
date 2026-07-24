@@ -41,7 +41,7 @@ export function HeroSection({ stats }: HeroSectionProps) {
           <div className="grid min-w-0 items-center gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.7fr)] lg:gap-8">
             <div className="min-w-0 text-white">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-white/70 sm:text-xs">
-                Tutopt — объявления Кыргызстана
+                ВсеТут — объявления Кыргызстана
               </p>
               <h1
                 className={cn(

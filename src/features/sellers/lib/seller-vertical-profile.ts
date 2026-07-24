@@ -96,7 +96,7 @@ export function getSellerProfileDescription(primaryVertical: ListingVertical | n
     case "CARGO":
       return "Грузоперевозки и логистика.";
     default:
-      return "Объявления и предложения на Tutopt.";
+      return "Объявления и предложения на ВсеТут.";
   }
 }
 

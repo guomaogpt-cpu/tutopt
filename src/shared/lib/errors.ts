@@ -85,11 +85,8 @@ export function normalizeError(error: unknown): AppError {
     return error;
   }
 
-  if (error instanceof Error) {
-    return new AppError(error.message, "INTERNAL_ERROR", 500);
-  }
-
-  return new AppError("An unexpected error occurred", "INTERNAL_ERROR", 500);
+  // Never expose raw Error/Prisma messages to clients.
+  return new AppError("Произошла ошибка. Попробуйте позже.", "INTERNAL_ERROR", 500);
 }
 
 export function toErrorResponse(error: unknown): ErrorResponse {

@@ -35,7 +35,7 @@ export function getListingVerticalLabel(vertical: ListingVertical): string {
     case "CARGO":
       return "ТутКарго";
     default:
-      return "Tutopt";
+      return "ВсеТут";
   }
 }
 

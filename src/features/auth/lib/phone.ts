@@ -1,5 +1,5 @@
 /**
- * Normalize phone numbers for Tutopt (KG-first).
+ * Normalize phone numbers for ВсеТут (KG-first).
  * Examples:
  * - 0500123456 -> +996500123456
  * - 996500123456 -> +996500123456
@@ -52,7 +52,7 @@ export function looksLikePhone(input: string): boolean {
   return digits.length >= 9;
 }
 
-/** Strict Tutopt KG phone: +996 + 9 digits */
+/** Strict ВсеТут KG phone: +996 + 9 digits */
 export function isValidKgPhone(phone: string): boolean {
   return /^\+996\d{9}$/.test(phone);
 }
