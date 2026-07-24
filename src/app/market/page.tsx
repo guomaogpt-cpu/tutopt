@@ -12,6 +12,7 @@ export default async function MarketVerticalPage() {
     <MarketLandingPage
       categories={data.categories}
       listings={data.listings}
+      publishedCount={data.publishedCount}
     />
   );
 }
