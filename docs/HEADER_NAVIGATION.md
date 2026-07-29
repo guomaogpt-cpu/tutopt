@@ -47,13 +47,20 @@ Guest: Войти / Регистрация (desktop); на mobile — «Войт
 
 ## Mobile drawer
 
-Секции:
+Секции (Phase 51 — `SettingsDrawer`):
 
-1. **Направления** — Опт, Объявления, Услуги, Карго  
-2. **Аккаунт** (если auth) — кабинет / заявки / избранное / уведомления по роли  
-3. **Выйти** или Войти / Регистрация  
+1. **Аккаунт** — кабинет / Войти / Регистрация  
+2. **Город** — Бишкек (placeholder)  
+3. **Язык** — RU / KG / EN (localStorage only)  
+4. **Тема** — light/dark/system (preference only, Phase 52)  
+5. **Разделы** — Опт, Объявления, Услуги, Карго, Все объявления, Подать объявление  
+6. **Поддержка** — `/help`, `/contacts`  
 
-Без Каталог / Продавцы / Категории.
+Desktop: кнопка `Settings2` справа открывает тот же drawer.
+
+Без Каталог / Продавцы / Категории в primary nav.
+
+Подробнее: `docs/SETTINGS_MENU_PHASE_51.md`.
 
 ## Role-based кабинет (UserMenu + drawer)
 
@@ -75,6 +82,9 @@ Guest: Войти / Регистрация (desktop); на mobile — «Войт
 
 - mega menu
 - categories dropdown
-- city selector
+- city selector (real)
 - saved searches in header
 - sticky mobile bottom nav
+- Phase 52: real theme via next-themes
+- Phase 53: full i18n RU/KG/EN
+- Phase 55–56: image search
