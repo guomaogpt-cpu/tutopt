@@ -18,6 +18,7 @@ import { SettingsDrawer } from "@/components/layout/header/SettingsDrawer";
 import { UserMenu } from "@/components/layout/header/UserMenu";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type HeaderClientProps = {
@@ -26,6 +27,7 @@ type HeaderClientProps = {
 
 export function HeaderClient({ user }: HeaderClientProps) {
   const pathname = usePathname();
+  const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
@@ -36,13 +38,13 @@ export function HeaderClient({ user }: HeaderClientProps) {
 
           <nav
             className="hidden shrink-0 items-center gap-1 lg:flex"
-            aria-label="Основная навигация"
+            aria-label={t("nav.main")}
           >
             {HEADER_PRIMARY_LINKS.map((link) => (
               <HeaderNavLink
                 key={link.href}
                 href={link.href}
-                label={link.label}
+                label={t(link.labelKey)}
                 isActive={isNavLinkActive(pathname, link.href)}
               />
             ))}
@@ -69,14 +71,14 @@ export function HeaderClient({ user }: HeaderClientProps) {
                   className="h-10 shrink-0 font-medium"
                   asChild
                 >
-                  <Link href="/login">Войти</Link>
+                  <Link href="/login">{t("auth.signIn")}</Link>
                 </Button>
                 <Button
                   variant="outline"
                   className="h-10 shrink-0 border-[#E5E7EB] font-medium"
                   asChild
                 >
-                  <Link href="/register">Регистрация</Link>
+                  <Link href="/register">{t("auth.register")}</Link>
                 </Button>
               </>
             ) : (
@@ -90,7 +92,9 @@ export function HeaderClient({ user }: HeaderClientProps) {
               className="h-10 w-10 shrink-0 border-[#E5E7EB]"
               aria-expanded={settingsOpen}
               aria-controls="settings-drawer-menu"
-              aria-label={settingsOpen ? "Закрыть настройки" : "Открыть настройки"}
+              aria-label={
+                settingsOpen ? t("auth.closeSettings") : t("auth.openSettings")
+              }
               onClick={() => setSettingsOpen(true)}
             >
               <Settings2 className="size-5" aria-hidden="true" />
@@ -103,7 +107,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
 
             {!user ? (
               <Button variant="ghost" className="h-10 shrink-0 px-2.5 font-medium" asChild>
-                <Link href="/login">Войти</Link>
+                <Link href="/login">{t("auth.signIn")}</Link>
               </Button>
             ) : null}
 
@@ -114,7 +118,9 @@ export function HeaderClient({ user }: HeaderClientProps) {
               className="h-10 w-10 shrink-0 border-[#E5E7EB]"
               aria-expanded={settingsOpen}
               aria-controls="settings-drawer-menu"
-              aria-label={settingsOpen ? "Закрыть меню" : "Открыть меню"}
+              aria-label={
+                settingsOpen ? t("auth.closeMenu") : t("auth.openMenu")
+              }
               onClick={() => setSettingsOpen((current) => !current)}
             >
               {settingsOpen ? (
@@ -165,6 +171,8 @@ function HeaderNavLink({ href, label, isActive }: HeaderNavLinkProps) {
 }
 
 function FavoritesButton() {
+  const { t } = useTranslation();
+
   return (
     <Button
       variant="outline"
@@ -172,7 +180,11 @@ function FavoritesButton() {
       className="h-10 w-10 shrink-0 border-[#E5E7EB]"
       asChild
     >
-      <Link href="/favorites" aria-label="Избранное" title="Избранное">
+      <Link
+        href="/favorites"
+        aria-label={t("auth.favorites")}
+        title={t("auth.favorites")}
+      >
         <Heart className="size-4" aria-hidden="true" />
       </Link>
     </Button>

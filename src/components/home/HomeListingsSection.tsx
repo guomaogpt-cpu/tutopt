@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ListingCard } from "@/components/listings/ListingCard";
@@ -5,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type HomeListingsGridProps = {
   listings: ListingCardData[];
@@ -48,27 +51,32 @@ export function RecentListingsSection({
   favoriteListingIds = [],
   createListingHref,
 }: RecentListingsSectionProps) {
+  const { t } = useTranslation();
+
   return (
-    <section data-home-section="listings" className="bg-white pb-5 pt-3 sm:pt-4">
+    <section
+      data-home-section="listings"
+      className="bg-white pb-5 pt-3 sm:pt-4 dark:bg-slate-950"
+    >
       <Container size="lg">
         <div className="mb-3.5 flex items-end justify-between gap-3 sm:mb-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#2563EB]">
-              Витрина
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#2563EB] dark:text-blue-400">
+              {t("home.showcase")}
             </p>
-            <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl">
-              Новые объявления
+            <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl dark:text-slate-100">
+              {t("home.newListings")}
             </h2>
           </div>
           {listings.length > 0 ? (
             <Button
               variant="outline"
               size="sm"
-              className="h-10 rounded-xl border-[rgba(148,163,184,0.22)] bg-white font-semibold text-[#2563EB] hover:bg-[#EFF6FF]"
+              className="h-10 rounded-xl border-[rgba(148,163,184,0.22)] bg-white font-semibold text-[#2563EB] hover:bg-[#EFF6FF] dark:border-slate-700 dark:bg-slate-900 dark:text-blue-400 dark:hover:bg-slate-800"
               asChild
             >
               <Link href="/listings">
-                Смотреть все
+                {t("home.viewAll")}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </Button>
@@ -77,12 +85,12 @@ export function RecentListingsSection({
 
         {listings.length === 0 ? (
           <EmptyState
-            title="Пока нет опубликованных объявлений"
-            description="Разместите объявление бесплатно и дождитесь модерации — оно появится в каталоге."
-            className="border-[#E5E7EB] bg-white"
+            title={t("home.emptyTitle")}
+            description={t("home.emptyDescription")}
+            className="border-[#E5E7EB] bg-white dark:border-slate-800 dark:bg-slate-900"
             action={
               <Button className="bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
-                <Link href={createListingHref}>Подать объявление</Link>
+                <Link href={createListingHref}>{t("vertical.postListing")}</Link>
               </Button>
             }
           />
@@ -109,25 +117,27 @@ export function HomeMoreListingsSection({
   isAuthenticated = false,
   favoriteListingIds = [],
 }: HomeMoreListingsSectionProps) {
+  const { t } = useTranslation();
+
   if (listings.length === 0) {
     return null;
   }
 
   return (
-    <section className="bg-white pb-8 pt-0">
+    <section className="bg-white pb-8 pt-0 dark:bg-slate-950">
       <Container size="lg">
         <div className="mb-5 flex items-end justify-between gap-3">
-          <h2 className="text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl">
-            Последние добавленные
+          <h2 className="text-lg font-bold tracking-tight text-[#0F172A] sm:text-xl dark:text-slate-100">
+            {t("home.moreListings")}
           </h2>
           <Button
             variant="outline"
             size="sm"
-            className="h-10 rounded-xl border-[rgba(148,163,184,0.22)] bg-white font-semibold text-[#2563EB] hover:bg-[#EFF6FF]"
+            className="h-10 rounded-xl border-[rgba(148,163,184,0.22)] bg-white font-semibold text-[#2563EB] hover:bg-[#EFF6FF] dark:border-slate-700 dark:bg-slate-900 dark:text-blue-400 dark:hover:bg-slate-800"
             asChild
           >
             <Link href="/listings">
-              Смотреть все
+              {t("home.viewAll")}
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </Button>

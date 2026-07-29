@@ -11,13 +11,15 @@ import {
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { trackVerticalClick } from "@/lib/analytics/events";
 import { cn } from "@/lib/utils";
 
 type EntryCard = {
   id: "OPT" | "MARKET" | "SERVICES" | "CARGO";
-  label: string;
-  description: string;
+  labelKey: DictionaryKey;
+  descriptionKey: DictionaryKey;
   href: string;
   icon: LucideIcon;
   accentBar: string;
@@ -28,8 +30,8 @@ type EntryCard = {
 const ENTRY_CARDS: EntryCard[] = [
   {
     id: "MARKET",
-    label: "Объявления",
-    description: "Товары от частных лиц и компаний",
+    labelKey: "nav.market",
+    descriptionKey: "home.marketDesc",
     href: "/market",
     icon: Megaphone,
     accentBar: "bg-violet-500",
@@ -38,8 +40,8 @@ const ENTRY_CARDS: EntryCard[] = [
   },
   {
     id: "SERVICES",
-    label: "Услуги",
-    description: "Мастера, специалисты и компании",
+    labelKey: "nav.services",
+    descriptionKey: "home.servicesDesc",
     href: "/services",
     icon: Briefcase,
     accentBar: "bg-emerald-500",
@@ -48,8 +50,8 @@ const ENTRY_CARDS: EntryCard[] = [
   },
   {
     id: "OPT",
-    label: "Опт",
-    description: "Оптовые товары и поставщики",
+    labelKey: "nav.opt",
+    descriptionKey: "home.optDesc",
     href: "/opt",
     icon: Package,
     accentBar: "bg-blue-500",
@@ -58,8 +60,8 @@ const ENTRY_CARDS: EntryCard[] = [
   },
   {
     id: "CARGO",
-    label: "Карго",
-    description: "Грузоперевозки и логистика",
+    labelKey: "nav.cargo",
+    descriptionKey: "home.cargoDesc",
     href: "/cargo",
     icon: Truck,
     accentBar: "bg-orange-500",
@@ -75,36 +77,36 @@ const ENTRY_CARDS: EntryCard[] = [
  * Compact: no “TUTOPT” label / no large “ОБЪЯВЛЕНИЯ” heading.
  */
 export function HomepagePaperEntry() {
+  const { t } = useTranslation();
+
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F8FAFC] pb-6 pt-4 sm:pb-8 sm:pt-4 lg:pb-10"
+      className="overflow-x-clip bg-[#F8FAFC] pb-6 pt-4 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
       aria-labelledby="home-marketplace-lead"
     >
       <Container size="lg">
-        {/* Compact top row: short lead + search */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           <p
             id="home-marketplace-lead"
-            className="min-w-0 max-w-xl text-xl font-bold leading-snug text-[#0F172A] sm:text-2xl lg:text-3xl"
+            className="min-w-0 max-w-xl text-xl font-bold leading-snug text-[#0F172A] sm:text-2xl lg:text-3xl dark:text-slate-100"
           >
-            Покупайте, продавайте, находите услуги
+            {t("home.lead")}
           </p>
 
           <div className="w-full min-w-0 lg:max-w-[440px]">
             <SearchWithSuggest
               id="home-marketplace-search"
               variant="header"
-              placeholder="Поиск объявлений, услуг и компаний..."
-              buttonLabel="Найти"
+              placeholder={t("search.homePlaceholder")}
+              buttonLabel={t("search.find")}
             />
           </div>
         </div>
 
-        {/* Same visual rhythm as section top padding */}
         <ul
           className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
-          aria-label="Направления"
+          aria-label={t("home.directions")}
         >
           {ENTRY_CARDS.map((card) => {
             const Icon = card.icon;
@@ -118,9 +120,10 @@ export function HomepagePaperEntry() {
                   className={cn(
                     "group relative flex h-full min-h-[132px] flex-col overflow-hidden",
                     "rounded-[20px] border border-slate-200/70 bg-white p-4 shadow-sm",
+                    "dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
                     "transition duration-200",
-                    "hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2",
+                    "hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:hover:border-slate-700",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950",
                     "sm:min-h-[140px] sm:p-5",
                   )}
                 >
@@ -130,23 +133,24 @@ export function HomepagePaperEntry() {
                         "flex size-10 shrink-0 items-center justify-center rounded-xl",
                         card.iconWrap,
                         card.iconColor,
+                        "dark:bg-slate-800",
                       )}
                       aria-hidden="true"
                     >
                       <Icon className="size-5" strokeWidth={1.75} />
                     </span>
                     <ArrowRight
-                      className="size-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500"
+                      className="size-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 dark:text-slate-500 dark:group-hover:text-slate-300"
                       aria-hidden="true"
                     />
                   </div>
 
                   <div className="mt-3 min-w-0 flex-1">
-                    <p className="text-[15px] font-bold tracking-tight text-[#0F172A]">
-                      {card.label}
+                    <p className="text-[15px] font-bold tracking-tight text-[#0F172A] dark:text-slate-100">
+                      {t(card.labelKey)}
                     </p>
-                    <p className="mt-1 text-xs leading-snug text-[#64748B] sm:text-[13px]">
-                      {card.description}
+                    <p className="mt-1 text-xs leading-snug text-[#64748B] sm:text-[13px] dark:text-slate-400">
+                      {t(card.descriptionKey)}
                     </p>
                   </div>
 

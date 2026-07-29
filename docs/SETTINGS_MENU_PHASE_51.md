@@ -39,14 +39,17 @@ UI: существующий `Drawer` (`src/components/ui/drawer.tsx`), `side="r
 
 Auth architecture не менялась. Header actions (избранное, уведомления, login/profile) сохранены.
 
-## 4. Language selector (сейчас)
+## 4. Language selector
 
-- Key: `vsetut.locale`
+**Language selector is active since Phase 53.**
+
+- Key: `vsetut.locale` (unchanged)
 - Values: `ru` \| `kg` \| `en`
-- Активная кнопка подсвечивается
-- **Интерфейс не переводится**
+- Active button highlighted
+- Selection updates UI strings via `LocaleProvider` / `useTranslation`
+- Details: `docs/I18N_PHASE_53.md`
 
-→ Полный RU/KG/EN: **Phase 53**
+→ Full SEO locale routes (`/ru` `/kg` `/en`): later phase
 
 ## 5. Theme selector (сейчас)
 

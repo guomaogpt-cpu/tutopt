@@ -35,7 +35,7 @@ export function SellerRecentLeads({ leads }: SellerRecentLeadsProps) {
       </div>
 
       {leads.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-10 text-center">
+        <div className="rounded-3xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-10 text-center dark:border-slate-700 dark:bg-slate-900">
           <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
             <Inbox className="size-5" aria-hidden="true" />
           </div>
@@ -45,7 +45,7 @@ export function SellerRecentLeads({ leads }: SellerRecentLeadsProps) {
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
+        <div className="overflow-hidden rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
           <ul className="divide-y divide-[rgba(148,163,184,0.1)]">
             {leads.map((lead) => (
               <li

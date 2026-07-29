@@ -26,11 +26,11 @@ const roleLabels: Record<PublicUser["role"], string> = {
 
 export function BuyerProfileSection({ user }: BuyerProfileSectionProps) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="text-lg font-semibold text-slate-900">Профиль</h2>
+    <section className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+      <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Профиль</h2>
 
       <div className="mt-5 flex items-start gap-4">
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100">
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800">
           {user.avatar_url ? (
             <Image
               src={user.avatar_url}

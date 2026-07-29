@@ -20,6 +20,7 @@ import { getMarketCategoryVisual } from "@/features/market/market-category-visua
 import { getCategorySeoSlug } from "@/features/seo/category-seo-slug";
 import { buildVerticalCategoryListingsHref } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 export const MARKET_HERO_BACKGROUND_IMAGE = "/images/tutoby.png";
@@ -41,6 +42,7 @@ export function MarketCompactHero({
   listingCount,
 }: MarketCompactHeroProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
   const config = VERTICALS.MARKET;
 
   const sortedCategories = useMemo(() => {
@@ -82,14 +84,16 @@ export function MarketCompactHero({
             <div className="min-w-0 w-full max-w-[45rem]">
               <div className="flex w-full min-w-0 flex-col gap-3 md:flex-row md:items-center md:gap-4">
                 <h1 className="shrink-0 text-lg font-medium leading-tight text-white drop-shadow-sm md:text-xl">
-                  Ищите{" "}
-                  <span className="font-bold text-white">объявления</span>
+                  {t("vertical.seekListings")}{" "}
+                  <span className="font-bold text-white">
+                    {t("vertical.seekListingsAccent")}
+                  </span>
                 </h1>
 
                 <SearchWithSuggest
                   variant="phrase"
-                  placeholder="Найти товар или объявление..."
-                  buttonLabel="Найти"
+                  placeholder={t("search.marketPlaceholder")}
+                  buttonLabel={t("search.find")}
                   className="min-w-0 flex-1"
                 />
               </div>
@@ -99,7 +103,9 @@ export function MarketCompactHero({
                   className="h-11 w-full rounded-xl bg-white text-indigo-700 hover:bg-white/95 active:scale-[0.98] md:w-auto"
                   asChild
                 >
-                  <Link href={config.createListingHref}>Подать объявление</Link>
+                  <Link href={config.createListingHref}>
+                    {t("vertical.postListing")}
+                  </Link>
                 </Button>
 
                 <Drawer open={open} onOpenChange={setOpen}>
@@ -109,7 +115,7 @@ export function MarketCompactHero({
                       className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/45 bg-white/15 px-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/25 active:scale-[0.98] md:w-auto"
                     >
                       <LayoutGrid className="size-4 shrink-0" aria-hidden="true" />
-                      Категории
+                      {t("vertical.categories")}
                     </button>
                   </DrawerTrigger>
 
@@ -118,19 +124,19 @@ export function MarketCompactHero({
                     className="w-[min(85vw,22.5rem)] gap-0 p-0 sm:max-w-[26rem]"
                   >
                     <DrawerHeader className="border-b border-slate-100 pr-12">
-                      <DrawerTitle>Категории</DrawerTitle>
+                      <DrawerTitle>{t("vertical.categories")}</DrawerTitle>
                       <DrawerDescription>
-                        Выберите раздел объявлений
+                        {t("vertical.categoriesDescMarket")}
                       </DrawerDescription>
                     </DrawerHeader>
 
                     <nav
-                      aria-label="Категории объявлений"
+                      aria-label={t("vertical.categories")}
                       className="min-h-0 flex-1 overflow-y-auto px-3 py-3"
                     >
                       {sortedCategories.length === 0 ? (
                         <p className="px-3 py-6 text-sm text-slate-500">
-                          Категории появятся после запуска раздела
+                          {t("vertical.categoriesEmpty")}
                         </p>
                       ) : (
                         <ul className="space-y-1">
@@ -179,14 +185,14 @@ export function MarketCompactHero({
 
             <div
               className="hidden shrink-0 gap-3 md:flex"
-              aria-label="Статистика раздела"
+              aria-label={t("vertical.statsLabel")}
             >
               <div className="flex size-[104px] flex-col items-center justify-center rounded-2xl border border-white/25 bg-white/15 px-2 text-center text-white shadow-sm backdrop-blur-md">
                 <span className="text-2xl font-bold leading-none tracking-tight">
                   {listingCountLabel}
                 </span>
                 <span className="mt-1.5 text-xs font-medium leading-tight text-white/90">
-                  объявлений
+                  {t("vertical.statsListings")}
                 </span>
               </div>
               <div className="flex size-[104px] flex-col items-center justify-center rounded-2xl border border-white/25 bg-white/15 px-2 text-center text-white shadow-sm backdrop-blur-md">
@@ -194,7 +200,7 @@ export function MarketCompactHero({
                   24/7
                 </span>
                 <span className="mt-1.5 text-xs font-medium leading-tight text-white/90">
-                  просмотры объявлений
+                  {t("vertical.statsViews")}
                 </span>
               </div>
             </div>

@@ -75,12 +75,13 @@ export function ListingCard({
       <article
         className={cn(
           "relative z-10 flex h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white",
-          "shadow-[0_4px_14px_rgba(15,23,42,0.04)]",
+          "dark:border-slate-800 dark:bg-slate-900",
+          "shadow-[0_4px_14px_rgba(15,23,42,0.04)] dark:shadow-none",
           "transition-all duration-200 ease-out",
-          "hover:-translate-y-0.5 hover:border-[rgba(148,163,184,0.28)] hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)]",
+          "hover:-translate-y-0.5 hover:border-[rgba(148,163,184,0.28)] hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] dark:hover:border-slate-700",
         )}
       >
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#EEF2F7]">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#EEF2F7] dark:bg-slate-800">
           <Link href={`/listings/${listing.id}`} className="relative block h-full w-full">
             {mainImage ? (
               <Image
@@ -99,10 +100,14 @@ export function ListingCard({
               <div
                 className={cn(
                   "flex h-full flex-col items-center justify-center gap-1.5",
-                  listing.vertical === "OPT" && "bg-blue-50/80 text-blue-300",
-                  listing.vertical === "MARKET" && "bg-indigo-50/80 text-indigo-300",
-                  listing.vertical === "SERVICES" && "bg-teal-50/80 text-teal-300",
-                  listing.vertical === "CARGO" && "bg-rose-50/80 text-rose-300",
+                  listing.vertical === "OPT" &&
+                    "bg-blue-50/80 text-blue-300 dark:bg-blue-950/40 dark:text-blue-400",
+                  listing.vertical === "MARKET" &&
+                    "bg-indigo-50/80 text-indigo-300 dark:bg-indigo-950/40 dark:text-indigo-400",
+                  listing.vertical === "SERVICES" &&
+                    "bg-teal-50/80 text-teal-300 dark:bg-teal-950/40 dark:text-teal-400",
+                  listing.vertical === "CARGO" &&
+                    "bg-rose-50/80 text-rose-300 dark:bg-rose-950/40 dark:text-rose-400",
                 )}
                 aria-hidden="true"
               >
@@ -113,7 +118,7 @@ export function ListingCard({
 
           <VerticalListingBadge
             vertical={listing.vertical}
-            className="absolute left-2 top-2 z-10 bg-white/95 shadow-sm backdrop-blur-sm"
+            className="absolute left-2 top-2 z-10 bg-white/95 shadow-sm backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/95"
           />
 
           <FavoriteButton
@@ -124,7 +129,7 @@ export function ListingCard({
             variant="icon"
             onFavoriteChange={onFavoriteChange}
             className={cn(
-              "absolute right-2 top-2 z-10 rounded-full border border-[rgba(148,163,184,0.2)] bg-white/95 p-0 shadow-sm backdrop-blur-sm hover:bg-white",
+              "absolute right-2 top-2 z-10 rounded-full border border-[rgba(148,163,184,0.2)] bg-white/95 p-0 shadow-sm backdrop-blur-sm hover:bg-white dark:border-slate-700 dark:bg-slate-900/95 dark:hover:bg-slate-800",
               isCompact ? "size-8 [&_svg]:size-3.5" : "size-9 [&_svg]:size-4",
             )}
           />
@@ -132,19 +137,19 @@ export function ListingCard({
 
         <div
           className={cn(
-            "flex flex-1 flex-col",
+            "flex flex-1 flex-col bg-white dark:bg-slate-900",
             isCompact ? "gap-1 p-2.5 md:p-3" : "gap-1.5 p-3 md:p-3.5",
           )}
         >
           <p
             className={cn(
-              "font-bold leading-tight tracking-tight text-[#0F172A]",
+              "font-bold leading-tight tracking-tight text-[#0F172A] dark:text-slate-100",
               isCompact ? "text-[15px] md:text-base" : "text-base md:text-lg",
             )}
           >
             {priceLabel}
             {showUnitSuffix ? (
-              <span className="text-[11px] font-medium text-[#94A3B8] md:text-xs">
+              <span className="text-[11px] font-medium text-[#94A3B8] md:text-xs dark:text-slate-500">
                 {" "}
                 / {unitLabel.toLowerCase()}
               </span>
@@ -153,7 +158,7 @@ export function ListingCard({
 
           <h2
             className={cn(
-              "line-clamp-2 font-medium leading-snug text-[#334155]",
+              "line-clamp-2 font-medium leading-snug text-[#334155] dark:text-slate-200",
               isCompact
                 ? "min-h-[2.4rem] text-[13px] md:text-sm"
                 : "min-h-[2.5rem] text-sm md:text-[15px]",
@@ -161,7 +166,7 @@ export function ListingCard({
           >
             <Link
               href={`/listings/${listing.id}`}
-              className="transition hover:text-[#2563EB]"
+              className="transition hover:text-[#2563EB] dark:hover:text-blue-400"
             >
               {listing.title}
             </Link>
@@ -169,7 +174,7 @@ export function ListingCard({
 
           <div
             className={cn(
-              "mt-auto flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[#94A3B8]",
+              "mt-auto flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[#94A3B8] dark:text-slate-400",
               isCompact ? "pt-1 text-[11px]" : "pt-1.5 text-xs",
             )}
           >
@@ -189,7 +194,7 @@ export function ListingCard({
           {showSeller ? (
             <p
               className={cn(
-                "truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B]",
+                "truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
                 isCompact
                   ? "mt-1.5 pt-1.5 text-[11px]"
                   : "mt-2 pt-2 text-xs md:text-[13px]",

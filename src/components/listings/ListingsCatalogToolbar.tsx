@@ -51,7 +51,7 @@ const VERTICAL_TAB_ACTIVE: Record<ListingVertical, string> = {
 };
 
 const VERTICAL_TAB_INACTIVE =
-  "bg-white text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:bg-[#F8FAFC] hover:text-[#334155]";
+  "bg-white text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:bg-[#F8FAFC] hover:text-[#334155] dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200";
 
 type ListingsCatalogToolbarProps = {
   filters: ListingsCatalogFilters;
@@ -209,8 +209,8 @@ export function ListingsCatalogToolbar({
 
   return (
     <section className="space-y-3">
-      <div className="overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
-        <div className="border-b border-[rgba(148,163,184,0.12)] bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-4 py-4 sm:px-5 sm:py-5">
+      <div className="overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+        <div className="border-b border-[rgba(148,163,184,0.12)] bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-4 py-4 sm:px-5 sm:py-5 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
           <div
             className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             role="tablist"
@@ -268,7 +268,7 @@ export function ListingsCatalogToolbar({
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Что вы ищете?"
-                className="h-12 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-10 pr-10 text-base shadow-none"
+                className="h-12 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-10 pr-10 text-base shadow-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
               {query ? (
                 <button
@@ -292,18 +292,18 @@ export function ListingsCatalogToolbar({
 
         <div className="flex flex-col gap-3 px-4 py-3 sm:px-5 sm:py-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
-            <p className="text-sm text-[#64748B]">
+            <p className="text-sm text-[#64748B] dark:text-slate-400">
               Найдено:{" "}
-              <span className="font-semibold text-[#0F172A]">{totalCount}</span>{" "}
+              <span className="font-semibold text-[#0F172A] dark:text-slate-100">{totalCount}</span>{" "}
               {formatListingCount(totalCount)}
             </p>
-            <p className="mt-0.5 text-xs text-[#94A3B8]">{currentSortLabel}</p>
+            <p className="mt-0.5 text-xs text-[#94A3B8] dark:text-slate-500">{currentSortLabel}</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <Select value={filters.sort} onValueChange={handleSortChange}>
               <SelectTrigger
-                className="h-10 min-w-[150px] flex-1 rounded-xl bg-white sm:flex-none sm:w-[180px]"
+                className="h-10 min-w-[150px] flex-1 rounded-xl bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:flex-none sm:w-[180px]"
                 aria-label="Сортировка"
               >
                 <SelectValue />
@@ -323,7 +323,7 @@ export function ListingsCatalogToolbar({
                 variant="outline"
                 onClick={() => setFiltersOpen((current) => !current)}
                 aria-expanded={filtersOpen}
-                className="h-10 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white"
+                className="h-10 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
               >
                 <SlidersHorizontal className="size-4" aria-hidden="true" />
                 Фильтры
@@ -364,7 +364,7 @@ export function ListingsCatalogToolbar({
               type="button"
               variant="outline"
               size="sm"
-              className="h-8 rounded-full border-[rgba(148,163,184,0.25)] bg-white px-3 font-normal text-[#334155] hover:bg-[#F8FAFC]"
+              className="h-8 rounded-full border-[rgba(148,163,184,0.25)] bg-white px-3 font-normal text-[#334155] hover:bg-[#F8FAFC] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
               onClick={() => pushFilters(chip.clearPatch, "filter")}
             >
               {chip.label}

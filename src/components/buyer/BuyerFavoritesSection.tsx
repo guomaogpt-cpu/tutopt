@@ -32,7 +32,7 @@ export function BuyerFavoritesSection({
       </div>
 
       {listings.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-12 text-center">
+        <div className="rounded-3xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-12 text-center dark:border-slate-700 dark:bg-slate-900">
           <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
             <Heart className="size-6" aria-hidden="true" />
           </div>

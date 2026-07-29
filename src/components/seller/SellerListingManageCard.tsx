@@ -131,13 +131,14 @@ export function SellerListingManageCard({
     <article
       className={cn(
         "flex min-w-0 flex-col gap-4 rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white p-4 shadow-[0_4px_14px_rgba(15,23,42,0.04)]",
+        "dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
         "lg:flex-row lg:items-center lg:p-5",
         "transition-shadow hover:shadow-[0_8px_22px_rgba(15,23,42,0.06)]",
       )}
     >
       <Link
         href={`/listings/${listing.id}`}
-        className="relative mx-auto size-24 shrink-0 overflow-hidden rounded-xl bg-[#EEF2F7] lg:mx-0 lg:size-28"
+        className="relative mx-auto size-24 shrink-0 overflow-hidden rounded-xl bg-[#EEF2F7] dark:bg-slate-800 lg:mx-0 lg:size-28"
       >
         {listing.image_url ? (
           <Image
@@ -171,7 +172,7 @@ export function SellerListingManageCard({
           ) : null}
         </div>
 
-        <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#0F172A]">
+        <h3 className="mt-2 line-clamp-2 text-base font-semibold text-[#0F172A] dark:text-slate-100">
           <Link href={`/listings/${listing.id}`} className="transition hover:text-[#2563EB]">
             {listing.title}
           </Link>

@@ -69,6 +69,7 @@ function getStatusBadgeVariant(
 
 const cardClassName = cn(
   "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-6",
+  "dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
 );
 
 export function ListingContactCard({
@@ -129,40 +130,40 @@ export function ListingContactCard({
       ) : null}
 
       <div className="space-y-1">
-        <p className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
+        <p className="text-xs font-medium uppercase tracking-wide text-[#64748B] dark:text-slate-400">
           {priceCaption}
         </p>
-        <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px]">
+        <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px] dark:text-blue-400">
           {priceLabel}
         </p>
-        <p className="text-sm text-[#64748B]">за {unitLabel.toLowerCase()}</p>
+        <p className="text-sm text-[#64748B] dark:text-slate-400">за {unitLabel.toLowerCase()}</p>
       </div>
 
-      <dl className="mt-5 space-y-2.5 border-b border-[rgba(148,163,184,0.14)] pb-5 text-sm">
+      <dl className="mt-5 space-y-2.5 border-b border-[rgba(148,163,184,0.14)] pb-5 text-sm dark:border-slate-800">
         {showMoq ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B]">{moqLabel}</dt>
-            <dd className="font-medium text-[#0F172A]">
+            <dt className="text-[#64748B] dark:text-slate-400">{moqLabel}</dt>
+            <dd className="font-medium text-[#0F172A] dark:text-slate-200">
               {moq} {unitLabel.toLowerCase()}
             </dd>
           </div>
         ) : null}
         {cityName ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B]">Город</dt>
-            <dd className="font-medium text-[#0F172A]">{cityName}</dd>
+            <dt className="text-[#64748B] dark:text-slate-400">Город</dt>
+            <dd className="font-medium text-[#0F172A] dark:text-slate-200">{cityName}</dd>
           </div>
         ) : null}
         {showBrand && brandName ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B]">Бренд</dt>
-            <dd className="font-medium text-[#0F172A]">{brandName}</dd>
+            <dt className="text-[#64748B] dark:text-slate-400">Бренд</dt>
+            <dd className="font-medium text-[#0F172A] dark:text-slate-200">{brandName}</dd>
           </div>
         ) : null}
         {showStock && stockQuantity != null ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B]">{stockLabel}</dt>
-            <dd className="font-medium text-[#0F172A]">{stockQuantity}</dd>
+            <dt className="text-[#64748B] dark:text-slate-400">{stockLabel}</dt>
+            <dd className="font-medium text-[#0F172A] dark:text-slate-200">{stockQuantity}</dd>
           </div>
         ) : null}
       </dl>

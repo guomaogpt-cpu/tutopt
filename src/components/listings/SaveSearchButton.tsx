@@ -85,7 +85,7 @@ export function SaveSearchButton({ filters, lookups }: SaveSearchButtonProps) {
       variant="outline"
       onClick={handleSave}
       disabled={saved && !justSaved}
-      className="h-11 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white"
+      className="h-11 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
       title={saved ? "Этот поиск уже сохранён" : "Сохранить текущий поиск"}
     >
       {saved ? (

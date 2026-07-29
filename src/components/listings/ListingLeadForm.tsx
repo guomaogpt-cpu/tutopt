@@ -18,7 +18,7 @@ import { Section } from "@/components/ui/section";
 import { Textarea } from "@/components/ui/textarea";
 
 const leadCardClassName =
-  "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-sm sm:p-6";
+  "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none";
 
 type ListingLeadFormProps = {
   listingId: string;
@@ -166,7 +166,7 @@ export function ListingLeadForm({
         aria-labelledby="listing-lead-login-title"
       >
         <div className={leadCardClassName}>
-          <h3 id="listing-lead-login-title" className="text-lg font-semibold text-[#0F172A]">
+          <h3 id="listing-lead-login-title" className="text-lg font-semibold text-[#0F172A] dark:text-slate-100">
             {config.title}
           </h3>
           <p className="mt-2 text-sm text-[#64748B]">{config.loginPrompt(sellerName)}</p>
@@ -208,7 +208,7 @@ export function ListingLeadForm({
         aria-labelledby="listing-lead-owner-title"
       >
         <div className={leadCardClassName}>
-          <h3 id="listing-lead-owner-title" className="text-lg font-semibold text-[#0F172A]">
+          <h3 id="listing-lead-owner-title" className="text-lg font-semibold text-[#0F172A] dark:text-slate-100">
             {config.title}
           </h3>
           <p className="mt-2 text-sm text-[#64748B]">
@@ -229,7 +229,7 @@ export function ListingLeadForm({
       className="scroll-mt-28"
       aria-labelledby="listing-lead-form-title"
     >
-      <h2 id="listing-lead-form-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl">
+      <h2 id="listing-lead-form-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl dark:text-slate-100">
         {config.title}
       </h2>
 

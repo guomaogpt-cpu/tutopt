@@ -17,7 +17,7 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
   if (images.length === 0) {
     return (
       <section aria-label="Галерея товара">
-        <div className="flex aspect-[4/3] max-h-[520px] w-full flex-col items-center justify-center gap-2 rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] text-[#94A3B8]">
+        <div className="flex aspect-[4/3] max-h-[520px] w-full flex-col items-center justify-center gap-2 rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] text-[#94A3B8] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-500">
           <ImageIcon className="size-10" aria-hidden="true" />
           <p className="text-sm font-medium">Фото не добавлено</p>
         </div>
@@ -29,7 +29,7 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
 
   return (
     <section aria-label="Галерея товара">
-      <div className="relative aspect-[4/3] max-h-[520px] w-full overflow-hidden rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9]">
+      <div className="relative aspect-[4/3] max-h-[520px] w-full overflow-hidden rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] dark:border-slate-800 dark:bg-slate-900">
         <Image
           src={normalizeListingImageUrl(activeImage.url)}
           alt={title}
@@ -51,10 +51,10 @@ export function ListingGallery({ images, title }: ListingGalleryProps) {
               aria-label={`Фото ${index + 1}`}
               aria-current={index === activeIndex ? "true" : undefined}
               className={cn(
-                "relative size-[76px] shrink-0 overflow-hidden rounded-xl border-2 bg-[#F1F5F9] transition sm:size-20",
+                "relative size-[76px] shrink-0 overflow-hidden rounded-xl border-2 bg-[#F1F5F9] transition sm:size-20 dark:bg-slate-900",
                 index === activeIndex
                   ? "border-[#2563EB] ring-2 ring-[#2563EB]/20"
-                  : "border-[rgba(148,163,184,0.25)] hover:border-[#2563EB]/40",
+                  : "border-[rgba(148,163,184,0.25)] hover:border-[#2563EB]/40 dark:border-slate-700",
               )}
             >
               <Image

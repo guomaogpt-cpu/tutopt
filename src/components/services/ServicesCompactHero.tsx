@@ -20,6 +20,7 @@ import { getServicesCategoryVisual } from "@/features/services/services-category
 import { getCategorySeoSlug } from "@/features/seo/category-seo-slug";
 import { buildVerticalCategoryListingsHref } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 export const SERVICES_HERO_BACKGROUND_IMAGE = "/images/tutuslu.png";
@@ -37,6 +38,7 @@ type ServicesCompactHeroProps = {
 
 export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
   const config = VERTICALS.SERVICES;
 
   const sortedCategories = useMemo(() => {
@@ -74,13 +76,16 @@ export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
         <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
           <div className="flex w-full max-w-5xl min-w-0 flex-col gap-3 md:flex-row md:items-center md:gap-4">
             <h1 className="shrink-0 text-lg font-medium leading-tight text-white drop-shadow-sm md:text-xl">
-              Ищите <span className="font-bold text-white">услуги</span>
+              {t("vertical.seekListings")}{" "}
+              <span className="font-bold text-white">
+                {t("vertical.seekServicesAccent")}
+              </span>
             </h1>
 
             <SearchWithSuggest
               variant="phrase"
-              placeholder="Найти услугу или специалиста..."
-              buttonLabel="Найти"
+              placeholder={t("search.servicesPlaceholder")}
+              buttonLabel={t("search.find")}
               className="min-w-0 flex-1"
             />
           </div>
@@ -90,7 +95,9 @@ export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
               className="h-11 w-full rounded-xl bg-white text-teal-800 hover:bg-white/95 active:scale-[0.98] md:w-auto"
               asChild
             >
-              <Link href={config.createListingHref}>Подать объявление</Link>
+              <Link href={config.createListingHref}>
+                {t("vertical.postListing")}
+              </Link>
             </Button>
 
             <Drawer open={open} onOpenChange={setOpen}>
@@ -100,7 +107,7 @@ export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
                   className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/45 bg-white/15 px-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/25 active:scale-[0.98] md:w-auto"
                 >
                   <LayoutGrid className="size-4 shrink-0" aria-hidden="true" />
-                  Категории
+                  {t("vertical.categories")}
                 </button>
               </DrawerTrigger>
 
@@ -109,19 +116,19 @@ export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
                 className="w-[min(85vw,22.5rem)] gap-0 p-0 sm:max-w-[26rem]"
               >
                 <DrawerHeader className="border-b border-slate-100 pr-12">
-                  <DrawerTitle>Категории</DrawerTitle>
+                  <DrawerTitle>{t("vertical.categories")}</DrawerTitle>
                   <DrawerDescription>
-                    Выберите раздел услуг
+                    {t("vertical.categoriesDescServices")}
                   </DrawerDescription>
                 </DrawerHeader>
 
                 <nav
-                  aria-label="Категории услуг"
+                  aria-label={t("vertical.categories")}
                   className="min-h-0 flex-1 overflow-y-auto px-3 py-3"
                 >
                   {sortedCategories.length === 0 ? (
                     <p className="px-3 py-6 text-sm text-slate-500">
-                      Категории появятся после запуска раздела
+                      {t("vertical.categoriesEmpty")}
                     </p>
                   ) : (
                     <ul className="space-y-1">

@@ -342,16 +342,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
             {isOwner ? (
               <Link
                 href={`/listings/${listing.id}/edit`}
-                className="inline-flex h-8 items-center rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-[#334155] transition hover:border-[#2563EB]/30 hover:text-[#2563EB]"
+                className="inline-flex h-8 items-center rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-[#334155] transition hover:border-[#2563EB]/30 hover:text-[#2563EB] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-500/40 dark:hover:text-blue-400"
               >
                 Редактировать
               </Link>
             ) : null}
           </div>
-          <h1 className="mt-2 break-words text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem]">
+          <h1 className="mt-2 break-words text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem] dark:text-slate-100">
             {listing.title}
           </h1>
-          <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#64748B]">
+          <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#64748B] dark:text-slate-400">
             <span>{listing.category.name}</span>
             {listing.city ? (
               <>
@@ -369,10 +369,10 @@ export default async function ListingPage({ params }: ListingPageProps) {
         </header>
 
         {isOwner && (expiresDateLabel || expirationStatus === "expired") ? (
-          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-900">
             <div className="min-w-0">
               {expiresDateLabel ? (
-                <p className="font-medium text-[#0F172A]">
+                <p className="font-medium text-[#0F172A] dark:text-slate-100">
                   Публикация до: {expiresDateLabel}
                 </p>
               ) : null}
@@ -395,8 +395,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
         ) : null}
 
         {isAdminViewer && adminRisk ? (
-          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm">
-            <span className="font-semibold text-[#0F172A]">Для модерации</span>
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm dark:border-slate-800 dark:bg-slate-900">
+            <span className="font-semibold text-[#0F172A] dark:text-slate-100">Для модерации</span>
             <Badge variant={listing.status === ListingStatus.PUBLISHED ? "success" : "warning"}>
               {listingStatusLabels[listing.status]}
             </Badge>

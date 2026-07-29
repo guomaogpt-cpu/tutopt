@@ -34,7 +34,7 @@ export function ListingsEmptyState({
           ? "Попробуйте изменить запрос, выбрать другой город или сбросить фильтры."
           : copy.emptyDescription
       }
-      className="mt-8 rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_14px_rgba(15,23,42,0.03)]"
+      className="mt-8 rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_14px_rgba(15,23,42,0.03)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
       action={
         <div className="flex flex-col items-center gap-3 sm:flex-row">
           {hasActiveFilters ? (

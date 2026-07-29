@@ -22,15 +22,17 @@ export function SellerDashboardStatCards({ stats }: SellerDashboardStatCardsProp
           <div
             key={stat.label}
             className={cn(
-              "rounded-[20px] border border-[rgba(148,163,184,0.18)] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)] sm:rounded-3xl sm:p-5",
+              "rounded-[20px] border border-[rgba(148,163,184,0.18)] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none sm:rounded-3xl sm:p-5",
             )}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+                <p className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl dark:text-slate-100">
                   {stat.value}
                 </p>
-                <p className="mt-1 text-xs leading-snug text-[#64748B] sm:text-sm">{stat.label}</p>
+                <p className="mt-1 text-xs leading-snug text-[#64748B] sm:text-sm dark:text-slate-400">
+                  {stat.label}
+                </p>
               </div>
               <div
                 className={cn(

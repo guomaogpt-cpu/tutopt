@@ -72,18 +72,22 @@ export function SellerTrustCompactBlock({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[rgba(148,163,184,0.16)] bg-[#F8FAFC] p-3.5",
+        "rounded-2xl border border-[rgba(148,163,184,0.16)] bg-[#F8FAFC] p-3.5 dark:border-slate-800 dark:bg-slate-950",
         className,
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B] dark:text-slate-400">
           Доверие к продавцу
         </p>
         <SellerTrustBadge level={level} />
       </div>
-      <p className="mt-1.5 text-sm font-medium text-[#0F172A]">{levelLabel}</p>
-      <SellerTrustSignalsList signals={signals} maxItems={3} className="mt-2" />
+      <p className="mt-1.5 text-sm font-medium text-[#0F172A] dark:text-slate-200">{levelLabel}</p>
+      <SellerTrustSignalsList
+        signals={signals}
+        maxItems={3}
+        className="mt-2 dark:text-slate-400"
+      />
     </div>
   );
 }

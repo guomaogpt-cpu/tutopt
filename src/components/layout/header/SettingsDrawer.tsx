@@ -25,11 +25,7 @@ import {
   HEADER_PRIMARY_LINKS,
   isNavLinkActive,
 } from "@/features/navigation/lib/header-nav";
-import {
-  getPreferredLocale,
-  setPreferredLocale,
-  type PreferredLocale,
-} from "@/features/preferences/locale-preference";
+import type { PreferredLocale } from "@/features/preferences/locale-preference";
 import type { PreferredTheme } from "@/features/preferences/theme-preference";
 import { BrandLogo } from "@/components/layout/BrandLogo";
 import { Button } from "@/components/ui/button";
@@ -40,6 +36,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type SettingsDrawerProps = {
@@ -56,18 +54,18 @@ const LOCALE_OPTIONS: { id: PreferredLocale; label: string }[] = [
 
 const THEME_OPTIONS: {
   id: PreferredTheme;
-  label: string;
+  labelKey: DictionaryKey;
   icon: typeof Sun;
 }[] = [
-  { id: "light", label: "Светлая", icon: Sun },
-  { id: "dark", label: "Тёмная", icon: Moon },
-  { id: "system", label: "Системная", icon: Monitor },
+  { id: "light", labelKey: "settings.themeLight", icon: Sun },
+  { id: "dark", labelKey: "settings.themeDark", icon: Moon },
+  { id: "system", labelKey: "settings.themeSystem", icon: Monitor },
 ];
 
-const SECTION_LINKS = [
+const SECTION_LINKS: { labelKey: DictionaryKey; href: string }[] = [
   ...HEADER_PRIMARY_LINKS,
-  { label: "Все объявления", href: "/listings" },
-] as const;
+  { labelKey: "vertical.allListings", href: "/listings" },
+];
 
 export function SettingsDrawer({
   open,
@@ -77,23 +75,15 @@ export function SettingsDrawer({
   const router = useRouter();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const { locale, setLocale, t } = useTranslation();
   const [mounted, setMounted] = useState(false);
-  const [locale, setLocale] = useState<PreferredLocale>("ru");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    setLocale(getPreferredLocale());
-  }, [open]);
-
   function handleLocaleSelect(next: PreferredLocale) {
-    setPreferredLocale(next);
     setLocale(next);
   }
 
@@ -128,10 +118,10 @@ export function SettingsDrawer({
           <BrandLogo variant="default" className="h-9 max-w-[140px]" />
           <div className="min-w-0">
             <DrawerTitle className="text-base font-semibold text-slate-900 dark:text-slate-100">
-              ВсеТут
+              {t("settings.brand")}
             </DrawerTitle>
             <DrawerDescription className="text-xs text-slate-500 dark:text-slate-400">
-              Настройки и разделы
+              {t("settings.subtitle")}
             </DrawerDescription>
           </div>
         </DrawerHeader>
@@ -139,7 +129,7 @@ export function SettingsDrawer({
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
           <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Аккаунт
+              {t("settings.account")}
             </p>
             {user ? (
               <div className="space-y-2">
@@ -153,7 +143,7 @@ export function SettingsDrawer({
                 </div>
                 <SettingsLink
                   href={getAccountHomeHref(user.role)}
-                  label="Мой кабинет"
+                  label={t("settings.dashboard")}
                   isActive={isNavLinkActive(
                     pathname,
                     getAccountHomeHref(user.role),
@@ -168,7 +158,7 @@ export function SettingsDrawer({
                   className="h-11 w-full justify-start gap-2 rounded-xl px-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
                 >
                   <LogOut className="size-4 shrink-0" aria-hidden="true" />
-                  Выйти
+                  {t("auth.signOut")}
                 </Button>
               </div>
             ) : (
@@ -178,7 +168,7 @@ export function SettingsDrawer({
                   asChild
                 >
                   <Link href="/login" onClick={closeDrawer}>
-                    Войти
+                    {t("auth.signIn")}
                   </Link>
                 </Button>
                 <Button
@@ -187,7 +177,7 @@ export function SettingsDrawer({
                   asChild
                 >
                   <Link href="/register" onClick={closeDrawer}>
-                    Регистрация
+                    {t("auth.register")}
                   </Link>
                 </Button>
               </div>
@@ -196,7 +186,7 @@ export function SettingsDrawer({
 
           <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Город
+              {t("settings.city")}
             </p>
             <button
               type="button"
@@ -204,16 +194,18 @@ export function SettingsDrawer({
               className="flex h-11 w-full cursor-not-allowed items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 text-left text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-400"
             >
               <MapPin className="size-4 shrink-0" aria-hidden="true" />
-              <span className="min-w-0 flex-1 truncate">Бишкек</span>
+              <span className="min-w-0 flex-1 truncate">
+                {t("settings.cityValue")}
+              </span>
               <span className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
-                скоро
+                {t("settings.soon")}
               </span>
             </button>
           </section>
 
           <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Язык
+              {t("settings.language")}
             </p>
             <div className="flex flex-wrap gap-2">
               {LOCALE_OPTIONS.map((option) => {
@@ -237,13 +229,13 @@ export function SettingsDrawer({
               })}
             </div>
             <p className="mt-2 px-1 text-xs text-slate-400">
-              Выбор сохраняется. Перевод интерфейса — позже.
+              {t("settings.languageHint")}
             </p>
           </section>
 
           <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Тема
+              {t("settings.theme")}
             </p>
             <div className="flex flex-wrap gap-2">
               {THEME_OPTIONS.map((option) => {
@@ -263,26 +255,26 @@ export function SettingsDrawer({
                     aria-pressed={active}
                   >
                     <Icon className="size-3.5 shrink-0" aria-hidden="true" />
-                    {option.label}
+                    {t(option.labelKey)}
                   </button>
                 );
               })}
             </div>
             <p className="mt-2 px-1 text-xs text-slate-400">
-              По умолчанию — светлая. Тёмная тема пока экспериментальная.
+              {t("settings.themeHint")}
             </p>
           </section>
 
           <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Разделы
+              {t("settings.sections")}
             </p>
             <ul className="space-y-0.5">
               {SECTION_LINKS.map((link) => (
                 <li key={link.href}>
                   <SettingsLink
                     href={link.href}
-                    label={link.label}
+                    label={t(link.labelKey)}
                     isActive={isNavLinkActive(pathname, link.href)}
                     onNavigate={closeDrawer}
                   />
@@ -291,7 +283,7 @@ export function SettingsDrawer({
               <li>
                 <SettingsLink
                   href={getCreateListingHref(user)}
-                  label="Подать объявление"
+                  label={t("vertical.postListing")}
                   isActive={pathname === "/listings/new"}
                   onNavigate={closeDrawer}
                 />
@@ -301,13 +293,13 @@ export function SettingsDrawer({
 
           <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Поддержка
+              {t("settings.support")}
             </p>
             <ul className="space-y-0.5">
               <li>
                 <SettingsLink
                   href="/help"
-                  label="Помощь"
+                  label={t("settings.help")}
                   icon={HelpCircle}
                   isActive={pathname === "/help"}
                   onNavigate={closeDrawer}
@@ -316,7 +308,7 @@ export function SettingsDrawer({
               <li>
                 <SettingsLink
                   href="/contacts"
-                  label="Контакты"
+                  label={t("settings.contacts")}
                   icon={Mail}
                   isActive={pathname === "/contacts"}
                   onNavigate={closeDrawer}
@@ -324,7 +316,7 @@ export function SettingsDrawer({
               </li>
             </ul>
             <p className="mt-2 px-1 text-xs text-slate-400">
-              WhatsApp появится, когда будет указан рабочий контакт.
+              {t("settings.whatsappHint")}
             </p>
           </section>
         </div>

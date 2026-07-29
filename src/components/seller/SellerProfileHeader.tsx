@@ -31,11 +31,11 @@ export function SellerProfileHeader({
   return (
     <header
       className={cn(
-        "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-6 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-8",
+        "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-6 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-8 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
       )}
     >
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-        <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] sm:size-24">
+        <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.18)] bg-[#F1F5F9] sm:size-24 dark:border-slate-800 dark:bg-slate-800">
           {logoUrl ? (
             <Image
               src={logoUrl}
@@ -65,7 +65,7 @@ export function SellerProfileHeader({
             ) : null}
           </div>
 
-          <h1 className="mt-3 text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+          <h1 className="mt-3 text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl dark:text-slate-100">
             {profile.company_name}
           </h1>
 
@@ -109,7 +109,7 @@ export function SellerProfileHeader({
             </Link>
             <Link
               href="#seller-contacts"
-              className="inline-flex h-11 w-full items-center justify-center rounded-xl border border-[rgba(148,163,184,0.25)] bg-white px-5 text-sm font-semibold text-[#334155] transition hover:border-[#2563EB]/30 hover:text-[#2563EB] sm:w-auto"
+              className="inline-flex h-11 w-full items-center justify-center rounded-xl border border-[rgba(148,163,184,0.25)] bg-white px-5 text-sm font-semibold text-[#334155] transition hover:border-[#2563EB]/30 hover:text-[#2563EB] sm:w-auto dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300 dark:hover:border-blue-500/40 dark:hover:text-blue-400"
             >
               Связаться
             </Link>

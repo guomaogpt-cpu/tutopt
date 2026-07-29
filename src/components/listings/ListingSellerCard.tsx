@@ -75,13 +75,13 @@ export function ListingSellerCard({
   return (
     <div
       className={cn(
-        "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-6",
+        "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
       )}
     >
       <div className="flex items-start gap-3">
         <Avatar className="size-14 shrink-0">
           {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
-          <AvatarFallback className="bg-[#EFF6FF] text-sm font-semibold text-[#2563EB]">
+          <AvatarFallback className="bg-[#EFF6FF] text-sm font-semibold text-[#2563EB] dark:bg-slate-800 dark:text-blue-400">
             {getInitials(displayName)}
           </AvatarFallback>
         </Avatar>
@@ -99,10 +99,12 @@ export function ListingSellerCard({
             ) : null}
           </div>
 
-          <h2 className="mt-2 text-base font-semibold text-[#0F172A]">{displayName}</h2>
+          <h2 className="mt-2 text-base font-semibold text-[#0F172A] dark:text-slate-100">
+            {displayName}
+          </h2>
 
           {companyName.trim() && companyName !== sellerName ? (
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-[#64748B]">
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-[#64748B] dark:text-slate-400">
               <Building2 className="size-3.5 shrink-0" aria-hidden="true" />
               <span className="truncate">{sellerName}</span>
             </p>
@@ -119,20 +121,22 @@ export function ListingSellerCard({
         />
       ) : null}
 
-      <dl className="mt-4 space-y-2 border-t border-[rgba(148,163,184,0.14)] pt-4 text-sm">
+      <dl className="mt-4 space-y-2 border-t border-[rgba(148,163,184,0.14)] pt-4 text-sm dark:border-slate-800">
         <div className="flex justify-between gap-4">
-          <dt className="text-[#64748B]">Объявлений</dt>
-          <dd className="font-medium text-[#0F172A]">{publishedListingCount}</dd>
+          <dt className="text-[#64748B] dark:text-slate-400">Объявлений</dt>
+          <dd className="font-medium text-[#0F172A] dark:text-slate-200">
+            {publishedListingCount}
+          </dd>
         </div>
         {sellerCity ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B]">Город</dt>
-            <dd className="font-medium text-[#0F172A]">{sellerCity}</dd>
+            <dt className="text-[#64748B] dark:text-slate-400">Город</dt>
+            <dd className="font-medium text-[#0F172A] dark:text-slate-200">{sellerCity}</dd>
           </div>
         ) : null}
         <div className="flex justify-between gap-4">
-          <dt className="text-[#64748B]">На платформе с</dt>
-          <dd className="font-medium text-[#0F172A]">{sellerSinceLabel}</dd>
+          <dt className="text-[#64748B] dark:text-slate-400">На платформе с</dt>
+          <dd className="font-medium text-[#0F172A] dark:text-slate-200">{sellerSinceLabel}</dd>
         </div>
       </dl>
 
@@ -161,7 +165,7 @@ export function ListingSellerCard({
         </Link>
       </Button>
 
-      <div className="mt-3 border-t border-[rgba(148,163,184,0.14)] pt-3 text-center">
+      <div className="mt-3 border-t border-[rgba(148,163,184,0.14)] pt-3 text-center dark:border-slate-800">
         <ReportDialog
           targetType="listing"
           listingId={listingId}

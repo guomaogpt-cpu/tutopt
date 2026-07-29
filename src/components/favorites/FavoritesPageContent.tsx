@@ -35,14 +35,14 @@ export function FavoritesPageContent({
 
   if (listings.length === 0) {
     return (
-      <div className="rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white px-6 py-12 text-center shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
-        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
+      <div className="rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white px-6 py-12 text-center shadow-[0_8px_24px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB] dark:bg-slate-800 dark:text-blue-400">
           <Heart className="size-6" aria-hidden="true" />
         </div>
-        <h2 className="mt-5 text-base font-semibold text-[#0F172A] sm:text-lg">
+        <h2 className="mt-5 text-base font-semibold text-[#0F172A] sm:text-lg dark:text-slate-100">
           В избранном пока пусто
         </h2>
-        <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
+        <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B] dark:text-slate-400">
           Сохраняйте интересные объявления, чтобы быстро вернуться к ним позже.
         </p>
         <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
@@ -57,16 +57,17 @@ export function FavoritesPageContent({
       <div
         className={cn(
           "flex flex-col gap-4 rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]",
+          "dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
           "sm:flex-row sm:items-center sm:justify-between sm:p-5",
         )}
       >
         <div className="min-w-0">
-          <p className="text-sm text-[#64748B]">Всего в избранном</p>
-          <p className="mt-1 text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+          <p className="text-sm text-[#64748B] dark:text-slate-400">Всего в избранном</p>
+          <p className="mt-1 text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl dark:text-slate-100">
             {listings.length}
           </p>
           {initialLastAddedAt ? (
-            <p className="mt-1 text-sm text-[#64748B]">
+            <p className="mt-1 text-sm text-[#64748B] dark:text-slate-400">
               Последнее добавление: {formatLastAddedDate(initialLastAddedAt)}
             </p>
           ) : null}

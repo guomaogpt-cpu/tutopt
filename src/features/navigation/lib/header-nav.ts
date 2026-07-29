@@ -1,16 +1,23 @@
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 
 export type NavLinkItem = {
+  labelKey: DictionaryKey;
+  href: string;
+};
+
+/** Account drawer links — still RU labels (Phase 53 known gap). */
+export type AccountLinkItem = {
   label: string;
   href: string;
 };
 
 /** Desktop + mobile primary nav: directions only (no Catalog / Sellers / Categories). */
 export const HEADER_PRIMARY_LINKS: NavLinkItem[] = [
-  { label: "Опт", href: "/opt" },
-  { label: "Объявления", href: "/market" },
-  { label: "Услуги", href: "/services" },
-  { label: "Карго", href: "/cargo" },
+  { labelKey: "nav.opt", href: "/opt" },
+  { labelKey: "nav.market", href: "/market" },
+  { labelKey: "nav.services", href: "/services" },
+  { labelKey: "nav.cargo", href: "/cargo" },
 ];
 
 /** Soft active pill per direction — local Tailwind classes only. */
@@ -47,7 +54,9 @@ export function isNavLinkActive(pathname: string, href: string): boolean {
  * Secondary links for the mobile drawer (account / role), after primary directions.
  * Does not include Catalog, Sellers, or Categories.
  */
-export function getMobileAccountLinks(user: HeaderUser | null): NavLinkItem[] {
+export function getMobileAccountLinks(
+  user: HeaderUser | null,
+): AccountLinkItem[] {
   if (!user) {
     return [];
   }
@@ -89,6 +98,8 @@ export function getMobileAccountLinks(user: HeaderUser | null): NavLinkItem[] {
 }
 
 /** @deprecated Use getMobileAccountLinks — kept for any leftover imports during transition. */
-export function getMobileDrawerLinks(user: HeaderUser | null): NavLinkItem[] {
+export function getMobileDrawerLinks(
+  user: HeaderUser | null,
+): Array<NavLinkItem | AccountLinkItem> {
   return [...HEADER_PRIMARY_LINKS, ...getMobileAccountLinks(user)];
 }

@@ -33,7 +33,7 @@ export function BuyerLeadsSection({ leads, totalCount }: BuyerLeadsSectionProps)
       </div>
 
       {leads.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-12 text-center">
+        <div className="rounded-3xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-12 text-center dark:border-slate-700 dark:bg-slate-900">
           <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
             <Inbox className="size-6" aria-hidden="true" />
           </div>
@@ -54,7 +54,7 @@ export function BuyerLeadsSection({ leads, totalCount }: BuyerLeadsSectionProps)
               <article
                 key={lead.id}
                 className={cn(
-                  "overflow-hidden rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.04)]",
+                  "overflow-hidden rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
                 )}
               >
                 <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
