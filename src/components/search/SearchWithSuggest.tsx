@@ -267,6 +267,7 @@ export function SearchWithSuggest({
             >
               <PhotoSearchButton
                 disabled={disabled}
+                vertical={searchVertical}
                 sizeClassName={compact ? "size-8" : "size-9 md:size-10"}
                 className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
               />
@@ -327,6 +328,7 @@ export function SearchWithSuggest({
         <div className="absolute right-10 top-1/2 z-10 -translate-y-1/2">
           <PhotoSearchButton
             disabled={disabled}
+            vertical={searchVertical}
             sizeClassName="size-8"
             className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
           />

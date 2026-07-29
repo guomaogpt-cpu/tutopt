@@ -112,6 +112,61 @@ export const DICTIONARY = {
     kg: "Сүрөттү өчүрүү",
     en: "Remove photo",
   },
+  "search.photo.prototypeNotice": {
+    ru: "Это тестовый режим поиска по фото. Сейчас показываются объявления, которые могут подойти. Точный визуальный поиск будет улучшен позже.",
+    kg: "Бул сүрөт менен издөөнүн тесттик режими. Азыр ылайыктуу болушу мүмкүн болгон жарыялар көрсөтүлөт. Так визуалдык издөө кийин жакшыртылат.",
+    en: "This is a prototype photo search mode. We are showing listings that may match. Accurate visual search will be improved later.",
+  },
+  "search.photo.resultsTitle": {
+    ru: "Возможные совпадения",
+    kg: "Ыктымал дал келүүлөр",
+    en: "Possible matches",
+  },
+  "search.photo.openListing": {
+    ru: "Открыть",
+    kg: "Ачуу",
+    en: "Open",
+  },
+  "search.photo.viewAllResults": {
+    ru: "Смотреть все результаты",
+    kg: "Бардык жыйынтыктарды көрүү",
+    en: "View all results",
+  },
+  "search.photo.chooseAnother": {
+    ru: "Выбрать другое фото",
+    kg: "Башка сүрөт тандоо",
+    en: "Choose another photo",
+  },
+  "search.photo.openAllListings": {
+    ru: "Открыть все объявления",
+    kg: "Бардык жарыяларды ачуу",
+    en: "Open all listings",
+  },
+  "search.photo.emptyTitle": {
+    ru: "Похожие объявления пока не найдены.",
+    kg: "Окшош жарыялар азырынча табылган жок.",
+    en: "No similar listings found yet.",
+  },
+  "search.photo.tryAgain": {
+    ru: "Попробовать снова",
+    kg: "Кайра аракет кылуу",
+    en: "Try again",
+  },
+  "search.photo.searching": {
+    ru: "Идёт поиск...",
+    kg: "Издөө жүрүп жатат...",
+    en: "Searching...",
+  },
+  "search.photo.networkError": {
+    ru: "Не удалось выполнить поиск. Проверьте соединение и попробуйте снова.",
+    kg: "Издөө ишке ашкан жок. Байланышты текшерип, кайра аракет кылыңыз.",
+    en: "Search failed. Check your connection and try again.",
+  },
+  "search.photo.serverError": {
+    ru: "Не удалось выполнить поиск. Попробуйте позже.",
+    kg: "Издөө ишке ашкан жок. Кийинчерээк аракет кылыңыз.",
+    en: "Search could not be completed. Please try again later.",
+  },
 
   // Home
   "home.lead": {
