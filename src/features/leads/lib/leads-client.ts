@@ -1,8 +1,16 @@
+import type { LeadStatus } from "@prisma/client";
 import type { CreateLeadInput } from "@/features/leads/validators/lead.validators";
 
 type CreateLeadResponse = {
   lead: {
     id: string;
+  };
+};
+
+type UpdateLeadStatusResponse = {
+  lead: {
+    id: string;
+    status: LeadStatus;
   };
 };
 
@@ -86,4 +94,26 @@ export async function createLeadRequest(
   }
 
   return (body as ApiSuccessBody<CreateLeadResponse>).data;
+}
+
+export async function updateSellerLeadStatus(
+  leadId: string,
+  status: Extract<LeadStatus, "VIEWED" | "CLOSED">,
+): Promise<UpdateLeadStatusResponse> {
+  const response = await fetch(`/api/seller/leads/${leadId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+
+  const body = (await response.json()) as
+    | ApiSuccessBody<UpdateLeadStatusResponse>
+    | ApiErrorBody;
+
+  if (!response.ok) {
+    const errors = mapApiErrors(body as ApiErrorBody);
+    throw new LeadRequestError(errors.form[0] ?? "LEAD_GENERIC_ERROR", errors);
+  }
+
+  return (body as ApiSuccessBody<UpdateLeadStatusResponse>).data;
 }

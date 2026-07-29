@@ -853,6 +853,177 @@ export const DICTIONARY = {
     en: "Listing unavailable",
   },
 
+  "sellerLeads.title": {
+    ru: "Заявки покупателей",
+    kg: "Сатып алуучулардын сурамдары",
+    en: "Buyer requests",
+  },
+  "sellerLeads.description": {
+    ru: "Запросы по вашим объявлениям",
+    kg: "Жарыяларыңыз боюнча сурамдар",
+    en: "Requests for your listings",
+  },
+  "sellerLeads.emptyTitle": {
+    ru: "Заявок пока нет.",
+    kg: "Азырынча сурамдар жок.",
+    en: "No requests yet.",
+  },
+  "sellerLeads.emptyDescription": {
+    ru: "Когда покупатель отправит запрос по вашему объявлению, он появится здесь.",
+    kg: "Сатып алуучу жарыяңыз боюнча сурам жөнөткөндө, ал ушул жерде көрүнөт.",
+    en: "When a buyer sends a request for your listing, it will appear here.",
+  },
+  "sellerLeads.myListings": {
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "sellerLeads.addListing": {
+    ru: "Добавить объявление",
+    kg: "Жарыя кошуу",
+    en: "Add listing",
+  },
+  "sellerLeads.openListing": {
+    ru: "Открыть объявление",
+    kg: "Жарыяны ачуу",
+    en: "Open listing",
+  },
+  "sellerLeads.unavailableListing": {
+    ru: "Объявление недоступно",
+    kg: "Жарыя жеткиликсиз",
+    en: "Listing unavailable",
+  },
+  "sellerLeads.buyer": {
+    ru: "Покупатель",
+    kg: "Сатып алуучу",
+    en: "Buyer",
+  },
+  "sellerLeads.message": {
+    ru: "Сообщение",
+    kg: "Билдирүү",
+    en: "Message",
+  },
+  "sellerLeads.quantity": {
+    ru: "Количество",
+    kg: "Саны",
+    en: "Quantity",
+  },
+  "sellerLeads.createdAt": {
+    ru: "Дата заявки",
+    kg: "Сурамдын датасы",
+    en: "Request date",
+  },
+  "sellerLeads.status": {
+    ru: "Статус",
+    kg: "Статус",
+    en: "Status",
+  },
+  "sellerLeads.status.new": {
+    ru: "Новая",
+    kg: "Жаңы",
+    en: "New",
+  },
+  "sellerLeads.status.inProgress": {
+    ru: "В обработке",
+    kg: "Иштетүүдө",
+    en: "In progress",
+  },
+  "sellerLeads.status.done": {
+    ru: "Обработана",
+    kg: "Иштетилген",
+    en: "Done",
+  },
+  "sellerLeads.status.closed": {
+    ru: "Закрыта",
+    kg: "Жабылган",
+    en: "Closed",
+  },
+  "sellerLeads.filters.all": {
+    ru: "Все",
+    kg: "Баары",
+    en: "All",
+  },
+  "sellerLeads.filters.new": {
+    ru: "Новые",
+    kg: "Жаңылар",
+    en: "New",
+  },
+  "sellerLeads.filters.inProgress": {
+    ru: "В обработке",
+    kg: "Иштетүүдө",
+    en: "In progress",
+  },
+  "sellerLeads.filters.done": {
+    ru: "Обработанные",
+    kg: "Иштетилгендер",
+    en: "Done",
+  },
+  "sellerLeads.filters.closed": {
+    ru: "Закрытые",
+    kg: "Жабылгандар",
+    en: "Closed",
+  },
+  "sellerLeads.markDone": {
+    ru: "Отметить как обработанную",
+    kg: "Иштетилди деп белгилөө",
+    en: "Mark as done",
+  },
+  "sellerLeads.marking": {
+    ru: "Сохранение...",
+    kg: "Сакталууда...",
+    en: "Saving...",
+  },
+  "sellerLeads.allRequests": {
+    ru: "Все заявки",
+    kg: "Бардык сурамдар",
+    en: "All requests",
+  },
+  "sellerLeads.latestRequests": {
+    ru: "Последние заявки",
+    kg: "Акыркы сурамдар",
+    en: "Latest requests",
+  },
+  "sellerLeads.newCount": {
+    ru: "Новых",
+    kg: "Жаңы",
+    en: "New",
+  },
+  "sellerLeads.copyPhone": {
+    ru: "Скопировать телефон",
+    kg: "Телефонду көчүрүү",
+    en: "Copy phone",
+  },
+  "sellerLeads.phoneCopied": {
+    ru: "Телефон скопирован",
+    kg: "Телефон көчүрүлдү",
+    en: "Phone copied",
+  },
+  "sellerLeads.whatsapp": {
+    ru: "WhatsApp",
+    kg: "WhatsApp",
+    en: "WhatsApp",
+  },
+  "sellerLeads.showMore": {
+    ru: "Показать полностью",
+    kg: "Толугу менен көрсөтүү",
+    en: "Show more",
+  },
+  "sellerLeads.showLess": {
+    ru: "Свернуть",
+    kg: "Жыйыштыруу",
+    en: "Show less",
+  },
+  "sellerLeads.dashboard": {
+    ru: "Кабинет продавца",
+    kg: "Сатуучунун кабинети",
+    en: "Seller dashboard",
+  },
+  "sellerLeads.updateError": {
+    ru: "Не удалось обновить статус заявки.",
+    kg: "Сурамдын статусу жаңыртылган жок.",
+    en: "Could not update the request status.",
+  },
+
   // Buyer / seller quick actions — Phase 56
   "quickActions.title": { ru: "Быстрые действия", kg: "Тез аракеттер", en: "Quick actions" },
   "buyer.findProduct": { ru: "Найти товар", kg: "Товар табуу", en: "Find a product" },

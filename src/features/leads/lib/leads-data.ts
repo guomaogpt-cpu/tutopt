@@ -1,11 +1,15 @@
-import type { ListingStatus, ListingVertical } from "@prisma/client";
+import type { LeadStatus, ListingStatus, ListingVertical, Prisma } from "@prisma/client";
+import {
+  sellerLeadStatusFilterToEnum,
+  type SellerLeadStatusFilter,
+} from "@/features/leads/lib/lead-status";
 import { prisma } from "@/shared/lib/prisma";
 
 export type SellerLeadItem = {
   id: string;
   quantity: number;
   message: string | null;
-  status: "NEW" | "VIEWED" | "CLOSED";
+  status: LeadStatus;
   created_at: Date;
   listing: {
     id: string;
@@ -13,6 +17,9 @@ export type SellerLeadItem = {
     image_url: string | null;
     vertical: ListingVertical;
     status: ListingStatus;
+    city: string | null;
+    price: string | null;
+    currency: string | null;
   };
   buyer: {
     id: string;
@@ -26,7 +33,7 @@ export type BuyerLeadItem = {
   id: string;
   quantity: number;
   message: string | null;
-  status: "NEW" | "VIEWED" | "CLOSED";
+  status: LeadStatus;
   created_at: Date;
   listing: {
     id: string;
@@ -90,10 +97,19 @@ export async function getBuyerLeads(userId: string): Promise<BuyerLeadItem[]> {
   }));
 }
 
-export async function getSellerLeads(sellerProfileId: string): Promise<SellerLeadItem[]> {
+export async function getSellerLeads(
+  sellerProfileId: string,
+  options?: { statusFilter?: SellerLeadStatusFilter },
+): Promise<SellerLeadItem[]> {
+  const status = sellerLeadStatusFilterToEnum(options?.statusFilter ?? "all");
+  const where: Prisma.LeadWhereInput = {
+    seller_profile_id: sellerProfileId,
+    ...(status ? { status } : {}),
+  };
+
   const leads = await prisma.lead.findMany({
-    where: { seller_profile_id: sellerProfileId },
-    orderBy: { created_at: "desc" },
+    where,
+    orderBy: [{ status: "asc" }, { created_at: "desc" }],
     select: {
       id: true,
       quantity: true,
@@ -106,6 +122,9 @@ export async function getSellerLeads(sellerProfileId: string): Promise<SellerLea
           title: true,
           vertical: true,
           status: true,
+          price: true,
+          currency: true,
+          city: { select: { name: true } },
           images: {
             orderBy: { sort_order: "asc" },
             take: 1,
@@ -138,6 +157,9 @@ export async function getSellerLeads(sellerProfileId: string): Promise<SellerLea
       title: lead.listing.title,
       vertical: lead.listing.vertical,
       status: lead.listing.status,
+      city: lead.listing.city?.name ?? null,
+      price: lead.listing.price?.toString() ?? null,
+      currency: lead.listing.currency ?? null,
       image_url: lead.listing.images[0]?.thumbnail_url ?? lead.listing.images[0]?.url ?? null,
     },
     buyer: lead.buyer,

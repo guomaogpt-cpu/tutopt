@@ -135,7 +135,7 @@ export default async function SellerDashboardPage() {
         prisma.lead.findMany({
           where: { seller_profile_id: sellerProfile.id },
           orderBy: { created_at: "desc" },
-          take: 5,
+          take: 3,
           select: {
             id: true,
             status: true,
@@ -372,7 +372,7 @@ export default async function SellerDashboardPage() {
             sellerProfileId={sellerProfile?.id ?? null}
             verticalCounts={verticalCounts}
           />
-          <SellerRecentLeads leads={serializedRecentLeads} />
+          <SellerRecentLeads leads={serializedRecentLeads} newLeadsCount={newLeadsCount} />
           <SellerDashboardListings
             listings={serializedListings.slice(0, 5)}
             totalCount={serializedListings.length}
