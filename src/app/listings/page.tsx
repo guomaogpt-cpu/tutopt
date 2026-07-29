@@ -3,6 +3,7 @@ import { ListingCard } from "@/components/listings/ListingCard";
 import { ListingsCatalogToolbar } from "@/components/listings/ListingsCatalogToolbar";
 import { ListingsEmptyState } from "@/components/listings/ListingsEmptyState";
 import { ListingsPagination } from "@/components/listings/ListingsPagination";
+import { PhotoSearchListingsNotice } from "@/components/listings/PhotoSearchListingsNotice";
 import { AppBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 import {
   LISTINGS_PER_PAGE,
@@ -174,6 +175,10 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
           </p>
         </header>
 
+        {filters.photoSearch ? (
+          <PhotoSearchListingsNotice vertical={filters.vertical} />
+        ) : null}
+
         <ListingsCatalogToolbar
           filters={filters}
           categories={categoryOptions}
@@ -193,6 +198,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
             }
             showCreateListingCTA={showCreateListingCTA}
             vertical={filters.vertical}
+            photoSearch={filters.photoSearch}
           />
         ) : (
           <>

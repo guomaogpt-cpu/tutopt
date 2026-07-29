@@ -34,6 +34,9 @@ type PhotoSearchButtonProps = {
   sizeClassName?: string;
   disabled?: boolean;
   vertical?: ListingVertical | null;
+  /** `icon` = camera control in search; `button` = labeled CTA (listings page). */
+  triggerVariant?: "icon" | "button";
+  triggerLabelKey?: "search.photo.aria" | "listings.photoSearch.newSearch";
 };
 
 type ApiErrorBody = {
@@ -63,6 +66,8 @@ export function PhotoSearchButton({
   sizeClassName = "size-9",
   disabled = false,
   vertical = null,
+  triggerVariant = "icon",
+  triggerLabelKey = "search.photo.aria",
 }: PhotoSearchButtonProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -254,27 +259,45 @@ export function PhotoSearchButton({
   const listingsHref = buildListingsHref(vertical, false);
   const viewAllHref = buildListingsHref(vertical, true);
 
+  const triggerLabel = t(triggerLabelKey);
+
   return (
     <Modal open={open} onOpenChange={handleOpenChange}>
       <ModalTrigger asChild>
-        <button
-          type="button"
-          disabled={disabled}
-          aria-label={t("search.photo.aria")}
-          title={t("search.photo.aria")}
-          className={cn(
-            "inline-flex shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition",
-            "hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            "disabled:pointer-events-none disabled:opacity-50",
-            "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300",
-            "dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-100",
-            sizeClassName,
-            className,
-          )}
-        >
-          <Camera className="size-4" aria-hidden="true" />
-        </button>
+        {triggerVariant === "button" ? (
+          <Button
+            type="button"
+            disabled={disabled}
+            variant="outline"
+            className={cn(
+              "h-10 gap-2 rounded-xl border-slate-200 bg-white text-slate-800",
+              "hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900",
+              className,
+            )}
+          >
+            <Camera className="size-4 shrink-0" aria-hidden="true" />
+            {triggerLabel}
+          </Button>
+        ) : (
+          <button
+            type="button"
+            disabled={disabled}
+            aria-label={triggerLabel}
+            title={triggerLabel}
+            className={cn(
+              "inline-flex shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition",
+              "hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "disabled:pointer-events-none disabled:opacity-50",
+              "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300",
+              "dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-100",
+              sizeClassName,
+              className,
+            )}
+          >
+            <Camera className="size-4" aria-hidden="true" />
+          </button>
+        )}
       </ModalTrigger>
 
       <ModalContent className="max-h-[90vh] max-w-lg gap-4 overflow-y-auto border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">

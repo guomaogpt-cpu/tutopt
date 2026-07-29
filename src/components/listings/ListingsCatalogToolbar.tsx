@@ -307,6 +307,11 @@ export function ListingsCatalogToolbar({
               {formatListingCount(locale, totalCount)}
             </p>
             <p className="mt-0.5 text-xs text-[#94A3B8] dark:text-slate-500">{currentSortLabel}</p>
+            {filters.photoSearch ? (
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                {t("listings.photoSearch.filterHint")}
+              </p>
+            ) : null}
           </div>
 
           <div className="flex flex-wrap items-center gap-2">

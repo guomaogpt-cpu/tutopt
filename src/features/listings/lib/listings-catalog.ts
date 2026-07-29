@@ -16,6 +16,11 @@ export type ListingsCatalogFilters = {
   withPhotos: boolean;
   /** When set, filters by Listing.vertical. When empty, catalog shows all (current behavior). */
   vertical: ListingVertical | null;
+  /**
+   * UI-only prototype photo search mode (`photoSearch=1`).
+   * Does not change query matching — catalog filters still apply as usual.
+   */
+  photoSearch: boolean;
   sort: ListingSort;
   page: number;
 };
@@ -66,6 +71,7 @@ export function parseListingsCatalogParams(
     priceMax: get("priceTo") || get("priceMax"),
     withPhotos: get("withPhoto") === "1" || get("withPhotos") === "1",
     vertical: parseListingVerticalParam(get("vertical")),
+    photoSearch: get("photoSearch") === "1",
     sort,
     page,
   };
@@ -184,6 +190,9 @@ export function buildListingsCatalogQueryString(
   }
   if (next.vertical) {
     params.set("vertical", next.vertical);
+  }
+  if (next.photoSearch) {
+    params.set("photoSearch", "1");
   }
   if (next.sort !== "newest") {
     params.set("sort", next.sort);

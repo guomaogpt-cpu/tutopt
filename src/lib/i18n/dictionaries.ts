@@ -528,6 +528,42 @@ export const DICTIONARY = {
   "catalog.reset": { ru: "Сбросить", kg: "Тазалоо", en: "Reset" },
   "catalog.apply": { ru: "Применить", kg: "Колдонуу", en: "Apply" },
 
+  "listings.photoSearch.title": {
+    ru: "Поиск по фото",
+    kg: "Сүрөт менен издөө",
+    en: "Photo search",
+  },
+  "listings.photoSearch.description": {
+    ru: "Сейчас это тестовый режим. Мы показываем объявления, которые могут подойти. Точный визуальный поиск будет улучшен позже.",
+    kg: "Бул тесттик режим. Азыр ылайыктуу болушу мүмкүн болгон жарыялар көрсөтүлөт. Так визуалдык издөө кийин жакшыртылат.",
+    en: "This is a prototype mode. We are showing listings that may match. Accurate visual search will be improved later.",
+  },
+  "listings.photoSearch.newSearch": {
+    ru: "Новый поиск по фото",
+    kg: "Жаңы сүрөт менен издөө",
+    en: "New photo search",
+  },
+  "listings.photoSearch.filterHint": {
+    ru: "Фильтры можно использовать вместе с поиском по фото.",
+    kg: "Фильтрлерди сүрөт менен издөө менен бирге колдонсо болот.",
+    en: "You can use filters together with photo search.",
+  },
+  "listings.photoSearch.emptyTitle": {
+    ru: "Похожие объявления пока не найдены.",
+    kg: "Окшош жарыялар азырынча табылган жок.",
+    en: "No similar listings found yet.",
+  },
+  "listings.photoSearch.emptyDescription": {
+    ru: "Попробуйте другое фото или откройте все объявления.",
+    kg: "Башка сүрөт колдонуп көрүңүз же бардык жарыяларды ачыңыз.",
+    en: "Try another photo or open all listings.",
+  },
+  "listings.photoSearch.openAllListings": {
+    ru: "Все объявления",
+    kg: "Бардык жарыялар",
+    en: "All listings",
+  },
+
   // Listing detail — Phase 56
   "listing.characteristics": {
     ru: "Характеристики",

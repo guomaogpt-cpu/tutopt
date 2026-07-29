@@ -35,6 +35,6 @@ Uploaded file is validated and **not** persisted.
 - Embeddings / OCR / vector DB
 - External AI APIs
 
-## 6. Possible Phase 59
+## 6. Later phases
 
-Research real visual search approach (embeddings / similarity) behind the same UX.
+- Phase 59: `/listings?photoSearch=1` UI mode (see `PHOTO_SEARCH_LISTINGS_PHASE_59.md`)

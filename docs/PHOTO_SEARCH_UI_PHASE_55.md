@@ -39,3 +39,4 @@ Component: `src/components/search/PhotoSearchButton.tsx`
 
 - Phase 57: backend prototype `POST /api/search/photo` (see `PHOTO_SEARCH_BACKEND_PHASE_57.md`)
 - Phase 58: results UX in modal (see `PHOTO_SEARCH_UX_PHASE_58.md`)
+- Phase 59: `/listings?photoSearch=1` UI mode (see `PHOTO_SEARCH_LISTINGS_PHASE_59.md`)

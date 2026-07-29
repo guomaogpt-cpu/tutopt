@@ -13,3 +13,4 @@ See also:
 
 - `docs/PHOTO_SEARCH_UI_PHASE_55.md`
 - `docs/PHOTO_SEARCH_UX_PHASE_58.md`
+- `docs/PHOTO_SEARCH_LISTINGS_PHASE_59.md`

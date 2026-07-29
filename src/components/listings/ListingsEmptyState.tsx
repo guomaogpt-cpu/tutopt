@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import type { ListingVertical } from "@prisma/client";
-import { SearchX } from "lucide-react";
+import { Camera, SearchX } from "lucide-react";
+import { PhotoSearchButton } from "@/components/search/PhotoSearchButton";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { getCatalogVerticalCopy } from "@/features/listings/lib/listing-display";
@@ -14,6 +15,7 @@ type ListingsEmptyStateProps = {
   createListingHref: string;
   showCreateListingCTA?: boolean;
   vertical?: ListingVertical | null;
+  photoSearch?: boolean;
 };
 
 export function ListingsEmptyState({
@@ -21,6 +23,7 @@ export function ListingsEmptyState({
   createListingHref,
   showCreateListingCTA = true,
   vertical = null,
+  photoSearch = false,
 }: ListingsEmptyStateProps) {
   const { t } = useTranslation();
   const copy = getCatalogVerticalCopy(vertical);
@@ -28,6 +31,38 @@ export function ListingsEmptyState({
     vertical && !createListingHref.includes("vertical=")
       ? VERTICALS[vertical].createListingHref
       : createListingHref;
+  const allListingsHref = vertical
+    ? `/listings?vertical=${VERTICALS[vertical].slug}`
+    : "/listings";
+
+  if (photoSearch) {
+    return (
+      <EmptyState
+        icon={Camera}
+        title={t("listings.photoSearch.emptyTitle")}
+        description={t("listings.photoSearch.emptyDescription")}
+        className="mt-8 rounded-2xl border border-slate-200 bg-white shadow-[0_4px_14px_rgba(15,23,42,0.03)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
+        action={
+          <div className="flex flex-col items-center gap-3 sm:flex-row">
+            <PhotoSearchButton
+              vertical={vertical}
+              triggerVariant="button"
+              triggerLabelKey="listings.photoSearch.newSearch"
+            />
+            <Button
+              variant="outline"
+              className="h-10 rounded-xl border-slate-200 dark:border-slate-700"
+              asChild
+            >
+              <Link href={allListingsHref}>
+                {t("listings.photoSearch.openAllListings")}
+              </Link>
+            </Button>
+          </div>
+        }
+      />
+    );
+  }
 
   return (
     <EmptyState
