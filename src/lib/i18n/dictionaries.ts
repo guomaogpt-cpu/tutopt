@@ -1,6 +1,4 @@
-import type { PreferredLocale } from "@/features/preferences/locale-preference";
-
-export type Locale = PreferredLocale;
+export type Locale = "ru" | "kg" | "en";
 
 export const DEFAULT_LOCALE: Locale = "ru";
 

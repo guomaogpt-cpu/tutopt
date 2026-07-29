@@ -12,6 +12,8 @@
 
 **`ru`** — used before mount and when localStorage is empty/invalid.
 
+**Locale auto-detection and cookie storage added in Phase 54** — see `docs/I18N_PHASE_54_LOCALE_DETECTION.md`.
+
 ## 3. Dictionaries
 
 | File | Role |

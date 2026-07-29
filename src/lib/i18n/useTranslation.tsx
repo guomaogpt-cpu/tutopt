@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import {
-  getPreferredLocale,
+  resolveInitialLocale,
   setPreferredLocale,
   type PreferredLocale,
 } from "@/features/preferences/locale-preference";
@@ -35,16 +35,19 @@ type LocaleProviderProps = {
 };
 
 export function LocaleProvider({ children }: LocaleProviderProps) {
+  // Always start with ru to avoid hydration mismatch; resolve after mount.
   const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setLocaleState(getPreferredLocale());
+    // Priority: stored user/auto choice → browser detect → ru (inside helpers).
+    setLocaleState(resolveInitialLocale());
     setMounted(true);
   }, []);
 
   const setLocale = useCallback((next: PreferredLocale) => {
-    setPreferredLocale(next);
+    // Manual selection from settings drawer — persist localStorage + cookie.
+    setPreferredLocale(next, "manual");
     setLocaleState(next);
   }, []);
 
