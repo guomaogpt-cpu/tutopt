@@ -269,7 +269,7 @@ export function SettingsDrawer({
               })}
             </div>
             <p className="mt-2 px-1 text-xs text-slate-400">
-              Светлая, тёмная или как в системе.
+              По умолчанию — светлая. Тёмная тема пока экспериментальная.
             </p>
           </section>
 

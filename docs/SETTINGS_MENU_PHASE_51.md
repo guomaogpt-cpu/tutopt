@@ -54,9 +54,11 @@ Auth architecture не менялась. Header actions (избранное, у�
 
 - Package: `next-themes`
 - Provider: `src/components/providers/ThemeProvider.tsx`
-- Storage key: `vsetut.theme`
+- Storage key: `vsetut.theme.v2`
+- Default: **light** (не system)
 - Buttons call `setTheme("light" | "dark" | "system")`
 - Active state after client mount
+- Dark mode is experimental; listing cards stay light for stability
 
 Подробнее: `docs/THEME_PHASE_52.md`.
 

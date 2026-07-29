@@ -19,10 +19,12 @@
 Provider options:
 
 - `attribute="class"`
-- `defaultTheme="system"`
-- `enableSystem`
+- `defaultTheme="light"` — first visit is always light
+- `enableSystem` — system applies only after user picks “Системная”
 - `disableTransitionOnChange`
-- `storageKey="vsetut.theme"` (совместим с Phase 51 preference key)
+- `storageKey="vsetut.theme.v2"` (v2 resets old Phase 52 `system` default in `vsetut.theme`)
+
+Hotfix: dark must not auto-enable from OS theme on first load.
 
 ## 3. Settings drawer
 
@@ -36,7 +38,7 @@ Provider options:
 |------|--------|
 | Header | Already had dark classes; mobile divider updated |
 | Settings drawer | Dark section cards, text, pills, links |
-| Listing cards | Dark bg/border/title/price/meta/favorite/badge; softer glow |
+| Listing cards | Stay light (`bg-white`); dark card styles removed in hotfix (photo + dark body looked broken) |
 | Search inputs | `SearchWithSuggest` hero/header inputs |
 | Auth | `AuthLayout`, `AuthFormCard` |
 | Vertical landings | `/market` `/opt` `/services` `/cargo` page backgrounds + headings |
