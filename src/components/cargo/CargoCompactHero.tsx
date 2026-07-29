@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/drawer";
 import { getCargoCategoryVisual } from "@/features/cargo/cargo-category-visuals";
 import { getCategorySeoSlug } from "@/features/seo/category-seo-slug";
+import { buildVerticalCategoryListingsHref } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +45,10 @@ export function CargoCompactHero({ categories }: CargoCompactHeroProps) {
         const seoSlug = getCategorySeoSlug(category);
         return {
           category,
-          href: `/cargo/${seoSlug}`,
+          href: buildVerticalCategoryListingsHref(
+            category.vertical,
+            category.id,
+          ),
           visual: getCargoCategoryVisual(seoSlug, category.slug),
         };
       })

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/drawer";
 import { getMarketCategoryVisual } from "@/features/market/market-category-visuals";
 import { getCategorySeoSlug } from "@/features/seo/category-seo-slug";
+import { buildVerticalCategoryListingsHref } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
 
@@ -48,7 +49,10 @@ export function MarketCompactHero({
         const seoSlug = getCategorySeoSlug(category);
         return {
           category,
-          href: `/market/${seoSlug}`,
+          href: buildVerticalCategoryListingsHref(
+            category.vertical,
+            category.id,
+          ),
           visual: getMarketCategoryVisual(seoSlug, category.slug),
         };
       })

@@ -6,6 +6,7 @@ import {
 } from "@/components/cargo/CargoCompactHero";
 import { Container } from "@/components/ui/container";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import { VERTICAL_LATEST_LISTINGS_GRID_CLASS } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
 
 type CargoLandingPageProps = {
@@ -47,7 +48,7 @@ export function CargoLandingPage({
               В ТутКарго пока нет объявлений
             </div>
           ) : (
-            <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+            <div className={VERTICAL_LATEST_LISTINGS_GRID_CLASS}>
               {listings.map((listing) => (
                 <div key={listing.id} className="min-w-0 w-full">
                   <ListingCard listing={listing} variant="catalog" />

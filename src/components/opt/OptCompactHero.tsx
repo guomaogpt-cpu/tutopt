@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/drawer";
 import { getOptCategoryVisual } from "@/features/opt/opt-category-visuals";
 import { getCategorySeoSlug } from "@/features/seo/category-seo-slug";
+import { buildVerticalCategoryListingsHref } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +45,10 @@ export function OptCompactHero({ categories }: OptCompactHeroProps) {
         const seoSlug = getCategorySeoSlug(category);
         return {
           category,
-          href: `/opt/${seoSlug}`,
+          href: buildVerticalCategoryListingsHref(
+            category.vertical,
+            category.id,
+          ),
           visual: getOptCategoryVisual(seoSlug, category.slug),
         };
       })
