@@ -138,11 +138,11 @@ export function ListingLeadForm({
         className="scroll-mt-28"
         aria-labelledby="listing-lead-success-title"
       >
-        <div className="rounded-[22px] border border-green-200 bg-green-50 p-5 sm:p-6">
-          <h3 id="listing-lead-success-title" className="text-lg font-semibold text-green-900">
+        <div className="rounded-[22px] border border-green-200 bg-green-50 p-5 sm:p-6 dark:border-green-900/60 dark:bg-green-950/30">
+          <h3 id="listing-lead-success-title" className="text-lg font-semibold text-green-900 dark:text-green-200">
             {config.successTitle}
           </h3>
-          <p className="mt-3 text-sm leading-relaxed text-green-800">
+          <p className="mt-3 text-sm leading-relaxed text-green-800 dark:text-green-300">
             {config.successMessage(sellerName)} Можно отправить ещё одно сообщение по этому
             объявлению.
           </p>
@@ -171,7 +171,7 @@ export function ListingLeadForm({
           <h3 id="listing-lead-login-title" className="text-lg font-semibold text-[#0F172A] dark:text-slate-100">
             {config.title}
           </h3>
-          <p className="mt-2 text-sm text-[#64748B]">{config.loginPrompt(sellerName)}</p>
+          <p className="mt-2 text-sm text-[#64748B] dark:text-slate-400">{config.loginPrompt(sellerName)}</p>
           <Button className="mt-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]" onClick={handleLoginRedirect}>
             {t("form.loginToSendLead")}
           </Button>
@@ -213,7 +213,7 @@ export function ListingLeadForm({
           <h3 id="listing-lead-owner-title" className="text-lg font-semibold text-[#0F172A] dark:text-slate-100">
             {config.title}
           </h3>
-          <p className="mt-2 text-sm text-[#64748B]">{t("form.ownListingLeadNotice")}</p>
+          <p className="mt-2 text-sm text-[#64748B] dark:text-slate-400">{t("form.ownListingLeadNotice")}</p>
           <Button variant="outline" className="mt-5 rounded-xl" asChild>
             <Link href="/seller/leads">{t("form.goToLeads")}</Link>
           </Button>
@@ -234,8 +234,8 @@ export function ListingLeadForm({
       </h2>
 
       <div className={leadCardClassName}>
-        <p className="text-sm text-[#64748B]">{config.subtitle}</p>
-        <p className="mt-1 text-xs text-[#94A3B8]">{t("form.leadHint")}</p>
+        <p className="text-sm text-[#64748B] dark:text-slate-400">{config.subtitle}</p>
+        <p className="mt-1 text-xs text-[#94A3B8] dark:text-slate-500">{t("form.leadHint")}</p>
 
         <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
           <div
@@ -255,7 +255,7 @@ export function ListingLeadForm({
                   step={1}
                   value={quantity}
                   onChange={(event) => setQuantity(event.target.value)}
-                  className="rounded-xl"
+                  className="rounded-xl dark:border-slate-700 dark:bg-slate-950"
                   required
                 />
                 <p className="text-xs text-muted-foreground">
@@ -278,7 +278,7 @@ export function ListingLeadForm({
                 value={contactPhone}
                 onChange={(event) => setContactPhone(event.target.value)}
                 placeholder="+996700000000"
-                className="rounded-xl"
+                className="rounded-xl dark:border-slate-700 dark:bg-slate-950"
               />
               {fieldErrors.contact_phone ? (
                 <p className="text-xs text-destructive">{fieldErrors.contact_phone}</p>
@@ -296,7 +296,7 @@ export function ListingLeadForm({
               value={contactEmail}
               onChange={(event) => setContactEmail(event.target.value)}
               placeholder="buyer@company.kg"
-              className="rounded-xl"
+              className="rounded-xl dark:border-slate-700 dark:bg-slate-950"
             />
             {fieldErrors.contact_email ? (
               <p className="text-xs text-destructive">{fieldErrors.contact_email}</p>
@@ -313,7 +313,7 @@ export function ListingLeadForm({
               onChange={(event) => setMessage(event.target.value)}
               rows={4}
               placeholder={config.messagePlaceholder}
-              className="rounded-xl"
+              className="rounded-xl dark:border-slate-700 dark:bg-slate-950"
             />
             {fieldErrors.message ? (
               <p className="text-xs text-destructive">{fieldErrors.message}</p>

@@ -1,10 +1,12 @@
 "use client";
 
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 
 export type ListingCharacteristicItem = {
-  label: string;
+  label?: string;
+  labelKey?: DictionaryKey;
   value: string;
 };
 
@@ -37,11 +39,13 @@ export function ListingCharacteristics({ items }: ListingCharacteristicsProps) {
         <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           {visibleItems.map((item) => (
             <div
-              key={item.label}
-              className="rounded-xl border border-[rgba(148,163,184,0.12)] bg-[#F8FAFC] px-4 py-3 dark:border-slate-800 dark:bg-slate-950"
+              key={item.labelKey ?? item.label}
+              className="min-w-0 rounded-xl border border-slate-200/70 bg-slate-50 px-3.5 py-3 dark:border-slate-800 dark:bg-slate-950"
             >
-              <dt className="text-sm text-[#64748B] dark:text-slate-400">{item.label}</dt>
-              <dd className="mt-1 text-sm font-medium text-[#0F172A] dark:text-slate-200">
+              <dt className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                {item.labelKey ? t(item.labelKey) : item.label}
+              </dt>
+              <dd className="mt-1 break-words text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {item.value}
               </dd>
             </div>

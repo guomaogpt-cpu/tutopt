@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { MessageSquare, Phone, Send } from "lucide-react";
 import { ListingStatus, type ListingStatus as ListingStatusType, type ListingVertical } from "@prisma/client";
-import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
@@ -18,7 +17,6 @@ type ListingContactCardProps = {
   isAuthenticated: boolean;
   isFavorited: boolean;
   priceLabel: string;
-  priceCaption?: string;
   moq: number;
   unitLabel: string;
   stockQuantity: number | null;
@@ -28,10 +26,8 @@ type ListingContactCardProps = {
   vertical: ListingVertical;
   showStatusBadge?: boolean;
   showMoq?: boolean;
-  moqLabel?: string;
   showBrand?: boolean;
   showStock?: boolean;
-  stockLabel?: string;
   contactPhone: string | null;
   whatsapp: string | null;
   telegram: string | null;
@@ -69,7 +65,7 @@ function getStatusBadgeVariant(
 }
 
 const cardClassName = cn(
-  "rounded-3xl border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] sm:p-6",
+  "rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_6px_20px_rgba(15,23,42,0.05)] sm:p-6",
   "dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
 );
 
@@ -78,7 +74,6 @@ export function ListingContactCard({
   isAuthenticated,
   isFavorited,
   priceLabel,
-  priceCaption = "Цена",
   moq,
   unitLabel,
   stockQuantity,
@@ -88,10 +83,8 @@ export function ListingContactCard({
   vertical,
   showStatusBadge = false,
   showMoq = true,
-  moqLabel = "Мин. партия",
   showBrand = true,
   showStock = true,
-  stockLabel = "Остаток",
   contactPhone,
   whatsapp,
   telegram,
@@ -121,7 +114,9 @@ export function ListingContactCard({
   }
 
   const hasContacts = Boolean(contactPhone || whatsapp || telegram);
-  const contactCtaLabel = getLeadFormConfig(vertical).contactCtaLabel;
+  const contactCtaLabel = hasPrice
+    ? t("listing.sendRequest")
+    : t("listing.requestOffer");
 
   return (
     <div className={cardClassName}>
@@ -133,7 +128,7 @@ export function ListingContactCard({
 
       <div className="space-y-1">
         <p className="text-xs font-medium uppercase tracking-wide text-[#64748B] dark:text-slate-400">
-          {priceCaption}
+          {t("listing.price")}
         </p>
         <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px] dark:text-blue-400">
           {priceLabel}
@@ -146,7 +141,9 @@ export function ListingContactCard({
       <dl className="mt-5 space-y-2.5 border-b border-[rgba(148,163,184,0.14)] pb-5 text-sm dark:border-slate-800">
         {showMoq ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B] dark:text-slate-400">{moqLabel}</dt>
+            <dt className="text-[#64748B] dark:text-slate-400">
+              {t("listing.minOrder")}
+            </dt>
             <dd className="font-medium text-[#0F172A] dark:text-slate-200">
               {moq} {unitLabel.toLowerCase()}
             </dd>
@@ -166,7 +163,9 @@ export function ListingContactCard({
         ) : null}
         {showStock && stockQuantity != null ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B] dark:text-slate-400">{stockLabel}</dt>
+            <dt className="text-[#64748B] dark:text-slate-400">
+              {t("listing.stock")}
+            </dt>
             <dd className="font-medium text-[#0F172A] dark:text-slate-200">{stockQuantity}</dd>
           </div>
         ) : null}
@@ -175,7 +174,7 @@ export function ListingContactCard({
       <div className="mt-5 flex flex-col gap-3">
         <Button
           type="button"
-          className="h-11 w-full gap-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
+          className="h-12 w-full gap-2 rounded-xl bg-blue-600 text-base font-semibold hover:bg-blue-700"
           onClick={handleWriteToSeller}
         >
           <MessageSquare className="size-4" aria-hidden="true" />
@@ -194,10 +193,10 @@ export function ListingContactCard({
         {!isAuthenticated ? (
           <Button
             variant="outline"
-            className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)]"
+            className="h-10 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
             onClick={handleLoginToViewContacts}
           >
-            {t("listing.loginToSeeContacts")}
+            {t("listing.signInToSeeContacts")}
           </Button>
         ) : (
           <>
@@ -238,7 +237,9 @@ export function ListingContactCard({
               </Button>
             ) : null}
             {isAuthenticated && !hasContacts ? (
-              <p className="text-center text-xs text-[#94A3B8]">{t("listing.noContactsProvided")}</p>
+              <p className="text-center text-xs text-[#94A3B8] dark:text-slate-500">
+                {t("listing.noContactsProvided")}
+              </p>
             ) : null}
           </>
         )}

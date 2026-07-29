@@ -7,6 +7,7 @@ import { ListingCard } from "@/components/listings/ListingCard";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { buildSellerProfileHref } from "@/features/sellers/lib/seller-vertical-profile";
 import { trackSellerOtherListingClick } from "@/lib/analytics/events";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type SellerOtherListingsProps = {
   listings: ListingCardData[];
@@ -23,6 +24,7 @@ export function SellerOtherListings({
   isAuthenticated = false,
   favoriteListingIds = [],
 }: SellerOtherListingsProps) {
+  const { t } = useTranslation();
   const favoriteIds = new Set(favoriteListingIds);
 
   if (listings.length === 0) {
@@ -44,20 +46,20 @@ export function SellerOtherListings({
         <div>
           <h2
             id="seller-other-listings-title"
-            className="text-lg font-bold text-[#0F172A] sm:text-xl"
+            className="text-lg font-bold text-slate-900 sm:text-xl dark:text-slate-100"
           >
-            Другие объявления продавца
+            {t("listing.otherSellerListings")}
           </h2>
-          <p className="mt-1 text-sm text-[#64748B]">
-            Посмотрите ещё предложения этого продавца
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {t("listing.otherSellerListingsDescription")}
           </p>
         </div>
 
         <Link
           href={buildSellerProfileHref(sellerId)}
-          className="w-fit text-sm font-semibold text-[#2563EB] underline-offset-2 hover:underline"
+          className="w-fit text-sm font-semibold text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
         >
-          Все объявления продавца
+          {t("listing.viewSellerListings")}
         </Link>
       </div>
 

@@ -1,8 +1,10 @@
+"use client";
+
 import {
-  getSellerTrustBadgeLabel,
   type SellerTrustLevel,
   type SellerTrustSignal,
 } from "@/lib/trust/seller-trust";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 const LEVEL_STYLES: Record<SellerTrustLevel, string> = {
@@ -17,6 +19,14 @@ type SellerTrustBadgeProps = {
 };
 
 export function SellerTrustBadge({ level, className }: SellerTrustBadgeProps) {
+  const { t } = useTranslation();
+  const label =
+    level === "trusted"
+      ? t("listing.profileCompleted")
+      : level === "normal"
+        ? t("listing.standardProfile")
+        : t("listing.profileIncomplete");
+
   return (
     <span
       className={cn(
@@ -25,7 +35,7 @@ export function SellerTrustBadge({ level, className }: SellerTrustBadgeProps) {
         className,
       )}
     >
-      {getSellerTrustBadgeLabel(level)}
+      {label}
     </span>
   );
 }
@@ -58,17 +68,40 @@ export function SellerTrustSignalsList({
 
 type SellerTrustCompactBlockProps = {
   level: SellerTrustLevel;
-  levelLabel: string;
   signals: SellerTrustSignal[];
+  publishedListingCount?: number;
   className?: string;
 };
 
 export function SellerTrustCompactBlock({
   level,
-  levelLabel,
   signals,
+  publishedListingCount = 0,
   className,
 }: SellerTrustCompactBlockProps) {
+  const { t } = useTranslation();
+  const levelLabel =
+    level === "trusted"
+      ? t("listing.profileCompleted")
+      : level === "normal"
+        ? t("listing.standardProfile")
+        : t("listing.profileIncomplete");
+  const localizedSignals = signals.map((signal) => {
+    if (signal.code === "phone_verified") {
+      return { ...signal, label: t("listing.phoneVerified") };
+    }
+    if (signal.code === "profile_filled") {
+      return { ...signal, label: t("listing.profileCompleted") };
+    }
+    if (signal.code === "active_listings") {
+      return {
+        ...signal,
+        label: `${t("listing.activeListings")}: ${publishedListingCount}`,
+      };
+    }
+    return signal;
+  });
+
   return (
     <div
       className={cn(
@@ -78,13 +111,13 @@ export function SellerTrustCompactBlock({
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B] dark:text-slate-400">
-          Доверие к продавцу
+          {t("listing.trust")}
         </p>
         <SellerTrustBadge level={level} />
       </div>
       <p className="mt-1.5 text-sm font-medium text-[#0F172A] dark:text-slate-200">{levelLabel}</p>
       <SellerTrustSignalsList
-        signals={signals}
+        signals={localizedSignals}
         maxItems={3}
         className="mt-2 dark:text-slate-400"
       />

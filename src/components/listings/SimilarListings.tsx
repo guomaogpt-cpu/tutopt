@@ -4,6 +4,7 @@ import type { ListingVertical } from "@prisma/client";
 import { ListingCard } from "@/components/listings/ListingCard";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { trackSimilarListingClick } from "@/lib/analytics/events";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type SimilarListingsProps = {
   listings: ListingCardData[];
@@ -20,6 +21,7 @@ export function SimilarListings({
   sourceVertical = null,
   sameCategoryIds = [],
 }: SimilarListingsProps) {
+  const { t } = useTranslation();
   const favoriteIds = new Set(favoriteListingIds);
   const sameCategorySet = new Set(sameCategoryIds);
 
@@ -48,9 +50,9 @@ export function SimilarListings({
     <section className="mt-10 lg:mt-14" aria-labelledby="similar-listings-title">
       <h2
         id="similar-listings-title"
-        className="mb-5 text-lg font-bold text-[#0F172A] sm:text-xl"
+        className="mb-5 text-lg font-bold text-slate-900 sm:text-xl dark:text-slate-100"
       >
-        Похожие объявления
+        {t("listing.similarListings")}
       </h2>
 
       <div className="grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">

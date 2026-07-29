@@ -5,6 +5,7 @@ import { ListingCharacteristics } from "@/components/listings/ListingCharacteris
 import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
 import { ListingGallery } from "@/components/listings/ListingGallery";
+import { ListingRequestHint } from "@/components/listings/ListingRequestHint";
 import { ListingSellerCard } from "@/components/listings/ListingSellerCard";
 import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
@@ -44,9 +45,6 @@ import { listingStatusLabels } from "@/features/listings/lib/listing-status";
 import {
   formatListingCardPrice,
   getListingDisplayFlags,
-  getListingPriceFieldLabel,
-  getListingStockLabel,
-  getListingUnitFieldLabel,
   getListingUnitLabel,
   getListingVerticalBadgeLabel,
 } from "@/features/listings/lib/listing-display";
@@ -141,8 +139,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const unitLabel = getListingUnitLabel(listing.unit, listing.vertical);
   const displayFlags = getListingDisplayFlags(listing.vertical);
-  const priceFieldLabel = getListingPriceFieldLabel(listing.vertical);
-  const unitFieldLabel = getListingUnitFieldLabel(listing.vertical);
 
   const priceLabel = formatListingCardPrice({
     price: listing.price,
@@ -234,27 +230,37 @@ export default async function ListingPage({ params }: ListingPageProps) {
       : null;
 
   const characteristicItems = [
-    { label: "Направление", value: getListingVerticalBadgeLabel(listing.vertical) },
-    { label: "Категория", value: listing.category.name },
-    ...(listing.city ? [{ label: "Город", value: listing.city.name }] : []),
-    { label: priceFieldLabel, value: priceLabel },
+    {
+      labelKey: "listing.direction" as const,
+      value: getListingVerticalBadgeLabel(listing.vertical),
+    },
+    { labelKey: "listing.category" as const, value: listing.category.name },
+    ...(listing.city
+      ? [{ labelKey: "listing.city" as const, value: listing.city.name }]
+      : []),
+    { labelKey: "listing.price" as const, value: priceLabel },
     ...(displayFlags.showBrand && listing.brand
-      ? [{ label: "Бренд", value: listing.brand.name }]
+      ? [{ labelKey: "listing.brand" as const, value: listing.brand.name }]
       : []),
     ...(displayFlags.showMoq
-      ? [{ label: displayFlags.moqLabel, value: `${listing.moq} ${unitLabel.toLowerCase()}` }]
+      ? [
+          {
+            labelKey: "listing.minOrder" as const,
+            value: `${listing.moq} ${unitLabel.toLowerCase()}`,
+          },
+        ]
       : []),
-    { label: unitFieldLabel, value: unitLabel },
+    { labelKey: "listing.unit" as const, value: unitLabel },
     ...(displayFlags.showStock && listing.stock_quantity != null
       ? [
           {
-            label: getListingStockLabel(listing.vertical),
+            labelKey: "listing.stock" as const,
             value: String(listing.stock_quantity),
           },
         ]
       : []),
     ...(publishedDateLabel
-      ? [{ label: "Дата публикации", value: publishedDateLabel }]
+      ? [{ labelKey: "listing.publishedAt" as const, value: publishedDateLabel }]
       : []),
   ];
 
@@ -264,7 +270,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
       isAuthenticated={user !== null}
       isFavorited={isFavorited}
       priceLabel={priceLabel}
-      priceCaption={priceFieldLabel}
       moq={listing.moq}
       unitLabel={unitLabel}
       stockQuantity={listing.stock_quantity}
@@ -274,10 +279,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
       vertical={listing.vertical}
       showStatusBadge={showStatusBadge}
       showMoq={displayFlags.showMoq}
-      moqLabel={displayFlags.moqLabel}
       showBrand={displayFlags.showBrand}
       showStock={displayFlags.showStock}
-      stockLabel={displayFlags.stockLabel}
       contactPhone={user ? sellerProfile.contact_phone : null}
       whatsapp={user ? sellerProfile.whatsapp : null}
       telegram={user ? sellerProfile.telegram : null}
@@ -299,7 +302,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
       listingId={listing.id}
       vertical={listing.vertical}
       trustLevel={sellerTrust.level}
-      trustLevelLabel={sellerTrust.levelLabel}
       trustSignals={sellerTrust.signals}
       isAuthenticated={user !== null}
       hasPrice={hasPrice}
@@ -422,6 +424,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
             <ListingCharacteristics items={characteristicItems} />
             <ListingDescription text={listing.description} />
             {!isOwner ? <ListingVerticalHint vertical={listing.vertical} /> : null}
+            {!isOwner ? <ListingRequestHint /> : null}
             <ListingLeadForm
               key={`${listing.id}-${listing.vertical}`}
               listingId={listing.id}

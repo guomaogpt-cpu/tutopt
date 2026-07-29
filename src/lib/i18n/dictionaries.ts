@@ -583,11 +583,37 @@ export const DICTIONARY = {
   },
   "listing.showLess": { ru: "Свернуть", kg: "Жыйыштыруу", en: "Show less" },
   "listing.price": { ru: "Цена", kg: "Баасы", en: "Price" },
+  "listing.minOrder": { ru: "Мин. партия", kg: "Мин. партия", en: "Min. order" },
   "listing.city": { ru: "Город", kg: "Шаар", en: "City" },
   "listing.brand": { ru: "Бренд", kg: "Бренд", en: "Brand" },
   "listing.moq": { ru: "Мин. партия", kg: "Мин. партия", en: "Min. order" },
   "listing.stock": { ru: "Остаток", kg: "Калдык", en: "In stock" },
+  "listing.sendRequest": {
+    ru: "Отправить запрос",
+    kg: "Сурам жөнөтүү",
+    en: "Send request",
+  },
+  "listing.requestOffer": {
+    ru: "Запросить предложение",
+    kg: "Сунуш суроо",
+    en: "Request an offer",
+  },
+  "listing.addToFavorites": {
+    ru: "Добавить в избранное",
+    kg: "Тандалмаларга кошуу",
+    en: "Add to favorites",
+  },
+  "listing.removeFromFavorites": {
+    ru: "Убрать из избранного",
+    kg: "Тандалмалардан алып салуу",
+    en: "Remove from favorites",
+  },
   "listing.perUnitPrefix": { ru: "за", kg: "үчүн", en: "per" },
+  "listing.signInToSeeContacts": {
+    ru: "Войти, чтобы увидеть контакты",
+    kg: "Байланыштарды көрүү үчүн кирүү",
+    en: "Sign in to see contacts",
+  },
   "listing.loginToSeeContacts": {
     ru: "Войти, чтобы увидеть контакты",
     kg: "Байланыштарды көрүү үчүн кирүү",
@@ -600,6 +626,38 @@ export const DICTIONARY = {
   },
   "listing.verified": { ru: "Проверен", kg: "Текшерилген", en: "Verified" },
   "listing.listingsCount": { ru: "Объявлений", kg: "Жарыялар", en: "Listings" },
+  "listing.seller": { ru: "Продавец", kg: "Сатуучу", en: "Seller" },
+  "listing.supplier": { ru: "Поставщик", kg: "Жеткирүүчү", en: "Supplier" },
+  "listing.trust": {
+    ru: "Доверие к продавцу",
+    kg: "Сатуучуга ишеним",
+    en: "Seller trust",
+  },
+  "listing.profileCompleted": {
+    ru: "Профиль заполнен",
+    kg: "Профиль толтурулган",
+    en: "Profile completed",
+  },
+  "listing.profileIncomplete": {
+    ru: "Профиль заполнен не полностью",
+    kg: "Профиль толук толтурулган эмес",
+    en: "Profile is incomplete",
+  },
+  "listing.standardProfile": {
+    ru: "Обычный профиль",
+    kg: "Кадимки профиль",
+    en: "Standard profile",
+  },
+  "listing.phoneVerified": {
+    ru: "Телефон подтверждён",
+    kg: "Телефон ырасталган",
+    en: "Phone verified",
+  },
+  "listing.activeListings": {
+    ru: "Активных объявлений",
+    kg: "Активдүү жарыялар",
+    en: "Active listings",
+  },
   "listing.memberSince": {
     ru: "На платформе с",
     kg: "Платформада",
@@ -609,6 +667,39 @@ export const DICTIONARY = {
     ru: "Профиль продавца",
     kg: "Сатуучунун профили",
     en: "Seller profile",
+  },
+  "listing.direction": { ru: "Направление", kg: "Багыт", en: "Direction" },
+  "listing.category": { ru: "Категория", kg: "Категория", en: "Category" },
+  "listing.unit": { ru: "Единица", kg: "Бирдик", en: "Unit" },
+  "listing.publishedAt": {
+    ru: "Дата публикации",
+    kg: "Жарыяланган күнү",
+    en: "Published at",
+  },
+  "listing.similarListings": {
+    ru: "Похожие объявления",
+    kg: "Окшош жарыялар",
+    en: "Similar listings",
+  },
+  "listing.otherSellerListings": {
+    ru: "Другие объявления продавца",
+    kg: "Сатуучунун башка жарыялары",
+    en: "Other seller listings",
+  },
+  "listing.otherSellerListingsDescription": {
+    ru: "Посмотрите ещё предложения этого продавца",
+    kg: "Бул сатуучунун башка сунуштарын көрүңүз",
+    en: "See more offers from this seller",
+  },
+  "listing.viewSellerListings": {
+    ru: "Все объявления продавца",
+    kg: "Сатуучунун бардык жарыялары",
+    en: "All seller listings",
+  },
+  "listing.requestHint": {
+    ru: "Перед заявкой уточните минимальную партию, наличие и условия отгрузки.",
+    kg: "Сурам жөнөтүүдөн мурун минималдуу партияны, бар-жогун жана жөнөтүү шарттарын тактаңыз.",
+    en: "Before sending a request, confirm the minimum order, availability, and delivery terms.",
   },
   "listing.report": { ru: "Пожаловаться", kg: "Даттануу", en: "Report" },
 

@@ -11,6 +11,7 @@ import {
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { trackFavoriteToggle } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type FavoriteButtonProps = {
@@ -33,6 +34,7 @@ export function FavoriteButton({
   onFavoriteChange,
 }: FavoriteButtonProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const [isFavorited, setIsFavorited] = useState(initialIsFavorited);
   const [isPending, setIsPending] = useState(false);
 
@@ -67,7 +69,9 @@ export function FavoriteButton({
     }
   }
 
-  const label = isFavorited ? "Убрать из избранного" : "Добавить в избранное";
+  const label = isFavorited
+    ? t("listing.removeFromFavorites")
+    : t("listing.addToFavorites");
 
   if (variant === "button") {
     return (
@@ -80,12 +84,13 @@ export function FavoriteButton({
         aria-label={label}
         className={cn(
           "w-full",
-          isFavorited && "border-rose-200 bg-rose-50 text-rose-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700",
+          isFavorited &&
+            "border-rose-200 bg-rose-50 text-rose-700 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300",
           className,
         )}
       >
         <Heart className={cn("size-4", isFavorited && "fill-current")} aria-hidden="true" />
-        {isFavorited ? "В избранном" : "Добавить в избранное"}
+        {label}
       </Button>
     );
   }
