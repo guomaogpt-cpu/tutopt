@@ -1,6 +1,8 @@
 "use client";
 
 import { Check, ShoppingBag, Store } from "lucide-react";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type RegisterRole = "BUYER" | "SELLER";
@@ -14,28 +16,30 @@ type RoleSelectorProps = {
 
 const roleOptions: Array<{
   value: RegisterRole;
-  title: string;
-  description: string;
+  titleKey: DictionaryKey;
+  descriptionKey: DictionaryKey;
   icon: typeof ShoppingBag;
 }> = [
   {
     value: "BUYER",
-    title: "Покупатель",
-    description: "Ищу товары и отправляю заявки поставщикам",
+    titleKey: "roles.buyer",
+    descriptionKey: "roles.buyerDescription",
     icon: ShoppingBag,
   },
   {
     value: "SELLER",
-    title: "Продавец",
-    description: "Публикую товары и получаю заявки от покупателей",
+    titleKey: "roles.seller",
+    descriptionKey: "roles.sellerDescription",
     icon: Store,
   },
 ];
 
 export function RoleSelector({ value, onChange, disabled = false, error }: RoleSelectorProps) {
+  const { t } = useTranslation();
+
   return (
     <fieldset className="space-y-3">
-      <legend className="text-sm font-medium text-[#0F172A]">Тип аккаунта</legend>
+      <legend className="text-sm font-medium text-[#0F172A]">{t("roles.accountType")}</legend>
 
       <div className="grid gap-3 sm:grid-cols-2">
         {roleOptions.map((option) => {
@@ -72,9 +76,9 @@ export function RoleSelector({ value, onChange, disabled = false, error }: RoleS
                 <Icon className="size-5" aria-hidden="true" />
               </span>
 
-              <span className="mt-3 font-semibold text-[#0F172A]">{option.title}</span>
+              <span className="mt-3 font-semibold text-[#0F172A]">{t(option.titleKey)}</span>
               <span className="mt-1 text-xs leading-relaxed text-[#64748B] sm:text-sm">
-                {option.description}
+                {t(option.descriptionKey)}
               </span>
             </button>
           );

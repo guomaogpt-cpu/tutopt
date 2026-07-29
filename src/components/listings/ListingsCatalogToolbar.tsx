@@ -40,6 +40,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { translate, type Locale } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 import type { ListingVertical } from "@prisma/client";
 
@@ -62,16 +64,22 @@ type ListingsCatalogToolbarProps = {
   totalCount: number;
 };
 
-function formatListingCount(count: number): string {
+function formatListingCount(locale: Locale, count: number): string {
+  if (locale !== "ru") {
+    return count === 1
+      ? translate(locale, "catalog.listingWordOne")
+      : translate(locale, "catalog.listingWordMany");
+  }
+
   const mod10 = count % 10;
   const mod100 = count % 100;
   if (mod10 === 1 && mod100 !== 11) {
-    return "объявление";
+    return translate(locale, "catalog.listingWordOne");
   }
   if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-    return "объявления";
+    return translate(locale, "catalog.listingWordFew");
   }
-  return "объявлений";
+  return translate(locale, "catalog.listingWordMany");
 }
 
 export function ListingsCatalogToolbar({
@@ -83,6 +91,7 @@ export function ListingsCatalogToolbar({
   totalCount,
 }: ListingsCatalogToolbarProps) {
   const router = useRouter();
+  const { t, locale } = useTranslation();
   const filtersButtonRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState(filters.q);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -101,7 +110,7 @@ export function ListingsCatalogToolbar({
     hasActiveCatalogFilters(filters) || Boolean(filters.vertical);
   const currentSortLabel =
     listingSortOptions.find((option) => option.value === filters.sort)?.label ??
-    "Сначала новые";
+    t("catalog.sortNewestFirst");
 
   useEffect(() => {
     setQuery(filters.q);
@@ -214,7 +223,7 @@ export function ListingsCatalogToolbar({
           <div
             className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             role="tablist"
-            aria-label="Раздел объявлений"
+            aria-label={t("catalog.sectionAriaLabel")}
           >
             <button
               type="button"
@@ -228,7 +237,7 @@ export function ListingsCatalogToolbar({
                   : VERTICAL_TAB_INACTIVE,
               )}
             >
-              Все
+              {t("catalog.all")}
             </button>
             {VERTICAL_LIST.map((vertical) => {
               const isActive = filters.vertical === vertical.id;
@@ -255,7 +264,7 @@ export function ListingsCatalogToolbar({
             className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center"
           >
             <label htmlFor="catalog-search" className="sr-only">
-              Что вы ищете?
+              {t("catalog.searchAriaLabel")}
             </label>
             <div className="relative min-w-0 flex-1">
               <Search
@@ -267,7 +276,7 @@ export function ListingsCatalogToolbar({
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Что вы ищете?"
+                placeholder={t("catalog.searchPlaceholder")}
                 className="h-12 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-10 pr-10 text-base shadow-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
               {query ? (
@@ -275,7 +284,7 @@ export function ListingsCatalogToolbar({
                   type="button"
                   onClick={handleCatalogClear}
                   className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#64748B]"
-                  aria-label="Очистить поиск"
+                  aria-label={t("catalog.clearSearch")}
                 >
                   <X className="size-4" aria-hidden="true" />
                 </button>
@@ -285,7 +294,7 @@ export function ListingsCatalogToolbar({
               type="submit"
               className="h-12 w-full shrink-0 rounded-xl bg-[#2563EB] px-6 text-base hover:bg-[#1D4ED8] sm:w-auto"
             >
-              Найти
+              {t("search.find")}
             </Button>
           </form>
         </div>
@@ -293,9 +302,9 @@ export function ListingsCatalogToolbar({
         <div className="flex flex-col gap-3 px-4 py-3 sm:px-5 sm:py-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <p className="text-sm text-[#64748B] dark:text-slate-400">
-              Найдено:{" "}
+              {t("catalog.found")}:{" "}
               <span className="font-semibold text-[#0F172A] dark:text-slate-100">{totalCount}</span>{" "}
-              {formatListingCount(totalCount)}
+              {formatListingCount(locale, totalCount)}
             </p>
             <p className="mt-0.5 text-xs text-[#94A3B8] dark:text-slate-500">{currentSortLabel}</p>
           </div>
@@ -304,7 +313,7 @@ export function ListingsCatalogToolbar({
             <Select value={filters.sort} onValueChange={handleSortChange}>
               <SelectTrigger
                 className="h-10 min-w-[150px] flex-1 rounded-xl bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:flex-none sm:w-[180px]"
-                aria-label="Сортировка"
+                aria-label={t("catalog.sortAriaLabel")}
               >
                 <SelectValue />
               </SelectTrigger>
@@ -326,14 +335,14 @@ export function ListingsCatalogToolbar({
                 className="h-10 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
               >
                 <SlidersHorizontal className="size-4" aria-hidden="true" />
-                Фильтры
+                {t("catalog.filters")}
                 {panelFiltersOnly ? (
                   <Badge
                     variant="default"
                     className="ml-0.5 size-2 rounded-full bg-[#2563EB] p-0"
                     aria-hidden="true"
                   >
-                    <span className="sr-only">Есть активные фильтры</span>
+                    <span className="sr-only">{t("catalog.hasActiveFilters")}</span>
                   </Badge>
                 ) : null}
               </Button>
@@ -369,7 +378,7 @@ export function ListingsCatalogToolbar({
             >
               {chip.label}
               <X className="size-3.5 text-[#94A3B8]" aria-hidden="true" />
-              <span className="sr-only">Удалить фильтр</span>
+              <span className="sr-only">{t("catalog.removeFilter")}</span>
             </Button>
           ))}
           {hasFilters ? (
@@ -380,7 +389,7 @@ export function ListingsCatalogToolbar({
               className="h-8 rounded-full px-3 text-[#2563EB] hover:text-[#1D4ED8]"
               onClick={handleResetAll}
             >
-              Сбросить всё
+              {t("catalog.resetAll")}
             </Button>
           ) : null}
         </div>

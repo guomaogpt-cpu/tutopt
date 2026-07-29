@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export type FilterDraft = {
   categoryId: string;
@@ -80,21 +81,23 @@ function FilterFields({
   showBrandFilter,
   onUpdate,
 }: FilterFieldsProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
         <label htmlFor="filter-category" className="text-sm font-medium text-foreground">
-          Категория
+          {t("catalog.category")}
         </label>
         <Select
           value={draft.categoryId || "all"}
           onValueChange={(value) => onUpdate("categoryId", value === "all" ? "" : value)}
         >
           <SelectTrigger id="filter-category">
-            <SelectValue placeholder="Все категории" />
+            <SelectValue placeholder={t("catalog.allCategories")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Все категории</SelectItem>
+            <SelectItem value="all">{t("catalog.allCategories")}</SelectItem>
             {categories.map((category) => (
               <SelectItem key={category.id} value={category.id}>
                 {category.label}
@@ -106,17 +109,17 @@ function FilterFields({
 
       <div className="space-y-2">
         <label htmlFor="filter-city" className="text-sm font-medium text-foreground">
-          Город
+          {t("listing.city")}
         </label>
         <Select
           value={draft.cityId || "all"}
           onValueChange={(value) => onUpdate("cityId", value === "all" ? "" : value)}
         >
           <SelectTrigger id="filter-city">
-            <SelectValue placeholder="Все города" />
+            <SelectValue placeholder={t("catalog.allCities")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Все города</SelectItem>
+            <SelectItem value="all">{t("catalog.allCities")}</SelectItem>
             {cities.map((city) => (
               <SelectItem key={city.id} value={city.id}>
                 {city.label}
@@ -129,17 +132,17 @@ function FilterFields({
       {showBrandFilter ? (
         <div className="space-y-2">
           <label htmlFor="filter-brand" className="text-sm font-medium text-foreground">
-            Бренд
+            {t("catalog.brand")}
           </label>
           <Select
             value={draft.brandId || "all"}
             onValueChange={(value) => onUpdate("brandId", value === "all" ? "" : value)}
           >
             <SelectTrigger id="filter-brand">
-              <SelectValue placeholder="Все бренды" />
+              <SelectValue placeholder={t("catalog.allBrands")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все бренды</SelectItem>
+              <SelectItem value="all">{t("catalog.allBrands")}</SelectItem>
               {brands.map((brand) => (
                 <SelectItem key={brand.id} value={brand.id}>
                   {brand.label}
@@ -153,7 +156,7 @@ function FilterFields({
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
           <label htmlFor="filter-price-from" className="text-sm font-medium text-foreground">
-            Цена от
+            {t("catalog.priceFrom")}
           </label>
           <Input
             id="filter-price-from"
@@ -167,7 +170,7 @@ function FilterFields({
         </div>
         <div className="space-y-2">
           <label htmlFor="filter-price-to" className="text-sm font-medium text-foreground">
-            Цена до
+            {t("catalog.priceTo")}
           </label>
           <Input
             id="filter-price-to"
@@ -188,7 +191,7 @@ function FilterFields({
           onChange={(event) => onUpdate("withPhotos", event.target.checked)}
           className="size-4 rounded border-input text-primary focus:ring-ring"
         />
-        Только с фото
+        {t("catalog.withPhotosOnly")}
       </label>
     </div>
   );
@@ -201,6 +204,8 @@ type FilterActionsProps = {
 };
 
 function FilterActions({ onReset, onApply, className }: FilterActionsProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={`flex gap-3 ${className ?? ""}`}>
       <Button
@@ -209,14 +214,14 @@ function FilterActions({ onReset, onApply, className }: FilterActionsProps) {
         className="h-11 flex-1 rounded-xl"
         onClick={onReset}
       >
-        Сбросить
+        {t("catalog.reset")}
       </Button>
       <Button
         type="button"
         className="h-11 flex-1 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
         onClick={onApply}
       >
-        Применить
+        {t("catalog.apply")}
       </Button>
     </div>
   );
@@ -233,6 +238,7 @@ export function CatalogFiltersPanel({
   onApply,
   onReset,
 }: CatalogFiltersPanelProps) {
+  const { t } = useTranslation();
   const [draft, setDraft] = useState<FilterDraft>(() => filtersToDraft(filters));
   const [isMobile, setIsMobile] = useState(false);
 
@@ -291,7 +297,7 @@ export function CatalogFiltersPanel({
           <DrawerHeader className="border-b px-4 pb-4 text-left">
             <DrawerTitle className="flex items-center gap-2 text-base">
               <SlidersHorizontal className="size-4 text-muted-foreground" aria-hidden="true" />
-              Фильтры
+              {t("catalog.filters")}
             </DrawerTitle>
           </DrawerHeader>
           <div className="flex-1 overflow-y-auto px-4 py-4">{fields}</div>
@@ -312,9 +318,15 @@ export function CatalogFiltersPanel({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[rgba(148,163,184,0.12)] px-4 py-3">
         <CardTitle className="flex items-center gap-2 text-base text-[#0F172A]">
           <SlidersHorizontal className="size-4 text-[#64748B]" aria-hidden="true" />
-          Фильтры
+          {t("catalog.filters")}
         </CardTitle>
-        <Button type="button" variant="ghost" size="icon" onClick={onClose} aria-label="Закрыть">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          aria-label={t("common.close")}
+        >
           <X className="size-4" />
         </Button>
       </CardHeader>

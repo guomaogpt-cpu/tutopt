@@ -7,9 +7,10 @@ import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
-import { listingStatusLabels } from "@/features/listings/lib/listing-status";
+import { getListingStatusLabel } from "@/features/listings/lib/listing-status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type ListingContactCardProps = {
@@ -99,6 +100,7 @@ export function ListingContactCard({
   isOwnListing = false,
 }: ListingContactCardProps) {
   const router = useRouter();
+  const { t, locale } = useTranslation();
 
   function handleLoginToViewContacts() {
     router.push(buildLoginUrl(getCurrentPathFromWindow()));
@@ -125,7 +127,7 @@ export function ListingContactCard({
     <div className={cardClassName}>
       {showStatusBadge ? (
         <Badge variant={getStatusBadgeVariant(status)} className="mb-3">
-          {listingStatusLabels[status]}
+          {getListingStatusLabel(locale, status)}
         </Badge>
       ) : null}
 
@@ -136,7 +138,9 @@ export function ListingContactCard({
         <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px] dark:text-blue-400">
           {priceLabel}
         </p>
-        <p className="text-sm text-[#64748B] dark:text-slate-400">за {unitLabel.toLowerCase()}</p>
+        <p className="text-sm text-[#64748B] dark:text-slate-400">
+          {t("listing.perUnitPrefix")} {unitLabel.toLowerCase()}
+        </p>
       </div>
 
       <dl className="mt-5 space-y-2.5 border-b border-[rgba(148,163,184,0.14)] pb-5 text-sm dark:border-slate-800">
@@ -150,13 +154,13 @@ export function ListingContactCard({
         ) : null}
         {cityName ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B] dark:text-slate-400">Город</dt>
+            <dt className="text-[#64748B] dark:text-slate-400">{t("listing.city")}</dt>
             <dd className="font-medium text-[#0F172A] dark:text-slate-200">{cityName}</dd>
           </div>
         ) : null}
         {showBrand && brandName ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B] dark:text-slate-400">Бренд</dt>
+            <dt className="text-[#64748B] dark:text-slate-400">{t("listing.brand")}</dt>
             <dd className="font-medium text-[#0F172A] dark:text-slate-200">{brandName}</dd>
           </div>
         ) : null}
@@ -193,7 +197,7 @@ export function ListingContactCard({
             className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)]"
             onClick={handleLoginToViewContacts}
           >
-            Войти, чтобы увидеть контакты
+            {t("listing.loginToSeeContacts")}
           </Button>
         ) : (
           <>
@@ -234,7 +238,7 @@ export function ListingContactCard({
               </Button>
             ) : null}
             {isAuthenticated && !hasContacts ? (
-              <p className="text-center text-xs text-[#94A3B8]">Продавец не указал контакты</p>
+              <p className="text-center text-xs text-[#94A3B8]">{t("listing.noContactsProvided")}</p>
             ) : null}
           </>
         )}

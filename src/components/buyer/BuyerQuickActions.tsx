@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Bell, Heart, Inbox, LayoutGrid } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 const cardClassName = cn(
@@ -13,10 +16,12 @@ const iconWrapClassName =
   "flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#2563EB] dark:bg-blue-950 dark:text-blue-300";
 
 export function BuyerQuickActions() {
+  const { t } = useTranslation();
+
   return (
     <section aria-labelledby="buyer-quick-actions-title">
       <h2 id="buyer-quick-actions-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl dark:text-slate-100">
-        Быстрые действия
+        {t("quickActions.title")}
       </h2>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -25,8 +30,10 @@ export function BuyerQuickActions() {
             <LayoutGrid className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Найти товар</p>
-            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">Каталог оптовых предложений</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">{t("buyer.findProduct")}</p>
+            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">
+              {t("buyer.findProductHint")}
+            </p>
           </div>
         </Link>
 
@@ -35,8 +42,10 @@ export function BuyerQuickActions() {
             <Heart className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Избранное</p>
-            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">Сохранённые объявления</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">{t("auth.favorites")}</p>
+            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">
+              {t("buyer.favoritesHint")}
+            </p>
           </div>
         </Link>
 
@@ -45,8 +54,12 @@ export function BuyerQuickActions() {
             <Bell className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Уведомления</p>
-            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">Обновления по заявкам</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+              {t("footer.notifications")}
+            </p>
+            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">
+              {t("buyer.notificationsHint")}
+            </p>
           </div>
         </Link>
 
@@ -55,8 +68,10 @@ export function BuyerQuickActions() {
             <Inbox className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Мои заявки</p>
-            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">Отправленные запросы</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">{t("buyer.myLeads")}</p>
+            <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">
+              {t("buyer.myLeadsHint")}
+            </p>
           </div>
         </Link>
       </div>

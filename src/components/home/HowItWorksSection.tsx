@@ -1,29 +1,35 @@
+"use client";
+
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 const steps = [
   {
     step: 1,
-    title: "Найдите товар",
-    description: "Воспользуйтесь поиском и категориями, чтобы найти нужные оптовые предложения.",
+    titleKey: "howItWorks.step1Title" as DictionaryKey,
+    descriptionKey: "howItWorks.step1Description" as DictionaryKey,
   },
   {
     step: 2,
-    title: "Свяжитесь с поставщиком",
-    description: "Откройте объявление и напишите продавцу напрямую.",
+    titleKey: "howItWorks.step2Title" as DictionaryKey,
+    descriptionKey: "howItWorks.step2Description" as DictionaryKey,
   },
   {
     step: 3,
-    title: "Договоритесь напрямую",
-    description: "Согласуйте цену, объём и условия поставки без посредников.",
+    titleKey: "howItWorks.step3Title" as DictionaryKey,
+    descriptionKey: "howItWorks.step3Description" as DictionaryKey,
   },
 ] as const;
 
 export function HowItWorksSection() {
+  const { t } = useTranslation();
+
   return (
     <section className="border-t border-slate-200 bg-white py-12 sm:py-16 dark:border-slate-800 dark:bg-slate-950">
       <Container>
-        <SectionHeading align="center" title="Как это работает" />
+        <SectionHeading align="center" title={t("howItWorks.title")} />
 
         <ol className="mx-auto mt-10 grid max-w-5xl gap-5 sm:grid-cols-3">
           {steps.map((item) => (
@@ -35,10 +41,10 @@ export function HowItWorksSection() {
                 {item.step}
               </span>
               <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                {item.title}
+                {t(item.titleKey)}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                {item.description}
+                {t(item.descriptionKey)}
               </p>
             </li>
           ))}

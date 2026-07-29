@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import type { ListingVertical } from "@prisma/client";
 import { SearchX } from "lucide-react";
@@ -5,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { getCatalogVerticalCopy } from "@/features/listings/lib/listing-display";
 import { VERTICALS } from "@/features/verticals/verticals";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type ListingsEmptyStateProps = {
   hasActiveFilters: boolean;
@@ -19,6 +22,7 @@ export function ListingsEmptyState({
   showCreateListingCTA = true,
   vertical = null,
 }: ListingsEmptyStateProps) {
+  const { t } = useTranslation();
   const copy = getCatalogVerticalCopy(vertical);
   const createHref =
     vertical && !createListingHref.includes("vertical=")
@@ -28,11 +32,9 @@ export function ListingsEmptyState({
   return (
     <EmptyState
       icon={SearchX}
-      title={hasActiveFilters ? "Ничего не найдено" : copy.emptyTitle}
+      title={hasActiveFilters ? t("catalog.notFoundTitle") : copy.emptyTitle}
       description={
-        hasActiveFilters
-          ? "Попробуйте изменить запрос, выбрать другой город или сбросить фильтры."
-          : copy.emptyDescription
+        hasActiveFilters ? t("catalog.notFoundDescription") : copy.emptyDescription
       }
       className="mt-8 rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_14px_rgba(15,23,42,0.03)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
       action={
@@ -44,13 +46,13 @@ export function ListingsEmptyState({
               asChild
             >
               <Link href={vertical ? `/listings?vertical=${vertical}` : "/listings"}>
-                Сбросить фильтры
+                {t("catalog.resetFilters")}
               </Link>
             </Button>
           ) : null}
           {showCreateListingCTA ? (
             <Button className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
-              <Link href={createHref}>Добавить объявление</Link>
+              <Link href={createHref}>{t("catalog.addListing")}</Link>
             </Button>
           ) : null}
         </div>

@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { ExternalLink, Inbox, LayoutGrid, ListChecks, PlusCircle } from "lucide-react";
 import type { ListingVertical } from "@prisma/client";
 import { VERTICALS } from "@/features/verticals/verticals";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type SellerQuickActionsProps = {
@@ -19,33 +23,18 @@ const cardClassName = cn(
 const iconWrapClassName =
   "flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#2563EB] dark:bg-slate-800 dark:text-blue-400";
 
-const CREATE_LINKS: Array<{ vertical: ListingVertical; label: string; hint: string }> = [
-  {
-    vertical: "OPT",
-    label: "Создать оптовое объявление",
-    hint: VERTICALS.OPT.label,
-  },
-  {
-    vertical: "MARKET",
-    label: "Создать розничное объявление",
-    hint: VERTICALS.MARKET.label,
-  },
-  {
-    vertical: "SERVICES",
-    label: "Разместить услугу",
-    hint: VERTICALS.SERVICES.label,
-  },
-  {
-    vertical: "CARGO",
-    label: "Разместить перевозку",
-    hint: VERTICALS.CARGO.label,
-  },
+const CREATE_LINKS: Array<{ vertical: ListingVertical; labelKey: DictionaryKey }> = [
+  { vertical: "OPT", labelKey: "seller.createOptListing" },
+  { vertical: "MARKET", labelKey: "seller.createMarketListing" },
+  { vertical: "SERVICES", labelKey: "seller.createServicesListing" },
+  { vertical: "CARGO", labelKey: "seller.createCargoListing" },
 ];
 
 export function SellerQuickActions({
   sellerProfileId,
   verticalCounts,
 }: SellerQuickActionsProps) {
+  const { t } = useTranslation();
   const hasAnyListings =
     verticalCounts != null &&
     Object.values(verticalCounts).some((count) => (count ?? 0) > 0);
@@ -53,7 +42,7 @@ export function SellerQuickActions({
   return (
     <section aria-labelledby="seller-quick-actions-title">
       <h2 id="seller-quick-actions-title" className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl dark:text-slate-100">
-        Быстрые действия
+        {t("quickActions.title")}
       </h2>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -62,8 +51,10 @@ export function SellerQuickActions({
             <PlusCircle className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Подать объявление</p>
-            <p className="mt-0.5 text-xs text-[#64748B]">Создать новое предложение</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+              {t("vertical.postListing")}
+            </p>
+            <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.createNewOfferHint")}</p>
           </div>
         </Link>
 
@@ -72,8 +63,8 @@ export function SellerQuickActions({
             <ListChecks className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Мои объявления</p>
-            <p className="mt-0.5 text-xs text-[#64748B]">Управление и продление</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">{t("seller.myListings")}</p>
+            <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.myListingsHint")}</p>
           </div>
         </Link>
 
@@ -82,8 +73,8 @@ export function SellerQuickActions({
             <Inbox className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Посмотреть заявки</p>
-            <p className="mt-0.5 text-xs text-[#64748B]">Ответы покупателей</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">{t("seller.viewLeads")}</p>
+            <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.viewLeadsHint")}</p>
           </div>
         </Link>
 
@@ -93,8 +84,10 @@ export function SellerQuickActions({
               <ExternalLink className="size-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-[#0F172A] dark:text-slate-100">Публичный профиль</p>
-              <p className="mt-0.5 text-xs text-[#64748B]">Как видят покупатели</p>
+              <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+                {t("seller.publicProfile")}
+              </p>
+              <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.publicProfileHint")}</p>
             </div>
           </Link>
         ) : (
@@ -106,8 +99,10 @@ export function SellerQuickActions({
               <ExternalLink className="size-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-[#0F172A] dark:text-slate-100">Публичный профиль</p>
-              <p className="mt-0.5 text-xs text-[#64748B]">Появится после первого объявления</p>
+              <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+                {t("seller.publicProfile")}
+              </p>
+              <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.publicProfilePending")}</p>
             </div>
           </div>
         )}
@@ -117,8 +112,10 @@ export function SellerQuickActions({
             <LayoutGrid className="size-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-[#0F172A] dark:text-slate-100">Перейти в каталог</p>
-            <p className="mt-0.5 text-xs text-[#64748B]">Смотреть рынок</p>
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+              {t("seller.goToCatalog")}
+            </p>
+            <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.goToCatalogHint")}</p>
           </div>
         </Link>
       </div>
@@ -130,11 +127,11 @@ export function SellerQuickActions({
             href={VERTICALS[item.vertical].createListingHref}
             className="rounded-xl border border-dashed border-[rgba(148,163,184,0.35)] bg-white/70 px-3 py-2.5 text-sm transition hover:border-[#2563EB]/40 hover:bg-white dark:border-slate-700 dark:bg-slate-950/70 dark:hover:bg-slate-900"
           >
-            <p className="font-medium text-[#0F172A] dark:text-slate-100">{item.label}</p>
+            <p className="font-medium text-[#0F172A] dark:text-slate-100">{t(item.labelKey)}</p>
             <p className="mt-0.5 text-xs text-[#64748B]">
-              {item.hint}
+              {VERTICALS[item.vertical].label}
               {hasAnyListings && verticalCounts?.[item.vertical]
-                ? ` · ${verticalCounts[item.vertical]} в кабинете`
+                ? ` · ${verticalCounts[item.vertical]} ${t("seller.inDashboardSuffix")}`
                 : null}
             </p>
           </Link>

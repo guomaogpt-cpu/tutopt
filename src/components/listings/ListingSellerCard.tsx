@@ -15,6 +15,7 @@ import type { SellerTrustLevel, SellerTrustSignal } from "@/lib/trust/seller-tru
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type ListingSellerCardProps = {
@@ -67,6 +68,7 @@ export function ListingSellerCard({
   hasPrice = false,
   isOwnListing = false,
 }: ListingSellerCardProps) {
+  const { t } = useTranslation();
   const displayName = companyName.trim() || sellerName;
   const roleLabel = getSellerProfileLabel(vertical);
   const ctaLabel = getListingSellerCardCtaLabel(vertical);
@@ -94,7 +96,7 @@ export function ListingSellerCard({
             {isVerified ? (
               <Badge variant="secondary" className="gap-1 rounded-full text-[11px]">
                 <BadgeCheck className="size-3.5" aria-hidden="true" />
-                Проверен
+                {t("listing.verified")}
               </Badge>
             ) : null}
           </div>
@@ -123,19 +125,19 @@ export function ListingSellerCard({
 
       <dl className="mt-4 space-y-2 border-t border-[rgba(148,163,184,0.14)] pt-4 text-sm dark:border-slate-800">
         <div className="flex justify-between gap-4">
-          <dt className="text-[#64748B] dark:text-slate-400">Объявлений</dt>
+          <dt className="text-[#64748B] dark:text-slate-400">{t("listing.listingsCount")}</dt>
           <dd className="font-medium text-[#0F172A] dark:text-slate-200">
             {publishedListingCount}
           </dd>
         </div>
         {sellerCity ? (
           <div className="flex justify-between gap-4">
-            <dt className="text-[#64748B] dark:text-slate-400">Город</dt>
+            <dt className="text-[#64748B] dark:text-slate-400">{t("listing.city")}</dt>
             <dd className="font-medium text-[#0F172A] dark:text-slate-200">{sellerCity}</dd>
           </div>
         ) : null}
         <div className="flex justify-between gap-4">
-          <dt className="text-[#64748B] dark:text-slate-400">На платформе с</dt>
+          <dt className="text-[#64748B] dark:text-slate-400">{t("listing.memberSince")}</dt>
           <dd className="font-medium text-[#0F172A] dark:text-slate-200">{sellerSinceLabel}</dd>
         </div>
       </dl>
@@ -161,7 +163,7 @@ export function ListingSellerCard({
           href={buildSellerProfileHref(sellerId, vertical)}
           onClick={() => trackListingDetailAction("seller_profile", analyticsParams)}
         >
-          Профиль продавца
+          {t("listing.sellerProfile")}
         </Link>
       </Button>
 
@@ -171,7 +173,7 @@ export function ListingSellerCard({
           listingId={listingId}
           isAuthenticated={isAuthenticated}
           vertical={vertical}
-          triggerLabel="Пожаловаться"
+          triggerLabel={t("listing.report")}
           onTriggerClick={() => trackListingDetailAction("report", analyticsParams)}
         />
       </div>

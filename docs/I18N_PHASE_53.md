@@ -1,5 +1,10 @@
 # Interface i18n — Phase 53
 
+> **Update (Phase 56):** Full-site localization coverage was expanded to the footer,
+> home CTA/how-it-works sections, listing detail cards, catalog toolbar/filters, admin
+> nav, buyer/seller quick actions, auth forms, favorites, and notifications. See
+> `docs/I18N_PHASE_56_FULL_SITE_COVERAGE.md` for the complete list and remaining gaps.
+
 ## 1. Languages
 
 | Locale | Label |

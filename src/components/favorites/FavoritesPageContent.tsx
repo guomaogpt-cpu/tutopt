@@ -6,6 +6,7 @@ import { Heart, LayoutGrid } from "lucide-react";
 import { ListingCard } from "@/components/listings/ListingCard";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type FavoritesPageContentProps = {
@@ -25,6 +26,7 @@ export function FavoritesPageContent({
   initialListings,
   initialLastAddedAt,
 }: FavoritesPageContentProps) {
+  const { t } = useTranslation();
   const [listings, setListings] = useState(initialListings);
 
   function handleFavoriteChange(listingId: string, isFavorited: boolean) {
@@ -40,13 +42,13 @@ export function FavoritesPageContent({
           <Heart className="size-6" aria-hidden="true" />
         </div>
         <h2 className="mt-5 text-base font-semibold text-[#0F172A] sm:text-lg dark:text-slate-100">
-          В избранном пока пусто
+          {t("favorites.emptyTitle")}
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B] dark:text-slate-400">
-          Сохраняйте интересные объявления, чтобы быстро вернуться к ним позже.
+          {t("favorites.emptyDescription")}
         </p>
         <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
-          <Link href="/listings">Перейти в каталог</Link>
+          <Link href="/listings">{t("catalog.goToCatalog")}</Link>
         </Button>
       </div>
     );
@@ -62,13 +64,13 @@ export function FavoritesPageContent({
         )}
       >
         <div className="min-w-0">
-          <p className="text-sm text-[#64748B] dark:text-slate-400">Всего в избранном</p>
+          <p className="text-sm text-[#64748B] dark:text-slate-400">{t("favorites.total")}</p>
           <p className="mt-1 text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl dark:text-slate-100">
             {listings.length}
           </p>
           {initialLastAddedAt ? (
             <p className="mt-1 text-sm text-[#64748B] dark:text-slate-400">
-              Последнее добавление: {formatLastAddedDate(initialLastAddedAt)}
+              {t("favorites.lastAdded")} {formatLastAddedDate(initialLastAddedAt)}
             </p>
           ) : null}
         </div>
@@ -80,7 +82,7 @@ export function FavoritesPageContent({
         >
           <Link href="/listings">
             <LayoutGrid className="size-4" aria-hidden="true" />
-            Открыть каталог
+            {t("catalog.openCatalog")}
           </Link>
         </Button>
       </div>

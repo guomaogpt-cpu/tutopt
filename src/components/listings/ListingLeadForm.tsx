@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Section } from "@/components/ui/section";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 const leadCardClassName =
   "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none";
@@ -46,6 +47,7 @@ export function ListingLeadForm({
   defaultEmail = "",
 }: ListingLeadFormProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const config = getLeadFormConfig(vertical);
   const [quantity, setQuantity] = useState(String(Math.max(1, moq)));
   const [message, setMessage] = useState(config.defaultMessage);
@@ -150,7 +152,7 @@ export function ListingLeadForm({
             className="mt-5 rounded-xl border-green-300 bg-white text-green-900 hover:bg-green-100"
             onClick={resetFormForAnotherLead}
           >
-            Отправить ещё
+            {t("form.sendAnother")}
           </Button>
         </div>
       </Section>
@@ -171,7 +173,7 @@ export function ListingLeadForm({
           </h3>
           <p className="mt-2 text-sm text-[#64748B]">{config.loginPrompt(sellerName)}</p>
           <Button className="mt-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]" onClick={handleLoginRedirect}>
-            Войдите, чтобы отправить заявку
+            {t("form.loginToSendLead")}
           </Button>
         </div>
       </Section>
@@ -211,11 +213,9 @@ export function ListingLeadForm({
           <h3 id="listing-lead-owner-title" className="text-lg font-semibold text-[#0F172A] dark:text-slate-100">
             {config.title}
           </h3>
-          <p className="mt-2 text-sm text-[#64748B]">
-            Это ваше объявление — заявки от клиентов появятся в разделе «Заявки».
-          </p>
+          <p className="mt-2 text-sm text-[#64748B]">{t("form.ownListingLeadNotice")}</p>
           <Button variant="outline" className="mt-5 rounded-xl" asChild>
-            <Link href="/seller/leads">Перейти к заявкам</Link>
+            <Link href="/seller/leads">{t("form.goToLeads")}</Link>
           </Button>
         </div>
       </Section>
@@ -235,9 +235,7 @@ export function ListingLeadForm({
 
       <div className={leadCardClassName}>
         <p className="text-sm text-[#64748B]">{config.subtitle}</p>
-        <p className="mt-1 text-xs text-[#94A3B8]">
-          Отправьте заявку — продавец увидит её в своём кабинете.
-        </p>
+        <p className="mt-1 text-xs text-[#94A3B8]">{t("form.leadHint")}</p>
 
         <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
           <div
@@ -272,7 +270,7 @@ export function ListingLeadForm({
 
             <div className="space-y-2">
               <label htmlFor="lead-phone" className="text-sm font-medium text-foreground">
-                Телефон
+                {t("form.phone")}
               </label>
               <Input
                 id="lead-phone"
@@ -290,7 +288,7 @@ export function ListingLeadForm({
 
           <div className="space-y-2">
             <label htmlFor="lead-email" className="text-sm font-medium text-foreground">
-              Email
+              {t("form.email")}
             </label>
             <Input
               id="lead-email"
@@ -350,7 +348,7 @@ export function ListingLeadForm({
             disabled={isPending}
             className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
           >
-            {isPending ? "Отправка..." : config.submitLabel}
+            {isPending ? t("form.sending") : config.submitLabel}
           </Button>
         </form>
       </div>

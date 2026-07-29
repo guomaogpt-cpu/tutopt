@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 export type ListingCharacteristicItem = {
@@ -10,6 +13,7 @@ type ListingCharacteristicsProps = {
 };
 
 export function ListingCharacteristics({ items }: ListingCharacteristicsProps) {
+  const { t } = useTranslation();
   const visibleItems = items.filter((item) => item.value.trim().length > 0);
 
   if (visibleItems.length === 0) {
@@ -22,7 +26,7 @@ export function ListingCharacteristics({ items }: ListingCharacteristicsProps) {
         id="listing-characteristics-title"
         className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl dark:text-slate-100"
       >
-        Характеристики
+        {t("listing.characteristics")}
       </h2>
 
       <div

@@ -16,6 +16,7 @@ import {
 } from "@/features/auth/lib/auth-client";
 import { resolveNextParam } from "@/features/auth/lib/login-redirect";
 import { defaultPostAuthPath } from "@/features/auth/validators/seller-onboarding.validators";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 const emptyErrors: AuthFormErrors = { form: [], fields: {} };
@@ -26,6 +27,7 @@ type LoginFormProps = {
 
 export function LoginForm({ googleEnabled }: LoginFormProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const nextPath = resolveNextParam(searchParams.get("next"));
   const oauthError = searchParams.get("error");
@@ -51,7 +53,7 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
 
     try {
       const data = await loginRequest(phone, password, rememberMe);
-      setSuccessMessage("Вход выполнен успешно. Перенаправление...");
+      setSuccessMessage(t("auth.loginSuccess"));
       const destination = defaultPostAuthPath(data.user.role, nextPath);
       window.setTimeout(() => {
         router.push(destination);
@@ -61,7 +63,7 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
       if (error instanceof AuthRequestError) {
         setErrors(error.formErrors);
       } else {
-        setErrors({ form: ["Не удалось выполнить вход. Попробуйте позже."], fields: {} });
+        setErrors({ form: [t("auth.loginGenericError")], fields: {} });
       }
       setIsSubmitting(false);
     }
@@ -77,14 +79,14 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
 
   return (
     <AuthFormCard
-      title="Вход"
-      description="Войдите по телефону и паролю или через Google."
+      title={t("auth.loginTitle")}
+      description={t("auth.loginDescription")}
     >
       <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
         <AuthAlert variant="error" messages={errors.form} />
 
-        <AuthFormField label="Телефон" htmlFor="login-phone" error={phoneError}>
+        <AuthFormField label={t("auth.phone")} htmlFor="login-phone" error={phoneError}>
           <input
             id="login-phone"
             name="phone"
@@ -102,7 +104,7 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
           />
         </AuthFormField>
 
-        <AuthFormField label="Пароль" htmlFor="login-password" error={passwordError}>
+        <AuthFormField label={t("auth.password")} htmlFor="login-password" error={passwordError}>
           <PasswordInput
             id="login-password"
             name="password"
@@ -124,13 +126,13 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
               disabled={isSubmitting}
               className="rounded border-[rgba(148,163,184,0.4)] text-[#2563EB] focus:ring-[#2563EB]/20"
             />
-            Запомнить меня
+            {t("auth.rememberMe")}
           </label>
           <Link
             href="/forgot-password"
             className="text-sm font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
           >
-            Забыли пароль?
+            {t("auth.forgotPassword")}
           </Link>
         </div>
 
@@ -138,10 +140,10 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-              Вход...
+              {t("auth.signingIn")}
             </>
           ) : (
-            "Войти"
+            t("auth.signIn")
           )}
         </button>
 
@@ -150,12 +152,12 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
         <GoogleAuthButton enabled={googleEnabled} next={nextPath} disabled={isSubmitting} />
 
         <p className="text-center text-sm text-[#64748B]">
-          Нет аккаунта?{" "}
+          {t("auth.noAccount")}{" "}
           <Link
             href={registerHref}
             className="font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
           >
-            Зарегистрироваться
+            {t("auth.signUp")}
           </Link>
         </p>
       </form>

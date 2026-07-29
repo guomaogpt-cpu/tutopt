@@ -1,46 +1,52 @@
+"use client";
+
 import Link from "next/link";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Container } from "./Container";
 import { BrandLogo } from "./BrandLogo";
 
 type FooterLink = {
-  label: string;
+  labelKey: DictionaryKey;
   href: string;
 };
 
 type FooterColumn = {
-  title: string;
+  titleKey: DictionaryKey;
   links: FooterLink[];
 };
 
 const footerColumns: FooterColumn[] = [
   {
-    title: "Покупателям",
+    titleKey: "footer.buyersTitle",
     links: [
-      { label: "Каталог", href: "/listings" },
-      { label: "Избранное", href: "/favorites" },
-      { label: "Кабинет покупателя", href: "/buyer/dashboard" },
+      { labelKey: "footer.catalog", href: "/listings" },
+      { labelKey: "footer.favorites", href: "/favorites" },
+      { labelKey: "footer.buyerDashboard", href: "/buyer/dashboard" },
     ],
   },
   {
-    title: "Продавцам",
+    titleKey: "footer.sellersTitle",
     links: [
-      { label: "Подать объявление", href: "/listings/new" },
-      { label: "Кабинет продавца", href: "/seller/dashboard" },
-      { label: "Заявки", href: "/seller/leads" },
+      { labelKey: "footer.postListing", href: "/listings/new" },
+      { labelKey: "footer.sellerDashboard", href: "/seller/dashboard" },
+      { labelKey: "footer.leads", href: "/seller/leads" },
     ],
   },
   {
-    title: "Платформа",
+    titleKey: "footer.platformTitle",
     links: [
-      { label: "Продавцы", href: "/sellers" },
-      { label: "Уведомления", href: "/notifications" },
-      { label: "Войти", href: "/login" },
-      { label: "Регистрация", href: "/register" },
+      { labelKey: "footer.sellers", href: "/sellers" },
+      { labelKey: "footer.notifications", href: "/notifications" },
+      { labelKey: "footer.signIn", href: "/login" },
+      { labelKey: "footer.register", href: "/register" },
     ],
   },
 ];
 
 export function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
       <Container>
@@ -48,16 +54,18 @@ export function Footer() {
           <div className="min-w-0">
             <BrandLogo variant="footer" />
             <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              B2B-платформа оптовых объявлений в Кыргызстане
+              {t("footer.brandTagline")}
             </p>
             <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-500">
-              Покупатели находят поставщиков, продавцы получают заявки.
+              {t("footer.brandSubline")}
             </p>
           </div>
 
           {footerColumns.map((column) => (
-            <nav key={column.title} className="min-w-0" aria-label={column.title}>
-              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{column.title}</h2>
+            <nav key={column.titleKey} className="min-w-0" aria-label={t(column.titleKey)}>
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                {t(column.titleKey)}
+              </h2>
               <ul className="mt-3 flex flex-col gap-2.5">
                 {column.links.map((link) => (
                   <li key={link.href}>
@@ -65,7 +73,7 @@ export function Footer() {
                       href={link.href}
                       className="text-sm text-slate-600 transition hover:text-blue-600 dark:text-slate-300 dark:hover:text-white"
                     >
-                      {link.label}
+                      {t(link.labelKey)}
                     </Link>
                   </li>
                 ))}
@@ -75,9 +83,9 @@ export function Footer() {
         </div>
 
         <div className="border-t border-slate-200 py-6 dark:border-slate-800">
-          <p className="text-sm text-slate-500 dark:text-slate-500">© 2026 ВсеТут. Все права защищены.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-500">{t("footer.copyright")}</p>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-500">
-            Оптовые объявления для бизнеса в Кыргызстане.
+            {t("footer.bottomTagline")}
           </p>
         </div>
       </Container>

@@ -19,6 +19,7 @@ import {
 import { resolveNextParam } from "@/features/auth/lib/login-redirect";
 import type { RegisterInput } from "@/features/auth/validators/auth.validators";
 import { defaultPostAuthPath } from "@/features/auth/validators/seller-onboarding.validators";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 import { authInputClassName } from "@/components/auth/auth-form-styles";
 
@@ -33,6 +34,7 @@ type RegisterFormProps = {
 
 export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const nextPath = resolveNextParam(searchParams.get("next"));
   const initialRole = searchParams.get("role") === "SELLER" ? "SELLER" : "BUYER";
@@ -59,8 +61,8 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
 
     if (!phoneVerificationToken) {
       setErrors({
-        form: ["Подтвердите телефон по коду из SMS"],
-        fields: { phoneVerificationToken: "Подтвердите телефон по коду из SMS" },
+        form: [t("auth.confirmPhoneRequired")],
+        fields: { phoneVerificationToken: t("auth.confirmPhoneRequired") },
       });
       return;
     }
@@ -77,7 +79,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
 
     try {
       const data = await registerRequest(payload);
-      setSuccessMessage("Регистрация успешна. Перенаправление...");
+      setSuccessMessage(t("auth.registerSuccess"));
       const destination = defaultPostAuthPath(data.user.role, nextPath);
       window.setTimeout(() => {
         router.push(destination);
@@ -88,7 +90,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
         setErrors(error.formErrors);
       } else {
         setErrors({
-          form: ["Не удалось зарегистрироваться. Попробуйте позже."],
+          form: [t("auth.registerGenericError")],
           fields: {},
         });
       }
@@ -103,8 +105,8 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
 
   return (
     <AuthFormCard
-      title="Регистрация"
-      description="Создайте аккаунт по телефону. Альтернатива — вход через Google."
+      title={t("auth.registerTitle")}
+      description={t("auth.registerDescription")}
     >
       <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
@@ -118,7 +120,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
         />
 
         <AuthFormField
-          label={role === "SELLER" ? "Название компании или имя продавца" : "Ваше имя"}
+          label={role === "SELLER" ? t("auth.sellerNameLabel") : t("auth.buyerNameLabel")}
           htmlFor="register-name"
           error={getFieldError(errors, "name")}
         >
@@ -128,7 +130,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
             type="text"
             autoComplete="organization"
             placeholder={
-              role === "SELLER" ? "ОсОО «Ваша компания» или ваше имя" : "Ваше имя"
+              role === "SELLER" ? t("auth.sellerNamePlaceholder") : t("auth.buyerNameLabel")
             }
             value={name}
             onChange={(event) => setName(event.target.value)}
@@ -158,7 +160,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
         />
 
         <AuthFormField
-          label="Пароль"
+          label={t("auth.password")}
           htmlFor="register-password"
           error={getFieldError(errors, "password")}
         >
@@ -182,10 +184,10 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-              Создание аккаунта...
+              {t("auth.creatingAccount")}
             </>
           ) : (
-            "Создать аккаунт"
+            t("auth.createAccount")
           )}
         </button>
 
@@ -199,12 +201,12 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
         />
 
         <p className="text-center text-sm text-[#64748B]">
-          Уже есть аккаунт?{" "}
+          {t("auth.haveAccount")}{" "}
           <Link
             href={loginHref}
             className="font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
           >
-            Войти
+            {t("auth.signIn")}
           </Link>
         </p>
       </form>

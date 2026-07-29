@@ -18,6 +18,8 @@ import {
 } from "@/features/notifications/lib/notifications-unread-store";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type NotificationsListProps = {
@@ -27,10 +29,10 @@ type NotificationsListProps = {
 
 type NotificationFilter = "all" | "unread" | "leads";
 
-const FILTER_CONFIG: Array<{ value: NotificationFilter; label: string }> = [
-  { value: "all", label: "Все" },
-  { value: "unread", label: "Непрочитанные" },
-  { value: "leads", label: "Заявки" },
+const FILTER_CONFIG: Array<{ value: NotificationFilter; labelKey: DictionaryKey }> = [
+  { value: "all", labelKey: "catalog.all" },
+  { value: "unread", labelKey: "notifications.unread" },
+  { value: "leads", labelKey: "notifications.leads" },
 ];
 
 function formatNotificationDateTime(date: Date | string): string {
@@ -81,20 +83,21 @@ function getNotificationIcon(type: NotificationType) {
   }
 }
 
-function getEmptyStateAction(role: UserRole): { href: string; label: string } {
+function getEmptyStateAction(role: UserRole): { href: string; labelKey: DictionaryKey } {
   if (role === UserRoleEnum.SELLER || role === UserRoleEnum.ADMIN) {
-    return { href: "/seller/dashboard", label: "Перейти в кабинет продавца" };
+    return { href: "/seller/dashboard", labelKey: "notifications.goToSellerDashboard" };
   }
 
   if (role === UserRoleEnum.BUYER) {
-    return { href: "/listings", label: "Перейти в каталог" };
+    return { href: "/listings", labelKey: "catalog.goToCatalog" };
   }
 
-  return { href: "/", label: "Перейти на главную" };
+  return { href: "/", labelKey: "notifications.goToHome" };
 }
 
 export function NotificationsList({ initialNotifications, userRole }: NotificationsListProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState(initialNotifications);
   const [activeFilter, setActiveFilter] = useState<NotificationFilter>("all");
   const [isMarkingAll, setIsMarkingAll] = useState(false);
@@ -122,19 +125,19 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
 
   const summaryStats = [
     {
-      label: "Все уведомления",
+      label: t("notifications.allNotifications"),
       value: notifications.length,
       icon: Bell,
       iconClassName: "bg-[#EFF6FF] text-[#2563EB]",
     },
     {
-      label: "Непрочитанные",
+      label: t("notifications.unread"),
       value: unreadCount,
       icon: BellRing,
       iconClassName: "bg-[#FFFBEB] text-[#D97706]",
     },
     {
-      label: "За 24 часа",
+      label: t("notifications.last24h"),
       value: todayCount,
       icon: CalendarDays,
       iconClassName: "bg-[#ECFDF5] text-[#059669]",
@@ -226,13 +229,13 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
           <Bell className="size-6" aria-hidden="true" />
         </div>
         <h2 className="mt-5 text-base font-semibold text-[#0F172A] sm:text-lg">
-          Уведомлений пока нет
+          {t("notifications.emptyTitle")}
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
-          Здесь будут появляться заявки, статусы модерации и важные события.
+          {t("notifications.emptyDescription")}
         </p>
         <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
-          <Link href={emptyAction.href}>{emptyAction.label}</Link>
+          <Link href={emptyAction.href}>{t(emptyAction.labelKey)}</Link>
         </Button>
       </div>
     );
@@ -253,7 +256,7 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
             disabled={isMarkingAll}
             className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
           >
-            {isMarkingAll ? "Обновление..." : "Отметить всё прочитанным"}
+            {isMarkingAll ? t("notifications.updating") : t("notifications.markAllRead")}
           </Button>
         </div>
       ) : null}
@@ -274,7 +277,7 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
               value={filter.value}
               className="shrink-0 rounded-xl px-3 py-2 text-xs data-[state=active]:bg-[#EFF6FF] data-[state=active]:text-[#2563EB] sm:text-sm"
             >
-              {filter.label}
+              {t(filter.labelKey)}
               <span className="ml-1.5 text-[#94A3B8]">({filterCounts[filter.value]})</span>
             </TabsTrigger>
           ))}
@@ -287,7 +290,7 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
             <TabsContent key={filter.value} value={filter.value} className="mt-4">
               {filteredNotifications.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-10 text-center">
-                  <p className="text-sm text-[#64748B]">В этой категории уведомлений нет.</p>
+                  <p className="text-sm text-[#64748B]">{t("notifications.emptyCategory")}</p>
                 </div>
               ) : (
                 <ul className="space-y-3">
@@ -334,7 +337,7 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
                                 <p className="font-semibold text-[#0F172A]">{notification.title}</p>
                                 {isUnread ? (
                                   <span className="inline-flex shrink-0 items-center rounded-full bg-[#2563EB] px-2.5 py-0.5 text-xs font-medium text-white">
-                                    Новое
+                                    {t("notifications.new")}
                                   </span>
                                 ) : null}
                               </div>
@@ -345,7 +348,7 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
 
                               {notification.actor ? (
                                 <p className="mt-2 text-xs text-[#94A3B8]">
-                                  От: {notification.actor.name}
+                                  {t("notifications.from")} {notification.actor.name}
                                 </p>
                               ) : null}
 
@@ -355,7 +358,7 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
                                 </p>
                                 {hasLink ? (
                                   <span className="text-xs font-medium text-[#2563EB]">
-                                    Открыть →
+                                    {t("notifications.open")}
                                   </span>
                                 ) : null}
                               </div>

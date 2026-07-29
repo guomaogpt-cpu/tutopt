@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 const COLLAPSED_LENGTH = 480;
@@ -11,6 +12,7 @@ type ListingDescriptionProps = {
 };
 
 export function ListingDescription({ text }: ListingDescriptionProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const hasText = text.trim().length > 0;
   const isLong = hasText && text.length > COLLAPSED_LENGTH;
@@ -22,7 +24,7 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
         id="listing-description-title"
         className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl dark:text-slate-100"
       >
-        Описание
+        {t("listing.description")}
       </h2>
 
       <div
@@ -35,7 +37,7 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
             {displayText}
           </p>
         ) : (
-          <p className="text-sm text-[#94A3B8] dark:text-slate-500">Описание не указано</p>
+          <p className="text-sm text-[#94A3B8] dark:text-slate-500">{t("listing.noDescription")}</p>
         )}
         {isLong ? (
           <Button
@@ -44,7 +46,7 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
             className="mt-4 h-auto p-0 text-[#2563EB] dark:text-blue-400"
             onClick={() => setExpanded((current) => !current)}
           >
-            {expanded ? "Свернуть" : "Показать полностью"}
+            {expanded ? t("listing.showLess") : t("listing.showMore")}
           </Button>
         ) : null}
       </div>

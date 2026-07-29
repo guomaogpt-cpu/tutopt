@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserRole } from "@prisma/client";
 import type { PublicUser } from "@/features/auth/lib/session";
+import { useTranslation } from "@/lib/i18n/useTranslation";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 
 type AdminNavProps = {
@@ -12,34 +14,34 @@ type AdminNavProps = {
 
 const navItems = [
   {
-    label: "Обзор",
+    labelKey: "admin.overview" as DictionaryKey,
     href: "/admin",
     roles: [UserRole.ADMIN, UserRole.MODERATOR],
     match: "exact" as const,
   },
   {
-    label: "Модерация",
+    labelKey: "admin.moderation" as DictionaryKey,
     href: "/admin/moderation/listings",
     roles: [UserRole.ADMIN, UserRole.MODERATOR],
     match: "prefix" as const,
     prefix: "/admin/moderation",
   },
   {
-    label: "Жалобы",
+    labelKey: "admin.reports" as DictionaryKey,
     href: "/admin/reports",
     roles: [UserRole.ADMIN, UserRole.MODERATOR],
     match: "prefix" as const,
     prefix: "/admin/reports",
   },
   {
-    label: "Пользователи",
+    labelKey: "admin.users" as DictionaryKey,
     href: "/admin/users",
     roles: [UserRole.ADMIN],
     match: "prefix" as const,
     prefix: "/admin/users",
   },
   {
-    label: "Журнал",
+    labelKey: "admin.auditLog" as DictionaryKey,
     href: "/admin/audit",
     roles: [UserRole.ADMIN],
     match: "prefix" as const,
@@ -49,6 +51,7 @@ const navItems = [
 
 export function AdminNav({ user }: AdminNavProps) {
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   const visibleItems = navItems.filter((item) =>
     (item.roles as readonly UserRole[]).includes(user.role),
@@ -56,7 +59,7 @@ export function AdminNav({ user }: AdminNavProps) {
 
   return (
     <nav
-      aria-label="Админ-навигация"
+      aria-label={t("admin.navAriaLabel")}
       className={cn(
         "mb-6 overflow-x-auto rounded-[20px] border border-[rgba(148,163,184,0.18)] bg-white p-1.5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
         "scrollbar-none",
@@ -81,7 +84,7 @@ export function AdminNav({ user }: AdminNavProps) {
                   : "text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]",
               )}
             >
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           );
         })}
