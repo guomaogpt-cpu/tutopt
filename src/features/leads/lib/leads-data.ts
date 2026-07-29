@@ -1,4 +1,4 @@
-import type { ListingVertical } from "@prisma/client";
+import type { ListingStatus, ListingVertical } from "@prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 
 export type SellerLeadItem = {
@@ -12,6 +12,7 @@ export type SellerLeadItem = {
     title: string;
     image_url: string | null;
     vertical: ListingVertical;
+    status: ListingStatus;
   };
   buyer: {
     id: string;
@@ -104,6 +105,7 @@ export async function getSellerLeads(sellerProfileId: string): Promise<SellerLea
           id: true,
           title: true,
           vertical: true,
+          status: true,
           images: {
             orderBy: { sort_order: "asc" },
             take: 1,
@@ -135,6 +137,7 @@ export async function getSellerLeads(sellerProfileId: string): Promise<SellerLea
       id: lead.listing.id,
       title: lead.listing.title,
       vertical: lead.listing.vertical,
+      status: lead.listing.status,
       image_url: lead.listing.images[0]?.thumbnail_url ?? lead.listing.images[0]?.url ?? null,
     },
     buyer: lead.buyer,

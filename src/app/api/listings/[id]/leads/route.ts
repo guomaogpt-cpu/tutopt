@@ -74,15 +74,15 @@ export async function POST(request: Request, context: LeadRouteContext) {
     }
 
     if (listing.sellerProfile.user_id === user.id) {
-      throw new ForbiddenError("Нельзя отправить заявку на своё объявление");
+      throw new ForbiddenError("LEAD_OWN_LISTING");
     }
 
     if (listing.status !== ListingStatus.PUBLISHED) {
-      throw new ForbiddenError("Заявки принимаются только по опубликованным объявлениям");
+      throw new ForbiddenError("LEAD_UNAVAILABLE_LISTING");
     }
 
     if (isListingExpired({ expires_at: listing.expires_at })) {
-      throw new ForbiddenError("Объявление истекло — заявки больше не принимаются");
+      throw new ForbiddenError("LEAD_UNAVAILABLE_LISTING");
     }
 
     assertLeadCreateRateLimits(user.id, listing.id);
@@ -96,9 +96,7 @@ export async function POST(request: Request, context: LeadRouteContext) {
     });
 
     if (duplicateLead) {
-      throw new ConflictError(
-        "Такая заявка уже была отправлена недавно. Подождите несколько минут.",
-      );
+      throw new ConflictError("LEAD_ALREADY_SENT");
     }
 
     const lead = await prisma.lead.create({

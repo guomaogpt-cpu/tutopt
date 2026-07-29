@@ -1,16 +1,24 @@
 import { z } from "zod";
 
 export const LEAD_MESSAGE_MIN = 5;
-export const LEAD_MESSAGE_MAX = 2000;
+export const LEAD_MESSAGE_MAX = 1000;
+export const LEAD_QUANTITY_MAX = 1_000_000;
 
 const trimmedMessage = z
   .string()
   .trim()
-  .min(LEAD_MESSAGE_MIN, "Сообщение слишком короткое")
-  .max(LEAD_MESSAGE_MAX, "Сообщение слишком длинное");
+  .min(LEAD_MESSAGE_MIN, { message: "LEAD_MESSAGE_TOO_SHORT" })
+  .max(LEAD_MESSAGE_MAX, { message: "LEAD_MESSAGE_TOO_LONG" });
 
 export const createLeadSchema = z.object({
-  quantity: z.coerce.number().int().min(1, "Укажите количество не меньше 1"),
+  quantity: z.coerce
+    .number({
+      invalid_type_error: "LEAD_QUANTITY_INVALID",
+      required_error: "LEAD_QUANTITY_INVALID",
+    })
+    .int({ message: "LEAD_QUANTITY_INVALID" })
+    .min(1, { message: "LEAD_QUANTITY_INVALID" })
+    .max(LEAD_QUANTITY_MAX, { message: "LEAD_QUANTITY_INVALID" }),
   message: trimmedMessage,
   contact_phone: z.string().trim().max(20, "Телефон слишком длинный").optional().nullable(),
   contact_email: z

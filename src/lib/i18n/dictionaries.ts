@@ -703,7 +703,7 @@ export const DICTIONARY = {
   },
   "listing.report": { ru: "Пожаловаться", kg: "Даттануу", en: "Report" },
 
-  // Lead form — Phase 56
+  // Lead form — Phase 56 / 61
   "form.phone": { ru: "Телефон", kg: "Телефон", en: "Phone" },
   "form.email": { ru: "Email", kg: "Email", en: "Email" },
   "form.sending": { ru: "Отправка...", kg: "Жөнөтүлүүдө...", en: "Sending..." },
@@ -727,6 +727,130 @@ export const DICTIONARY = {
     ru: "Отправьте заявку — продавец увидит её в своём кабинете.",
     kg: "Тапшырма жөнөтүңүз — сатуучу аны өз кабинетинде көрөт.",
     en: "Send a request — the seller will see it in their dashboard.",
+  },
+
+  "lead.title": {
+    ru: "Запрос продавцу",
+    kg: "Сатуучуга сурам",
+    en: "Request to seller",
+  },
+  "lead.description": {
+    ru: "Напишите, какое количество вас интересует и уточните условия.",
+    kg: "Канча көлөм керек экенин жана шарттарды жазыңыз.",
+    en: "Write the quantity you need and ask about the terms.",
+  },
+  "lead.messageLabel": {
+    ru: "Сообщение",
+    kg: "Билдирүү",
+    en: "Message",
+  },
+  "lead.messagePlaceholder": {
+    ru: "Здравствуйте. Меня интересует это объявление. Подскажите наличие, минимальную партию и условия отгрузки.",
+    kg: "Саламатсызбы. Бул жарыя кызыктырат. Бар-жогун, минималдуу партияны жана жөнөтүү шарттарын айтып бериңизчи.",
+    en: "Hello. I am interested in this listing. Please tell me the availability, minimum order, and delivery terms.",
+  },
+  "lead.quantityLabel": {
+    ru: "Количество",
+    kg: "Саны",
+    en: "Quantity",
+  },
+  "lead.submit": {
+    ru: "Отправить",
+    kg: "Жөнөтүү",
+    en: "Send",
+  },
+  "lead.sending": {
+    ru: "Отправка...",
+    kg: "Жөнөтүлүүдө...",
+    en: "Sending...",
+  },
+  "lead.successTitle": {
+    ru: "Запрос отправлен продавцу.",
+    kg: "Сурам сатуучуга жөнөтүлдү.",
+    en: "Request sent to seller.",
+  },
+  "lead.successDescription": {
+    ru: "Продавец увидит вашу заявку в кабинете.",
+    kg: "Сатуучу сурамыңызды кабинетинен көрөт.",
+    en: "The seller will see your request in their dashboard.",
+  },
+  "lead.alreadySent": {
+    ru: "Вы уже отправляли запрос по этому объявлению.",
+    kg: "Бул жарыя боюнча сурам мурун жөнөтүлгөн.",
+    en: "You have already sent a request for this listing.",
+  },
+  "lead.loginRequiredTitle": {
+    ru: "Запрос продавцу",
+    kg: "Сатуучуга сурам",
+    en: "Request to seller",
+  },
+  "lead.loginRequiredDescription": {
+    ru: "Чтобы отправить запрос продавцу, войдите или зарегистрируйтесь.",
+    kg: "Сатуучуга сурам жөнөтүү үчүн кириңиз же катталыңыз.",
+    en: "Sign in or register to send a request to the seller.",
+  },
+  "lead.signIn": { ru: "Войти", kg: "Кирүү", en: "Sign in" },
+  "lead.register": { ru: "Регистрация", kg: "Катталуу", en: "Register" },
+  "lead.validation.messageRequired": {
+    ru: "Напишите сообщение продавцу.",
+    kg: "Сатуучуга билдирүү жазыңыз.",
+    en: "Please write a message to the seller.",
+  },
+  "lead.validation.messageTooShort": {
+    ru: "Сообщение слишком короткое.",
+    kg: "Билдирүү өтө кыска.",
+    en: "Message is too short.",
+  },
+  "lead.validation.messageTooLong": {
+    ru: "Сообщение слишком длинное.",
+    kg: "Билдирүү өтө узун.",
+    en: "Message is too long.",
+  },
+  "lead.validation.quantityInvalid": {
+    ru: "Укажите корректное количество.",
+    kg: "Туура санды көрсөтүңүз.",
+    en: "Enter a valid quantity.",
+  },
+  "lead.error.generic": {
+    ru: "Не удалось отправить запрос. Попробуйте ещё раз.",
+    kg: "Сурам жөнөтүлгөн жок. Кайра аракет кылыңыз.",
+    en: "Could not send the request. Please try again.",
+  },
+  "lead.error.ownListing": {
+    ru: "Нельзя отправить запрос на своё объявление.",
+    kg: "Өз жарыяңызга сурам жөнөтүүгө болбойт.",
+    en: "You cannot send a request for your own listing.",
+  },
+  "lead.error.unavailableListing": {
+    ru: "По этому объявлению сейчас нельзя отправить запрос.",
+    kg: "Бул жарыя боюнча азыр сурам жөнөтүүгө болбойт.",
+    en: "Requests cannot be sent for this listing right now.",
+  },
+  "lead.close": { ru: "Закрыть", kg: "Жабуу", en: "Close" },
+  "lead.continueBrowsing": {
+    ru: "Продолжить просмотр",
+    kg: "Көрүүнү улантуу",
+    en: "Continue browsing",
+  },
+  "lead.listingLabel": {
+    ru: "Объявление",
+    kg: "Жарыя",
+    en: "Listing",
+  },
+  "lead.sellerLabel": {
+    ru: "Продавец",
+    kg: "Сатуучу",
+    en: "Seller",
+  },
+  "lead.minQuantityHint": {
+    ru: "Мин.",
+    kg: "Мин.",
+    en: "Min.",
+  },
+  "lead.listingUnavailable": {
+    ru: "Объявление недоступно",
+    kg: "Жарыя жеткиликсиз",
+    en: "Listing unavailable",
   },
 
   // Buyer / seller quick actions — Phase 56

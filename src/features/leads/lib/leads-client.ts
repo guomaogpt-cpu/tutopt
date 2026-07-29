@@ -24,6 +24,8 @@ type ApiErrorBody = {
 export type LeadFormErrors = {
   form: string[];
   fields: Record<string, string>;
+  code?: string;
+  messageCode?: string;
 };
 
 export class LeadRequestError extends Error {
@@ -58,7 +60,12 @@ function mapApiErrors(body: ApiErrorBody): LeadFormErrors {
     }
   }
 
-  return { form: [...new Set(form)], fields };
+  return {
+    form: [...new Set(form)],
+    fields,
+    code: body.error.code,
+    messageCode: body.error.message,
+  };
 }
 
 export async function createLeadRequest(
@@ -75,7 +82,7 @@ export async function createLeadRequest(
 
   if (!response.ok) {
     const errors = mapApiErrors(body as ApiErrorBody);
-    throw new LeadRequestError(errors.form[0] ?? "Не удалось отправить заявку", errors);
+    throw new LeadRequestError(errors.form[0] ?? "LEAD_GENERIC_ERROR", errors);
   }
 
   return (body as ApiSuccessBody<CreateLeadResponse>).data;

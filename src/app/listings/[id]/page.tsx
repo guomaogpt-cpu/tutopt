@@ -428,6 +428,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
             <ListingLeadForm
               key={`${listing.id}-${listing.vertical}`}
               listingId={listing.id}
+              listingTitle={listing.title}
               sellerName={sellerName}
               moq={listing.moq}
               unitLabel={unitLabel}
