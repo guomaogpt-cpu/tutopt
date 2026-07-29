@@ -10,7 +10,7 @@ type SellerCtaSectionProps = {
 
 export function SellerCtaSection({ createListingHref }: SellerCtaSectionProps) {
   return (
-    <Section spacing="md" className="bg-[#F5F7FA]">
+    <Section spacing="md" className="bg-[#F5F7FA] dark:bg-slate-950">
       <Container size="xl">
         <Card className="overflow-hidden border-[#E5E7EB] bg-white shadow-sm">
           <CardContent className="flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">

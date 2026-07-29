@@ -32,7 +32,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   }
 
   return (
-    <div className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+    <div className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
       <Container className="max-w-[1280px] min-w-0">
         <AdminNav user={user} />
         {children}

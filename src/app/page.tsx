@@ -32,7 +32,7 @@ export default async function HomePage() {
   const createListingHref = getCreateListingHref(headerUser);
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-[#F8FAFC]">
+    <main className="min-w-0 overflow-x-clip bg-[#F8FAFC] dark:bg-slate-950">
       <HomepagePaperEntry />
       <RecentListingsSection
         listings={listings}

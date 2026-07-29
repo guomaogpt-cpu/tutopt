@@ -15,7 +15,7 @@ export default async function CategoriesPage() {
   const categories = await getCategoriesPageData();
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] py-8 sm:py-10">
+    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] dark:bg-slate-950 py-8 sm:py-10">
       <Container>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">

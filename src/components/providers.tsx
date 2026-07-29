@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 type AppProvidersProps = {
@@ -8,5 +9,9 @@ type AppProvidersProps = {
 };
 
 export function AppProviders({ children }: AppProvidersProps) {
-  return <TooltipProvider delayDuration={300}>{children}</TooltipProvider>;
+  return (
+    <ThemeProvider>
+      <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+    </ThemeProvider>
+  );
 }

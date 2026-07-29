@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import {
   ChevronRight,
   HelpCircle,
@@ -29,11 +30,7 @@ import {
   setPreferredLocale,
   type PreferredLocale,
 } from "@/features/preferences/locale-preference";
-import {
-  getPreferredTheme,
-  setPreferredTheme,
-  type PreferredTheme,
-} from "@/features/preferences/theme-preference";
+import type { PreferredTheme } from "@/features/preferences/theme-preference";
 import { BrandLogo } from "@/components/layout/BrandLogo";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,16 +76,20 @@ export function SettingsDrawer({
 }: SettingsDrawerProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [locale, setLocale] = useState<PreferredLocale>("ru");
-  const [theme, setTheme] = useState<PreferredTheme>("system");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) {
       return;
     }
     setLocale(getPreferredLocale());
-    setTheme(getPreferredTheme());
   }, [open]);
 
   function handleLocaleSelect(next: PreferredLocale) {
@@ -97,7 +98,6 @@ export function SettingsDrawer({
   }
 
   function handleThemeSelect(next: PreferredTheme) {
-    setPreferredTheme(next);
     setTheme(next);
   }
 
@@ -122,32 +122,32 @@ export function SettingsDrawer({
       <DrawerContent
         id="settings-drawer-menu"
         side="right"
-        className="w-[min(85vw,23.75rem)] max-w-[23.75rem] gap-0 p-0"
+        className="w-[min(85vw,23.75rem)] max-w-[23.75rem] gap-0 border-slate-200 bg-background p-0 dark:border-slate-800 dark:bg-slate-950"
       >
-        <DrawerHeader className="flex shrink-0 flex-row items-center gap-3 border-b border-slate-100 px-4 py-3 pr-12 text-left">
+        <DrawerHeader className="flex shrink-0 flex-row items-center gap-3 border-b border-slate-100 px-4 py-3 pr-12 text-left dark:border-slate-800">
           <BrandLogo variant="default" className="h-9 max-w-[140px]" />
           <div className="min-w-0">
-            <DrawerTitle className="text-base font-semibold text-slate-900">
+            <DrawerTitle className="text-base font-semibold text-slate-900 dark:text-slate-100">
               ВсеТут
             </DrawerTitle>
-            <DrawerDescription className="text-xs text-slate-500">
+            <DrawerDescription className="text-xs text-slate-500 dark:text-slate-400">
               Настройки и разделы
             </DrawerDescription>
           </div>
         </DrawerHeader>
 
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
-          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Аккаунт
             </p>
             {user ? (
               <div className="space-y-2">
-                <div className="rounded-xl bg-slate-50 px-3 py-2.5">
-                  <p className="truncate text-sm font-semibold text-slate-900">
+                <div className="rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800/80">
+                  <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
                     {user.name}
                   </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                     {getRoleLabel(user.role)}
                   </p>
                 </div>
@@ -183,7 +183,7 @@ export function SettingsDrawer({
                 </Button>
                 <Button
                   variant="outline"
-                  className="h-11 rounded-xl border-slate-200"
+                  className="h-11 rounded-xl border-slate-200 dark:border-slate-700"
                   asChild
                 >
                   <Link href="/register" onClick={closeDrawer}>
@@ -194,14 +194,14 @@ export function SettingsDrawer({
             )}
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Город
             </p>
             <button
               type="button"
               disabled
-              className="flex h-11 w-full cursor-not-allowed items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 text-left text-sm text-slate-500"
+              className="flex h-11 w-full cursor-not-allowed items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 text-left text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-400"
             >
               <MapPin className="size-4 shrink-0" aria-hidden="true" />
               <span className="min-w-0 flex-1 truncate">Бишкек</span>
@@ -211,7 +211,7 @@ export function SettingsDrawer({
             </button>
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Язык
             </p>
@@ -227,7 +227,7 @@ export function SettingsDrawer({
                       "inline-flex h-9 min-w-12 items-center justify-center rounded-full border px-3 text-sm font-semibold transition",
                       active
                         ? "border-blue-600 bg-blue-600 text-white"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50",
+                        : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-blue-500/40 dark:hover:bg-slate-800",
                     )}
                     aria-pressed={active}
                   >
@@ -241,13 +241,13 @@ export function SettingsDrawer({
             </p>
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Тема
             </p>
             <div className="flex flex-wrap gap-2">
               {THEME_OPTIONS.map((option) => {
-                const active = theme === option.id;
+                const active = mounted && theme === option.id;
                 const Icon = option.icon;
                 return (
                   <button
@@ -257,8 +257,8 @@ export function SettingsDrawer({
                     className={cn(
                       "inline-flex h-9 items-center justify-center gap-1.5 rounded-full border px-3 text-sm font-semibold transition",
                       active
-                        ? "border-slate-800 bg-slate-800 text-white"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50",
+                        ? "border-slate-800 bg-slate-800 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-900"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800",
                     )}
                     aria-pressed={active}
                   >
@@ -269,11 +269,11 @@ export function SettingsDrawer({
               })}
             </div>
             <p className="mt-2 px-1 text-xs text-slate-400">
-              Тема сохраняется. Применение light/dark — Phase 52.
+              Светлая, тёмная или как в системе.
             </p>
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Разделы
             </p>
@@ -299,7 +299,7 @@ export function SettingsDrawer({
             </ul>
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Поддержка
             </p>
@@ -355,13 +355,21 @@ function SettingsLink({
       className={cn(
         "flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium transition",
         isActive
-          ? "bg-blue-50 text-blue-700"
-          : "text-slate-800 hover:bg-slate-50",
+          ? "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300"
+          : "text-slate-800 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800",
       )}
     >
-      {Icon ? <Icon className="size-4 shrink-0 text-slate-400" aria-hidden="true" /> : null}
+      {Icon ? (
+        <Icon
+          className="size-4 shrink-0 text-slate-400"
+          aria-hidden="true"
+        />
+      ) : null}
       <span className="min-w-0 flex-1 truncate">{label}</span>
-      <ChevronRight className="size-4 shrink-0 text-slate-300" aria-hidden="true" />
+      <ChevronRight
+        className="size-4 shrink-0 text-slate-300 dark:text-slate-600"
+        aria-hidden="true"
+      />
     </Link>
   );
 }

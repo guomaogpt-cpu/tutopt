@@ -126,7 +126,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
         </div>
 
-        <div className="border-t border-slate-100 pb-2.5 pt-2 lg:hidden">
+        <div className="border-t border-slate-100 pb-2.5 pt-2 lg:hidden dark:border-slate-800">
           <Suspense
             fallback={<HeaderSearch id="header-search-mobile" syncDisabled />}
           >

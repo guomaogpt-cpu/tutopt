@@ -43,7 +43,7 @@ export default async function SellerLeadsPage() {
 
   if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
     return (
-      <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+      <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
         <Container size="lg" className="max-w-[1280px]">
           <PageHeader className="pb-0">
             <PageHeaderContent>
@@ -69,7 +69,7 @@ export default async function SellerLeadsPage() {
   const leads = sellerProfile ? await getSellerLeads(sellerProfile.id) : [];
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
       <Container size="lg" className="max-w-[1280px] min-w-0">
         <PageHeader className="pb-0">
           <PageHeaderContent>

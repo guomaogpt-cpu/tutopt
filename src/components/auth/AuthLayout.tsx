@@ -22,17 +22,17 @@ export function AuthBrandPanel({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "rounded-[28px] border border-[rgba(148,163,184,0.18)] bg-gradient-to-br from-white to-[#EFF6FF] p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] sm:p-8",
+        "rounded-[28px] border border-[rgba(148,163,184,0.18)] bg-gradient-to-br from-white to-[#EFF6FF] p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] sm:p-8 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950 dark:shadow-none",
         className,
       )}
     >
       <BrandLogo variant="footer" className="sm:max-w-[180px]" />
 
-      <h1 className="mt-6 text-2xl font-bold leading-tight text-[#0F172A] sm:text-3xl">
+      <h1 className="mt-6 text-2xl font-bold leading-tight text-[#0F172A] sm:text-3xl dark:text-slate-100">
         Оптовая торговля в Кыргызстане
       </h1>
 
-      <p className="mt-3 hidden text-sm leading-relaxed text-[#64748B] sm:block sm:text-base">
+      <p className="mt-3 hidden text-sm leading-relaxed text-[#64748B] sm:block sm:text-base dark:text-slate-400">
         Находите поставщиков, публикуйте товары и получайте заявки от покупателей.
       </p>
 
@@ -43,9 +43,9 @@ export function AuthBrandPanel({ className }: { className?: string }) {
           return (
             <li
               key={benefit.title}
-              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(148,163,184,0.14)] bg-white/80 px-3 py-2 text-xs font-medium text-[#334155] sm:w-full sm:px-4 sm:py-3 sm:text-sm"
+              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(148,163,184,0.14)] bg-white/80 px-3 py-2 text-xs font-medium text-[#334155] sm:w-full sm:px-4 sm:py-3 sm:text-sm dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-200"
             >
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#EFF6FF] text-[#2563EB] dark:bg-blue-950 dark:text-blue-300">
                 <Icon className="size-4" aria-hidden="true" />
               </span>
               {benefit.title}
@@ -63,7 +63,7 @@ type AuthLayoutProps = {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-10 lg:py-12">
+    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-10 lg:py-12 dark:bg-slate-950">
       <div className="mx-auto w-full max-w-[1100px] px-4 sm:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-10">
           <AuthBrandPanel className="lg:sticky lg:top-24" />

@@ -161,12 +161,12 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
       ];
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
       <Container size="lg" className="min-w-0">
         <AppBreadcrumbs className="mb-4" items={breadcrumbItems} />
 
         <header className="mb-5 sm:mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl dark:text-slate-100">
             Каталог объявлений
           </h1>
           <p className="mt-1.5 max-w-2xl text-sm text-[#64748B] sm:text-base">

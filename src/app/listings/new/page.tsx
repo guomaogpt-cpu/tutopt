@@ -88,7 +88,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
   ]);
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] py-6 sm:py-8">
+    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
       <Container size="md" className="max-w-[1100px] min-w-0">
         <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
           <ol className="flex flex-wrap items-center gap-1.5">

@@ -156,7 +156,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <main className="bg-slate-50 py-10 sm:py-14">
+    <main className="bg-slate-50 py-10 dark:bg-slate-950 sm:py-14">
       <Container>
         <div className="mx-auto max-w-md">
           <PublicPageHeader

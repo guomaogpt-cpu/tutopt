@@ -70,7 +70,7 @@ export function HomeMarketplaceEntry() {
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F5F7FA] pb-3 pt-5 sm:pt-6 lg:pt-7"
+      className="overflow-x-clip bg-[#F5F7FA] dark:bg-slate-950 pb-3 pt-5 sm:pt-6 lg:pt-7"
       aria-labelledby="home-marketplace-heading"
     >
       <Container size="lg">

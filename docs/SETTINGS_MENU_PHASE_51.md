@@ -50,12 +50,15 @@ Auth architecture не менялась. Header actions (избранное, у�
 
 ## 5. Theme selector (сейчас)
 
-- `next-themes` **не** установлен
-- Key: `vsetut.theme`
-- Values: `light` \| `dark` \| `system`
-- Preference сохраняется, **тема на страницу не применяется**
+**Theme is active since Phase 52.**
 
-→ Real light/dark/system: **Phase 52**
+- Package: `next-themes`
+- Provider: `src/components/providers/ThemeProvider.tsx`
+- Storage key: `vsetut.theme`
+- Buttons call `setTheme("light" | "dark" | "system")`
+- Active state after client mount
+
+Подробнее: `docs/THEME_PHASE_52.md`.
 
 ## 6. Поиск по фото
 

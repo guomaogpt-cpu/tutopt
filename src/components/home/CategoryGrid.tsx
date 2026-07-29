@@ -18,7 +18,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
   return (
     <section
       data-home-section="categories"
-      className="overflow-x-clip bg-[#F5F7FA] py-8 sm:py-9"
+      className="overflow-x-clip bg-[#F5F7FA] dark:bg-slate-950 py-8 sm:py-9"
       id="categories"
     >
       <Container size="lg">

@@ -251,7 +251,7 @@ export function SearchWithSuggest({
               aria-controls={dropdownId}
               aria-autocomplete="list"
               className={cn(
-                "w-full min-w-0 border border-input bg-white py-0 text-[15px] text-slate-900 shadow-sm transition placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                "w-full min-w-0 border border-input bg-white py-0 text-[15px] text-slate-900 shadow-sm transition placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-900 dark:text-slate-100",
                 compact
                   ? "h-11 rounded-xl pl-10 pr-3 sm:rounded-l-xl sm:rounded-r-none sm:border-r-0"
                   : "h-12 rounded-[14px] pl-10 pr-3 md:h-14 md:rounded-l-2xl md:rounded-r-none md:border-r-0 md:pl-12 md:pr-4",
@@ -306,7 +306,7 @@ export function SearchWithSuggest({
           aria-controls={dropdownId}
           aria-autocomplete="list"
           containerClassName="w-full"
-          className={cn("h-10 rounded-xl bg-white", inputClassName)}
+          className={cn("h-10 rounded-xl bg-white dark:bg-slate-900", inputClassName)}
         />
         <SearchSuggestDropdown
           id={dropdownId}

@@ -23,7 +23,7 @@ export function MarketLandingPage({
   const config = VERTICALS.MARKET;
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-gradient-to-b from-indigo-50/60 to-slate-50">
+    <main className="min-w-0 overflow-x-clip bg-gradient-to-b from-indigo-50/60 to-slate-50 dark:from-slate-950 dark:to-slate-950">
       <MarketCompactHero
         categories={categories}
         listingCount={publishedCount}
@@ -34,7 +34,7 @@ export function MarketLandingPage({
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2
               id="market-listings-heading"
-              className="text-lg font-semibold tracking-tight text-[#0F172A]"
+              className="text-lg font-semibold tracking-tight text-[#0F172A] dark:text-slate-100"
             >
               Последние объявления
             </h2>
@@ -49,7 +49,7 @@ export function MarketLandingPage({
           </div>
 
           {listings.length === 0 ? (
-            <div className="rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white px-5 py-7 text-sm text-[#64748B]">
+            <div className="rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white px-5 py-7 text-sm text-[#64748B] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
               В Объявлениях пока нет объявлений
             </div>
           ) : (

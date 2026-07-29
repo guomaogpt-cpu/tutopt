@@ -8,7 +8,7 @@ export function HomeVerticalsSection() {
   return (
     <section
       data-home-section="verticals"
-      className="overflow-x-clip bg-[#F5F7FA] pb-2 pt-4 sm:pt-5"
+      className="overflow-x-clip bg-[#F5F7FA] dark:bg-slate-950 pb-2 pt-4 sm:pt-5"
       aria-labelledby="home-verticals-heading"
     >
       <Container size="lg">
