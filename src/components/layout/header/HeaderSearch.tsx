@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { PhotoSearchButton } from "@/components/search/PhotoSearchButton";
 import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -45,13 +46,24 @@ function HeaderSearchStatic({
       <label htmlFor={id} className="sr-only">
         {t("search.listingsLabel")}
       </label>
-      <SearchInput
-        id={id}
-        disabled
-        placeholder={placeholder}
-        containerClassName="min-w-0 flex-1"
-        className={cn("h-10 rounded-xl bg-white dark:bg-slate-900 dark:text-slate-100", inputClassName)}
-      />
+      <div className="relative min-w-0 flex-1">
+        <SearchInput
+          id={id}
+          disabled
+          placeholder={placeholder}
+          containerClassName="min-w-0 w-full"
+          className={cn(
+            "h-10 rounded-xl bg-white pr-12 dark:bg-slate-900 dark:text-slate-100",
+            inputClassName,
+          )}
+        />
+        <div className="absolute right-1.5 top-1/2 z-10 -translate-y-1/2">
+          <PhotoSearchButton
+            sizeClassName="size-8"
+            className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
+          />
+        </div>
+      </div>
       <Button
         type="button"
         disabled

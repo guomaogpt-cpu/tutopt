@@ -57,6 +57,61 @@ export const DICTIONARY = {
     kg: "Жеткирүү, карго же ташуучуну табуу...",
     en: "Find delivery, cargo or a carrier...",
   },
+  "search.photo.aria": {
+    ru: "Поиск по фото",
+    kg: "Сүрөт менен издөө",
+    en: "Search by photo",
+  },
+  "search.photo.title": {
+    ru: "Поиск по фото",
+    kg: "Сүрөт менен издөө",
+    en: "Search by photo",
+  },
+  "search.photo.description": {
+    ru: "Загрузите фото товара, чтобы позже искать похожие объявления.",
+    kg: "Окшош жарыяларды издөө үчүн товар сүрөтүн жүктөңүз.",
+    en: "Upload a product photo to search similar listings later.",
+  },
+  "search.photo.choose": {
+    ru: "Выбрать фото",
+    kg: "Сүрөт тандоо",
+    en: "Choose photo",
+  },
+  "search.photo.supportedFormats": {
+    ru: "JPG, PNG, WEBP",
+    kg: "JPG, PNG, WEBP",
+    en: "JPG, PNG, WEBP",
+  },
+  "search.photo.maxSize": {
+    ru: "до 5 МБ",
+    kg: "5 МБ чейин",
+    en: "up to 5 MB",
+  },
+  "search.photo.findSimilar": {
+    ru: "Найти похожее",
+    kg: "Окшошун табуу",
+    en: "Find similar",
+  },
+  "search.photo.comingSoon": {
+    ru: "Поиск по фото будет доступен позже.",
+    kg: "Сүрөт менен издөө кийин жеткиликтүү болот.",
+    en: "Photo search will be available later.",
+  },
+  "search.photo.invalidType": {
+    ru: "Поддерживаются только JPG, PNG и WEBP.",
+    kg: "Жалгыз JPG, PNG жана WEBP колдоого алынат.",
+    en: "Only JPG, PNG, and WEBP are supported.",
+  },
+  "search.photo.tooLarge": {
+    ru: "Файл слишком большой. Максимум 5 МБ.",
+    kg: "Файл өтө чоң. Максимум 5 МБ.",
+    en: "File is too large. Maximum 5 MB.",
+  },
+  "search.photo.remove": {
+    ru: "Удалить фото",
+    kg: "Сүрөттү өчүрүү",
+    en: "Remove photo",
+  },
 
   // Home
   "home.lead": {

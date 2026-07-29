@@ -71,6 +71,7 @@ Full boxes: `docs/FINAL_SMOKE_TEST_CHECKLIST.md`.
 - `/compare` route not built
 - Soft-delete/trash beyond `ARCHIVED` later
 - Historical strategy docs may still say «Tutopt» / «ТутМаркет» (legacy product docs; not runtime)
+- Photo search UI exists, backend search is future phase.
 
 ---
 

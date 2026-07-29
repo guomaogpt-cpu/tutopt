@@ -11,6 +11,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { SearchSuggestDropdown } from "@/components/search/SearchSuggestDropdown";
+import { PhotoSearchButton } from "@/components/search/PhotoSearchButton";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import {
@@ -253,11 +254,23 @@ export function SearchWithSuggest({
               className={cn(
                 "w-full min-w-0 border border-input bg-white py-0 text-[15px] text-slate-900 shadow-sm transition placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-900 dark:text-slate-100",
                 compact
-                  ? "h-11 rounded-xl pl-10 pr-3 sm:rounded-l-xl sm:rounded-r-none sm:border-r-0"
-                  : "h-12 rounded-[14px] pl-10 pr-3 md:h-14 md:rounded-l-2xl md:rounded-r-none md:border-r-0 md:pl-12 md:pr-4",
+                  ? "h-11 rounded-xl pl-10 pr-12 sm:rounded-l-xl sm:rounded-r-none sm:border-r-0"
+                  : "h-12 rounded-[14px] pl-10 pr-12 md:h-14 md:rounded-l-2xl md:rounded-r-none md:border-r-0 md:pl-12 md:pr-14",
                 inputClassName,
               )}
             />
+            <div
+              className={cn(
+                "absolute top-1/2 z-10 -translate-y-1/2",
+                compact ? "right-1.5" : "right-2 md:right-2.5",
+              )}
+            >
+              <PhotoSearchButton
+                disabled={disabled}
+                sizeClassName={compact ? "size-8" : "size-9 md:size-10"}
+                className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
+              />
+            </div>
             <SearchSuggestDropdown
               id={dropdownId}
               query={query}
@@ -306,8 +319,18 @@ export function SearchWithSuggest({
           aria-controls={dropdownId}
           aria-autocomplete="list"
           containerClassName="w-full"
-          className={cn("h-10 rounded-xl bg-white dark:bg-slate-900", inputClassName)}
+          className={cn(
+            "h-10 rounded-xl bg-white pr-20 dark:bg-slate-900",
+            inputClassName,
+          )}
         />
+        <div className="absolute right-10 top-1/2 z-10 -translate-y-1/2">
+          <PhotoSearchButton
+            disabled={disabled}
+            sizeClassName="size-8"
+            className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
+          />
+        </div>
         <SearchSuggestDropdown
           id={dropdownId}
           query={query}
