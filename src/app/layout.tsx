@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { AppProviders } from "@/components/providers";
 import { getSiteBaseUrl } from "@/shared/seo/absolute-url";
 import { getSiteVerificationMetadata } from "@/shared/seo/site-verification";
@@ -33,6 +34,12 @@ export const metadata: Metadata = {
   ...getSiteVerificationMetadata(),
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,8 +51,11 @@ export default function RootLayout({
         <AnalyticsScripts />
         <AppProviders>
           <Header />
-          {children}
-          <Footer />
+          <div className="flex min-h-0 flex-1 flex-col pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
+            {children}
+            <Footer />
+          </div>
+          <MobileNav />
         </AppProviders>
       </body>
     </html>

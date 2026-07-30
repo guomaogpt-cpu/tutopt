@@ -1,9 +1,8 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { Heart, Menu, Settings2, X } from "lucide-react";
-import { useState } from "react";
 import { usePathname } from "next/navigation";
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import {
@@ -33,7 +32,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/80">
       <Container>
-        <div className="flex h-[64px] min-w-0 items-center gap-1.5 sm:gap-2 lg:h-[96px] lg:gap-3">
+        <div className="flex h-[56px] min-w-0 items-center gap-1.5 sm:gap-2 lg:h-[96px] lg:gap-3">
           <BrandLogo variant="header" priority />
 
           <nav
@@ -102,20 +101,13 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-1 lg:hidden">
-            {user ? <FavoritesButton /> : null}
             {user ? <HeaderNotificationsBell /> : null}
-
-            {!user ? (
-              <Button variant="ghost" className="h-10 shrink-0 px-2.5 font-medium" asChild>
-                <Link href="/login">{t("auth.signIn")}</Link>
-              </Button>
-            ) : null}
 
             <Button
               type="button"
               variant="outline"
               size="icon"
-              className="h-10 w-10 shrink-0 border-[#E5E7EB]"
+              className="h-10 w-10 shrink-0 border-slate-200 dark:border-slate-700"
               aria-expanded={settingsOpen}
               aria-controls="settings-drawer-menu"
               aria-label={
@@ -132,11 +124,20 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
         </div>
 
-        <div className="border-t border-slate-100 pb-2.5 pt-2 lg:hidden dark:border-slate-800">
+        <div className="border-t border-slate-100 pb-2 pt-2 lg:hidden dark:border-slate-800">
           <Suspense
-            fallback={<HeaderSearch id="header-search-mobile" syncDisabled />}
+            fallback={
+              <HeaderSearch
+                id="header-search-mobile"
+                placeholderKey="mobileSearch.placeholder"
+                syncDisabled
+              />
+            }
           >
-            <HeaderSearch id="header-search-mobile" />
+            <HeaderSearch
+              id="header-search-mobile"
+              placeholderKey="mobileSearch.placeholder"
+            />
           </Suspense>
         </div>
       </Container>

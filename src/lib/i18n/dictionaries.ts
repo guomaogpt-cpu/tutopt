@@ -10,6 +10,27 @@ export const DICTIONARY = {
   "nav.cargo": { ru: "Карго", kg: "Карго", en: "Cargo" },
   "nav.main": { ru: "Основная навигация", kg: "Негизги навигация", en: "Main navigation" },
 
+  // Mobile bottom navigation
+  "mobileNav.label": {
+    ru: "Мобильная навигация",
+    kg: "Мобилдик навигация",
+    en: "Mobile navigation",
+  },
+  "mobileNav.home": { ru: "Главная", kg: "Башкы", en: "Home" },
+  "mobileNav.search": { ru: "Поиск", kg: "Издөө", en: "Search" },
+  "mobileNav.post": { ru: "Подать", kg: "Жарыя", en: "Post" },
+  "mobileNav.favorites": {
+    ru: "Избранное",
+    kg: "Тандалгандар",
+    en: "Favorites",
+  },
+  "mobileNav.profile": { ru: "Профиль", kg: "Профиль", en: "Profile" },
+  "mobileSearch.placeholder": {
+    ru: "Что ищем?",
+    kg: "Эмне издейбиз?",
+    en: "Search",
+  },
+
   // Auth / header actions
   "auth.signIn": { ru: "Войти", kg: "Кирүү", en: "Sign in" },
   "auth.register": { ru: "Регистрация", kg: "Катталуу", en: "Register" },

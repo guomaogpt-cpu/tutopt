@@ -5,6 +5,7 @@ import { PhotoSearchButton } from "@/components/search/PhotoSearchButton";
 import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
@@ -13,11 +14,12 @@ type HeaderSearchProps = {
   className?: string;
   syncDisabled?: boolean;
   inputClassName?: string;
+  placeholderKey?: DictionaryKey;
 };
 
 export function HeaderSearch(props: HeaderSearchProps) {
   const { t } = useTranslation();
-  const placeholder = t("search.headerPlaceholder");
+  const placeholder = t(props.placeholderKey ?? "search.headerPlaceholder");
 
   if (props.syncDisabled) {
     return <HeaderSearchStatic {...props} placeholder={placeholder} />;
@@ -28,7 +30,9 @@ export function HeaderSearch(props: HeaderSearchProps) {
       variant="header"
       placeholder={placeholder}
       buttonLabel={t("search.find")}
-      {...props}
+      id={props.id}
+      className={props.className}
+      inputClassName={props.inputClassName}
     />
   );
 }
