@@ -6,6 +6,7 @@ import { Camera, ImagePlus, Loader2, Package, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ChangeEvent } from "react";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Modal,
   ModalContent,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/modal";
 import {
   PHOTO_SEARCH_MAX_BYTES,
+  PHOTO_SEARCH_QUERY_HINT_MAX,
   PHOTO_SEARCH_UI_LIMIT,
   type PhotoSearchResponse,
   type PhotoSearchResultItem,
@@ -34,6 +36,8 @@ type PhotoSearchButtonProps = {
   sizeClassName?: string;
   disabled?: boolean;
   vertical?: ListingVertical | null;
+  categoryId?: string | null;
+  initialQueryHint?: string;
   /** `icon` = camera control in search; `button` = labeled CTA (listings page). */
   triggerVariant?: "icon" | "button";
   triggerLabelKey?: "search.photo.aria" | "listings.photoSearch.newSearch";
@@ -66,6 +70,8 @@ export function PhotoSearchButton({
   sizeClassName = "size-9",
   disabled = false,
   vertical = null,
+  categoryId = null,
+  initialQueryHint = "",
   triggerVariant = "icon",
   triggerLabelKey = "search.photo.aria",
 }: PhotoSearchButtonProps) {
@@ -74,13 +80,25 @@ export function PhotoSearchButton({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [queryHint, setQueryHint] = useState(initialQueryHint.trim());
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<PhotoSearchResultItem[]>([]);
   const [total, setTotal] = useState(0);
+  const [visualSearch, setVisualSearch] = useState(false);
   const [searching, setSearching] = useState(false);
   const [didSearch, setDidSearch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputId = useId();
+  const hintId = useId();
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    if (!queryHint.trim() && initialQueryHint.trim()) {
+      setQueryHint(initialQueryHint.trim());
+    }
+  }, [open, initialQueryHint, queryHint]);
 
   const modalState: ModalState = (() => {
     if (searching) {
@@ -117,6 +135,7 @@ export function PhotoSearchButton({
     setTotal(0);
     setDidSearch(false);
     setSearching(false);
+    setVisualSearch(false);
   }
 
   function resetAll() {
@@ -137,6 +156,9 @@ export function PhotoSearchButton({
     setOpen(next);
     if (!next) {
       resetAll();
+      setQueryHint(initialQueryHint.trim());
+    } else if (initialQueryHint.trim()) {
+      setQueryHint(initialQueryHint.trim());
     }
   }
 
@@ -205,7 +227,7 @@ export function PhotoSearchButton({
     }
   }
 
-  async function handleFindSimilar() {
+  async function handleFindByPhoto() {
     if (!file || searching) {
       return;
     }
@@ -215,12 +237,20 @@ export function PhotoSearchButton({
     setResults([]);
     setTotal(0);
     setDidSearch(false);
+    setVisualSearch(false);
 
     try {
       const body = new FormData();
       body.append("image", file);
       if (vertical) {
         body.append("vertical", vertical);
+      }
+      if (categoryId) {
+        body.append("category", categoryId);
+      }
+      const hint = queryHint.trim().slice(0, PHOTO_SEARCH_QUERY_HINT_MAX);
+      if (hint) {
+        body.append("queryHint", hint);
       }
 
       const response = await fetch("/api/search/photo", {
@@ -243,9 +273,10 @@ export function PhotoSearchButton({
       }
 
       const payload = (await response.json()) as ApiSuccessBody;
-      const items = payload.data?.results ?? [];
+      const items = payload.data?.items ?? payload.data?.results ?? [];
       setResults(items);
       setTotal(payload.data?.total ?? items.length);
+      setVisualSearch(payload.data?.visualSearch === true);
       setDidSearch(true);
     } catch {
       setError(t("search.photo.networkError"));
@@ -258,7 +289,7 @@ export function PhotoSearchButton({
   const visibleResults = results.slice(0, PHOTO_SEARCH_UI_LIMIT);
   const listingsHref = buildListingsHref(vertical, false);
   const viewAllHref = buildListingsHref(vertical, true);
-
+  const showHintTip = !queryHint.trim() && !vertical;
   const triggerLabel = t(triggerLabelKey);
 
   return (
@@ -365,6 +396,29 @@ export function PhotoSearchButton({
             </div>
           ) : null}
 
+          <div className="space-y-1.5">
+            <label
+              htmlFor={hintId}
+              className="text-sm font-medium text-slate-900 dark:text-slate-100"
+            >
+              {t("search.photo.whatIsInPhoto")}
+            </label>
+            <Input
+              id={hintId}
+              type="text"
+              value={queryHint}
+              maxLength={PHOTO_SEARCH_QUERY_HINT_MAX}
+              onChange={(event) => setQueryHint(event.target.value)}
+              placeholder={t("search.photo.queryHintPlaceholder")}
+              className="h-11 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
+            />
+            {showHintTip ? (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t("search.photo.queryHintTip")}
+              </p>
+            ) : null}
+          </div>
+
           {modalState === "searching" ? (
             <p className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
               <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden="true" />
@@ -380,11 +434,27 @@ export function PhotoSearchButton({
 
           {modalState === "success" ? (
             <div className="space-y-3">
-              <p className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs leading-relaxed text-blue-900 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-200">
-                {t("search.photo.prototypeNotice")}
-              </p>
+              <div className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 dark:border-blue-900/40 dark:bg-blue-950/30">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-blue-700 dark:bg-slate-950 dark:text-blue-300">
+                    {t("search.photo.prototypeModeTitle")}
+                  </span>
+                  {!visualSearch ? (
+                    <span className="text-[11px] text-blue-800/80 dark:text-blue-200/80">
+                      {t("search.photo.visualSearchNotEnabled")}
+                    </span>
+                  ) : null}
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-blue-900 dark:text-blue-200">
+                  {t("search.photo.prototypeModeDescription")}
+                </p>
+                <p className="mt-1.5 text-xs text-blue-800/90 dark:text-blue-200/80">
+                  {t("search.photo.resultsBasedOnTextAndCategory")}
+                </p>
+              </div>
+
               <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                {t("search.photo.resultsTitle")}
+                {t("search.photo.hybridResults")}
               </h3>
               <ul className="space-y-2">
                 {visibleResults.map((item) => (
@@ -446,6 +516,9 @@ export function PhotoSearchButton({
               <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
                 {t("search.photo.emptyTitle")}
               </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t("search.photo.queryHintTip")}
+              </p>
               <Button type="button" variant="outline" className="h-10 rounded-xl" asChild>
                 <Link href={listingsHref}>{t("search.photo.openAllListings")}</Link>
               </Button>
@@ -458,7 +531,7 @@ export function PhotoSearchButton({
             <Button
               type="button"
               disabled={!file || searching}
-              onClick={() => void handleFindSimilar()}
+              onClick={() => void handleFindByPhoto()}
               className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
             >
               {searching ? (
@@ -476,7 +549,7 @@ export function PhotoSearchButton({
             <Button
               type="button"
               disabled={!file || searching}
-              onClick={() => void handleFindSimilar()}
+              onClick={() => void handleFindByPhoto()}
               className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
             >
               {t("search.photo.tryAgain")}

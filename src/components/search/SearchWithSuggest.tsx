@@ -71,6 +71,7 @@ export function SearchWithSuggest({
     (isHero || isPhrase ? "Что вы ищете?" : "Найти товары, услуги…");
   const resolvedButtonLabel = buttonLabel ?? "Найти";
   const searchVertical = resolveSearchVertical(pathname, searchParams);
+  const categoryId = searchParams.get("category");
 
   useEffect(() => {
     setQuery(urlQuery);
@@ -268,6 +269,8 @@ export function SearchWithSuggest({
               <PhotoSearchButton
                 disabled={disabled}
                 vertical={searchVertical}
+                categoryId={categoryId}
+                initialQueryHint={query}
                 sizeClassName={compact ? "size-8" : "size-9 md:size-10"}
                 className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
               />
@@ -329,6 +332,8 @@ export function SearchWithSuggest({
           <PhotoSearchButton
             disabled={disabled}
             vertical={searchVertical}
+            categoryId={categoryId}
+            initialQueryHint={query}
             sizeClassName="size-8"
             className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
           />

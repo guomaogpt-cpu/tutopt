@@ -176,7 +176,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         </header>
 
         {filters.photoSearch ? (
-          <PhotoSearchListingsNotice vertical={filters.vertical} />
+          <PhotoSearchListingsNotice
+            vertical={filters.vertical}
+            categoryId={filters.categoryId || null}
+            initialQueryHint={filters.q}
+          />
         ) : null}
 
         <ListingsCatalogToolbar

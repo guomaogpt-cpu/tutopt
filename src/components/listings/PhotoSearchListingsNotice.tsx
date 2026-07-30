@@ -7,10 +7,14 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type PhotoSearchListingsNoticeProps = {
   vertical?: ListingVertical | null;
+  categoryId?: string | null;
+  initialQueryHint?: string;
 };
 
 export function PhotoSearchListingsNotice({
   vertical = null,
+  categoryId = null,
+  initialQueryHint = "",
 }: PhotoSearchListingsNoticeProps) {
   const { t } = useTranslation();
 
@@ -31,6 +35,8 @@ export function PhotoSearchListingsNotice({
       </div>
       <PhotoSearchButton
         vertical={vertical}
+        categoryId={categoryId}
+        initialQueryHint={initialQueryHint}
         triggerVariant="button"
         triggerLabelKey="listings.photoSearch.newSearch"
         className="w-full shrink-0 sm:w-auto"

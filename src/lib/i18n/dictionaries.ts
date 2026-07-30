@@ -68,9 +68,9 @@ export const DICTIONARY = {
     en: "Search by photo",
   },
   "search.photo.description": {
-    ru: "Загрузите фото товара, чтобы позже искать похожие объявления.",
-    kg: "Окшош жарыяларды издөө үчүн товар сүрөтүн жүктөңүз.",
-    en: "Upload a product photo to search similar listings later.",
+    ru: "Загрузите фото и при желании кратко опишите, что на нём. Это тестовый режим поиска.",
+    kg: "Сүрөт жүктөп, кааласаңыз кыскача жазыңыз. Бул издөөнүн тесттик режими.",
+    en: "Upload a photo and optionally describe what is on it. This is a prototype search mode.",
   },
   "search.photo.choose": {
     ru: "Выбрать фото",
@@ -88,9 +88,9 @@ export const DICTIONARY = {
     en: "up to 5 MB",
   },
   "search.photo.findSimilar": {
-    ru: "Найти похожее",
-    kg: "Окшошун табуу",
-    en: "Find similar",
+    ru: "Найти по фото",
+    kg: "Сүрөт боюнча издөө",
+    en: "Search by photo",
   },
   "search.photo.comingSoon": {
     ru: "Поиск по фото будет доступен позже.",
@@ -113,14 +113,59 @@ export const DICTIONARY = {
     en: "Remove photo",
   },
   "search.photo.prototypeNotice": {
-    ru: "Это тестовый режим поиска по фото. Сейчас показываются объявления, которые могут подойти. Точный визуальный поиск будет улучшен позже.",
-    kg: "Бул сүрөт менен издөөнүн тесттик режими. Азыр ылайыктуу болушу мүмкүн болгон жарыялар көрсөтүлөт. Так визуалдык издөө кийин жакшыртылат.",
-    en: "This is a prototype photo search mode. We are showing listings that may match. Accurate visual search will be improved later.",
+    ru: "Это тестовый режим. Сейчас поиск учитывает раздел, наличие фото и текстовые совпадения. Точный визуальный поиск будет добавлен позже.",
+    kg: "Бул тесттик режим. Азыр издөө бөлүмдү, сүрөтү бар жарыяларды жана тексттик дал келүүлөрдү эске алат. Так визуалдык издөө кийин кошулат.",
+    en: "This is a prototype mode. Search currently uses section, listings with images, and text matches. Accurate visual search will be added later.",
+  },
+  "search.photo.prototypeModeTitle": {
+    ru: "Тестовый режим",
+    kg: "Тесттик режим",
+    en: "Prototype mode",
+  },
+  "search.photo.prototypeModeDescription": {
+    ru: "Сейчас поиск по фото работает в тестовом режиме: мы используем раздел, текст рядом с поиском и объявления с фотографиями. Полное сравнение изображений будет добавлено отдельным этапом.",
+    kg: "Азыр сүрөт боюнча издөө тесттик режимде иштейт: бөлүм, издөө тексти жана сүрөтү бар жарыялар колдонулат. Толук сүрөт салыштыруу кийинки этапта кошулат.",
+    en: "Photo search is currently in prototype mode: it uses the section, nearby search text, and listings with photos. Full image similarity will be added in a later phase.",
+  },
+  "search.photo.whatIsInPhoto": {
+    ru: "Что на фото?",
+    kg: "Сүрөттө эмне бар?",
+    en: "What is in the photo?",
+  },
+  "search.photo.queryHintPlaceholder": {
+    ru: "Например: iPhone, диван, насос, кроссовки...",
+    kg: "Мисалы: iPhone, диван, насос, кроссовка...",
+    en: "For example: iPhone, sofa, pump, sneakers...",
+  },
+  "search.photo.queryHintTip": {
+    ru: "Добавьте короткое описание фото, чтобы результаты были точнее.",
+    kg: "Жыйынтыктар так болушу үчүн сүрөткө кыскача түшүндүрмө кошуңуз.",
+    en: "Add a short description of the photo to improve results.",
+  },
+  "search.photo.hybridResults": {
+    ru: "Результаты поиска по фото",
+    kg: "Сүрөт боюнча издөө жыйынтыктары",
+    en: "Photo search results",
+  },
+  "search.photo.visualSearchNotEnabled": {
+    ru: "Визуальный поиск изображений пока не включён",
+    kg: "Сүрөттөрдү визуалдык издөө азырынча өчүк",
+    en: "Visual image search is not enabled yet",
+  },
+  "search.photo.futureVisualSearch": {
+    ru: "Точный визуальный поиск будет добавлен отдельным этапом.",
+    kg: "Так визуалдык издөө өзүнчө этапта кошулат.",
+    en: "Accurate visual search will be added in a later phase.",
+  },
+  "search.photo.resultsBasedOnTextAndCategory": {
+    ru: "Результаты основаны на разделе, тексте и объявлениях с фото.",
+    kg: "Жыйынтыктар бөлүмгө, текстке жана сүрөтү бар жарыяларга негизделген.",
+    en: "Results are based on section, text matches, and listings with photos.",
   },
   "search.photo.resultsTitle": {
-    ru: "Возможные совпадения",
-    kg: "Ыктымал дал келүүлөр",
-    en: "Possible matches",
+    ru: "Результаты поиска по фото",
+    kg: "Сүрөт боюнча издөө жыйынтыктары",
+    en: "Photo search results",
   },
   "search.photo.openListing": {
     ru: "Открыть",
@@ -143,9 +188,9 @@ export const DICTIONARY = {
     en: "Open all listings",
   },
   "search.photo.emptyTitle": {
-    ru: "Похожие объявления пока не найдены.",
-    kg: "Окшош жарыялар азырынча табылган жок.",
-    en: "No similar listings found yet.",
+    ru: "Подходящие объявления пока не найдены.",
+    kg: "Ылайыктуу жарыялар азырынча табылган жок.",
+    en: "No matching listings found yet.",
   },
   "search.photo.tryAgain": {
     ru: "Попробовать снова",
@@ -534,13 +579,13 @@ export const DICTIONARY = {
     en: "Photo search",
   },
   "listings.photoSearch.description": {
-    ru: "Сейчас это тестовый режим. Мы показываем объявления, которые могут подойти. Точный визуальный поиск будет улучшен позже.",
-    kg: "Бул тесттик режим. Азыр ылайыктуу болушу мүмкүн болгон жарыялар көрсөтүлөт. Так визуалдык издөө кийин жакшыртылат.",
-    en: "This is a prototype mode. We are showing listings that may match. Accurate visual search will be improved later.",
+    ru: "Это тестовый режим. Сейчас поиск учитывает раздел, наличие фото и текстовые совпадения. Точный визуальный поиск будет добавлен позже.",
+    kg: "Бул тесттик режим. Азыр издөө бөлүмдү, сүрөтү бар жарыяларды жана тексттик дал келүүлөрдү эске алат. Так визуалдык издөө кийин кошулат.",
+    en: "This is a prototype mode. Search currently uses section, listings with images, and text matches. Accurate visual search will be added later.",
   },
   "listings.photoSearch.newSearch": {
     ru: "Новый поиск по фото",
-    kg: "Жаңы сүрөт менен издөө",
+    kg: "Жаңы сүрөт боюнча издөө",
     en: "New photo search",
   },
   "listings.photoSearch.filterHint": {
@@ -549,14 +594,14 @@ export const DICTIONARY = {
     en: "You can use filters together with photo search.",
   },
   "listings.photoSearch.emptyTitle": {
-    ru: "Похожие объявления пока не найдены.",
-    kg: "Окшош жарыялар азырынча табылган жок.",
-    en: "No similar listings found yet.",
+    ru: "Подходящие объявления пока не найдены.",
+    kg: "Ылайыктуу жарыялар азырынча табылган жок.",
+    en: "No matching listings found yet.",
   },
   "listings.photoSearch.emptyDescription": {
-    ru: "Попробуйте другое фото или откройте все объявления.",
-    kg: "Башка сүрөт колдонуп көрүңүз же бардык жарыяларды ачыңыз.",
-    en: "Try another photo or open all listings.",
+    ru: "Попробуйте другое фото или добавьте короткое описание.",
+    kg: "Башка сүрөт колдонуп көрүңүз же кыскача түшүндүрмө кошуңуз.",
+    en: "Try another photo or add a short description.",
   },
   "listings.photoSearch.openAllListings": {
     ru: "Все объявления",

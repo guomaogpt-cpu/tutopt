@@ -1,9 +1,15 @@
+import { z } from "zod";
 import { jsonDataNoStore, withApiHandler } from "@/shared/lib/api-route";
 import { ValidationError } from "@/shared/lib/errors";
-import { searchPhotoPrototype } from "@/features/search/lib/photo-search-prototype";
+import {
+  buildPhotoSearchExplanation,
+  searchPhotoHybridPrototype,
+} from "@/features/search/lib/photo-search-prototype";
 import {
   PHOTO_SEARCH_ACCEPTED_TYPES,
+  PHOTO_SEARCH_API_LIMIT,
   PHOTO_SEARCH_MAX_BYTES,
+  PHOTO_SEARCH_QUERY_HINT_MAX,
   type PhotoSearchResponse,
 } from "@/features/search/lib/photo-search-types";
 import { parseListingVerticalParam } from "@/features/verticals/verticals";
@@ -11,6 +17,7 @@ import { parseListingVerticalParam } from "@/features/verticals/verticals";
 export const dynamic = "force-dynamic";
 
 const ACCEPTED = new Set<string>(PHOTO_SEARCH_ACCEPTED_TYPES);
+const categoryIdSchema = z.string().uuid();
 
 export async function POST(request: Request) {
   return withApiHandler(async () => {
@@ -35,7 +42,6 @@ export async function POST(request: Request) {
     }
 
     // Prototype: validate only — do not persist the upload.
-    // Consume a tiny slice so the stream is acknowledged, then drop.
     await image.slice(0, 1).arrayBuffer().catch(() => undefined);
 
     const vertical = parseListingVerticalParam(
@@ -44,15 +50,46 @@ export async function POST(request: Request) {
         : null,
     );
 
-    const results = await searchPhotoPrototype({
+    const rawCategory =
+      typeof formData.get("category") === "string"
+        ? String(formData.get("category")).trim()
+        : "";
+    const categoryParsed = categoryIdSchema.safeParse(rawCategory);
+    const categoryId = categoryParsed.success ? categoryParsed.data : null;
+
+    const rawHint =
+      typeof formData.get("queryHint") === "string"
+        ? String(formData.get("queryHint")).trim()
+        : "";
+    const queryHint =
+      rawHint.length > 0 ? rawHint.slice(0, PHOTO_SEARCH_QUERY_HINT_MAX) : null;
+
+    const fileName = image.name?.trim() ? image.name.trim() : null;
+
+    const items = await searchPhotoHybridPrototype({
       vertical,
-      limit: 12,
+      categoryId,
+      queryHint,
+      fileName,
+      limit: PHOTO_SEARCH_API_LIMIT,
     });
 
     const payload: PhotoSearchResponse = {
+      ok: true,
+      mode: "hybrid-prototype",
+      visualSearch: false,
       prototype: true,
-      results,
-      total: results.length,
+      items,
+      results: items,
+      total: items.length,
+      explanation: buildPhotoSearchExplanation({
+        hasQueryHint: Boolean(queryHint) || Boolean(fileName),
+        hasVertical: Boolean(vertical),
+        hasCategory: Boolean(categoryId),
+      }),
+      queryHint,
+      vertical,
+      categoryId,
     };
 
     return jsonDataNoStore(payload);
