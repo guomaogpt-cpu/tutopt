@@ -64,7 +64,7 @@ export function MarketCompactHero({
   const listingCountLabel = new Intl.NumberFormat("ru-RU").format(listingCount);
 
   return (
-    <section className="relative min-h-[300px] overflow-hidden border-b border-indigo-200/40 shadow-sm md:h-[300px]">
+    <section className="relative min-h-[260px] overflow-hidden border-b border-indigo-200/40 shadow-sm md:h-[300px] md:min-h-[300px]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-no-repeat"
@@ -78,7 +78,7 @@ export function MarketCompactHero({
         className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/10 to-transparent"
       />
 
-      <div className="relative flex min-h-[300px] items-center py-6 md:h-full md:py-0 px-4 md:px-0">
+      <div className="relative flex min-h-[260px] items-center px-4 py-5 md:h-full md:min-h-[300px] md:px-0 md:py-0">
         <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
           <div className="flex w-full min-w-0 items-center justify-between gap-6 lg:gap-8">
             <div className="min-w-0 w-full max-w-[45rem]">

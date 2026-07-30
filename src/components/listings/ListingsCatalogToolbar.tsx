@@ -261,7 +261,7 @@ export function ListingsCatalogToolbar({
 
           <form
             onSubmit={handleCatalogSubmit}
-            className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center"
+            className="mt-3 flex items-center gap-2 sm:mt-4"
           >
             <label htmlFor="catalog-search" className="sr-only">
               {t("catalog.searchAriaLabel")}
@@ -292,7 +292,15 @@ export function ListingsCatalogToolbar({
             </div>
             <Button
               type="submit"
-              className="h-12 w-full shrink-0 rounded-xl bg-[#2563EB] px-6 text-base hover:bg-[#1D4ED8] sm:w-auto"
+              size="icon"
+              className="size-12 shrink-0 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
+              aria-label={t("search.find")}
+            >
+              <Search className="size-5" aria-hidden="true" />
+            </Button>
+            <Button
+              type="submit"
+              className="hidden h-12 shrink-0 rounded-xl bg-[#2563EB] px-6 text-base hover:bg-[#1D4ED8] sm:inline-flex"
             >
               {t("search.find")}
             </Button>
@@ -302,7 +310,7 @@ export function ListingsCatalogToolbar({
         <div className="flex flex-col gap-3 px-4 py-3 sm:px-5 sm:py-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <p className="text-sm text-[#64748B] dark:text-slate-400">
-              {t("catalog.found")}:{" "}
+              {t("listings.found")}:{" "}
               <span className="font-semibold text-[#0F172A] dark:text-slate-100">{totalCount}</span>{" "}
               {formatListingCount(locale, totalCount)}
             </p>
@@ -317,8 +325,8 @@ export function ListingsCatalogToolbar({
           <div className="flex flex-wrap items-center gap-2">
             <Select value={filters.sort} onValueChange={handleSortChange}>
               <SelectTrigger
-                className="h-10 min-w-[150px] flex-1 rounded-xl bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:flex-none sm:w-[180px]"
-                aria-label={t("catalog.sortAriaLabel")}
+                className="h-11 min-w-[132px] flex-1 rounded-xl bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:h-10 sm:flex-none sm:w-[180px]"
+                aria-label={t("listings.sort")}
               >
                 <SelectValue />
               </SelectTrigger>
@@ -337,10 +345,15 @@ export function ListingsCatalogToolbar({
                 variant="outline"
                 onClick={() => setFiltersOpen((current) => !current)}
                 aria-expanded={filtersOpen}
-                className="h-10 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
+                aria-label={
+                  filtersOpen
+                    ? t("listings.hideFilters")
+                    : t("listings.showFilters")
+                }
+                className="h-11 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 sm:h-10"
               >
                 <SlidersHorizontal className="size-4" aria-hidden="true" />
-                {t("catalog.filters")}
+                {t("listings.filters")}
                 {panelFiltersOnly ? (
                   <Badge
                     variant="default"

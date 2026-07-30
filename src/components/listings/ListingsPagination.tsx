@@ -35,7 +35,7 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
             <Button
               variant="outline"
               size="default"
-              className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-2.5 pr-3 shadow-none"
+              className="h-11 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-2.5 pr-3 shadow-none dark:border-slate-700 dark:bg-slate-900 sm:h-10"
               asChild
             >
               <Link
@@ -54,7 +54,7 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
             <PaginationItem key={`ellipsis-${index}`}>
               <span
                 aria-hidden
-                className="flex size-10 items-center justify-center text-[#94A3B8]"
+                className="flex size-11 items-center justify-center text-[#94A3B8] sm:size-10"
               >
                 <MoreHorizontal className="size-4" />
               </span>
@@ -65,9 +65,9 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
                 variant={page === filters.page ? "outline" : "ghost"}
                 size="icon"
                 className={cn(
-                  "size-10 min-w-10 rounded-xl",
+                  "size-11 min-w-11 rounded-xl sm:size-10 sm:min-w-10",
                   page === filters.page &&
-                    "border-[#2563EB]/30 bg-[#EFF6FF] font-semibold text-[#2563EB] shadow-none hover:bg-[#EFF6FF]",
+                    "border-[#2563EB]/30 bg-[#EFF6FF] font-semibold text-[#2563EB] shadow-none hover:bg-[#EFF6FF] dark:border-blue-700 dark:bg-blue-950/50 dark:text-blue-300 dark:hover:bg-blue-950/50",
                 )}
                 asChild
               >
@@ -87,7 +87,7 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
             <Button
               variant="outline"
               size="default"
-              className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-3 pr-2.5 shadow-none"
+              className="h-11 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-3 pr-2.5 shadow-none dark:border-slate-700 dark:bg-slate-900 sm:h-10"
               asChild
             >
               <Link

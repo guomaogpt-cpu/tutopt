@@ -738,6 +738,51 @@ export const DICTIONARY = {
   "catalog.reset": { ru: "Сбросить", kg: "Тазалоо", en: "Reset" },
   "catalog.apply": { ru: "Применить", kg: "Колдонуу", en: "Apply" },
 
+  // Mobile listing cards and catalog — Phase 65
+  "listingCard.priceOnRequest": {
+    ru: "Цена по запросу",
+    kg: "Баасы сурам боюнча",
+    en: "Price on request",
+  },
+  "listings.filters": { ru: "Фильтры", kg: "Чыпкалар", en: "Filters" },
+  "listings.showFilters": {
+    ru: "Показать фильтры",
+    kg: "Чыпкаларды көрсөтүү",
+    en: "Show filters",
+  },
+  "listings.hideFilters": {
+    ru: "Скрыть фильтры",
+    kg: "Чыпкаларды жашыруу",
+    en: "Hide filters",
+  },
+  "listings.sort": { ru: "Сортировка", kg: "Иреттөө", en: "Sort" },
+  "listings.found": { ru: "Найдено", kg: "Табылды", en: "Found" },
+  "listings.loadMore": {
+    ru: "Показать ещё",
+    kg: "Дагы көрсөтүү",
+    en: "Load more",
+  },
+  "listings.noImage": { ru: "Нет фото", kg: "Сүрөт жок", en: "No image" },
+  "listings.openListing": {
+    ru: "Открыть объявление",
+    kg: "Жарыяны ачуу",
+    en: "Open listing",
+  },
+  "listings.addToFavorites": {
+    ru: "Добавить в избранное",
+    kg: "Тандалгандарга кошуу",
+    en: "Add to favorites",
+  },
+  "listings.removeFromFavorites": {
+    ru: "Убрать из избранного",
+    kg: "Тандалгандардан алып салуу",
+    en: "Remove from favorites",
+  },
+  "vertical.market": { ru: "Объявления", kg: "Жарыялар", en: "Listings" },
+  "vertical.opt": { ru: "Опт", kg: "Дүң", en: "Wholesale" },
+  "vertical.services": { ru: "Услуги", kg: "Кызматтар", en: "Services" },
+  "vertical.cargo": { ru: "Карго", kg: "Карго", en: "Cargo" },
+
   "listings.photoSearch.title": {
     ru: "Поиск по фото",
     kg: "Сүрөт менен издөө",

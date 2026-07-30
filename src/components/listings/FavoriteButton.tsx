@@ -70,8 +70,8 @@ export function FavoriteButton({
   }
 
   const label = isFavorited
-    ? t("listing.removeFromFavorites")
-    : t("listing.addToFavorites");
+    ? t("listings.removeFromFavorites")
+    : t("listings.addToFavorites");
 
   if (variant === "button") {
     return (
