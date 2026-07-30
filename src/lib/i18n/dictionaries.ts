@@ -246,7 +246,57 @@ export const DICTIONARY = {
     kg: "Жаңы жарыялар",
     en: "New listings",
   },
+  "home.latestListings": {
+    ru: "Новые объявления",
+    kg: "Жаңы жарыялар",
+    en: "New listings",
+  },
+  "home.popularMarket": {
+    ru: "Популярное в объявлениях",
+    kg: "Жарыялардагы популярдуу",
+    en: "Popular in listings",
+  },
+  "home.wholesaleOffers": {
+    ru: "Оптовые предложения",
+    kg: "Дүң сунуштар",
+    en: "Wholesale offers",
+  },
+  "home.services": {
+    ru: "Услуги",
+    kg: "Кызматтар",
+    en: "Services",
+  },
+  "home.cargo": {
+    ru: "Карго и доставка",
+    kg: "Карго жана жеткирүү",
+    en: "Cargo and delivery",
+  },
+  "home.sectionMarketDesc": {
+    ru: "Свежие товары и предложения в разделе объявлений",
+    kg: "Жарыялар бөлүмүндөгү жаңы товарлар жана сунуштар",
+    en: "Fresh goods and offers in the listings section",
+  },
+  "home.sectionOptDesc": {
+    ru: "Поставщики и оптовые партии",
+    kg: "Жеткирүүчүлөр жана дүң партиялар",
+    en: "Suppliers and wholesale batches",
+  },
+  "home.sectionServicesDesc": {
+    ru: "Специалисты и компании рядом",
+    kg: "Жакынкы адистер жана компаниялар",
+    en: "Specialists and companies nearby",
+  },
+  "home.sectionCargoDesc": {
+    ru: "Перевозки, логистика и доставка",
+    kg: "Ташуу, логистика жана жеткирүү",
+    en: "Freight, logistics, and delivery",
+  },
   "home.viewAll": { ru: "Смотреть все", kg: "Баарын көрүү", en: "View all" },
+  "home.postListing": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post a listing",
+  },
   "home.moreListings": {
     ru: "Ещё объявления",
     kg: "Дагы жарыялар",
@@ -262,6 +312,100 @@ export const DICTIONARY = {
     kg: "Жарыяны акысыз жайгаштырыңыз жана модерацияны күтүңүз — ал каталогдо көрүнөт.",
     en: "Post a listing for free and wait for moderation — it will appear in the catalog.",
   },
+  "home.emptySectionTitle": {
+    ru: "В этом разделе пока тихо",
+    kg: "Бул бөлүмдө азырынча тынч",
+    en: "This section is quiet for now",
+  },
+  "home.emptySectionDescription": {
+    ru: "Выберите категорию или разместите первое объявление.",
+    kg: "Категорияны тандаңыз же биринчи жарыяны жайгаштырыңыз.",
+    en: "Pick a category or post the first listing.",
+  },
+  "home.trendingSearches": {
+    ru: "Сейчас ищут",
+    kg: "Азыр издешет",
+    en: "Trending searches",
+  },
+  "home.whyVsetut": {
+    ru: "Почему ВсеТут",
+    kg: "Эмне үчүн ВсеТут",
+    en: "Why VseTut",
+  },
+  "home.why.allInOne.title": {
+    ru: "Разные разделы в одном месте",
+    kg: "Ар кандай бөлүмдөр бир жерде",
+    en: "Different sections in one place",
+  },
+  "home.why.allInOne.description": {
+    ru: "Объявления, услуги, опт и карго — без лишних сайтов.",
+    kg: "Жарыялар, кызматтар, дүң жана карго — кошумча сайттарсыз.",
+    en: "Listings, services, wholesale, and cargo — without extra sites.",
+  },
+  "home.why.fastSearch.title": {
+    ru: "Быстрый поиск по сайту",
+    kg: "Сайт боюнча тез издөө",
+    en: "Fast site-wide search",
+  },
+  "home.why.fastSearch.description": {
+    ru: "Найдите нужное по запросу, разделу или категории.",
+    kg: "Сурам, бөлүм же категория боюнча керектүүнү табыңыз.",
+    en: "Find what you need by query, section, or category.",
+  },
+  "home.why.directRequests.title": {
+    ru: "Прямые заявки продавцам",
+    kg: "Сатуучуларга түз сурамдар",
+    en: "Direct requests to sellers",
+  },
+  "home.why.directRequests.description": {
+    ru: "Напишите продавцу прямо со страницы объявления.",
+    kg: "Жарыя барагынан сатуучуга түз жазыңыз.",
+    en: "Message the seller directly from the listing page.",
+  },
+  "home.why.localMarket.title": {
+    ru: "Локальный рынок",
+    kg: "Жергиликтүү базар",
+    en: "Local marketplace",
+  },
+  "home.why.localMarket.description": {
+    ru: "Объявления и предложения из Кыргызстана.",
+    kg: "Кыргызстандагы жарыялар жана сунуштар.",
+    en: "Listings and offers from Kyrgyzstan.",
+  },
+  "home.sellerCtaTitle": {
+    ru: "Продаёте товары или услуги?",
+    kg: "Товар же кызмат сатасызбы?",
+    en: "Do you sell goods or services?",
+  },
+  "home.sellerCtaDescription": {
+    ru: "Разместите объявление и получайте заявки от покупателей.",
+    kg: "Жарыя жайгаштырып, сатып алуучулардын сурамдарын алыңыз.",
+    en: "Post a listing and receive requests from buyers.",
+  },
+  "home.trend.equipment": { ru: "оборудование", kg: "жабдуулар", en: "equipment" },
+  "home.trend.furniture": { ru: "мебель", kg: "эмерек", en: "furniture" },
+  "home.trend.chinaDelivery": {
+    ru: "доставка из Китая",
+    kg: "Кытайдан жеткирүү",
+    en: "China delivery",
+  },
+  "home.trend.wholesaleClothing": {
+    ru: "одежда оптом",
+    kg: "кийим дүңүнөн",
+    en: "wholesale clothing",
+  },
+  "home.trend.repair": { ru: "ремонт", kg: "оңдоо", en: "repair" },
+  "home.trend.electronics": {
+    ru: "электроника",
+    kg: "электроника",
+    en: "electronics",
+  },
+  "home.trend.buildingMaterials": {
+    ru: "стройматериалы",
+    kg: "курулуш материалдары",
+    en: "building materials",
+  },
+  "home.trend.packaging": { ru: "упаковка", kg: "таңгак", en: "packaging" },
 
   // Vertical heroes / pages
   "vertical.seekListings": { ru: "Ищите", kg: "Издеңиз", en: "Search" },
