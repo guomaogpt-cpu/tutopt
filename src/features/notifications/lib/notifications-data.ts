@@ -108,3 +108,64 @@ export async function createNewLeadNotification(input: {
     },
   });
 }
+
+export async function createNewCargoRequestNotifications(input: {
+  actorId: string | null;
+  itemName: string;
+  fromLocation: string;
+  toLocation: string;
+}): Promise<void> {
+  const recipientIds = new Set<string>();
+
+  const admins = await prisma.user.findMany({
+    where: { role: "ADMIN", is_blocked: false },
+    select: { id: true },
+  });
+
+  for (const admin of admins) {
+    recipientIds.add(admin.id);
+  }
+
+  const cargoSellers = await prisma.user.findMany({
+    where: {
+      role: "SELLER",
+      is_blocked: false,
+      sellerProfile: {
+        listings: {
+          some: {
+            vertical: "CARGO",
+            status: "PUBLISHED",
+          },
+        },
+      },
+    },
+    select: { id: true },
+  });
+
+  for (const seller of cargoSellers) {
+    recipientIds.add(seller.id);
+  }
+
+  if (input.actorId) {
+    recipientIds.delete(input.actorId);
+  }
+
+  if (recipientIds.size === 0) {
+    return;
+  }
+
+  const title = "Новая карго-заявка";
+  const message = `${input.itemName}: ${input.fromLocation} → ${input.toLocation}`;
+  const link = "/seller/cargo-requests";
+
+  await prisma.notification.createMany({
+    data: [...recipientIds].map((recipientId) => ({
+      recipient_id: recipientId,
+      actor_id: input.actorId,
+      type: NotificationType.NEW_CARGO_REQUEST,
+      title,
+      message,
+      link,
+    })),
+  });
+}

@@ -56,6 +56,13 @@ enum LeadStatus {
   CLOSED
 }
 
+enum CargoRequestStatus {
+  NEW
+  IN_REVIEW
+  CONTACTED
+  CLOSED
+}
+
 enum ReportReason {
   SPAM
   FRAUD
@@ -93,6 +100,7 @@ enum ContactEventType {
 
 enum NotificationType {
   NEW_LEAD
+  NEW_CARGO_REQUEST
 }
 
 // ---------------------------------------------------------------------------
@@ -188,6 +196,7 @@ model User {
   listingContactEvents     ListingContactEvent[]
   notificationsReceived    Notification[]            @relation("NotificationRecipient")
   notificationsSent        Notification[]            @relation("NotificationActor")
+  cargoRequests            CargoRequest[]
 
   @@index([email])
   @@index([phone])
@@ -394,6 +403,34 @@ model Lead {
   @@index([buyer_id])
   @@index([listing_id])
   @@map("leads")
+}
+
+model CargoRequest {
+  id             String             @id @default(uuid()) @db.Uuid
+  created_at     DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updated_at     DateTime           @updatedAt @map("updated_at") @db.Timestamptz
+  name           String             @db.VarChar(100)
+  phone          String             @db.VarChar(20)
+  company        String?            @db.VarChar(150)
+  from_location  String             @map("from_location") @db.VarChar(200)
+  to_location    String             @map("to_location") @db.VarChar(200)
+  item_name      String             @map("item_name") @db.VarChar(200)
+  description    String?            @db.Text
+  item_photo_url String?            @map("item_photo_url") @db.Text
+  quantity       String?            @db.VarChar(50)
+  weight         String?            @db.VarChar(50)
+  dimensions     String?            @db.VarChar(100)
+  urgency        String?            @db.VarChar(50)
+  comment        String?            @db.Text
+  status         CargoRequestStatus @default(NEW)
+  user_id        String?            @map("user_id") @db.Uuid
+
+  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([created_at(sort: Desc)])
+  @@index([status])
+  @@index([user_id])
+  @@map("cargo_requests")
 }
 
 model Report {

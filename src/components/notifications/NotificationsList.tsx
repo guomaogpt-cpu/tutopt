@@ -68,7 +68,11 @@ function filterNotifications(
     case "unread":
       return notifications.filter((notification) => !notification.read_at);
     case "leads":
-      return notifications.filter((notification) => notification.type === NotificationTypeEnum.NEW_LEAD);
+      return notifications.filter(
+        (notification) =>
+          notification.type === NotificationTypeEnum.NEW_LEAD ||
+          notification.type === NotificationTypeEnum.NEW_CARGO_REQUEST,
+      );
     default:
       return notifications;
   }
@@ -77,6 +81,7 @@ function filterNotifications(
 function getNotificationIcon(type: NotificationType) {
   switch (type) {
     case NotificationTypeEnum.NEW_LEAD:
+    case NotificationTypeEnum.NEW_CARGO_REQUEST:
       return Inbox;
     default:
       return BellRing;
@@ -117,8 +122,11 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
     () => ({
       all: notifications.length,
       unread: unreadCount,
-      leads: notifications.filter((notification) => notification.type === NotificationTypeEnum.NEW_LEAD)
-        .length,
+      leads: notifications.filter(
+        (notification) =>
+          notification.type === NotificationTypeEnum.NEW_LEAD ||
+          notification.type === NotificationTypeEnum.NEW_CARGO_REQUEST,
+      ).length,
     }),
     [notifications, unreadCount],
   );

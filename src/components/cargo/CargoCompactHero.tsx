@@ -69,24 +69,26 @@ export function CargoCompactHero({ categories }: CargoCompactHeroProps) {
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/10 to-transparent"
+        className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/35 to-black/15"
       />
 
       <div className="relative flex min-h-[260px] items-center px-4 py-5 md:h-full md:min-h-[300px] md:px-0 md:py-0">
         <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
-          <div className="flex w-full max-w-5xl min-w-0 flex-col gap-3 md:flex-row md:items-center md:gap-4">
-            <h1 className="shrink-0 text-lg font-medium leading-tight text-white drop-shadow-sm md:text-xl">
-              {t("vertical.seekListings")}{" "}
-              <span className="font-bold text-white">
-                {t("vertical.seekCargoAccent")}
-              </span>
-            </h1>
+          <div className="flex w-full max-w-3xl min-w-0 flex-col gap-2.5 md:gap-3">
+            <div>
+              <h1 className="text-lg font-bold leading-snug text-white drop-shadow-sm md:text-2xl">
+                {t("cargo.heroTitle")}
+              </h1>
+              <p className="mt-1 line-clamp-2 text-xs leading-snug text-white/85 md:text-sm">
+                {t("cargo.heroSubtitle")}
+              </p>
+            </div>
 
             <SearchWithSuggest
               variant="phrase"
               placeholder={t("search.cargoPlaceholder")}
               buttonLabel={t("search.find")}
-              className="min-w-0 flex-1"
+              className="min-w-0 w-full"
             />
           </div>
 

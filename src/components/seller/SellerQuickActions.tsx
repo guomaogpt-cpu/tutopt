@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink, Inbox, LayoutGrid, ListChecks, PlusCircle } from "lucide-react";
+import { ExternalLink, Inbox, LayoutGrid, ListChecks, PlusCircle, Truck } from "lucide-react";
 import type { ListingVertical } from "@prisma/client";
 import { VERTICALS } from "@/features/verticals/verticals";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
@@ -75,6 +75,18 @@ export function SellerQuickActions({
           <div className="min-w-0">
             <p className="font-semibold text-[#0F172A] dark:text-slate-100">{t("seller.viewLeads")}</p>
             <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.viewLeadsHint")}</p>
+          </div>
+        </Link>
+
+        <Link href="/seller/cargo-requests" className={cardClassName}>
+          <div className={iconWrapClassName}>
+            <Truck className="size-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+              {t("seller.viewCargoRequests")}
+            </p>
+            <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.viewCargoRequestsHint")}</p>
           </div>
         </Link>
 

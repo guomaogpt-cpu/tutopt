@@ -553,6 +553,243 @@ export const DICTIONARY = {
     en: "No listings in Cargo yet",
   },
 
+  // Cargo requests — Phase 72
+  "cargo.heroTitle": {
+    ru: "Найдите карго или оставьте заявку на перевозку",
+    kg: "Карго табыңыз же жеткирүүгө сурам калтырыңыз",
+    en: "Find cargo services or submit a shipping request",
+  },
+  "cargo.heroSubtitle": {
+    ru: "Опишите товар, маршрут и контакты — карго-компании смогут увидеть вашу заявку.",
+    kg: "Товарды, маршрутту жана байланыштарды жазыңыз — карго компаниялар сурамыңызды көрө алышат.",
+    en: "Describe the item, route and contacts — cargo companies will be able to see your request.",
+  },
+  "cargo.requestTitle": {
+    ru: "Оставить заявку на перевозку",
+    kg: "Жеткирүүгө сурам калтыруу",
+    en: "Submit a shipping request",
+  },
+  "cargo.requestDescription": {
+    ru: "Опишите товар и маршрут. Карго-компании смогут увидеть заявку и связаться с вами.",
+    kg: "Товарды жана маршрутту жазыңыз. Карго компаниялар сурамыңызды көрүп, сиз менен байланышат.",
+    en: "Describe the item and route. Cargo companies will be able to see the request and contact you.",
+  },
+  "cargo.contactSection": {
+    ru: "Контакты",
+    kg: "Байланыштар",
+    en: "Contacts",
+  },
+  "cargo.routeSection": {
+    ru: "Маршрут",
+    kg: "Маршрут",
+    en: "Route",
+  },
+  "cargo.itemSection": {
+    ru: "Товар",
+    kg: "Товар",
+    en: "Item",
+  },
+  "cargo.commentSection": {
+    ru: "Комментарий",
+    kg: "Комментарий",
+    en: "Comment",
+  },
+  "cargo.name": {
+    ru: "Ваше имя",
+    kg: "Атыңыз",
+    en: "Your name",
+  },
+  "cargo.phone": {
+    ru: "Телефон",
+    kg: "Телефон",
+    en: "Phone",
+  },
+  "cargo.company": {
+    ru: "Компания, если есть",
+    kg: "Компания, бар болсо",
+    en: "Company, if any",
+  },
+  "cargo.fromLocation": {
+    ru: "Откуда",
+    kg: "Кайдан",
+    en: "From",
+  },
+  "cargo.toLocation": {
+    ru: "Куда",
+    kg: "Каяка",
+    en: "To",
+  },
+  "cargo.itemName": {
+    ru: "Что нужно перевезти?",
+    kg: "Эмнени ташуу керек?",
+    en: "What needs to be shipped?",
+  },
+  "cargo.itemPhoto": {
+    ru: "Фото товара",
+    kg: "Товардын сүрөтү",
+    en: "Item photo",
+  },
+  "cargo.weight": {
+    ru: "Вес",
+    kg: "Салмак",
+    en: "Weight",
+  },
+  "cargo.dimensions": {
+    ru: "Габариты",
+    kg: "Өлчөмдөр",
+    en: "Dimensions",
+  },
+  "cargo.quantity": {
+    ru: "Количество мест",
+    kg: "Орундардын саны",
+    en: "Number of pieces",
+  },
+  "cargo.urgency": {
+    ru: "Срочность",
+    kg: "Шашылыштык",
+    en: "Urgency",
+  },
+  "cargo.comment": {
+    ru: "Комментарий / дополнительные условия",
+    kg: "Комментарий / кошумча шарттар",
+    en: "Comment / additional conditions",
+  },
+  "cargo.submitRequest": {
+    ru: "Отправить заявку",
+    kg: "Сурамды жөнөтүү",
+    en: "Submit request",
+  },
+  "cargo.submitting": {
+    ru: "Отправка…",
+    kg: "Жөнөтүлүүдө…",
+    en: "Submitting…",
+  },
+  "cargo.successTitle": {
+    ru: "Заявка отправлена",
+    kg: "Сурам жөнөтүлдү",
+    en: "Request submitted",
+  },
+  "cargo.successDescription": {
+    ru: "Заявка отправлена. Карго-компании смогут увидеть её и связаться с вами.",
+    kg: "Сурам жөнөтүлдү. Карго компаниялар аны көрүп, сиз менен байланышат.",
+    en: "Request submitted. Cargo companies will be able to see it and contact you.",
+  },
+  "cargo.requestsTitle": {
+    ru: "Последние заявки на перевозку",
+    kg: "Жеткирүүгө акыркы сурамдар",
+    en: "Recent shipping requests",
+  },
+  "cargo.requestsPublicHint": {
+    ru: "Контакты скрыты. Полные данные видят карго-компании и администраторы.",
+    kg: "Байланыштар жашырылган. Толук маалыматты карго компаниялар жана админдер көрөт.",
+    en: "Contacts are hidden. Full details are visible to cargo companies and admins.",
+  },
+  "cargo.companiesTitle": {
+    ru: "Карго-компании",
+    kg: "Карго компаниялар",
+    en: "Cargo companies",
+  },
+  "cargo.noCompaniesTitle": {
+    ru: "Карго-компании пока не добавлены.",
+    kg: "Карго компаниялар азырынча кошула элек.",
+    en: "No cargo companies have been added yet.",
+  },
+  "cargo.noCompaniesDescription": {
+    ru: "Вы можете оставить заявку, и мы покажем её в разделе карго.",
+    kg: "Сурам калтырсаңыз, ал карго бөлүмүндө көрсөтүлөт.",
+    en: "You can submit a request and it will appear in the cargo section.",
+  },
+  "cargo.validation.nameRequired": {
+    ru: "Укажите имя",
+    kg: "Атыңызды жазыңыз",
+    en: "Name is required",
+  },
+  "cargo.validation.phoneRequired": {
+    ru: "Укажите телефон",
+    kg: "Телефонду жазыңыз",
+    en: "Phone is required",
+  },
+  "cargo.validation.fromRequired": {
+    ru: "Укажите откуда",
+    kg: "Кайдан экенин жазыңыз",
+    en: "From location is required",
+  },
+  "cargo.validation.toRequired": {
+    ru: "Укажите куда",
+    kg: "Каяка экенин жазыңыз",
+    en: "To location is required",
+  },
+  "cargo.validation.itemRequired": {
+    ru: "Укажите, что нужно перевезти",
+    kg: "Эмнени ташуу керектигин жазыңыз",
+    en: "Item description is required",
+  },
+  "cargo.status.new": {
+    ru: "Новая",
+    kg: "Жаңы",
+    en: "New",
+  },
+  "cargo.status.inReview": {
+    ru: "На рассмотрении",
+    kg: "Каралууда",
+    en: "In review",
+  },
+  "cargo.status.contacted": {
+    ru: "Связались",
+    kg: "Байланышты",
+    en: "Contacted",
+  },
+  "cargo.status.closed": {
+    ru: "Закрыта",
+    kg: "Жабылды",
+    en: "Closed",
+  },
+  "cargo.submitError": {
+    ru: "Не удалось отправить заявку. Попробуйте ещё раз.",
+    kg: "Сурамды жөнөтүү мүмкүн болбоду. Кайра аракет кылыңыз.",
+    en: "Could not submit the request. Please try again.",
+  },
+  "cargo.uploadError": {
+    ru: "Не удалось загрузить фото",
+    kg: "Сүрөттү жүктөө мүмкүн болбоду",
+    en: "Could not upload the photo",
+  },
+  "cargo.uploading": {
+    ru: "Загрузка фото…",
+    kg: "Сүрөт жүктөлүүдө…",
+    en: "Uploading photo…",
+  },
+  "cargo.removePhoto": {
+    ru: "Удалить",
+    kg: "Өчүрүү",
+    en: "Remove",
+  },
+  "cargo.sellerEmptyTitle": {
+    ru: "Пока нет карго-заявок",
+    kg: "Азырынча карго сурамдар жок",
+    en: "No cargo requests yet",
+  },
+  "cargo.sellerEmptyDescription": {
+    ru: "Когда клиенты оставят заявку на /cargo, она появится здесь.",
+    kg: "Кардарлар /cargo бетинде сурам калтырганда, ал бул жерде көрүнөт.",
+    en: "When customers submit a request on /cargo, it will appear here.",
+  },
+  "cargo.contactsRestricted": {
+    ru: "Контакты доступны администраторам и карго-компаниям.",
+    kg: "Байланыштар админдерге жана карго компанияларга жеткиликтүү.",
+    en: "Contacts are available to admins and cargo companies.",
+  },
+  "seller.viewCargoRequests": {
+    ru: "Карго-заявки",
+    kg: "Карго сурамдар",
+    en: "Cargo requests",
+  },
+  "seller.viewCargoRequestsHint": {
+    ru: "Запросы на перевозку",
+    kg: "Жеткирүү сурамдары",
+    en: "Shipping requests",
+  },
+
   // Services structure — Phase 71
   "services.heroTitle": {
     ru: "Найдите специалиста или услугу",

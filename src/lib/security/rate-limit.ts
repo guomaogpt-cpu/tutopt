@@ -276,6 +276,60 @@ export function assertUploadRateLimit(userId: string): void {
   );
 }
 
+export const CARGO_REQUEST_CREATE_IP_RATE_LIMIT = {
+  limit: 8,
+  windowMs: 60 * 60 * 1000,
+  message: "Слишком много карго-заявок с этого устройства. Попробуйте позже.",
+} as const;
+
+export const CARGO_REQUEST_CREATE_USER_RATE_LIMIT = {
+  limit: 10,
+  windowMs: 60 * 60 * 1000,
+  message: "Можно отправить не более 10 карго-заявок в час. Попробуйте позже.",
+} as const;
+
+export function assertCargoRequestCreateRateLimits(ip: string, userId?: string | null): void {
+  assertRateLimit(
+    `cargo:request:ip:${ip}`,
+    CARGO_REQUEST_CREATE_IP_RATE_LIMIT.limit,
+    CARGO_REQUEST_CREATE_IP_RATE_LIMIT.windowMs,
+    CARGO_REQUEST_CREATE_IP_RATE_LIMIT.message,
+  );
+
+  if (userId) {
+    assertRateLimit(
+      `cargo:request:user:${userId}`,
+      CARGO_REQUEST_CREATE_USER_RATE_LIMIT.limit,
+      CARGO_REQUEST_CREATE_USER_RATE_LIMIT.windowMs,
+      CARGO_REQUEST_CREATE_USER_RATE_LIMIT.message,
+    );
+  }
+}
+
+export const CARGO_UPLOAD_IP_RATE_LIMIT = {
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
+  message: "Слишком много загрузок изображений. Попробуйте позже.",
+} as const;
+
+export function assertCargoRequestUploadRateLimit(ip: string, userId?: string | null): void {
+  assertRateLimit(
+    `upload:cargo:ip:${ip}`,
+    CARGO_UPLOAD_IP_RATE_LIMIT.limit,
+    CARGO_UPLOAD_IP_RATE_LIMIT.windowMs,
+    CARGO_UPLOAD_IP_RATE_LIMIT.message,
+  );
+
+  if (userId) {
+    assertRateLimit(
+      `upload:cargo:user:${userId}`,
+      UPLOAD_USER_RATE_LIMIT.limit,
+      UPLOAD_USER_RATE_LIMIT.windowMs,
+      UPLOAD_USER_RATE_LIMIT.message,
+    );
+  }
+}
+
 export const FAVORITE_TOGGLE_RATE_LIMIT = {
   limit: 60,
   windowMs: 60 * 60 * 1000,
