@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export const BRAND_LOGO_SRC = "/images/vsetut.png";
+/** Canonical site logo (square mark). */
+export const BRAND_LOGO_SRC = "/logos/vsetut-logo-new.png";
 
 const variantSizeClasses = {
   header:
-    "h-[52px] w-auto max-w-[min(55vw,180px)] sm:h-[60px] sm:max-w-[220px] md:h-[72px] md:max-w-[300px] lg:h-[84px] lg:max-w-[330px]",
-  footer: "h-9 w-auto max-w-[140px] md:h-10 md:max-w-[160px]",
-  default: "h-10 w-auto max-w-[160px]",
+    "h-10 w-auto max-w-[40px] sm:h-11 sm:max-w-[44px] md:h-14 md:max-w-[56px] lg:h-16 lg:max-w-[64px]",
+  footer: "h-9 w-auto max-w-[36px] md:h-10 md:max-w-[40px]",
+  default: "h-10 w-auto max-w-[40px]",
 } as const;
 
 type BrandLogoVariant = keyof typeof variantSizeClasses;
@@ -32,8 +33,8 @@ export function BrandLogo({
     <Image
       src={BRAND_LOGO_SRC}
       alt="ВсеТут"
-      width={330}
-      height={84}
+      width={1024}
+      height={1024}
       priority={priority}
       className={cn("object-contain", variantSizeClasses[variant], className)}
     />

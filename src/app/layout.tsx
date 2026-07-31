@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     template: TITLE_TEMPLATE,
   },
   description: DEFAULT_DESCRIPTION,
+  icons: {
+    icon: [{ url: "/logos/vsetut-logo-new.png", type: "image/png" }],
+    apple: [{ url: "/logos/vsetut-logo-new.png" }],
+  },
   openGraph: {
     siteName: SITE_NAME,
     locale: "ru_KG",

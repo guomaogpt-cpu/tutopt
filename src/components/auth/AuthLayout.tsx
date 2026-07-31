@@ -26,7 +26,7 @@ export function AuthBrandPanel({ className }: { className?: string }) {
         className,
       )}
     >
-      <BrandLogo variant="footer" className="sm:max-w-[180px]" />
+      <BrandLogo variant="footer" className="h-12 max-w-[48px] sm:h-14 sm:max-w-[56px]" />
 
       <h1 className="mt-6 text-2xl font-bold leading-tight text-slate-900 sm:text-3xl dark:text-slate-100">
         Оптовая торговля в Кыргызстане
@@ -69,7 +69,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] py-4 dark:bg-slate-950 sm:py-10 lg:py-12">
       <div className="mx-auto w-full max-w-[1100px] px-4 sm:px-6">
         <div className="mb-4 flex justify-center lg:hidden">
-          <BrandLogo variant="footer" className="max-w-[140px]" />
+          <BrandLogo variant="footer" className="h-11 max-w-[44px]" />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2 lg:items-start lg:gap-10">

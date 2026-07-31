@@ -115,7 +115,7 @@ export function SettingsDrawer({
         className="w-[min(85vw,23.75rem)] max-w-[23.75rem] gap-0 border-slate-200 bg-background p-0 dark:border-slate-800 dark:bg-slate-950"
       >
         <DrawerHeader className="flex shrink-0 flex-row items-center gap-3 border-b border-slate-100 px-4 py-3 pr-12 text-left dark:border-slate-800">
-          <BrandLogo variant="default" className="h-9 max-w-[140px]" />
+          <BrandLogo variant="default" className="h-9 max-w-[36px]" />
           <div className="min-w-0">
             <DrawerTitle className="text-base font-semibold text-slate-900 dark:text-slate-100">
               {t("settings.brand")}
