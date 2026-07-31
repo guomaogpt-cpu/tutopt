@@ -975,6 +975,41 @@ export const DICTIONARY = {
     kg: "Жооп берүү",
     en: "Respond",
   },
+  "cargo.subscription.title": {
+    ru: "Уведомления о новых карго-заявках",
+    kg: "Жаңы карго сурамдар жөнүндө билдирмелер",
+    en: "Notifications for new cargo requests",
+  },
+  "cargo.subscription.activeDescription": {
+    ru: "Вы подписаны: новые заявки появятся в уведомлениях на сайте.",
+    kg: "Сиз жазылгансыз: жаңы сурамдар сайттагы билдирмелерде көрүнөт.",
+    en: "You are subscribed: new requests will appear in site notifications.",
+  },
+  "cargo.subscription.inactiveDescription": {
+    ru: "Подпишитесь, чтобы сразу видеть новые заявки на перевозку в уведомлениях.",
+    kg: "Жеткирүүгө жаңы сурамдарды билдирмелерден дароо көрүү үчүн жазылыңыз.",
+    en: "Subscribe to see new shipping requests in notifications right away.",
+  },
+  "cargo.subscription.subscribe": {
+    ru: "Подписаться",
+    kg: "Жазылуу",
+    en: "Subscribe",
+  },
+  "cargo.subscription.unsubscribe": {
+    ru: "Отписаться",
+    kg: "Жазылууну токтотуу",
+    en: "Unsubscribe",
+  },
+  "cargo.subscription.saving": {
+    ru: "Сохранение…",
+    kg: "Сакталууда…",
+    en: "Saving…",
+  },
+  "cargo.subscription.error": {
+    ru: "Не удалось изменить подписку",
+    kg: "Жазылууну өзгөртүү мүмкүн болбоду",
+    en: "Could not update subscription",
+  },
   "admin.cargoRequests": {
     ru: "Карго",
     kg: "Карго",

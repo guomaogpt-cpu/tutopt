@@ -142,45 +142,44 @@ export async function getSellerCargoRequests(options?: {
   sellerProfileId?: string | null;
   limit?: number;
 }): Promise<SellerCargoRequestItem[]> {
+  const sellerProfileId = options?.sellerProfileId ?? null;
+
   const rows = await prisma.cargoRequest.findMany({
     where: options?.statusFilter ? { status: options.statusFilter } : undefined,
     orderBy: { created_at: "desc" },
     take: options?.limit ?? 100,
     select: {
       ...sellerRequestSelect,
-      responses: options?.sellerProfileId
-        ? {
-            where: { seller_profile_id: options.sellerProfileId },
-            take: 1,
-            select: responseSelect,
-          }
-        : false,
+      responses: {
+        where: sellerProfileId
+          ? { seller_profile_id: sellerProfileId }
+          : { id: "00000000-0000-0000-0000-000000000000" },
+        take: 1,
+        select: responseSelect,
+      },
     },
   });
 
-  return rows.map((row) => {
-    const own = Array.isArray(row.responses) ? row.responses[0] ?? null : null;
-    return {
-      id: row.id,
-      created_at: row.created_at,
-      name: row.name,
-      phone: row.phone,
-      company: row.company,
-      from_location: row.from_location,
-      to_location: row.to_location,
-      item_name: row.item_name,
-      description: row.description,
-      item_photo_url: row.item_photo_url,
-      quantity: row.quantity,
-      weight: row.weight,
-      dimensions: row.dimensions,
-      urgency: row.urgency,
-      comment: row.comment,
-      status: row.status,
-      responseCount: row._count.responses,
-      ownResponse: own,
-    };
-  });
+  return rows.map((row) => ({
+    id: row.id,
+    created_at: row.created_at,
+    name: row.name,
+    phone: row.phone,
+    company: row.company,
+    from_location: row.from_location,
+    to_location: row.to_location,
+    item_name: row.item_name,
+    description: row.description,
+    item_photo_url: row.item_photo_url,
+    quantity: row.quantity,
+    weight: row.weight,
+    dimensions: row.dimensions,
+    urgency: row.urgency,
+    comment: row.comment,
+    status: row.status,
+    responseCount: row._count.responses,
+    ownResponse: row.responses[0] ?? null,
+  }));
 }
 
 export async function getAdminCargoRequests(options?: {

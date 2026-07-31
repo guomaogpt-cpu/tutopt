@@ -80,7 +80,12 @@ export function SellerCargoRequestsList({
         return (
           <article
             key={request.id}
-            className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
+            className={cn(
+              "min-w-0 rounded-2xl border bg-white p-4 shadow-sm sm:p-5 dark:bg-slate-900 dark:shadow-none",
+              request.status === "NEW"
+                ? "border-rose-300 ring-1 ring-rose-200 dark:border-rose-800 dark:ring-rose-900/60"
+                : "border-slate-200 dark:border-slate-800",
+            )}
           >
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div className="min-w-0">

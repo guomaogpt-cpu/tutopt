@@ -126,24 +126,16 @@ export async function createNewCargoRequestNotifications(input: {
     recipientIds.add(admin.id);
   }
 
-  const cargoSellers = await prisma.user.findMany({
+  const subscribers = await prisma.cargoRequestSubscription.findMany({
     where: {
-      role: "SELLER",
-      is_blocked: false,
-      sellerProfile: {
-        listings: {
-          some: {
-            vertical: "CARGO",
-            status: "PUBLISHED",
-          },
-        },
-      },
+      is_active: true,
+      user: { is_blocked: false },
     },
-    select: { id: true },
+    select: { user_id: true },
   });
 
-  for (const seller of cargoSellers) {
-    recipientIds.add(seller.id);
+  for (const subscriber of subscribers) {
+    recipientIds.add(subscriber.user_id);
   }
 
   if (input.actorId) {

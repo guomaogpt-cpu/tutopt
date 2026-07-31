@@ -205,6 +205,7 @@ model User {
   notificationsReceived    Notification[]            @relation("NotificationRecipient")
   notificationsSent        Notification[]            @relation("NotificationActor")
   cargoRequests            CargoRequest[]
+  cargoRequestSubscriptions CargoRequestSubscription[]
 
   @@index([email])
   @@index([phone])
@@ -246,6 +247,7 @@ model SellerProfile {
   leads          Lead[]
   reports        Report[]
   cargoResponses CargoResponse[]
+  cargoRequestSubscription CargoRequestSubscription?
 
   @@index([slug])
   @@index([region_id])
@@ -465,6 +467,22 @@ model CargoResponse {
   @@index([seller_profile_id, created_at(sort: Desc)])
   @@index([status])
   @@map("cargo_responses")
+}
+
+model CargoRequestSubscription {
+  id                String   @id @default(uuid()) @db.Uuid
+  seller_profile_id String   @unique @map("seller_profile_id") @db.Uuid
+  user_id           String   @map("user_id") @db.Uuid
+  is_active         Boolean  @default(true) @map("is_active")
+  created_at        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updated_at        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  sellerProfile SellerProfile @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([is_active])
+  @@map("cargo_request_subscriptions")
 }
 
 model Report {
