@@ -205,9 +205,16 @@ export function buildListingsCatalogQueryString(
   return query ? `?${query}` : "";
 }
 
-export const listingSortOptions: { value: ListingSort; label: string }[] = [
-  { value: "newest", label: "Сначала новые" },
-  { value: "oldest", label: "Сначала старые" },
-  { value: "price_asc", label: "Дешевле" },
-  { value: "price_desc", label: "Дороже" },
+export const listingSortOptions: Array<{
+  value: ListingSort;
+  labelKey:
+    | "sort.newest"
+    | "sort.oldest"
+    | "sort.priceAsc"
+    | "sort.priceDesc";
+}> = [
+  { value: "newest", labelKey: "sort.newest" },
+  { value: "oldest", labelKey: "sort.oldest" },
+  { value: "price_asc", labelKey: "sort.priceAsc" },
+  { value: "price_desc", labelKey: "sort.priceDesc" },
 ];

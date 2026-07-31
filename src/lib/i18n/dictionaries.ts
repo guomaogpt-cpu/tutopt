@@ -738,6 +738,91 @@ export const DICTIONARY = {
   "catalog.reset": { ru: "Сбросить", kg: "Тазалоо", en: "Reset" },
   "catalog.apply": { ru: "Применить", kg: "Колдонуу", en: "Apply" },
 
+  // Mobile catalog filters — Phase 67
+  "filters.title": { ru: "Фильтры", kg: "Фильтрлер", en: "Filters" },
+  "filters.show": {
+    ru: "Показать фильтры",
+    kg: "Чыпкаларды көрсөтүү",
+    en: "Show filters",
+  },
+  "filters.reset": {
+    ru: "Сбросить",
+    kg: "Тазалоо",
+    en: "Reset",
+  },
+  "filters.apply": {
+    ru: "Показать",
+    kg: "Көрсөтүү",
+    en: "Show results",
+  },
+  "filters.section": { ru: "Раздел", kg: "Бөлүм", en: "Section" },
+  "filters.category": { ru: "Категория", kg: "Категория", en: "Category" },
+  "filters.city": { ru: "Город", kg: "Шаар", en: "City" },
+  "filters.price": { ru: "Цена", kg: "Баасы", en: "Price" },
+  "filters.priceFrom": { ru: "Цена от", kg: "Баасы баштап", en: "Price from" },
+  "filters.priceTo": { ru: "Цена до", kg: "Баасы чейин", en: "Price to" },
+  "filters.onlyWithPhoto": {
+    ru: "Только с фото",
+    kg: "Сүрөттүү гана",
+    en: "With photos only",
+  },
+  "filters.activeFilters": {
+    ru: "Активные фильтры",
+    kg: "Активдүү чыпкалар",
+    en: "Active filters",
+  },
+  "filters.clearOne": {
+    ru: "Удалить фильтр",
+    kg: "Чыпканы өчүрүү",
+    en: "Remove filter",
+  },
+  "filters.clearAll": {
+    ru: "Сбросить всё",
+    kg: "Баарын тазалоо",
+    en: "Clear all",
+  },
+  "filters.invalidPriceRange": {
+    ru: "Цена «от» не может быть больше цены «до».",
+    kg: "«Баштап» баасы «чейин» баасынан чоң болбошу керек.",
+    en: "Minimum price cannot be greater than maximum price.",
+  },
+  "sort.title": { ru: "Сортировка", kg: "Иреттөө", en: "Sort" },
+  "sort.newest": {
+    ru: "Сначала новые",
+    kg: "Жаңылары биринчи",
+    en: "Newest first",
+  },
+  "sort.oldest": {
+    ru: "Сначала старые",
+    kg: "Эскилери биринчи",
+    en: "Oldest first",
+  },
+  "sort.priceAsc": {
+    ru: "Сначала дешёвые",
+    kg: "Арзандары биринчи",
+    en: "Cheapest first",
+  },
+  "sort.priceDesc": {
+    ru: "Сначала дорогие",
+    kg: "Кымбаттары биринчи",
+    en: "Most expensive first",
+  },
+  "listings.emptyFilteredTitle": {
+    ru: "Ничего не найдено",
+    kg: "Эч нерсе табылган жок",
+    en: "Nothing found",
+  },
+  "listings.emptyFilteredDescription": {
+    ru: "Попробуйте изменить фильтры или сбросить поиск.",
+    kg: "Фильтрлерди өзгөртүп көрүңүз же издөөнү тазалаңыз.",
+    en: "Try changing filters or clearing the search.",
+  },
+  "listings.allListings": {
+    ru: "Все объявления",
+    kg: "Бардык жарыялар",
+    en: "All listings",
+  },
+
   // Mobile listing cards and catalog — Phase 65
   "listingCard.priceOnRequest": {
     ru: "Цена по запросу",

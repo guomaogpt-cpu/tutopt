@@ -1,6 +1,10 @@
-import type { ListingsCatalogFilters } from "@/features/listings/lib/listings-catalog";
-import { buildListingsCatalogQueryString } from "@/features/listings/lib/listings-catalog";
-import { VERTICALS } from "@/features/verticals/verticals";
+import type { ListingVertical } from "@prisma/client";
+import {
+  buildListingsCatalogQueryString,
+  type ListingSort,
+  type ListingsCatalogFilters,
+} from "@/features/listings/lib/listings-catalog";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 
 export type CatalogLookupMaps = {
   categories: Record<string, string>;
@@ -12,75 +16,109 @@ export type ActiveFilterChip = {
   id: string;
   label: string;
   clearPatch: Partial<ListingsCatalogFilters>;
+  clearAriaLabelKey?: DictionaryKey;
 };
+
+type ChipTranslator = (key: DictionaryKey) => string;
+
+type ChipOptions = {
+  t: ChipTranslator;
+  includeSort?: boolean;
+  sortLabel?: string;
+};
+
+function verticalLabel(vertical: ListingVertical, t: ChipTranslator): string {
+  switch (vertical) {
+    case "MARKET":
+      return t("vertical.market");
+    case "OPT":
+      return t("vertical.opt");
+    case "SERVICES":
+      return t("vertical.services");
+    case "CARGO":
+      return t("vertical.cargo");
+  }
+}
 
 export function getActiveFilterChips(
   filters: ListingsCatalogFilters,
   lookups: CatalogLookupMaps,
+  options: ChipOptions,
 ): ActiveFilterChip[] {
+  const { t, includeSort = false, sortLabel } = options;
   const chips: ActiveFilterChip[] = [];
 
   if (filters.q) {
     chips.push({
       id: "q",
-      label: `Поиск: ${filters.q}`,
+      label: `${t("search.find")}: ${filters.q}`,
       clearPatch: { q: "" },
+      clearAriaLabelKey: "filters.clearOne",
     });
   }
 
   if (filters.vertical) {
     chips.push({
       id: "vertical",
-      label: VERTICALS[filters.vertical].label,
+      label: verticalLabel(filters.vertical, t),
       clearPatch: { vertical: null, categoryId: "", brandId: "" },
+      clearAriaLabelKey: "filters.clearOne",
     });
   }
 
   if (filters.categoryId) {
     chips.push({
       id: "category",
-      label: `Категория: ${lookups.categories[filters.categoryId] ?? "Выбрана"}`,
+      label: `${t("filters.category")}: ${lookups.categories[filters.categoryId] ?? "—"}`,
       clearPatch: { categoryId: "" },
+      clearAriaLabelKey: "filters.clearOne",
     });
   }
 
   if (filters.cityId) {
     chips.push({
       id: "city",
-      label: lookups.cities[filters.cityId] ?? "Город",
+      label: lookups.cities[filters.cityId] ?? t("filters.city"),
       clearPatch: { cityId: "" },
+      clearAriaLabelKey: "filters.clearOne",
     });
   }
 
   if (filters.brandId) {
     chips.push({
       id: "brand",
-      label: `Бренд: ${lookups.brands[filters.brandId] ?? "Выбран"}`,
+      label: `${t("catalog.brand")}: ${lookups.brands[filters.brandId] ?? "—"}`,
       clearPatch: { brandId: "" },
+      clearAriaLabelKey: "filters.clearOne",
     });
   }
 
-  if (filters.priceMin) {
+  if (filters.priceMin || filters.priceMax) {
+    const from = filters.priceMin ? `${t("filters.priceFrom")} ${filters.priceMin}` : "";
+    const to = filters.priceMax ? `${t("filters.priceTo")} ${filters.priceMax}` : "";
     chips.push({
-      id: "priceFrom",
-      label: `Цена от ${filters.priceMin}`,
-      clearPatch: { priceMin: "" },
-    });
-  }
-
-  if (filters.priceMax) {
-    chips.push({
-      id: "priceTo",
-      label: `Цена до ${filters.priceMax}`,
-      clearPatch: { priceMax: "" },
+      id: "price",
+      label: [from, to].filter(Boolean).join(" · "),
+      clearPatch: { priceMin: "", priceMax: "" },
+      clearAriaLabelKey: "filters.clearOne",
     });
   }
 
   if (filters.withPhotos) {
     chips.push({
       id: "withPhoto",
-      label: "С фото",
+      label: t("filters.onlyWithPhoto"),
       clearPatch: { withPhotos: false },
+      clearAriaLabelKey: "filters.clearOne",
+    });
+  }
+
+  if (includeSort && filters.sort !== "newest" && sortLabel) {
+    chips.push({
+      id: "sort",
+      label: sortLabel,
+      clearPatch: { sort: "newest" satisfies ListingSort },
+      clearAriaLabelKey: "filters.clearOne",
     });
   }
 

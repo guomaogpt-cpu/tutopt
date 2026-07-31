@@ -8,6 +8,7 @@ import {
   type FilterDraft,
 } from "@/components/listings/CatalogFiltersPanel";
 import { SaveSearchButton } from "@/components/listings/SaveSearchButton";
+import { PhotoSearchButton } from "@/components/search/PhotoSearchButton";
 import {
   getActiveFilterChips,
   getCatalogAnalyticsContext,
@@ -97,9 +98,16 @@ export function ListingsCatalogToolbar({
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const showBrandFilter = catalogShowsBrandFilter(filters.vertical);
-  const activeChips = getActiveFilterChips(filters, lookups).filter(
-    (chip) => showBrandFilter || chip.id !== "brand",
-  );
+  const sortLabel =
+    t(
+      listingSortOptions.find((option) => option.value === filters.sort)?.labelKey ??
+        "sort.newest",
+    );
+  const activeChips = getActiveFilterChips(filters, lookups, {
+    t,
+    includeSort: true,
+    sortLabel,
+  }).filter((chip) => showBrandFilter || chip.id !== "brand");
   const panelFiltersOnly = hasActiveCatalogFilters({
     ...filters,
     q: "",
@@ -107,10 +115,9 @@ export function ListingsCatalogToolbar({
     page: filters.page,
   });
   const hasFilters =
-    hasActiveCatalogFilters(filters) || Boolean(filters.vertical);
-  const currentSortLabel =
-    listingSortOptions.find((option) => option.value === filters.sort)?.label ??
-    t("catalog.sortNewestFirst");
+    hasActiveCatalogFilters(filters) ||
+    Boolean(filters.vertical) ||
+    filters.sort !== "newest";
 
   useEffect(() => {
     setQuery(filters.q);
@@ -174,18 +181,37 @@ export function ListingsCatalogToolbar({
   function handleApplyFilters(draft: FilterDraft) {
     pushFilters(
       {
+        vertical: draft.vertical,
         categoryId: draft.categoryId,
         cityId: draft.cityId,
-        brandId: showBrandFilter ? draft.brandId : "",
+        brandId: catalogShowsBrandFilter(draft.vertical) ? draft.brandId : "",
         priceMin: draft.priceMin,
         priceMax: draft.priceMax,
         withPhotos: draft.withPhotos,
+        sort: draft.sort,
       },
       "filter",
     );
   }
 
-  function handleResetFilters() {
+  function handleResetFilters(scope: "panel" | "all" = "panel") {
+    if (scope === "all") {
+      pushFilters(
+        {
+          vertical: null,
+          categoryId: "",
+          cityId: "",
+          brandId: "",
+          priceMin: "",
+          priceMax: "",
+          withPhotos: false,
+          sort: "newest",
+        },
+        "filter",
+      );
+      return;
+    }
+
     pushFilters(
       {
         categoryId: "",
@@ -219,7 +245,7 @@ export function ListingsCatalogToolbar({
   return (
     <section className="space-y-3">
       <div className="overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
-        <div className="border-b border-[rgba(148,163,184,0.12)] bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-4 py-4 sm:px-5 sm:py-5 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
+        <div className="border-b border-[rgba(148,163,184,0.12)] bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-4 py-3 sm:px-5 sm:py-5 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
           <div
             className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             role="tablist"
@@ -253,7 +279,15 @@ export function ListingsCatalogToolbar({
                     isActive ? VERTICAL_TAB_ACTIVE[vertical.id] : VERTICAL_TAB_INACTIVE,
                   )}
                 >
-                  {vertical.label}
+                  {t(
+                    vertical.id === "MARKET"
+                      ? "vertical.market"
+                      : vertical.id === "OPT"
+                        ? "vertical.opt"
+                        : vertical.id === "SERVICES"
+                          ? "vertical.services"
+                          : "vertical.cargo",
+                  )}
                 </button>
               );
             })}
@@ -268,7 +302,7 @@ export function ListingsCatalogToolbar({
             </label>
             <div className="relative min-w-0 flex-1">
               <Search
-                className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]"
+                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]"
                 aria-hidden="true"
               />
               <Input
@@ -276,14 +310,23 @@ export function ListingsCatalogToolbar({
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder={t("catalog.searchPlaceholder")}
-                className="h-12 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-10 pr-10 text-base shadow-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
+                placeholder={t("mobileSearch.placeholder")}
+                className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-10 pr-[4.5rem] text-base shadow-none sm:h-12 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
+              <div className="absolute right-10 top-1/2 z-10 -translate-y-1/2">
+                <PhotoSearchButton
+                  vertical={filters.vertical}
+                  categoryId={filters.categoryId || null}
+                  initialQueryHint={query}
+                  sizeClassName="size-8"
+                  className="border-transparent bg-transparent shadow-none hover:border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
+                />
+              </div>
               {query ? (
                 <button
                   type="button"
                   onClick={handleCatalogClear}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#64748B]"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#64748B] dark:hover:bg-slate-800"
                   aria-label={t("catalog.clearSearch")}
                 >
                   <X className="size-4" aria-hidden="true" />
@@ -293,7 +336,7 @@ export function ListingsCatalogToolbar({
             <Button
               type="submit"
               size="icon"
-              className="size-12 shrink-0 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
+              className="size-11 shrink-0 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
               aria-label={t("search.find")}
             >
               <Search className="size-5" aria-hidden="true" />
@@ -314,7 +357,7 @@ export function ListingsCatalogToolbar({
               <span className="font-semibold text-[#0F172A] dark:text-slate-100">{totalCount}</span>{" "}
               {formatListingCount(locale, totalCount)}
             </p>
-            <p className="mt-0.5 text-xs text-[#94A3B8] dark:text-slate-500">{currentSortLabel}</p>
+            <p className="mt-0.5 text-xs text-[#94A3B8] dark:text-slate-500">{sortLabel}</p>
             {filters.photoSearch ? (
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 {t("listings.photoSearch.filterHint")}
@@ -325,15 +368,15 @@ export function ListingsCatalogToolbar({
           <div className="flex flex-wrap items-center gap-2">
             <Select value={filters.sort} onValueChange={handleSortChange}>
               <SelectTrigger
-                className="h-11 min-w-[132px] flex-1 rounded-xl bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:h-10 sm:flex-none sm:w-[180px]"
-                aria-label={t("listings.sort")}
+                className="h-11 min-w-[132px] flex-1 rounded-xl bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:h-10 sm:flex-none sm:w-[200px]"
+                aria-label={t("sort.title")}
               >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {listingSortOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    {t(option.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -345,22 +388,18 @@ export function ListingsCatalogToolbar({
                 variant="outline"
                 onClick={() => setFiltersOpen((current) => !current)}
                 aria-expanded={filtersOpen}
-                aria-label={
-                  filtersOpen
-                    ? t("listings.hideFilters")
-                    : t("listings.showFilters")
-                }
+                aria-label={filtersOpen ? t("listings.hideFilters") : t("filters.show")}
                 className="h-11 gap-2 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 sm:h-10"
               >
                 <SlidersHorizontal className="size-4" aria-hidden="true" />
-                {t("listings.filters")}
+                {t("filters.title")}
                 {panelFiltersOnly ? (
                   <Badge
                     variant="default"
                     className="ml-0.5 size-2 rounded-full bg-[#2563EB] p-0"
                     aria-hidden="true"
                   >
-                    <span className="sr-only">{t("catalog.hasActiveFilters")}</span>
+                    <span className="sr-only">{t("filters.activeFilters")}</span>
                   </Badge>
                 ) : null}
               </Button>
@@ -372,7 +411,6 @@ export function ListingsCatalogToolbar({
                 categories={categories}
                 cities={cities}
                 brands={brands}
-                showBrandFilter={showBrandFilter}
                 onApply={handleApplyFilters}
                 onReset={handleResetFilters}
               />
@@ -384,19 +422,24 @@ export function ListingsCatalogToolbar({
       </div>
 
       {activeChips.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-2">
+        <div
+          className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible"
+          aria-label={t("filters.activeFilters")}
+        >
           {activeChips.map((chip) => (
             <Button
               key={chip.id}
               type="button"
               variant="outline"
               size="sm"
-              className="h-8 rounded-full border-[rgba(148,163,184,0.25)] bg-white px-3 font-normal text-[#334155] hover:bg-[#F8FAFC] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="h-9 shrink-0 rounded-full border-[rgba(148,163,184,0.25)] bg-white px-3 font-normal text-[#334155] hover:bg-[#F8FAFC] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
               onClick={() => pushFilters(chip.clearPatch, "filter")}
             >
-              {chip.label}
+              <span className="max-w-[12rem] truncate">{chip.label}</span>
               <X className="size-3.5 text-[#94A3B8]" aria-hidden="true" />
-              <span className="sr-only">{t("catalog.removeFilter")}</span>
+              <span className="sr-only">
+                {t(chip.clearAriaLabelKey ?? "filters.clearOne")}
+              </span>
             </Button>
           ))}
           {hasFilters ? (
@@ -404,10 +447,10 @@ export function ListingsCatalogToolbar({
               type="button"
               variant="ghost"
               size="sm"
-              className="h-8 rounded-full px-3 text-[#2563EB] hover:text-[#1D4ED8]"
+              className="h-9 shrink-0 rounded-full px-3 text-[#2563EB] hover:text-[#1D4ED8]"
               onClick={handleResetAll}
             >
-              {t("catalog.resetAll")}
+              {t("filters.clearAll")}
             </Button>
           ) : null}
         </div>

@@ -115,10 +115,9 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
     prisma.category.findMany({
       where: {
         is_active: true,
-        ...(filters.vertical ? { vertical: filters.vertical } : {}),
       },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
-      select: { id: true, name: true },
+      select: { id: true, name: true, vertical: true },
     }),
     prisma.city.findMany({
       where: { is_active: true },
@@ -134,7 +133,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
   const listings = serializeListingCards(rawListings);
 
-  const categoryOptions = categories.map((item) => ({ id: item.id, label: item.name }));
+  const categoryOptions = categories.map((item) => ({
+    id: item.id,
+    label: item.name,
+    vertical: item.vertical,
+  }));
   const cityOptions = cities.map((item) => ({ id: item.id, label: item.name }));
   const brandOptions = brands.map((item) => ({ id: item.id, label: item.name }));
 

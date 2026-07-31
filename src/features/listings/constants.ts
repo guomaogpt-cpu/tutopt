@@ -1,4 +1,4 @@
-import { ListingUnit } from "@prisma/client";
+import { ListingUnit, type ListingVertical } from "@prisma/client";
 
 export const listingUnitOptions: { value: ListingUnit; label: string }[] = [
   { value: ListingUnit.PIECE, label: "Штука" },
@@ -17,4 +17,5 @@ export const currencyOptions = [
 export type SelectOption = {
   id: string;
   label: string;
+  vertical?: ListingVertical;
 };
