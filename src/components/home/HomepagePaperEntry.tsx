@@ -77,8 +77,8 @@ const ENTRY_CARDS: EntryCard[] = [
 
 /**
  * Integrated marketplace entry for `/`.
- * Mobile: compact 2×2 square tiles so all four sections fit above the fold.
- * Desktop/tablet: wider cards in a row.
+ * Mobile: dense first screen — short copy, search, 2×2 tiles.
+ * Desktop/tablet: wider lead + search row and larger section cards.
  */
 export function HomepagePaperEntry() {
   const { t } = useTranslation();
@@ -86,30 +86,40 @@ export function HomepagePaperEntry() {
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F8FAFC] pb-4 pt-3 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
+      className="overflow-x-clip bg-[#F8FAFC] pb-3 pt-2.5 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
       aria-labelledby="home-marketplace-lead"
     >
       <Container size="lg">
+        {/* Mobile: title → search → tiles. Desktop: lead + search row. */}
         <div className="flex flex-col gap-2.5 sm:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-          <p
-            id="home-marketplace-lead"
-            className="min-w-0 max-w-xl text-lg font-bold leading-snug text-[#0F172A] sm:text-2xl lg:text-3xl dark:text-slate-100"
-          >
-            {t("home.lead")}
-          </p>
+          <div className="min-w-0 max-w-xl">
+            <h1
+              id="home-marketplace-lead"
+              className="text-[17px] font-bold leading-snug tracking-tight text-[#0F172A] sm:hidden dark:text-slate-100"
+            >
+              {t("home.mobileTitle")}
+            </h1>
+            <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-slate-500 sm:hidden dark:text-slate-400">
+              {t("home.mobileSubtitle")}
+            </p>
+            <p className="hidden min-w-0 text-2xl font-bold leading-snug text-[#0F172A] sm:block lg:text-3xl dark:text-slate-100">
+              {t("home.lead")}
+            </p>
+          </div>
 
           <div className="w-full min-w-0 lg:max-w-[440px]">
             <SearchWithSuggest
               id="home-marketplace-search"
               variant="header"
-              placeholder={t("search.homePlaceholder")}
+              placeholder={t("home.searchPlaceholder")}
               buttonLabel={t("search.find")}
+              className="w-full"
             />
           </div>
         </div>
 
         <ul
-          className="mt-3 grid grid-cols-2 gap-2.5 sm:mt-4 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
+          className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
           aria-label={t("home.directions")}
         >
           {ENTRY_CARDS.map((card) => {
@@ -128,9 +138,7 @@ export function HomepagePaperEntry() {
                     "transition duration-200",
                     "hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:hover:border-slate-700",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950",
-                    // Mobile: compact near-square tiles (~120px)
-                    "aspect-square max-h-[140px] min-h-[110px] p-3",
-                    // Tablet+: taller cards with room for longer copy
+                    "aspect-square max-h-[128px] min-h-[108px] p-2.5",
                     "sm:aspect-auto sm:max-h-none sm:min-h-[140px] sm:p-5",
                   )}
                 >
@@ -138,14 +146,14 @@ export function HomepagePaperEntry() {
                     <span
                       className={cn(
                         "flex shrink-0 items-center justify-center rounded-xl",
-                        "size-9 sm:size-10",
+                        "size-8 sm:size-10",
                         card.iconWrap,
                         card.iconColor,
                         "dark:bg-slate-800",
                       )}
                       aria-hidden="true"
                     >
-                      <Icon className="size-4 sm:size-5" strokeWidth={1.75} />
+                      <Icon className="size-3.5 sm:size-5" strokeWidth={1.75} />
                     </span>
                     <ArrowRight
                       className="size-3.5 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 sm:size-4 dark:text-slate-500 dark:group-hover:text-slate-300"
@@ -153,8 +161,8 @@ export function HomepagePaperEntry() {
                     />
                   </div>
 
-                  <div className="mt-auto min-w-0 pt-2 sm:mt-3 sm:flex-1 sm:pt-0">
-                    <p className="text-sm font-bold tracking-tight text-[#0F172A] sm:text-[15px] dark:text-slate-100">
+                  <div className="mt-auto min-w-0 pt-1.5 sm:mt-3 sm:flex-1 sm:pt-0">
+                    <p className="text-[13px] font-bold tracking-tight text-[#0F172A] sm:text-[15px] dark:text-slate-100">
                       {t(card.labelKey)}
                     </p>
                     <p className="mt-0.5 line-clamp-1 text-[11px] leading-snug text-[#64748B] sm:hidden dark:text-slate-400">

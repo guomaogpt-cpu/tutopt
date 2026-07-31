@@ -61,6 +61,10 @@ type HomeDiscoverySectionProps = {
   createListingHref: string;
   eyebrow?: DictionaryKey;
   tone?: "white" | "muted";
+  emptyTitleKey?: DictionaryKey;
+  emptyDescriptionKey?: DictionaryKey;
+  /** Tighter mobile spacing for first-screen adjacent blocks. */
+  dense?: boolean;
 };
 
 export function HomeDiscoverySection({
@@ -74,29 +78,37 @@ export function HomeDiscoverySection({
   createListingHref,
   eyebrow,
   tone = "white",
+  emptyTitleKey = "home.emptySectionTitle",
+  emptyDescriptionKey = "home.emptySectionDescription",
+  dense = false,
 }: HomeDiscoverySectionProps) {
   const { t } = useTranslation();
 
   return (
     <section
       className={cn(
-        "pb-8 pt-6 sm:pb-10 sm:pt-8",
+        dense ? "pb-5 pt-4 sm:pb-10 sm:pt-8" : "pb-8 pt-6 sm:pb-10 sm:pt-8",
         tone === "muted" ? "bg-[#F8FAFC] dark:bg-slate-950" : "bg-white dark:bg-slate-950",
       )}
     >
       <Container size="lg">
-        <div className="mb-4 flex items-end justify-between gap-3 sm:mb-5">
+        <div
+          className={cn(
+            "flex items-end justify-between gap-3",
+            dense ? "mb-3 sm:mb-5" : "mb-4 sm:mb-5",
+          )}
+        >
           <div className="min-w-0">
             {eyebrow ? (
-              <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+              <p className="hidden text-xs font-semibold uppercase tracking-wider text-blue-600 sm:block dark:text-blue-400">
                 {t(eyebrow)}
               </p>
             ) : null}
-            <h2 className="mt-0.5 text-lg font-bold tracking-tight text-slate-900 sm:text-xl dark:text-slate-100">
+            <h2 className="mt-0.5 text-base font-bold tracking-tight text-slate-900 sm:text-xl dark:text-slate-100">
               {t(titleKey)}
             </h2>
             {descriptionKey ? (
-              <p className="mt-1 max-w-2xl text-sm text-slate-500 dark:text-slate-400">
+              <p className="mt-1 hidden max-w-2xl text-sm text-slate-500 sm:block dark:text-slate-400">
                 {t(descriptionKey)}
               </p>
             ) : null}
@@ -105,7 +117,7 @@ export function HomeDiscoverySection({
             <Button
               variant="outline"
               size="sm"
-              className="h-10 shrink-0 rounded-xl border-slate-200 bg-white font-semibold text-blue-600 hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-900 dark:text-blue-400 dark:hover:bg-slate-800"
+              className="h-9 shrink-0 rounded-xl border-slate-200 bg-white text-sm font-semibold text-blue-600 hover:bg-blue-50 sm:h-10 dark:border-slate-700 dark:bg-slate-900 dark:text-blue-400 dark:hover:bg-slate-800"
               asChild
             >
               <Link href={viewAllHref}>
@@ -117,10 +129,10 @@ export function HomeDiscoverySection({
         </div>
 
         {listings.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 sm:p-6">
             <EmptyState
-              title={t("home.emptySectionTitle")}
-              description={t("home.emptySectionDescription")}
+              title={t(emptyTitleKey)}
+              description={t(emptyDescriptionKey)}
               className="border-0 bg-transparent p-0 shadow-none"
               action={
                 <Button className="bg-blue-600 hover:bg-blue-700" asChild>
@@ -163,6 +175,8 @@ type RecentListingsSectionProps = {
   createListingHref: string;
 };
 
+const HOME_LATEST_PREVIEW = 6;
+
 export function RecentListingsSection({
   listings,
   isAuthenticated = false,
@@ -174,11 +188,14 @@ export function RecentListingsSection({
       eyebrow="home.showcase"
       titleKey="home.latestListings"
       viewAllHref="/listings"
-      listings={listings}
+      listings={listings.slice(0, HOME_LATEST_PREVIEW)}
       isAuthenticated={isAuthenticated}
       favoriteListingIds={favoriteListingIds}
       createListingHref={createListingHref}
+      emptyTitleKey="home.emptyListingsTitle"
+      emptyDescriptionKey="home.emptyListingsDescription"
       tone="white"
+      dense
     />
   );
 }

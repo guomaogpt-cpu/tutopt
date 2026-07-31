@@ -240,6 +240,21 @@ export const DICTIONARY = {
     kg: "Сатып алыңыз, сатыңыз, кызматтарды табыңыз",
     en: "Buy, sell, and find services",
   },
+  "home.mobileTitle": {
+    ru: "ВсеТут — объявления, услуги, опт и карго",
+    kg: "ВсеТут — жарыялар, кызматтар, дүң соода жана карго",
+    en: "VseTut — listings, services, wholesale and cargo",
+  },
+  "home.mobileSubtitle": {
+    ru: "Найдите товары, специалистов, поставщиков и доставку в одном месте.",
+    kg: "Товарларды, адистерди, жеткирүүчүлөрдү жана доставканы бир жерден табыңыз.",
+    en: "Find goods, specialists, suppliers and delivery in one place.",
+  },
+  "home.searchPlaceholder": {
+    ru: "Что ищете?",
+    kg: "Эмне издейсиз?",
+    en: "What are you looking for?",
+  },
   "home.directions": { ru: "Направления", kg: "Багыттар", en: "Directions" },
   "home.marketDesc": {
     ru: "Товары от частных лиц и компаний",
@@ -362,6 +377,16 @@ export const DICTIONARY = {
     ru: "Выберите категорию или разместите первое объявление.",
     kg: "Категорияны тандаңыз же биринчи жарыяны жайгаштырыңыз.",
     en: "Pick a category or post the first listing.",
+  },
+  "home.emptyListingsTitle": {
+    ru: "Пока нет объявлений",
+    kg: "Азырынча жарыялар жок",
+    en: "No listings yet",
+  },
+  "home.emptyListingsDescription": {
+    ru: "Станьте первым — разместите объявление бесплатно.",
+    kg: "Биринчи болуңуз — жарыяны акысыз жайгаштырыңыз.",
+    en: "Be the first — post a listing for free.",
   },
   "home.trendingSearches": {
     ru: "Сейчас ищут",
