@@ -365,15 +365,21 @@ export const MARKET_CATEGORIES: CategorySeed[] = [
 
 export const SERVICES_CATEGORIES: CategorySeed[] = [
   { name: "Ремонт и строительство", slug: "services-remont-i-stroitelstvo", sort_order: 1, vertical: "SERVICES" },
-  { name: "Красота и здоровье", slug: "services-krasota-i-zdorove", sort_order: 2, vertical: "SERVICES" },
-  { name: "Обучение", slug: "services-obuchenie", sort_order: 3, vertical: "SERVICES" },
-  { name: "IT и digital", slug: "services-it-i-digital", sort_order: 4, vertical: "SERVICES" },
-  { name: "Бизнес-услуги", slug: "services-biznes-uslugi", sort_order: 5, vertical: "SERVICES" },
-  { name: "Перевозки и грузчики", slug: "services-perevozki-i-gruzchiki", sort_order: 6, vertical: "SERVICES" },
-  { name: "Клининговые услуги", slug: "services-kliningovye-uslugi", sort_order: 7, vertical: "SERVICES" },
-  { name: "Мероприятия", slug: "services-meropriyatiya", sort_order: 8, vertical: "SERVICES" },
-  { name: "Юридические услуги", slug: "services-yuridicheskie-uslugi", sort_order: 9, vertical: "SERVICES" },
-  { name: "Фото и видео", slug: "services-foto-i-video", sort_order: 10, vertical: "SERVICES" },
+  { name: "Электрики", slug: "services-elektriki", sort_order: 2, vertical: "SERVICES" },
+  { name: "Сантехники", slug: "services-santehniki", sort_order: 3, vertical: "SERVICES" },
+  { name: "Мебельщики", slug: "services-mebelshhiki", sort_order: 4, vertical: "SERVICES" },
+  { name: "Грузчики", slug: "services-perevozki-i-gruzchiki", sort_order: 5, vertical: "SERVICES" },
+  { name: "Клининг", slug: "services-kliningovye-uslugi", sort_order: 6, vertical: "SERVICES" },
+  { name: "Автоуслуги", slug: "services-avtouslugi", sort_order: 7, vertical: "SERVICES" },
+  { name: "Красота и здоровье", slug: "services-krasota-i-zdorove", sort_order: 8, vertical: "SERVICES" },
+  { name: "Обучение", slug: "services-obuchenie", sort_order: 9, vertical: "SERVICES" },
+  { name: "Бухгалтерия", slug: "services-buhgalteriya", sort_order: 10, vertical: "SERVICES" },
+  { name: "Юристы", slug: "services-yuridicheskie-uslugi", sort_order: 11, vertical: "SERVICES" },
+  { name: "IT и digital", slug: "services-it-i-digital", sort_order: 12, vertical: "SERVICES" },
+  { name: "Дизайн", slug: "services-dizajn", sort_order: 13, vertical: "SERVICES" },
+  { name: "Фото и видео", slug: "services-foto-i-video", sort_order: 14, vertical: "SERVICES" },
+  { name: "Мастера на час", slug: "services-mastera-na-chas", sort_order: 15, vertical: "SERVICES" },
+  { name: "Другое", slug: "services-drugoe", sort_order: 16, vertical: "SERVICES" },
 ];
 
 export const CARGO_CATEGORIES: CategorySeed[] = [

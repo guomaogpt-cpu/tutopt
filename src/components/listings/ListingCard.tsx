@@ -59,15 +59,21 @@ export function ListingCard({
         currency: listing.currency,
         vertical: listing.vertical,
       })
-    : t("listingCard.priceOnRequest");
+    : listing.vertical === "SERVICES"
+      ? t("services.priceByAgreement")
+      : t("listingCard.priceOnRequest");
   const isCompact = variant === "home";
   const showSeller = variant === "catalog" || variant === "default" || variant === "showcase";
   const dateLabel = formatCardDate(listing.published_at ?? listing.created_at, locale);
   const cityName = listing.city?.name ?? null;
-  const compactMetaLabel = cityName ?? listing.category.name;
+  const compactMetaLabel =
+    listing.vertical === "SERVICES"
+      ? (cityName ?? listing.category.name)
+      : (cityName ?? listing.category.name);
   const showUnitSuffix =
-    (listing.vertical === "OPT" || listing.vertical === "MARKET") &&
-    Number(listing.price) > 0;
+    ((listing.vertical === "OPT" || listing.vertical === "MARKET") &&
+      Number(listing.price) > 0) ||
+    (listing.vertical === "SERVICES" && Number(listing.price) > 0);
   const glowClass = getListingCardGlowClass(
     listing.vertical,
     listing.category?.name,
@@ -197,6 +203,12 @@ export function ListingCard({
               {cityName ? <MapPin className="size-3 shrink-0" aria-hidden="true" /> : null}
               <span className="truncate">{compactMetaLabel}</span>
             </span>
+            {listing.vertical === "SERVICES" && cityName ? (
+              <>
+                <span aria-hidden="true">·</span>
+                <span className="truncate">{listing.category.name}</span>
+              </>
+            ) : null}
             {dateLabel ? (
               <span className="hidden sm:inline" aria-hidden="true">
                 ·

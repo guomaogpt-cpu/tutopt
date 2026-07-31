@@ -157,11 +157,11 @@ export const VERTICAL_FORM_CONFIG: Record<ListingVertical, VerticalFormConfig> =
     titlePlaceholder: "Например: Ремонт квартир под ключ",
     titleHint: "Кратко опишите, какую услугу вы оказываете",
     basicsDescription: "Название поможет клиенту понять вашу услугу.",
-    categoryDescription: "Выберите категорию услуги.",
+    categoryDescription: "Выберите профессию или категорию услуги.",
     priceSectionTitle: "Стоимость и оплата",
-    priceSectionDescription: "Укажите стоимость и тип оплаты.",
+    priceSectionDescription: "Укажите стоимость услуги, если она известна.",
     priceLabel: "Стоимость услуги",
-    priceHint: "Стоимость за выбранный тип оплаты",
+    priceHint: "Можно указать ориентировочную стоимость",
     showMoq: false,
     moqLabel: "Количество",
     moqHint: "",
@@ -176,7 +176,8 @@ export const VERTICAL_FORM_CONFIG: Record<ListingVertical, VerticalFormConfig> =
     stockLabel: "",
     stockHint: "",
     stockPlaceholder: "",
-    descriptionSectionDescription: "Расскажите об опыте, условиях и районе работы.",
+    descriptionSectionDescription:
+      "Опишите, какую услугу вы оказываете, в каком городе работаете и как с вами связаться через заявку.",
     descriptionPlaceholder:
       "Опишите услугу, опыт, условия работы, район выезда и сроки.",
     descriptionTips: [

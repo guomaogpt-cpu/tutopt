@@ -19,6 +19,7 @@ type CategoryPickerProps = {
   onChange: (categoryId: string) => void;
   disabled?: boolean;
   error?: string;
+  label?: string;
 };
 
 export function CategoryPicker({
@@ -27,6 +28,7 @@ export function CategoryPicker({
   onChange,
   disabled = false,
   error,
+  label = "Категория",
 }: CategoryPickerProps) {
   const roots = useMemo(() => getRootCategories(categories), [categories]);
   const [selectedRootId, setSelectedRootId] = useState<string | null>(null);
@@ -74,7 +76,7 @@ export function CategoryPicker({
   if (value) {
     return (
       <div className="space-y-2">
-        <p className="text-sm font-medium text-foreground">Категория</p>
+        <p className="text-sm font-medium text-foreground">{label}</p>
         <Card className="border-primary/20 bg-primary/5">
           <CardContent className="flex items-start justify-between gap-4 p-4">
             <div className="min-w-0">
@@ -95,7 +97,7 @@ export function CategoryPicker({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm font-medium text-foreground">Категория</p>
+      <p className="text-sm font-medium text-foreground">{label}</p>
 
       {!selectedRootId ? (
         <div className="animate-fade-in-up space-y-3">

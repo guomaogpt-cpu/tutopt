@@ -536,6 +536,11 @@ export function NewListingForm({
               value={categoryId}
               onChange={setCategoryId}
               disabled={isSubmitting}
+              label={
+                vertical === "SERVICES"
+                  ? t("services.formCategory")
+                  : t("filters.category")
+              }
               error={
                 categoryError ||
                 (clientError === categoryRequiredMsg ? clientError : undefined)
@@ -708,15 +713,25 @@ export function NewListingForm({
 
           <FormSection
             dense
-            title={t("createListing.sections.description")}
-            description={formConfig.descriptionSectionDescription}
+            title={
+              vertical === "SERVICES"
+                ? t("services.formTitle")
+                : t("createListing.sections.description")
+            }
+            description={
+              vertical === "SERVICES"
+                ? t("services.formDescriptionHint")
+                : formConfig.descriptionSectionDescription
+            }
           >
             <div className="space-y-2">
               <label
                 htmlFor="listing-description"
                 className="text-sm font-medium text-slate-900 dark:text-slate-100"
               >
-                {t("createListing.sections.description")}
+                {vertical === "SERVICES"
+                  ? t("services.formTitle")
+                  : t("createListing.sections.description")}
               </label>
               <Textarea
                 id="listing-description"
@@ -731,11 +746,17 @@ export function NewListingForm({
                 )}
                 disabled={isSubmitting}
               />
-              <ul className="hidden text-xs leading-relaxed text-slate-500 sm:block dark:text-slate-400">
-                {formConfig.descriptionTips.map((tip) => (
-                  <li key={tip}>{tip}</li>
-                ))}
-              </ul>
+              {vertical === "SERVICES" ? (
+                <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                  {t("services.formDescriptionHint")}
+                </p>
+              ) : (
+                <ul className="hidden text-xs leading-relaxed text-slate-500 sm:block dark:text-slate-400">
+                  {formConfig.descriptionTips.map((tip) => (
+                    <li key={tip}>{tip}</li>
+                  ))}
+                </ul>
+              )}
               <FieldError message={descriptionError} />
             </div>
           </FormSection>

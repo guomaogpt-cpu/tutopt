@@ -64,12 +64,18 @@ export function ListingsEmptyState({
     <EmptyState
       icon={SearchX}
       title={
-        hasActiveFilters ? t("listings.emptyFilteredTitle") : copy.emptyTitle
+        hasActiveFilters
+          ? t("listings.emptyFilteredTitle")
+          : vertical === "SERVICES"
+            ? t("services.emptyTitle")
+            : copy.emptyTitle
       }
       description={
         hasActiveFilters
           ? t("listings.emptyFilteredDescription")
-          : copy.emptyDescription
+          : vertical === "SERVICES"
+            ? t("services.emptyDescription")
+            : copy.emptyDescription
       }
       className="mt-8 rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_14px_rgba(15,23,42,0.03)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
       action={
@@ -81,18 +87,30 @@ export function ListingsEmptyState({
                 className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700"
                 asChild
               >
-                <Link href={resetHref}>{t("filters.reset")}</Link>
+                <Link href={resetHref}>
+                  {vertical === "SERVICES"
+                    ? t("services.allServices")
+                    : t("filters.reset")}
+                </Link>
               </Button>
               <Button
                 className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
                 asChild
               >
-                <Link href="/listings">{t("listings.allListings")}</Link>
+                <Link href={createHref}>
+                  {vertical === "SERVICES"
+                    ? t("services.postService")
+                    : t("listings.allListings")}
+                </Link>
               </Button>
             </>
           ) : showCreateListingCTA ? (
             <Button className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
-              <Link href={createHref}>{t("catalog.addListing")}</Link>
+              <Link href={createHref}>
+                {vertical === "SERVICES"
+                  ? t("services.postService")
+                  : t("catalog.addListing")}
+              </Link>
             </Button>
           ) : (
             <Button
@@ -100,7 +118,11 @@ export function ListingsEmptyState({
               className="h-11 rounded-xl border-slate-200 dark:border-slate-700"
               asChild
             >
-              <Link href="/listings">{t("listings.allListings")}</Link>
+              <Link href="/listings">
+                {vertical === "SERVICES"
+                  ? t("services.allServices")
+                  : t("listings.allListings")}
+              </Link>
             </Button>
           )}
         </div>

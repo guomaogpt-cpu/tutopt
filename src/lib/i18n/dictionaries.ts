@@ -552,6 +552,164 @@ export const DICTIONARY = {
     kg: "ТутКаргодо азырынча жарыялар жок",
     en: "No listings in Cargo yet",
   },
+
+  // Services structure — Phase 71
+  "services.heroTitle": {
+    ru: "Найдите специалиста или услугу",
+    kg: "Адисти же кызматты табыңыз",
+    en: "Find a specialist or service",
+  },
+  "services.heroSubtitle": {
+    ru: "Ремонт, доставка, клининг, обучение, IT, автоуслуги и другие специалисты.",
+    kg: "Оңдоо, жеткирүү, клининг, окутуу, IT, авто кызматтар жана башка адистер.",
+    en: "Repair, delivery, cleaning, education, IT, auto services and other specialists.",
+  },
+  "services.searchPlaceholder": {
+    ru: "Какая услуга нужна?",
+    kg: "Кандай кызмат керек?",
+    en: "What service do you need?",
+  },
+  "services.professionsTitle": {
+    ru: "Профессии и услуги",
+    kg: "Кесиптер жана кызматтар",
+    en: "Professions and services",
+  },
+  "services.professionsSubtitle": {
+    ru: "Выберите направление, чтобы найти специалиста",
+    kg: "Адисти табуу үчүн багытты тандаңыз",
+    en: "Pick a direction to find a specialist",
+  },
+  "services.allServices": {
+    ru: "Все услуги",
+    kg: "Бардык кызматтар",
+    en: "All services",
+  },
+  "services.postService": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post a listing",
+  },
+  "services.emptyTitle": {
+    ru: "Пока нет специалистов в этой категории.",
+    kg: "Бул категорияда азырынча адистер жок.",
+    en: "No specialists in this category yet.",
+  },
+  "services.emptyDescription": {
+    ru: "Вы можете посмотреть другие услуги или разместить своё объявление.",
+    kg: "Башка кызматтарды көрүңүз же өз жарыяңызды жайгаштырыңыз.",
+    en: "You can browse other services or post your own listing.",
+  },
+  "services.profession": {
+    ru: "Профессия",
+    kg: "Кесип",
+    en: "Profession",
+  },
+  "services.serviceCategory": {
+    ru: "Категория услуги",
+    kg: "Кызмат категориясы",
+    en: "Service category",
+  },
+  "services.priceByAgreement": {
+    ru: "Цена по договорённости",
+    kg: "Баасы макулдашуу боюнча",
+    en: "Price by agreement",
+  },
+  "services.formTitle": {
+    ru: "Описание услуги",
+    kg: "Кызматтын сүрөттөмөсү",
+    en: "Service description",
+  },
+  "services.formCategory": {
+    ru: "Категория услуги / профессия",
+    kg: "Кызмат категориясы / кесип",
+    en: "Service category / profession",
+  },
+  "services.formDescriptionHint": {
+    ru: "Опишите, какую услугу вы оказываете, в каком городе работаете и как с вами связаться через заявку.",
+    kg: "Кандай кызмат көрсөтөрүңүздү, кайсы шаарда иштей турганыңызды жана сурам аркылуу кантип байланышса болорун жазыңыз.",
+    en: "Describe what service you provide, which city you work in, and how customers can contact you through a request.",
+  },
+  "services.categories.repairConstruction": {
+    ru: "Ремонт и строительство",
+    kg: "Оңдоо жана курулуш",
+    en: "Repair and construction",
+  },
+  "services.categories.electricians": {
+    ru: "Электрики",
+    kg: "Электриктер",
+    en: "Electricians",
+  },
+  "services.categories.plumbers": {
+    ru: "Сантехники",
+    kg: "Сантехниктер",
+    en: "Plumbers",
+  },
+  "services.categories.furniture": {
+    ru: "Мебельщики",
+    kg: "Эмерек усталары",
+    en: "Furniture makers",
+  },
+  "services.categories.movers": {
+    ru: "Грузчики",
+    kg: "Жүкчүлөр",
+    en: "Movers",
+  },
+  "services.categories.cleaning": {
+    ru: "Клининг",
+    kg: "Клининг",
+    en: "Cleaning",
+  },
+  "services.categories.autoServices": {
+    ru: "Автоуслуги",
+    kg: "Авто кызматтар",
+    en: "Auto services",
+  },
+  "services.categories.beautyHealth": {
+    ru: "Красота и здоровье",
+    kg: "Сулуулук жана ден соолук",
+    en: "Beauty and health",
+  },
+  "services.categories.education": {
+    ru: "Обучение",
+    kg: "Окутуу",
+    en: "Education",
+  },
+  "services.categories.accounting": {
+    ru: "Бухгалтерия",
+    kg: "Бухгалтерия",
+    en: "Accounting",
+  },
+  "services.categories.lawyers": {
+    ru: "Юристы",
+    kg: "Юристтер",
+    en: "Lawyers",
+  },
+  "services.categories.itDigital": {
+    ru: "IT и digital",
+    kg: "IT жана digital",
+    en: "IT and digital",
+  },
+  "services.categories.design": {
+    ru: "Дизайн",
+    kg: "Дизайн",
+    en: "Design",
+  },
+  "services.categories.photoVideo": {
+    ru: "Фото и видео",
+    kg: "Фото жана видео",
+    en: "Photo and video",
+  },
+  "services.categories.handyman": {
+    ru: "Мастера на час",
+    kg: "Сааттык усталар",
+    en: "Handyman",
+  },
+  "services.categories.other": {
+    ru: "Другое",
+    kg: "Башка",
+    en: "Other",
+  },
+
   "vertical.statsListings": {
     ru: "объявлений",
     kg: "жарыя",

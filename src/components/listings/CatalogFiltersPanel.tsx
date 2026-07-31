@@ -203,7 +203,9 @@ function FilterFields({
 
       <div className="space-y-2">
         <label htmlFor="filter-category" className="text-sm font-medium text-foreground">
-          {t("filters.category")}
+          {draft.vertical === "SERVICES"
+            ? t("services.serviceCategory")
+            : t("filters.category")}
         </label>
         <Select
           value={draft.categoryId || "all"}
