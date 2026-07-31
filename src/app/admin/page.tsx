@@ -78,6 +78,7 @@ export default async function AdminDashboardPage() {
     totalByVertical,
     publishedByVertical,
     pendingByVertical,
+    newCargoRequestsCount,
   ] = await Promise.all([
     prisma.listing.count({ where: { status: ListingStatus.PENDING_MODERATION } }),
     prisma.report.count({ where: { status: ReportStatus.OPEN } }),
@@ -94,6 +95,7 @@ export default async function AdminDashboardPage() {
       where: { status: ListingStatus.PENDING_MODERATION },
       _count: { _all: true },
     }),
+    prisma.cargoRequest.count({ where: { status: "NEW" } }),
   ]);
 
   const [
@@ -146,6 +148,13 @@ export default async function AdminDashboardPage() {
       icon: Flag,
       iconClassName: "bg-[#FEF2F2] text-[#DC2626]",
       href: "/admin/reports",
+    },
+    {
+      label: "Новые карго-заявки",
+      value: newCargoRequestsCount,
+      icon: Truck,
+      iconClassName: "bg-[#FFF1F2] text-[#E11D48]",
+      href: "/admin/cargo-requests?status=NEW",
     },
     {
       label: "Всего объявлений",
@@ -210,6 +219,15 @@ export default async function AdminDashboardPage() {
       description: openReportsCount > 0 ? `${openReportsCount} новых жалоб` : "Нет новых жалоб",
       href: "/admin/reports",
       adminOnly: false,
+    },
+    {
+      label: "Карго-заявки",
+      description:
+        newCargoRequestsCount > 0
+          ? `${newCargoRequestsCount} новых заявок`
+          : "Открыть доску карго",
+      href: "/admin/cargo-requests",
+      adminOnly: true,
     },
     {
       label: "Пользователи",

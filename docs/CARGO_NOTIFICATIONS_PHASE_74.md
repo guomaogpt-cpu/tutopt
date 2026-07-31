@@ -1,55 +1,89 @@
-# Phase 74 — Cargo request site notifications & subscriptions
+# Phase 74 — Cargo in-app notifications
 
-## 1. Goal
+## 1. When notifications are created
 
-Cargo companies can opt in to site notifications for new `CargoRequest` items and notice new requests faster on the seller board.
+| Event | Type | When |
+| --- | --- | --- |
+| New `CargoRequest` | `NEW_CARGO_REQUEST` | After successful `POST /api/cargo/requests` |
+| New `CargoResponse` | `NEW_CARGO_RESPONSE` | After successful `POST /api/cargo/requests/[id]/responses` |
 
-No Telegram / WhatsApp / email in this phase.
+Uses the existing `Notification` model and notification bell / `/notifications` page.
 
-## 2. CargoRequestSubscription
+## 2. Who gets `NEW_CARGO_REQUEST`
 
-Table `cargo_request_subscriptions`:
+1. All non-blocked **admin** users → link `/admin/cargo-requests`
+2. Sellers/admins with at least one **published** listing `vertical=CARGO` → link `/seller/cargo-requests`
+3. Optionally: active `CargoRequestSubscription` recipients (extra opt-in) if not already covered
 
-| Field | Notes |
-| --- | --- |
-| `seller_profile_id` | unique — one row per seller profile |
-| `user_id` | recipient for notifications |
-| `is_active` | toggle on/off without deleting the row |
+Guests and buyers without cargo listings are not notified.
 
-## 3. Who gets `NEW_CARGO_REQUEST` notifications
+## 3. Who gets `NEW_CARGO_RESPONSE`
 
-1. All non-blocked admins  
-2. Users with an **active** cargo request subscription  
+1. All non-blocked admins → `/admin/cargo-requests`
+2. Request owner (`CargoRequest.user_id`) if present → `/buyer/cargo-requests`
 
-Previous Phase 72 behavior (auto-notify every seller with a published CARGO listing) was replaced by explicit subscription so unsubscribe is meaningful.
+Guest-created requests (no `user_id`) do not notify an owner.
 
-## 4. Seller UX
+## 4. How cargo company is determined (MVP)
 
-On `/seller/cargo-requests`:
+A cargo company is a user with a seller profile that has ≥1 **published** listing with `vertical=CARGO`.
 
-- Subscription card (subscribe / unsubscribe)
-- Status chips including **Новые**
-- `NEW` request cards highlighted with rose border
+There is no separate “cargo company” role in this phase.
 
-API: `POST /api/seller/cargo-subscriptions` with `{ "active": true | false }`  
-`seller_profile_id` / `user_id` come from session only.
+## 5. Deduplication
 
-## 5. Unchanged
+Recipients are collected in a `Map<userId, link>`:
 
-- Cargo request / response models and flows  
-- Listing uploads / auth  
-- Market / services / wholesale  
+- one notification per `userId` per event
+- admin who is also a cargo seller gets **one** notification (admin link for new requests)
+- request owner who is also admin gets **one** response notification (owner link wins)
+- multiple CARGO listings for the same seller still yield one notification
 
-## 6. Not implemented
+No DB unique constraint added for this.
 
-- Telegram broadcast  
-- WhatsApp / WhatsApp Business API  
-- Email broadcast  
-- Route-based subscriptions (from→to filters)  
-- Guest magic-link client dashboard  
+## 6. Links
 
-## 7. Future
+| Audience | New request | New response |
+| --- | --- | --- |
+| Admin | `/admin/cargo-requests` | `/admin/cargo-requests` |
+| Cargo seller | `/seller/cargo-requests` | — |
+| Request owner | — | `/buyer/cargo-requests` |
 
-- External channels on top of the same subscription flag  
-- Optional route/direction filters  
-- Auto-suggest subscribe when publishing a CARGO listing  
+Stored notification titles use RU fallback text (notification table is plain text). UI chrome uses i18n keys under `cargo.notifications.*` / `cargo.seller.*`.
+
+## 7. Seller board UX
+
+`/seller/cargo-requests`:
+
+- Title block: new shipping requests
+- Filters: All / New / Responded
+- Badge «Новая» / «Вы откликнулись»
+- Newest first
+- Optional in-app subscription toggle (extra; not required to receive listing-based notifications)
+
+## 8. Admin
+
+- `/admin` overview: count of `CargoRequest` with status `NEW` + quick link
+- `/admin/cargo-requests`: requests newest first, response counts, status, expand responses
+
+## 9. Not implemented
+
+- Telegram notifications
+- WhatsApp / WhatsApp Business API notifications
+- Email notifications
+- Full preference matrix (`notifyTelegram`, direction filters, categories)
+- Real route-based subscription filters
+
+Optional table `cargo_request_subscriptions` already exists as a simple on/off opt-in; it is **not** the full future `CargoSubscription` model.
+
+## 10. Future Phase 75
+
+Suggested `CargoSubscription` fields:
+
+- `userId`
+- `enabled`
+- `directions` / `fromLocation` / `toLocation`
+- `categories`
+- `notifyInApp` / `notifyTelegram` / `notifyEmail` / `notifyWhatsApp`
+
+Plus Telegram/email channel delivery and user preferences UI.

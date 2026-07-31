@@ -10,7 +10,6 @@ import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getSellerCargoRequests } from "@/features/cargo/lib/cargo-requests-data";
 import { getCargoSubscriptionForSeller } from "@/features/cargo/lib/cargo-subscription-data";
-import { parseCargoRequestStatusFilter } from "@/features/cargo/lib/cargo-request-status";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import {
@@ -21,6 +20,7 @@ import {
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
+import { SellerCargoBoardHeader } from "@/components/seller/SellerCargoBoardHeader";
 
 export const metadata = buildPrivatePageMetadata(
   "Карго-заявки",
@@ -33,25 +33,14 @@ type SellerCargoRequestsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const STATUS_FILTERS = [
-  { href: "/seller/cargo-requests", labelKey: "all" as const, status: null },
-  { href: "/seller/cargo-requests?status=NEW", labelKey: "new" as const, status: "NEW" },
-  {
-    href: "/seller/cargo-requests?status=IN_REVIEW",
-    labelKey: "inReview" as const,
-    status: "IN_REVIEW",
-  },
-  {
-    href: "/seller/cargo-requests?status=CONTACTED",
-    labelKey: "contacted" as const,
-    status: "CONTACTED",
-  },
-  {
-    href: "/seller/cargo-requests?status=CLOSED",
-    labelKey: "closed" as const,
-    status: "CLOSED",
-  },
-] as const;
+type BoardFilter = "all" | "new" | "responded";
+
+function parseBoardFilter(value: string | null): BoardFilter {
+  if (value === "new" || value === "responded") {
+    return value;
+  }
+  return "all";
+}
 
 export default async function SellerCargoRequestsPage({
   searchParams,
@@ -93,23 +82,30 @@ export default async function SellerCargoRequestsPage({
   }
 
   const rawParams = await searchParams;
-  const statusParam = typeof rawParams.status === "string" ? rawParams.status : null;
-  const statusFilter = parseCargoRequestStatusFilter(statusParam);
+  const filterParam = typeof rawParams.filter === "string" ? rawParams.filter : null;
+  const boardFilter = parseBoardFilter(filterParam);
 
   const sellerProfile = await prisma.sellerProfile.findUnique({
     where: { user_id: user.id },
     select: { id: true },
   });
 
-  const [requests, subscription] = await Promise.all([
+  const [allRequests, subscription] = await Promise.all([
     getSellerCargoRequests({
-      statusFilter,
+      statusFilter: null,
       sellerProfileId: sellerProfile?.id ?? null,
     }),
     sellerProfile
       ? getCargoSubscriptionForSeller(sellerProfile.id)
       : Promise.resolve(null),
   ]);
+
+  const requests =
+    boardFilter === "new"
+      ? allRequests.filter((request) => request.status === "NEW")
+      : boardFilter === "responded"
+        ? allRequests.filter((request) => Boolean(request.ownResponse))
+        : allRequests;
 
   const showContacts = user.role === UserRole.ADMIN;
   const canRespond = Boolean(sellerProfile);
@@ -124,7 +120,7 @@ export default async function SellerCargoRequestsPage({
               Карго-заявки
             </PageTitle>
             <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
-              Доска заявок на перевозку — подпишитесь, чтобы получать уведомления о новых
+              Доска заявок на перевозку — новые заявки сверху
             </PageSubtitle>
           </PageHeaderContent>
           <PageHeaderActions className="w-full sm:w-auto">
@@ -144,38 +140,11 @@ export default async function SellerCargoRequestsPage({
           </div>
         ) : null}
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {STATUS_FILTERS.map((item) => {
-            const active =
-              item.status === null ? statusFilter === null : statusFilter === item.status;
-            const label =
-              item.labelKey === "all"
-                ? "Все"
-                : item.labelKey === "new"
-                  ? "Новые"
-                  : item.labelKey === "inReview"
-                    ? "На рассмотрении"
-                    : item.labelKey === "contacted"
-                      ? "Связались"
-                      : "Закрытые";
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={
-                  active
-                    ? "rounded-full border border-rose-300 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-800 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
-                    : "rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-                }
-              >
-                {label}
-              </Link>
-            );
-          })}
+        <div className="mt-6">
+          <SellerCargoBoardHeader activeFilter={boardFilter} />
         </div>
 
-        <div className="mt-6 lg:mt-8">
+        <div className="mt-4 lg:mt-6">
           <SellerCargoRequestsList
             requests={requests}
             showContacts={showContacts}

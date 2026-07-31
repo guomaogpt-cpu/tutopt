@@ -47,6 +47,8 @@ Prisma model: `CargoRequest` → table `cargo_requests`.
 
 Notifications (`NEW_CARGO_REQUEST`) go to admins and sellers who have at least one published CARGO listing.
 
+Cargo notifications added in Phase 74. See `docs/CARGO_NOTIFICATIONS_PHASE_74.md`.
+
 ## 5. What is public
 
 Public cards show:

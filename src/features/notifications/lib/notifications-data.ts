@@ -115,7 +115,8 @@ export async function createNewCargoRequestNotifications(input: {
   fromLocation: string;
   toLocation: string;
 }): Promise<void> {
-  const recipientIds = new Set<string>();
+  // recipientId -> notification link (admins win over sellers for dedupe)
+  const recipientLinks = new Map<string, string>();
 
   const admins = await prisma.user.findMany({
     where: { role: "ADMIN", is_blocked: false },
@@ -123,9 +124,32 @@ export async function createNewCargoRequestNotifications(input: {
   });
 
   for (const admin of admins) {
-    recipientIds.add(admin.id);
+    recipientLinks.set(admin.id, "/admin/cargo-requests");
   }
 
+  const cargoSellers = await prisma.user.findMany({
+    where: {
+      role: { in: ["SELLER", "ADMIN"] },
+      is_blocked: false,
+      sellerProfile: {
+        listings: {
+          some: {
+            vertical: "CARGO",
+            status: "PUBLISHED",
+          },
+        },
+      },
+    },
+    select: { id: true },
+  });
+
+  for (const seller of cargoSellers) {
+    if (!recipientLinks.has(seller.id)) {
+      recipientLinks.set(seller.id, "/seller/cargo-requests");
+    }
+  }
+
+  // Optional opt-in (existing CargoRequestSubscription) — still one notification per user
   const subscribers = await prisma.cargoRequestSubscription.findMany({
     where: {
       is_active: true,
@@ -135,23 +159,24 @@ export async function createNewCargoRequestNotifications(input: {
   });
 
   for (const subscriber of subscribers) {
-    recipientIds.add(subscriber.user_id);
+    if (!recipientLinks.has(subscriber.user_id)) {
+      recipientLinks.set(subscriber.user_id, "/seller/cargo-requests");
+    }
   }
 
   if (input.actorId) {
-    recipientIds.delete(input.actorId);
+    recipientLinks.delete(input.actorId);
   }
 
-  if (recipientIds.size === 0) {
+  if (recipientLinks.size === 0) {
     return;
   }
 
-  const title = "Новая карго-заявка";
-  const message = `${input.itemName}: ${input.fromLocation} → ${input.toLocation}`;
-  const link = "/seller/cargo-requests";
+  const title = `Новая карго-заявка: ${input.itemName}`;
+  const message = `${input.fromLocation} → ${input.toLocation}`;
 
   await prisma.notification.createMany({
-    data: [...recipientIds].map((recipientId) => ({
+    data: [...recipientLinks.entries()].map(([recipientId, link]) => ({
       recipient_id: recipientId,
       actor_id: input.actorId,
       type: NotificationType.NEW_CARGO_REQUEST,
@@ -168,7 +193,7 @@ export async function createNewCargoResponseNotifications(input: {
   itemName: string;
   companyName: string;
 }): Promise<void> {
-  const recipientIds = new Set<string>();
+  const recipientLinks = new Map<string, string>();
 
   const admins = await prisma.user.findMany({
     where: { role: "ADMIN", is_blocked: false },
@@ -176,33 +201,31 @@ export async function createNewCargoResponseNotifications(input: {
   });
 
   for (const admin of admins) {
-    recipientIds.add(admin.id);
+    recipientLinks.set(admin.id, "/admin/cargo-requests");
   }
 
   if (input.requestOwnerId) {
-    recipientIds.add(input.requestOwnerId);
+    // Owner link wins if the owner is also an admin (one notification)
+    recipientLinks.set(input.requestOwnerId, "/buyer/cargo-requests");
   }
 
-  recipientIds.delete(input.actorId);
+  recipientLinks.delete(input.actorId);
 
-  if (recipientIds.size === 0) {
+  if (recipientLinks.size === 0) {
     return;
   }
 
-  const title = "Новый отклик на карго-заявку";
-  const message = `${input.companyName} откликнулась на «${input.itemName}»`;
+  const title = `Новый отклик на карго-заявку: ${input.itemName}`;
+  const message = input.companyName;
 
   await prisma.notification.createMany({
-    data: [...recipientIds].map((recipientId) => {
-      const isOwner = recipientId === input.requestOwnerId;
-      return {
-        recipient_id: recipientId,
-        actor_id: input.actorId,
-        type: NotificationType.NEW_CARGO_RESPONSE,
-        title,
-        message,
-        link: isOwner ? "/buyer/cargo-requests" : "/admin/cargo-requests",
-      };
-    }),
+    data: [...recipientLinks.entries()].map(([recipientId, link]) => ({
+      recipient_id: recipientId,
+      actor_id: input.actorId,
+      type: NotificationType.NEW_CARGO_RESPONSE,
+      title,
+      message,
+      link,
+    })),
   });
 }

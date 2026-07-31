@@ -82,9 +82,13 @@ Phone, name, company, free-text comment (may contain contacts).
 - delivery tracking
 - automatic reveal of client phone to sellers after response
 
-## 11. Future Phase 74
+## 11. Future Phase 74 / 75
+
+Cargo notifications added in Phase 74. See `docs/CARGO_NOTIFICATIONS_PHASE_74.md`.
+
+Later:
 
 - Telegram/email notifications
-- cargo seller route subscriptions
+- full cargo subscription preferences / route filters
 - guest client dashboard via magic link/code
 - accepting a best response / status ACCEPTED UX

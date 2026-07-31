@@ -97,9 +97,19 @@ export function SellerCargoRequestsList({
                 </h3>
               </div>
               <div className="flex flex-wrap items-center gap-2">
+                {request.status === "NEW" ? (
+                  <span className="inline-flex shrink-0 items-center rounded-full bg-rose-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                    {t("cargo.seller.newBadge")}
+                  </span>
+                ) : null}
+                {hasOwnResponse ? (
+                  <span className="inline-flex shrink-0 items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+                    {t("cargo.seller.respondedBadge")}
+                  </span>
+                ) : null}
                 <CargoRequestStatusBadge status={request.status} />
                 <span className="text-xs text-slate-500 dark:text-slate-400">
-                  {t("cargo.responsesCount").replace(
+                  {t("cargo.admin.responsesCount").replace(
                     "{count}",
                     String(request.responseCount),
                   )}

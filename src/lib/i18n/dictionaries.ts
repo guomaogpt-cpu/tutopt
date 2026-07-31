@@ -1010,6 +1010,81 @@ export const DICTIONARY = {
     kg: "Жазылууну өзгөртүү мүмкүн болбоду",
     en: "Could not update subscription",
   },
+  "cargo.notifications.newRequest": {
+    ru: "Новая карго-заявка: {itemName}",
+    kg: "Жаңы карго сурамы: {itemName}",
+    en: "New cargo request: {itemName}",
+  },
+  "cargo.notifications.newResponse": {
+    ru: "Новый отклик на карго-заявку: {itemName}",
+    kg: "Карго сурамына жаңы жооп: {itemName}",
+    en: "New response to cargo request: {itemName}",
+  },
+  "cargo.notifications.adminNewRequest": {
+    ru: "Новая карго-заявка для модерации",
+    kg: "Модерация үчүн жаңы карго сурамы",
+    en: "New cargo request for review",
+  },
+  "cargo.notifications.sellerNewRequest": {
+    ru: "Новая заявка на перевозку",
+    kg: "Жеткирүүгө жаңы сурам",
+    en: "New shipping request",
+  },
+  "cargo.notifications.ownerNewResponse": {
+    ru: "На вашу карго-заявку пришёл отклик",
+    kg: "Сиздин карго сурамыңызга жооп келди",
+    en: "Your cargo request received a response",
+  },
+  "cargo.seller.newRequestsTitle": {
+    ru: "Новые заявки на перевозку",
+    kg: "Жеткирүү боюнча жаңы сурамдар",
+    en: "New shipping requests",
+  },
+  "cargo.seller.newRequestsDescription": {
+    ru: "Свежие заявки сверху. Откликайтесь через систему — уведомления приходят на сайте.",
+    kg: "Жаңы сурамдар жогоруда. Система аркылуу жооп бериңиз — билдирмелер сайтта келет.",
+    en: "Newest requests first. Respond in-app — notifications arrive on the site.",
+  },
+  "cargo.seller.filterAll": {
+    ru: "Все",
+    kg: "Баары",
+    en: "All",
+  },
+  "cargo.seller.filterNew": {
+    ru: "Новые",
+    kg: "Жаңылар",
+    en: "New",
+  },
+  "cargo.seller.filterResponded": {
+    ru: "Уже откликнулся",
+    kg: "Жооп берилген",
+    en: "Responded",
+  },
+  "cargo.seller.respondedBadge": {
+    ru: "Вы откликнулись",
+    kg: "Сиз жооп бердиңиз",
+    en: "You responded",
+  },
+  "cargo.seller.newBadge": {
+    ru: "Новая",
+    kg: "Жаңы",
+    en: "New",
+  },
+  "cargo.admin.newRequests": {
+    ru: "Новые карго-заявки",
+    kg: "Жаңы карго сурамдар",
+    en: "New cargo requests",
+  },
+  "cargo.admin.responsesCount": {
+    ru: "Откликов: {count}",
+    kg: "Жооптор: {count}",
+    en: "Responses: {count}",
+  },
+  "cargo.admin.openRequests": {
+    ru: "Открыть карго-заявки",
+    kg: "Карго сурамдарды ачуу",
+    en: "Open cargo requests",
+  },
   "admin.cargoRequests": {
     ru: "Карго",
     kg: "Карго",
