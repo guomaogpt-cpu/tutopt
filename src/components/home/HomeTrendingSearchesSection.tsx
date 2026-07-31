@@ -31,7 +31,7 @@ export function HomeTrendingSearchesSection({
       className={cn(
         "dark:bg-slate-950",
         compact
-          ? "bg-[#F8FAFC] pb-3 pt-0 sm:bg-[#F8FAFC] sm:py-5 dark:sm:bg-slate-950"
+          ? "bg-[#F8FAFC] pb-2 pt-0 sm:bg-[#F8FAFC] sm:py-5 dark:sm:bg-slate-950"
           : "bg-[#F8FAFC] py-7 sm:py-9",
       )}
       aria-labelledby="home-trending-heading"

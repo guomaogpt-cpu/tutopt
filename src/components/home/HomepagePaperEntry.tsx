@@ -26,6 +26,8 @@ type EntryCard = {
   accentBar: string;
   iconWrap: string;
   iconColor: string;
+  /** Soft tinted surface for compact mobile category buttons. */
+  mobileTile: string;
 };
 
 const ENTRY_CARDS: EntryCard[] = [
@@ -37,8 +39,10 @@ const ENTRY_CARDS: EntryCard[] = [
     href: "/market",
     icon: Megaphone,
     accentBar: "bg-violet-500",
-    iconWrap: "bg-violet-50",
-    iconColor: "text-violet-600",
+    iconWrap: "bg-violet-100 dark:bg-violet-950/60",
+    iconColor: "text-violet-600 dark:text-violet-300",
+    mobileTile:
+      "border-violet-200/80 bg-gradient-to-br from-violet-50 to-violet-100/70 dark:border-violet-800/60 dark:from-violet-950/50 dark:to-slate-900",
   },
   {
     id: "SERVICES",
@@ -48,8 +52,10 @@ const ENTRY_CARDS: EntryCard[] = [
     href: "/services",
     icon: Briefcase,
     accentBar: "bg-emerald-500",
-    iconWrap: "bg-emerald-50",
-    iconColor: "text-emerald-600",
+    iconWrap: "bg-emerald-100 dark:bg-emerald-950/60",
+    iconColor: "text-emerald-600 dark:text-emerald-300",
+    mobileTile:
+      "border-emerald-200/80 bg-gradient-to-br from-emerald-50 to-emerald-100/70 dark:border-emerald-800/60 dark:from-emerald-950/50 dark:to-slate-900",
   },
   {
     id: "OPT",
@@ -59,8 +65,10 @@ const ENTRY_CARDS: EntryCard[] = [
     href: "/opt",
     icon: Package,
     accentBar: "bg-blue-500",
-    iconWrap: "bg-blue-50",
-    iconColor: "text-blue-600",
+    iconWrap: "bg-blue-100 dark:bg-blue-950/60",
+    iconColor: "text-blue-600 dark:text-blue-300",
+    mobileTile:
+      "border-blue-200/80 bg-gradient-to-br from-blue-50 to-blue-100/70 dark:border-blue-800/60 dark:from-blue-950/50 dark:to-slate-900",
   },
   {
     id: "CARGO",
@@ -69,16 +77,18 @@ const ENTRY_CARDS: EntryCard[] = [
     shortKey: "home.cargoShort",
     href: "/cargo",
     icon: Truck,
-    accentBar: "bg-orange-500",
-    iconWrap: "bg-orange-50",
-    iconColor: "text-orange-600",
+    accentBar: "bg-rose-500",
+    iconWrap: "bg-rose-100 dark:bg-rose-950/60",
+    iconColor: "text-rose-600 dark:text-rose-300",
+    mobileTile:
+      "border-rose-200/80 bg-gradient-to-br from-rose-50 to-orange-50 dark:border-rose-800/60 dark:from-rose-950/45 dark:to-slate-900",
   },
 ];
 
 /**
- * Integrated marketplace entry for `/`.
- * Mobile: fluid 2×2 CSS grid (100% width, equal square tiles, gap 3px).
- * Desktop/tablet: wider cards in a row.
+ * Marketplace entry for `/`.
+ * Mobile: header search only; compact tinted 2×2 category buttons.
+ * sm+/desktop: lead + search row and wider white cards.
  */
 export function HomepagePaperEntry() {
   const { t } = useTranslation();
@@ -86,27 +96,28 @@ export function HomepagePaperEntry() {
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F8FAFC] pb-3 pt-2.5 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
+      className="overflow-x-clip bg-[#F8FAFC] pb-2 pt-2 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
       aria-labelledby="home-marketplace-lead"
     >
       <Container size="lg">
-        <div className="flex flex-col gap-2.5 sm:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="flex flex-col gap-2 sm:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           <div className="min-w-0 max-w-xl">
             <h1
               id="home-marketplace-lead"
-              className="text-[17px] font-bold leading-snug tracking-tight text-[#0F172A] sm:hidden dark:text-slate-100"
+              className="text-base font-bold leading-snug tracking-tight text-slate-900 sm:hidden dark:text-slate-100"
             >
               {t("home.mobileTitle")}
             </h1>
-            <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-slate-500 sm:hidden dark:text-slate-400">
+            <p className="mt-0.5 line-clamp-1 text-xs leading-snug text-slate-500 sm:hidden dark:text-slate-400">
               {t("home.mobileSubtitle")}
             </p>
-            <p className="hidden min-w-0 text-2xl font-bold leading-snug text-[#0F172A] sm:block lg:text-3xl dark:text-slate-100">
+            <p className="hidden min-w-0 text-2xl font-bold leading-snug text-slate-900 sm:block lg:text-3xl dark:text-slate-100">
               {t("home.lead")}
             </p>
           </div>
 
-          <div className="w-full min-w-0 lg:max-w-[440px]">
+          {/* Duplicate of header search — hide on mobile, keep for tablet/desktop */}
+          <div className="hidden w-full min-w-0 sm:block lg:max-w-[440px]">
             <SearchWithSuggest
               id="home-marketplace-search"
               variant="header"
@@ -117,9 +128,8 @@ export function HomepagePaperEntry() {
           </div>
         </div>
 
-        {/* Mobile: 2×2 fluid grid — equal cells, gap 3px, full container width */}
         <ul
-          className="mt-2.5 grid w-full grid-cols-2 gap-[3px] sm:mt-4 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
+          className="mt-2 grid w-full grid-cols-2 gap-2 sm:mt-4 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
           aria-label={t("home.directions")}
         >
           {ENTRY_CARDS.map((card) => {
@@ -132,16 +142,15 @@ export function HomepagePaperEntry() {
                     trackVerticalClick(card.id, "homepage");
                   }}
                   className={cn(
-                    "group relative flex w-full flex-col overflow-hidden",
-                    "border border-slate-200/70 bg-white",
-                    "dark:border-slate-800 dark:bg-slate-900",
-                    "transition duration-200",
-                    "hover:border-slate-300 dark:hover:border-slate-700",
+                    "group relative flex w-full flex-col overflow-hidden transition duration-200",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950",
-                    // Mobile: equal square cells filling the grid track
-                    "aspect-square rounded-xl p-3",
-                    // Tablet+: roomier cards (no forced square / fixed mobile heights)
-                    "sm:aspect-auto sm:min-h-[140px] sm:rounded-2xl sm:p-5 sm:shadow-sm sm:hover:-translate-y-0.5 sm:hover:shadow-md dark:sm:shadow-none",
+                    // Mobile: compact tinted category button (not a huge empty square)
+                    "min-h-[100px] justify-between gap-2 rounded-xl border p-2.5",
+                    card.mobileTile,
+                    // Tablet+: roomier neutral cards
+                    "sm:min-h-[140px] sm:justify-start sm:gap-0 sm:rounded-2xl sm:border-slate-200/70 sm:bg-white sm:bg-none sm:p-5 sm:shadow-sm",
+                    "sm:hover:-translate-y-0.5 sm:hover:border-slate-300 sm:hover:shadow-md",
+                    "dark:sm:border-slate-800 dark:sm:bg-slate-900 dark:sm:shadow-none dark:sm:hover:border-slate-700",
                   )}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -151,7 +160,7 @@ export function HomepagePaperEntry() {
                         "size-8 sm:size-10",
                         card.iconWrap,
                         card.iconColor,
-                        "dark:bg-slate-800",
+                        "sm:bg-opacity-100 dark:sm:bg-slate-800",
                       )}
                       aria-hidden="true"
                     >
@@ -163,11 +172,11 @@ export function HomepagePaperEntry() {
                     />
                   </div>
 
-                  <div className="mt-auto min-w-0 pt-2 sm:mt-3 sm:flex-1 sm:pt-0">
-                    <p className="line-clamp-1 text-sm font-semibold tracking-tight text-[#0F172A] sm:text-[15px] sm:font-bold dark:text-slate-100">
+                  <div className="min-w-0 sm:mt-3 sm:flex-1">
+                    <p className="line-clamp-1 text-sm font-semibold tracking-tight text-slate-900 sm:text-[15px] sm:font-bold dark:text-slate-100">
                       {t(card.labelKey)}
                     </p>
-                    <p className="mt-0.5 line-clamp-1 text-xs leading-snug text-slate-500 sm:hidden dark:text-slate-400">
+                    <p className="mt-0.5 line-clamp-1 text-[11px] leading-snug text-slate-600 sm:hidden dark:text-slate-400">
                       {t(card.shortKey)}
                     </p>
                     <p className="mt-1 hidden text-xs leading-snug text-slate-500 sm:line-clamp-2 sm:block sm:text-[13px] dark:text-slate-400">
