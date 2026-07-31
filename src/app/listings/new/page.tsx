@@ -88,7 +88,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] py-4 dark:bg-slate-950 sm:py-8">
       <Container size="md" className="max-w-[1100px] min-w-0">
-        <CreateListingPageHeader />
+        <CreateListingPageHeader initialVertical={initialVertical} />
 
         {categories.length === 0 || cities.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200 sm:mt-8 sm:p-6">

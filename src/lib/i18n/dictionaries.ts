@@ -554,6 +554,107 @@ export const DICTIONARY = {
   },
 
   // Cargo requests — Phase 72
+  "cargo.addCompanyTitle": {
+    ru: "Вы карго-компания?",
+    kg: "Сиз карго компаниясызбы?",
+    en: "Are you a cargo company?",
+  },
+  "cargo.addCompanyDescription": {
+    ru: "Добавьте свою компанию, чтобы клиенты могли находить вас и отправлять заявки.",
+    kg: "Компанияңызды кошуңуз, кардарлар сизди таап, сурам жөнөтө алышат.",
+    en: "Add your company so customers can find you and send requests.",
+  },
+  "cargo.addCompanyButton": {
+    ru: "Добавить карго-компанию",
+    kg: "Карго компания кошуу",
+    en: "Add cargo company",
+  },
+  "cargo.companySubmitted": {
+    ru: "Карго-компания отправлена на модерацию.",
+    kg: "Карго компания модерацияга жөнөтүлдү.",
+    en: "Cargo company submitted for moderation.",
+  },
+  "cargo.companyEmptyTitle": {
+    ru: "Карго-компании пока не добавлены.",
+    kg: "Карго компаниялар азырынча кошула элек.",
+    en: "No cargo companies have been added yet.",
+  },
+  "cargo.companyEmptyDescription": {
+    ru: "Станьте первым поставщиком карго-услуг на сайте.",
+    kg: "Сайттагы биринчи карго кызмат көрсөтүүчү болуңуз.",
+    en: "Become the first cargo service provider on the site.",
+  },
+  "cargo.form.companyName": {
+    ru: "Название карго-компании или услуги",
+    kg: "Карго компаниянын же кызматтын аталышы",
+    en: "Cargo company or service name",
+  },
+  "cargo.form.companyDescription": {
+    ru: "Опишите направления, сроки, условия доставки и способы связи через заявку.",
+    kg: "Багыттарды, мөөнөттөрдү, жеткирүү шарттарын жана сурам аркылуу байланышуу жолун жазыңыз.",
+    en: "Describe routes, timing, delivery terms and how customers can contact you through a request.",
+  },
+  "cargo.form.servicePrice": {
+    ru: "Стоимость услуги, если есть",
+    kg: "Кызмат баасы, эгер болсо",
+    en: "Service price, if available",
+  },
+  "cargo.form.serviceType": {
+    ru: "Тип карго-услуги",
+    kg: "Карго кызмат түрү",
+    en: "Cargo service type",
+  },
+  "cargo.form.cityOffice": {
+    ru: "Город / офис",
+    kg: "Шаар / офис",
+    en: "City / office",
+  },
+  "cargo.categories.deliveryFromChina": {
+    ru: "Доставка из Китая",
+    kg: "Кытайдан жеткирүү",
+    en: "Delivery from China",
+  },
+  "cargo.categories.deliveryKyrgyzstan": {
+    ru: "Доставка по Кыргызстану",
+    kg: "Кыргызстан боюнча жеткирүү",
+    en: "Delivery across Kyrgyzstan",
+  },
+  "cargo.categories.internationalDelivery": {
+    ru: "Международная доставка",
+    kg: "Эл аралык жеткирүү",
+    en: "International delivery",
+  },
+  "cargo.categories.roadFreight": {
+    ru: "Автоперевозки",
+    kg: "Авто жеткирүү",
+    en: "Road freight",
+  },
+  "cargo.categories.airFreight": {
+    ru: "Авиадоставка",
+    kg: "Аба аркылуу жеткирүү",
+    en: "Air freight",
+  },
+  "cargo.categories.railFreight": {
+    ru: "Железнодорожная доставка",
+    kg: "Темир жол аркылуу жеткирүү",
+    en: "Rail freight",
+  },
+  "cargo.categories.warehousing": {
+    ru: "Складские услуги",
+    kg: "Кампа кызматтары",
+    en: "Warehousing",
+  },
+  "cargo.categories.customsClearance": {
+    ru: "Таможенное оформление",
+    kg: "Бажы жол-жоболоштуруу",
+    en: "Customs clearance",
+  },
+  "cargo.categories.other": {
+    ru: "Другое",
+    kg: "Башка",
+    en: "Other",
+  },
+
   "cargo.heroTitle": {
     ru: "Карго и доставка из Китая, Кыргызстана и других направлений",
     kg: "Кытайдан, Кыргызстандан жана башка багыттардан карго жана жеткирүү",

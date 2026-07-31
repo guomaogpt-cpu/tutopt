@@ -383,14 +383,13 @@ export const SERVICES_CATEGORIES: CategorySeed[] = [
 ];
 
 export const CARGO_CATEGORIES: CategorySeed[] = [
-  { name: "Грузоперевозки по Кыргызстану", slug: "cargo-gruzoperevozki-po-kyrgyzstanu", sort_order: 1, vertical: "CARGO" },
-  { name: "Доставка Китай-Кыргызстан", slug: "cargo-dostavka-kitay-kyrgyzstan", sort_order: 2, vertical: "CARGO" },
-  { name: "Международная логистика", slug: "cargo-mezhdunarodnaya-logistika", sort_order: 3, vertical: "CARGO" },
-  { name: "Попутные грузы", slug: "cargo-poputnye-gruzy", sort_order: 4, vertical: "CARGO" },
-  { name: "Склады и хранение", slug: "cargo-sklady-i-hranenie", sort_order: 5, vertical: "CARGO" },
-  { name: "Таможенное оформление", slug: "cargo-tamozhennoe-oformlenie", sort_order: 6, vertical: "CARGO" },
-  { name: "Спецтехника", slug: "cargo-spectehnika", sort_order: 7, vertical: "CARGO" },
-  { name: "Курьерская доставка", slug: "cargo-kurerskaya-dostavka", sort_order: 8, vertical: "CARGO" },
-  { name: "Переезды", slug: "cargo-pereezdy", sort_order: 9, vertical: "CARGO" },
-  { name: "Экспедирование", slug: "cargo-ekspedirovanie", sort_order: 10, vertical: "CARGO" },
+  { name: "Доставка из Китая", slug: "cargo-delivery-from-china", sort_order: 1, vertical: "CARGO" },
+  { name: "Доставка по Кыргызстану", slug: "cargo-delivery-kyrgyzstan", sort_order: 2, vertical: "CARGO" },
+  { name: "Международная доставка", slug: "cargo-international-delivery", sort_order: 3, vertical: "CARGO" },
+  { name: "Автоперевозки", slug: "cargo-road-freight", sort_order: 4, vertical: "CARGO" },
+  { name: "Авиадоставка", slug: "cargo-air-freight", sort_order: 5, vertical: "CARGO" },
+  { name: "Железнодорожная доставка", slug: "cargo-rail-freight", sort_order: 6, vertical: "CARGO" },
+  { name: "Складские услуги", slug: "cargo-warehousing", sort_order: 7, vertical: "CARGO" },
+  { name: "Таможенное оформление", slug: "cargo-customs-clearance", sort_order: 8, vertical: "CARGO" },
+  { name: "Другое", slug: "cargo-other", sort_order: 9, vertical: "CARGO" },
 ];

@@ -415,7 +415,9 @@ export function NewListingForm({
             <CheckCircle2 className="size-7" aria-hidden="true" />
           </div>
           <h2 className="mt-4 text-lg font-bold text-slate-900 dark:text-slate-100">
-            {t("createListing.submittedForModeration")}
+            {vertical === "CARGO"
+              ? t("cargo.companySubmitted")
+              : t("createListing.submittedForModeration")}
           </h2>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             {t("createListing.moderationNote")}
@@ -477,15 +479,25 @@ export function NewListingForm({
 
           <FormSection
             dense
-            title={t("createListing.whatSelling")}
-            description={t("createListing.sections.main")}
+            title={
+              vertical === "CARGO"
+                ? t("cargo.addCompanyButton")
+                : t("createListing.whatSelling")
+            }
+            description={
+              vertical === "CARGO"
+                ? t("cargo.addCompanyDescription")
+                : t("createListing.sections.main")
+            }
           >
             <div className="space-y-2">
               <label
                 htmlFor="listing-title"
                 className="text-sm font-medium text-slate-900 dark:text-slate-100"
               >
-                {formConfig.titleLabel}
+                {vertical === "CARGO"
+                  ? t("cargo.form.companyName")
+                  : formConfig.titleLabel}
               </label>
               <Input
                 id="listing-title"
@@ -495,11 +507,19 @@ export function NewListingForm({
                 maxLength={120}
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder={formConfig.titlePlaceholder}
+                placeholder={
+                  vertical === "CARGO"
+                    ? t("cargo.form.companyName")
+                    : formConfig.titlePlaceholder
+                }
                 disabled={isSubmitting}
                 className={fieldInputClass(Boolean(titleError))}
               />
-              <p className="text-xs text-slate-500 dark:text-slate-400">{formConfig.titleHint}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {vertical === "CARGO"
+                  ? t("cargo.form.companyDescription")
+                  : formConfig.titleHint}
+              </p>
               <FieldError message={titleError} />
             </div>
 
@@ -539,7 +559,9 @@ export function NewListingForm({
               label={
                 vertical === "SERVICES"
                   ? t("services.formCategory")
-                  : t("filters.category")
+                  : vertical === "CARGO"
+                    ? t("cargo.form.serviceType")
+                    : t("filters.category")
               }
               error={
                 categoryError ||
@@ -589,7 +611,9 @@ export function NewListingForm({
                   htmlFor="listing-price"
                   className="text-sm font-medium text-slate-900 dark:text-slate-100"
                 >
-                  {formConfig.priceLabel}
+                  {vertical === "CARGO"
+                    ? t("cargo.form.servicePrice")
+                    : formConfig.priceLabel}
                 </label>
                 <Input
                   id="listing-price"
@@ -700,7 +724,9 @@ export function NewListingForm({
               pickerId="city"
               openPickerId={openPickerId}
               onOpenPickerChange={setOpenPickerId}
-              label="Город"
+              label={
+                vertical === "CARGO" ? t("cargo.form.cityOffice") : "Город"
+              }
               value={cityId}
               onChange={setCityId}
               options={cities}
@@ -716,12 +742,16 @@ export function NewListingForm({
             title={
               vertical === "SERVICES"
                 ? t("services.formTitle")
-                : t("createListing.sections.description")
+                : vertical === "CARGO"
+                  ? t("cargo.form.companyDescription")
+                  : t("createListing.sections.description")
             }
             description={
               vertical === "SERVICES"
                 ? t("services.formDescriptionHint")
-                : formConfig.descriptionSectionDescription
+                : vertical === "CARGO"
+                  ? t("cargo.form.companyDescription")
+                  : formConfig.descriptionSectionDescription
             }
           >
             <div className="space-y-2">
@@ -731,7 +761,9 @@ export function NewListingForm({
               >
                 {vertical === "SERVICES"
                   ? t("services.formTitle")
-                  : t("createListing.sections.description")}
+                  : vertical === "CARGO"
+                    ? t("cargo.form.companyDescription")
+                    : t("createListing.sections.description")}
               </label>
               <Textarea
                 id="listing-description"
@@ -739,16 +771,22 @@ export function NewListingForm({
                 required
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder={formConfig.descriptionPlaceholder}
+                placeholder={
+                  vertical === "CARGO"
+                    ? t("cargo.form.companyDescription")
+                    : formConfig.descriptionPlaceholder
+                }
                 className={cn(
                   "min-h-[140px] w-full resize-y rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:min-h-[160px]",
                   descriptionError && "border-red-200 focus-visible:ring-red-200",
                 )}
                 disabled={isSubmitting}
               />
-              {vertical === "SERVICES" ? (
+              {vertical === "SERVICES" || vertical === "CARGO" ? (
                 <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-                  {t("services.formDescriptionHint")}
+                  {vertical === "CARGO"
+                    ? t("cargo.form.companyDescription")
+                    : t("services.formDescriptionHint")}
                 </p>
               ) : (
                 <ul className="hidden text-xs leading-relaxed text-slate-500 sm:block dark:text-slate-400">

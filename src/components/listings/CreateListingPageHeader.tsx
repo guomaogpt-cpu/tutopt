@@ -1,12 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import type { ListingVertical } from "@prisma/client";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
 
-export function CreateListingPageHeader() {
+type CreateListingPageHeaderProps = {
+  initialVertical?: ListingVertical;
+};
+
+export function CreateListingPageHeader({
+  initialVertical,
+}: CreateListingPageHeaderProps) {
   const { t } = useTranslation();
+  const isCargo = initialVertical === "CARGO";
 
   return (
     <>
@@ -28,7 +36,7 @@ export function CreateListingPageHeader() {
           </li>
           <li aria-hidden="true">/</li>
           <li className="line-clamp-1 font-medium text-slate-700 dark:text-slate-200">
-            {t("createListing.title")}
+            {isCargo ? t("cargo.addCompanyButton") : t("createListing.title")}
           </li>
         </ol>
       </nav>
@@ -36,10 +44,10 @@ export function CreateListingPageHeader() {
       <PageHeader className="mt-0 pb-0 sm:mt-4">
         <PageHeaderContent>
           <PageTitle className="text-xl text-slate-900 sm:text-3xl dark:text-slate-100">
-            {t("createListing.title")}
+            {isCargo ? t("cargo.addCompanyButton") : t("createListing.title")}
           </PageTitle>
           <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
-            {t("createListing.subtitle")}
+            {isCargo ? t("cargo.addCompanyDescription") : t("createListing.subtitle")}
           </PageSubtitle>
         </PageHeaderContent>
       </PageHeader>

@@ -2,6 +2,7 @@ import {
   CargoCompactHero,
   type CargoCategoryItem,
 } from "@/components/cargo/CargoCompactHero";
+import { CargoAddCompanyCta } from "@/components/cargo/CargoAddCompanyCta";
 import { CargoCompaniesSection } from "@/components/cargo/CargoCompaniesSection";
 import { CargoHowItWorks } from "@/components/cargo/CargoHowItWorks";
 import { CargoPublicRequests } from "@/components/cargo/CargoPublicRequests";
@@ -34,6 +35,8 @@ export function CargoLandingPage({
         </section>
 
         <CargoHowItWorks />
+
+        <CargoAddCompanyCta />
 
         <CargoCompaniesSection listings={listings} />
 

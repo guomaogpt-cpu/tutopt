@@ -66,7 +66,7 @@ export const VERTICALS: Record<ListingVertical, VerticalDefinition> = {
     subtitle: "Грузоперевозки, доставка и логистика.",
     href: "/cargo",
     listingsHref: "/listings?vertical=CARGO",
-    createListingHref: "/listings/new?vertical=CARGO",
+    createListingHref: "/listings/new?vertical=cargo",
     homeCardDescription: "Грузоперевозки и логистика",
     metaTitle: "Карго — ВсеТут",
     metaDescription: "Карго, доставка и логистика в Кыргызстане.",

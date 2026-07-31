@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { Button } from "@/components/ui/button";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { VERTICAL_LATEST_LISTINGS_GRID_CLASS } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
@@ -37,11 +38,17 @@ export function CargoCompaniesSection({ listings }: CargoCompaniesSectionProps) 
       {listings.length === 0 ? (
         <div className="mt-4 rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-center sm:p-8 dark:border-slate-800 dark:bg-slate-900">
           <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-            {t("cargo.noCompaniesTitle")}
+            {t("cargo.companyEmptyTitle")}
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-            {t("cargo.noCompaniesDescription")}
+            {t("cargo.companyEmptyDescription")}
           </p>
+          <Button
+            asChild
+            className="mt-4 h-11 w-full rounded-xl bg-rose-600 text-white hover:bg-rose-700 sm:w-auto"
+          >
+            <Link href={config.createListingHref}>{t("cargo.addCompanyButton")}</Link>
+          </Button>
         </div>
       ) : (
         <div className={`mt-4 ${VERTICAL_LATEST_LISTINGS_GRID_CLASS}`}>

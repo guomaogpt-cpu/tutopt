@@ -98,7 +98,7 @@ export function CargoCompactHero({ categories }: CargoCompactHeroProps) {
               asChild
             >
               <Link href={config.createListingHref}>
-                {t("vertical.postListing")}
+                {t("cargo.addCompanyButton")}
               </Link>
             </Button>
 
