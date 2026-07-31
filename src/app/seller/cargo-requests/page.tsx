@@ -17,6 +17,7 @@ import {
   PageHeaderContent,
 } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
+import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPrivatePageMetadata(
@@ -72,9 +73,20 @@ export default async function SellerCargoRequestsPage({
   const rawParams = await searchParams;
   const statusParam = typeof rawParams.status === "string" ? rawParams.status : null;
   const statusFilter = parseCargoRequestStatusFilter(statusParam);
-  const requests = await getSellerCargoRequests({ statusFilter });
 
-  const showContacts = user.role === UserRole.ADMIN || user.role === UserRole.SELLER;
+  const sellerProfile = await prisma.sellerProfile.findUnique({
+    where: { user_id: user.id },
+    select: { id: true },
+  });
+
+  const requests = await getSellerCargoRequests({
+    statusFilter,
+    sellerProfileId: sellerProfile?.id ?? null,
+  });
+
+  // Client phone only for admin until contact-sharing policy is ready.
+  const showContacts = user.role === UserRole.ADMIN;
+  const canRespond = Boolean(sellerProfile);
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 dark:bg-slate-950 sm:py-8">
@@ -85,7 +97,7 @@ export default async function SellerCargoRequestsPage({
               Карго-заявки
             </PageTitle>
             <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
-              Запросы на перевозку от клиентов
+              Доска заявок на перевозку — откликайтесь через систему
             </PageSubtitle>
           </PageHeaderContent>
           <PageHeaderActions className="w-full sm:w-auto">
@@ -100,7 +112,11 @@ export default async function SellerCargoRequestsPage({
         </PageHeader>
 
         <div className="mt-6 lg:mt-8">
-          <SellerCargoRequestsList requests={requests} showContacts={showContacts} />
+          <SellerCargoRequestsList
+            requests={requests}
+            showContacts={showContacts}
+            canRespond={canRespond}
+          />
         </div>
       </Container>
     </main>

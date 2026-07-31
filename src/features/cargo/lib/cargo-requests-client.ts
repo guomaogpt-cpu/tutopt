@@ -1,8 +1,23 @@
 import type { CreateCargoRequestInput } from "@/features/cargo/validators/cargo-request.validators";
+import type { CreateCargoResponseInput } from "@/features/cargo/validators/cargo-response.validators";
+import type { CargoRequestStatus } from "@prisma/client";
 
 type CreateCargoRequestResponse = {
   request: {
     id: string;
+  };
+};
+
+type CreateCargoResponseResult = {
+  response: {
+    id: string;
+  };
+};
+
+type UpdateCargoRequestStatusResult = {
+  request: {
+    id: string;
+    status: CargoRequestStatus;
   };
 };
 
@@ -115,4 +130,48 @@ export async function uploadCargoRequestImage(
   }
 
   return (body as ApiSuccessBody<UploadCargoImageResponse>).data;
+}
+
+export async function createCargoResponse(
+  requestId: string,
+  input: CreateCargoResponseInput,
+): Promise<CreateCargoResponseResult> {
+  const response = await fetch(`/api/cargo/requests/${requestId}/responses`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  const body = (await response.json()) as
+    | ApiSuccessBody<CreateCargoResponseResult>
+    | ApiErrorBody;
+
+  if (!response.ok) {
+    const errors = mapApiErrors(body as ApiErrorBody);
+    throw new CargoRequestError(errors.form[0] ?? "CARGO_GENERIC_ERROR", errors);
+  }
+
+  return (body as ApiSuccessBody<CreateCargoResponseResult>).data;
+}
+
+export async function updateAdminCargoRequestStatus(
+  requestId: string,
+  status: CargoRequestStatus,
+): Promise<UpdateCargoRequestStatusResult> {
+  const response = await fetch(`/api/admin/cargo-requests/${requestId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+
+  const body = (await response.json()) as
+    | ApiSuccessBody<UpdateCargoRequestStatusResult>
+    | ApiErrorBody;
+
+  if (!response.ok) {
+    const errors = mapApiErrors(body as ApiErrorBody);
+    throw new CargoRequestError(errors.form[0] ?? "CARGO_GENERIC_ERROR", errors);
+  }
+
+  return (body as ApiSuccessBody<UpdateCargoRequestStatusResult>).data;
 }

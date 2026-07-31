@@ -101,6 +101,14 @@ enum ContactEventType {
 enum NotificationType {
   NEW_LEAD
   NEW_CARGO_REQUEST
+  NEW_CARGO_RESPONSE
+}
+
+enum CargoResponseStatus {
+  NEW
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
 }
 
 // ---------------------------------------------------------------------------
@@ -234,9 +242,10 @@ model SellerProfile {
   region     Region           @relation(fields: [region_id], references: [id], onDelete: Restrict)
   city       City?            @relation(fields: [city_id], references: [id], onDelete: SetNull)
   documents  SellerDocument[]
-  listings   Listing[]
-  leads      Lead[]
-  reports    Report[]
+  listings       Listing[]
+  leads          Lead[]
+  reports        Report[]
+  cargoResponses CargoResponse[]
 
   @@index([slug])
   @@index([region_id])
@@ -425,12 +434,37 @@ model CargoRequest {
   status         CargoRequestStatus @default(NEW)
   user_id        String?            @map("user_id") @db.Uuid
 
-  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user      User?            @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  responses CargoResponse[]
 
   @@index([created_at(sort: Desc)])
   @@index([status])
   @@index([user_id])
   @@map("cargo_requests")
+}
+
+model CargoResponse {
+  id                String              @id @default(uuid()) @db.Uuid
+  created_at        DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  updated_at        DateTime            @updatedAt @map("updated_at") @db.Timestamptz
+  cargo_request_id  String              @map("cargo_request_id") @db.Uuid
+  seller_profile_id String              @map("seller_profile_id") @db.Uuid
+  price             String?             @db.VarChar(50)
+  currency          String?             @db.VarChar(10)
+  estimated_time    String?             @map("estimated_time") @db.VarChar(100)
+  comment           String              @db.VarChar(1000)
+  contact_name      String?             @map("contact_name") @db.VarChar(100)
+  contact_phone     String?             @map("contact_phone") @db.VarChar(20)
+  status            CargoResponseStatus @default(NEW)
+
+  cargoRequest  CargoRequest  @relation(fields: [cargo_request_id], references: [id], onDelete: Cascade)
+  sellerProfile SellerProfile @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
+
+  @@unique([cargo_request_id, seller_profile_id])
+  @@index([cargo_request_id, created_at(sort: Desc)])
+  @@index([seller_profile_id, created_at(sort: Desc)])
+  @@index([status])
+  @@map("cargo_responses")
 }
 
 model Report {

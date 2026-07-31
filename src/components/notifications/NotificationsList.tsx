@@ -71,7 +71,8 @@ function filterNotifications(
       return notifications.filter(
         (notification) =>
           notification.type === NotificationTypeEnum.NEW_LEAD ||
-          notification.type === NotificationTypeEnum.NEW_CARGO_REQUEST,
+          notification.type === NotificationTypeEnum.NEW_CARGO_REQUEST ||
+          notification.type === NotificationTypeEnum.NEW_CARGO_RESPONSE,
       );
     default:
       return notifications;
@@ -82,6 +83,7 @@ function getNotificationIcon(type: NotificationType) {
   switch (type) {
     case NotificationTypeEnum.NEW_LEAD:
     case NotificationTypeEnum.NEW_CARGO_REQUEST:
+    case NotificationTypeEnum.NEW_CARGO_RESPONSE:
       return Inbox;
     default:
       return BellRing;
@@ -125,7 +127,8 @@ export function NotificationsList({ initialNotifications, userRole }: Notificati
       leads: notifications.filter(
         (notification) =>
           notification.type === NotificationTypeEnum.NEW_LEAD ||
-          notification.type === NotificationTypeEnum.NEW_CARGO_REQUEST,
+          notification.type === NotificationTypeEnum.NEW_CARGO_REQUEST ||
+          notification.type === NotificationTypeEnum.NEW_CARGO_RESPONSE,
       ).length,
     }),
     [notifications, unreadCount],

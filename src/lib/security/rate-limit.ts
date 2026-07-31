@@ -330,6 +330,21 @@ export function assertCargoRequestUploadRateLimit(ip: string, userId?: string | 
   }
 }
 
+export const CARGO_RESPONSE_CREATE_RATE_LIMIT = {
+  limit: 30,
+  windowMs: 60 * 60 * 1000,
+  message: "Слишком много откликов. Попробуйте позже.",
+} as const;
+
+export function assertCargoResponseCreateRateLimit(userId: string): void {
+  assertRateLimit(
+    `cargo:response:user:${userId}`,
+    CARGO_RESPONSE_CREATE_RATE_LIMIT.limit,
+    CARGO_RESPONSE_CREATE_RATE_LIMIT.windowMs,
+    CARGO_RESPONSE_CREATE_RATE_LIMIT.message,
+  );
+}
+
 export const FAVORITE_TOGGLE_RATE_LIMIT = {
   limit: 60,
   windowMs: 60 * 60 * 1000,

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Heart, Inbox, PlusCircle } from "lucide-react";
+import { Bell, Heart, Inbox, PlusCircle, Truck } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ export function BuyerQuickActions() {
         {t("profile.title")}
       </h2>
 
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-5">
         <Link href="/favorites" className={cardClassName}>
           <div className={iconWrapClassName}>
             <Heart className="size-5" aria-hidden="true" />
@@ -57,6 +57,17 @@ export function BuyerQuickActions() {
           <div className="min-w-0">
             <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
               {t("profile.leads")}
+            </p>
+          </div>
+        </Link>
+
+        <Link href="/buyer/cargo-requests" className={cardClassName}>
+          <div className={iconWrapClassName}>
+            <Truck className="size-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+              {t("buyer.cargoRequests")}
             </p>
           </div>
         </Link>

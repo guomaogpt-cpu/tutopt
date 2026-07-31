@@ -3,6 +3,7 @@ import {
   type CargoCategoryItem,
 } from "@/components/cargo/CargoCompactHero";
 import { CargoCompaniesSection } from "@/components/cargo/CargoCompaniesSection";
+import { CargoHowItWorks } from "@/components/cargo/CargoHowItWorks";
 import { CargoPublicRequests } from "@/components/cargo/CargoPublicRequests";
 import { CargoRequestForm } from "@/components/cargo/CargoRequestForm";
 import { Container } from "@/components/ui/container";
@@ -32,9 +33,11 @@ export function CargoLandingPage({
           <CargoRequestForm />
         </section>
 
-        <CargoPublicRequests requests={recentRequests} />
+        <CargoHowItWorks />
 
         <CargoCompaniesSection listings={listings} />
+
+        <CargoPublicRequests requests={recentRequests} />
       </Container>
     </main>
   );

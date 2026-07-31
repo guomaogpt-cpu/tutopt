@@ -555,9 +555,9 @@ export const DICTIONARY = {
 
   // Cargo requests — Phase 72
   "cargo.heroTitle": {
-    ru: "Найдите карго или оставьте заявку на перевозку",
-    kg: "Карго табыңыз же жеткирүүгө сурам калтырыңыз",
-    en: "Find cargo services or submit a shipping request",
+    ru: "Карго и доставка из Китая, Кыргызстана и других направлений",
+    kg: "Кытайдан, Кыргызстандан жана башка багыттардан карго жана жеткирүү",
+    en: "Cargo and delivery from China, Kyrgyzstan and other routes",
   },
   "cargo.heroSubtitle": {
     ru: "Опишите товар, маршрут и контакты — карго-компании смогут увидеть вашу заявку.",
@@ -775,9 +775,9 @@ export const DICTIONARY = {
     en: "When customers submit a request on /cargo, it will appear here.",
   },
   "cargo.contactsRestricted": {
-    ru: "Контакты доступны администраторам и карго-компаниям.",
-    kg: "Байланыштар админдерге жана карго компанияларга жеткиликтүү.",
-    en: "Contacts are available to admins and cargo companies.",
+    ru: "Телефон клиента скрыт. Сначала откликнитесь через систему — полный контакт видит администратор.",
+    kg: "Кардардын телефону жашырылган. Адегенде система аркылуу жооп бериңиз — толук байланышты администратор көрөт.",
+    en: "Client phone is hidden. Respond through the system first — full contact is visible to admins.",
   },
   "seller.viewCargoRequests": {
     ru: "Карго-заявки",
@@ -788,6 +788,202 @@ export const DICTIONARY = {
     ru: "Запросы на перевозку",
     kg: "Жеткирүү сурамдары",
     en: "Shipping requests",
+  },
+
+  "cargo.howItWorksTitle": {
+    ru: "Как это работает",
+    kg: "Бул кантип иштейт",
+    en: "How it works",
+  },
+  "cargo.howItWorks.step1.title": {
+    ru: "Опишите товар",
+    kg: "Товарды сүрөттөңүз",
+    en: "Describe the item",
+  },
+  "cargo.howItWorks.step1.description": {
+    ru: "Укажите, что нужно перевезти, вес, габариты и фото.",
+    kg: "Эмнени ташуу керектигин, салмакты, өлчөмдөрдү жана сүрөттү жазыңыз.",
+    en: "Tell what needs shipping, weight, dimensions and photo.",
+  },
+  "cargo.howItWorks.step2.title": {
+    ru: "Укажите маршрут и контакты",
+    kg: "Маршрутту жана байланыштарды жазыңыз",
+    en: "Add route and contacts",
+  },
+  "cargo.howItWorks.step2.description": {
+    ru: "Откуда и куда везти, имя и телефон для связи.",
+    kg: "Кайдан жана каяка ташуу, байланыш үчүн ат жана телефон.",
+    en: "From and to locations, plus name and phone.",
+  },
+  "cargo.howItWorks.step3.title": {
+    ru: "Карго-компании увидят заявку",
+    kg: "Карго компаниялар сурамды көрүшөт",
+    en: "Cargo companies see the request",
+  },
+  "cargo.howItWorks.step3.description": {
+    ru: "Заявка появляется на доске карго-заявок.",
+    kg: "Сурам карго сурамдар тактасында көрүнөт.",
+    en: "The request appears on the cargo request board.",
+  },
+  "cargo.howItWorks.step4.title": {
+    ru: "Получите отклики",
+    kg: "Жоопторду алыңыз",
+    en: "Get responses",
+  },
+  "cargo.howItWorks.step4.description": {
+    ru: "Компании предложат цену, срок и условия.",
+    kg: "Компаниялар бааны, мөөнөттү жана шарттарды сунушташат.",
+    en: "Companies offer price, timing and terms.",
+  },
+  "cargo.latestRequestsTitle": {
+    ru: "Последние заявки",
+    kg: "Акыркы сурамдар",
+    en: "Latest requests",
+  },
+  "cargo.publicRequestNotice": {
+    ru: "Контакты скрыты. Полные данные видят карго-компании после отклика и администраторы.",
+    kg: "Байланыштар жашырылган. Толук маалыматты жооп бергенден кийин карго компаниялар жана админдер көрөт.",
+    en: "Contacts are hidden. Full details are visible to admins and after system responses.",
+  },
+  "cargo.respond": {
+    ru: "Откликнуться",
+    kg: "Жооп берүү",
+    en: "Respond",
+  },
+  "cargo.responseTitle": {
+    ru: "Отклик на заявку",
+    kg: "Сурамга жооп",
+    en: "Respond to request",
+  },
+  "cargo.responseDescription": {
+    ru: "Укажите цену, срок и условия. Клиент или администратор сможет увидеть ваш отклик.",
+    kg: "Бааны, мөөнөттү жана шарттарды көрсөтүңүз. Кардар же администратор жообуңузду көрө алат.",
+    en: "Enter the price, timing and terms. The client or admin will be able to see your response.",
+  },
+  "cargo.responsePrice": {
+    ru: "Цена / ориентировочная цена",
+    kg: "Баа / болжолдуу баа",
+    en: "Price / estimate",
+  },
+  "cargo.responseCurrency": {
+    ru: "Валюта",
+    kg: "Валюта",
+    en: "Currency",
+  },
+  "cargo.responseEstimatedTime": {
+    ru: "Срок доставки / забора",
+    kg: "Жеткирүү / алуу мөөнөтү",
+    en: "Delivery / pickup timing",
+  },
+  "cargo.responseComment": {
+    ru: "Комментарий",
+    kg: "Комментарий",
+    en: "Comment",
+  },
+  "cargo.responseContactName": {
+    ru: "Контактное лицо",
+    kg: "Байланыш адамы",
+    en: "Contact person",
+  },
+  "cargo.responseContactPhone": {
+    ru: "Телефон для связи",
+    kg: "Байланыш телефону",
+    en: "Contact phone",
+  },
+  "cargo.sendResponse": {
+    ru: "Отправить отклик",
+    kg: "Жоопту жөнөтүү",
+    en: "Send response",
+  },
+  "cargo.responseSent": {
+    ru: "Отклик отправлен",
+    kg: "Жооп жөнөтүлдү",
+    en: "Response sent",
+  },
+  "cargo.alreadyResponded": {
+    ru: "Вы уже откликались на эту заявку.",
+    kg: "Бул сурамга мурун жооп бергенсиз.",
+    en: "You have already responded to this request.",
+  },
+  "cargo.requestClosed": {
+    ru: "Заявка закрыта, отклик недоступен.",
+    kg: "Сурам жабылган, жооп берүү мүмкүн эмес.",
+    en: "This request is closed; responses are unavailable.",
+  },
+  "cargo.myResponses": {
+    ru: "Ваш отклик",
+    kg: "Сиздин жообуңуз",
+    en: "Your response",
+  },
+  "cargo.responses": {
+    ru: "Отклики",
+    kg: "Жооптор",
+    en: "Responses",
+  },
+  "cargo.responsesCount": {
+    ru: "Откликов: {count}",
+    kg: "Жооптор: {count}",
+    en: "Responses: {count}",
+  },
+  "cargo.admin.title": {
+    ru: "Карго-заявки",
+    kg: "Карго сурамдар",
+    en: "Cargo requests",
+  },
+  "cargo.admin.requests": {
+    ru: "Заявки",
+    kg: "Сурамдар",
+    en: "Requests",
+  },
+  "cargo.admin.responses": {
+    ru: "Отклики",
+    kg: "Жооптор",
+    en: "Responses",
+  },
+  "cargo.admin.status": {
+    ru: "Статус",
+    kg: "Статус",
+    en: "Status",
+  },
+  "cargo.admin.changeStatus": {
+    ru: "Изменить статус",
+    kg: "Статусту өзгөртүү",
+    en: "Change status",
+  },
+  "cargo.admin.clientContact": {
+    ru: "Контакт клиента",
+    kg: "Кардардын байланышы",
+    en: "Client contact",
+  },
+  "cargo.seller.requestsTitle": {
+    ru: "Доска карго-заявок",
+    kg: "Карго сурамдар тактасы",
+    en: "Cargo request board",
+  },
+  "cargo.seller.requestsDescription": {
+    ru: "Новые заявки на перевозку — откликнитесь через систему.",
+    kg: "Жеткирүүгө жаңы сурамдар — система аркылуу жооп бериңиз.",
+    en: "New shipping requests — respond through the system.",
+  },
+  "cargo.seller.noRequests": {
+    ru: "Пока нет карго-заявок",
+    kg: "Азырынча карго сурамдар жок",
+    en: "No cargo requests yet",
+  },
+  "cargo.seller.respondToRequest": {
+    ru: "Откликнуться",
+    kg: "Жооп берүү",
+    en: "Respond",
+  },
+  "admin.cargoRequests": {
+    ru: "Карго",
+    kg: "Карго",
+    en: "Cargo",
+  },
+  "buyer.cargoRequests": {
+    ru: "Мои карго-заявки",
+    kg: "Менин карго сурамдарым",
+    en: "My cargo requests",
   },
 
   // Services structure — Phase 71

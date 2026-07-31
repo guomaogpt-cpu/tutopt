@@ -34,6 +34,13 @@ const navItems = [
     prefix: "/admin/reports",
   },
   {
+    labelKey: "admin.cargoRequests" as DictionaryKey,
+    href: "/admin/cargo-requests",
+    roles: [UserRole.ADMIN],
+    match: "prefix" as const,
+    prefix: "/admin/cargo-requests",
+  },
+  {
     labelKey: "admin.users" as DictionaryKey,
     href: "/admin/users",
     roles: [UserRole.ADMIN],

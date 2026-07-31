@@ -169,3 +169,48 @@ export async function createNewCargoRequestNotifications(input: {
     })),
   });
 }
+
+export async function createNewCargoResponseNotifications(input: {
+  actorId: string;
+  requestOwnerId: string | null;
+  itemName: string;
+  companyName: string;
+}): Promise<void> {
+  const recipientIds = new Set<string>();
+
+  const admins = await prisma.user.findMany({
+    where: { role: "ADMIN", is_blocked: false },
+    select: { id: true },
+  });
+
+  for (const admin of admins) {
+    recipientIds.add(admin.id);
+  }
+
+  if (input.requestOwnerId) {
+    recipientIds.add(input.requestOwnerId);
+  }
+
+  recipientIds.delete(input.actorId);
+
+  if (recipientIds.size === 0) {
+    return;
+  }
+
+  const title = "Новый отклик на карго-заявку";
+  const message = `${input.companyName} откликнулась на «${input.itemName}»`;
+
+  await prisma.notification.createMany({
+    data: [...recipientIds].map((recipientId) => {
+      const isOwner = recipientId === input.requestOwnerId;
+      return {
+        recipient_id: recipientId,
+        actor_id: input.actorId,
+        type: NotificationType.NEW_CARGO_RESPONSE,
+        title,
+        message,
+        link: isOwner ? "/buyer/cargo-requests" : "/admin/cargo-requests",
+      };
+    }),
+  });
+}

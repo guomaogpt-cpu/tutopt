@@ -28,9 +28,9 @@ export function CargoPublicRequests({ requests }: CargoPublicRequestsProps) {
         id="cargo-public-requests-heading"
         className="text-lg font-bold text-slate-900 sm:text-xl dark:text-slate-100"
       >
-        {t("cargo.requestsTitle")}
+        {t("cargo.latestRequestsTitle")}
       </h2>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("cargo.requestsPublicHint")}</p>
+      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("cargo.publicRequestNotice")}</p>
 
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {requests.map((request) => (

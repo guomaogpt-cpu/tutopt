@@ -2,7 +2,7 @@ import type { Prisma, UserRole } from "@prisma/client";
 import { logger } from "@/shared/lib/logger";
 import { prisma } from "@/shared/lib/prisma";
 
-export type AuditTargetType = "listing" | "user" | "report";
+export type AuditTargetType = "listing" | "user" | "report" | "cargo_request";
 
 export type AuditMetadata = Record<string, string | number | boolean | null>;
 
