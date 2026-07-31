@@ -122,25 +122,27 @@ export default async function BuyerDashboardPage() {
   ];
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
+    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] py-4 dark:bg-slate-950 sm:py-8">
       <Container size="lg" className="max-w-[1280px] min-w-0">
         <PageHeader className="pb-0">
           <PageHeaderContent>
-            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">{user.name}</PageTitle>
-            <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
+            <PageTitle className="text-xl text-slate-900 sm:text-3xl dark:text-slate-100">
+              {user.name}
+            </PageTitle>
+            <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
               Кабинет покупателя — заявки, избранное и поиск
             </PageSubtitle>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-[#64748B]">
-              <span className="inline-flex items-center rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-xs font-medium text-[#2563EB]">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-slate-500 dark:text-slate-400">
+              <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 dark:bg-slate-800 dark:text-blue-400">
                 Покупатель
               </span>
               {user.phone_verified_at ? (
-                <span className="inline-flex items-center gap-1 text-[#059669]">
+                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
                   <CheckCircle2 className="size-3.5" aria-hidden="true" />
                   Телефон подтверждён
                 </span>
               ) : null}
-              <span className="inline-flex items-center gap-1">
+              <span className="hidden items-center gap-1 sm:inline-flex">
                 <CalendarDays className="size-3.5" aria-hidden="true" />
                 На платформе с {memberSinceLabel}
               </span>
@@ -149,41 +151,43 @@ export default async function BuyerDashboardPage() {
           <PageHeaderActions className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button
               asChild
-              className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:w-auto"
+              className="h-11 w-full rounded-xl bg-blue-600 hover:bg-blue-700 sm:w-auto"
             >
               <Link href="/listings">Найти объявления</Link>
             </Button>
             <Button
               variant="outline"
               asChild
-              className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] sm:w-auto"
+              className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 sm:w-auto"
             >
               <Link href="/favorites">Избранное</Link>
             </Button>
           </PageHeaderActions>
         </PageHeader>
 
-        <div className="mt-6 space-y-8 lg:mt-8 lg:space-y-10">
+        <div className="mt-4 space-y-5 sm:mt-6 sm:space-y-8 lg:mt-8 lg:space-y-10">
           {blocked || leadsRestricted ? (
             <div
               role="status"
-              className="flex items-start gap-3 rounded-3xl border border-[rgba(220,38,38,0.2)] bg-[#FEF2F2] p-5"
+              className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950/30 sm:rounded-3xl sm:p-5"
             >
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#DC2626]">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-red-600 dark:bg-slate-900">
                 <AlertTriangle className="size-5" aria-hidden="true" />
               </div>
               <div>
-                <p className="font-semibold text-[#0F172A]">
+                <p className="font-semibold text-slate-900 dark:text-slate-100">
                   {blocked
                     ? "Аккаунт ограничен. Некоторые действия недоступны."
                     : "Отправка заявок временно ограничена."}
                 </p>
-                <p className="mt-1 text-sm text-[#64748B]">
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   Если вы считаете, что это ошибка, обратитесь в поддержку.
                 </p>
               </div>
             </div>
           ) : null}
+
+          <BuyerQuickActions />
 
           <SellerDashboardStatCards stats={stats} />
 
@@ -191,7 +195,7 @@ export default async function BuyerDashboardPage() {
             <section aria-labelledby="buyer-interests-title">
               <h2
                 id="buyer-interests-title"
-                className="mb-3 text-lg font-bold text-[#0F172A] sm:text-xl"
+                className="mb-3 text-base font-bold text-slate-900 sm:text-xl dark:text-slate-100"
               >
                 Направления интереса
               </h2>
@@ -200,7 +204,7 @@ export default async function BuyerDashboardPage() {
                   <li key={item.id}>
                     <Link
                       href={item.href}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-[#334155] ring-1 ring-slate-200 transition hover:text-[#2563EB] hover:ring-[#2563EB]/40"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-slate-200 transition hover:text-blue-600 hover:ring-blue-300 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-700"
                     >
                       {item.label}
                     </Link>
@@ -210,10 +214,10 @@ export default async function BuyerDashboardPage() {
             </section>
           ) : null}
 
-          <section aria-labelledby="buyer-quick-search-title">
+          <section aria-labelledby="buyer-quick-search-title" className="hidden sm:block">
             <h2
               id="buyer-quick-search-title"
-              className="mb-4 text-lg font-bold text-[#0F172A] sm:text-xl"
+              className="mb-4 text-lg font-bold text-slate-900 sm:text-xl dark:text-slate-100"
             >
               Быстрый поиск
             </h2>
@@ -223,16 +227,20 @@ export default async function BuyerDashboardPage() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex min-w-0 items-center gap-3 rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white p-4",
-                    "shadow-[0_4px_16px_rgba(15,23,42,0.04)] transition hover:border-[rgba(37,99,235,0.22)]",
+                    "flex min-w-0 items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4",
+                    "shadow-sm transition hover:border-blue-300 dark:border-slate-800 dark:bg-slate-900",
                   )}
                 >
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-slate-800 dark:text-blue-400">
                     <LayoutGrid className="size-5" aria-hidden="true" />
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate font-semibold text-[#0F172A]">{item.label}</p>
-                    <p className="mt-0.5 truncate text-xs text-[#64748B]">{item.description}</p>
+                    <p className="truncate font-semibold text-slate-900 dark:text-slate-100">
+                      {item.label}
+                    </p>
+                    <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+                      {item.description}
+                    </p>
                   </div>
                 </Link>
               ))}
@@ -240,9 +248,11 @@ export default async function BuyerDashboardPage() {
           </section>
 
           {awaitingResponseCount > 0 ? (
-            <p className="text-sm text-[#64748B]">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Ожидают ответа продавца:{" "}
-              <span className="font-medium text-[#0F172A]">{awaitingResponseCount}</span>
+              <span className="font-medium text-slate-900 dark:text-slate-100">
+                {awaitingResponseCount}
+              </span>
             </p>
           ) : null}
 
@@ -253,7 +263,6 @@ export default async function BuyerDashboardPage() {
             favoriteListingIds={data.favoriteListingIds}
           />
           <RecentlyViewedPanel />
-          <BuyerQuickActions />
         </div>
       </Container>
     </main>

@@ -15,6 +15,7 @@ import {
   getFieldError,
   type AuthFormErrors,
 } from "@/features/auth/lib/auth-client";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 const emptyErrors: AuthFormErrors = { form: [], fields: {} };
@@ -32,6 +33,7 @@ export function SellerOnboardingForm({
   nextPath,
   isDev,
 }: SellerOnboardingFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [companyName, setCompanyName] = useState(initialCompanyName);
   const [phone, setPhone] = useState("");
@@ -47,10 +49,15 @@ export function SellerOnboardingForm({
     event.preventDefault();
     setErrors(emptyErrors);
 
+    if (!companyName.trim()) {
+      setErrors({ form: [t("auth.requiredFields")], fields: {} });
+      return;
+    }
+
     if (!phoneVerificationToken) {
       setErrors({
-        form: ["Подтвердите телефон по коду из SMS"],
-        fields: { phoneVerificationToken: "Подтвердите телефон по коду из SMS" },
+        form: [t("auth.confirmPhoneRequired")],
+        fields: { phoneVerificationToken: t("auth.confirmPhoneRequired") },
       });
       return;
     }
@@ -86,8 +93,9 @@ export function SellerOnboardingForm({
             }
           }
         }
-        throw new AuthRequestError(body.error?.message ?? "Не удалось сохранить профиль", {
-          form: body.error?.message ? [body.error.message] : ["Не удалось сохранить профиль"],
+        const message = body.error?.message ?? t("auth.tryAgainLater");
+        throw new AuthRequestError(message, {
+          form: [message],
           fields,
         });
       }
@@ -101,7 +109,7 @@ export function SellerOnboardingForm({
         setErrors(error.formErrors);
       } else {
         setErrors({
-          form: ["Не удалось сохранить профиль. Попробуйте позже."],
+          form: [t("auth.tryAgainLater")],
           fields: {},
         });
       }
@@ -111,14 +119,18 @@ export function SellerOnboardingForm({
 
   return (
     <AuthFormCard
-      title="Профиль продавца"
-      description="Укажите данные, которые будут видны в ваших объявлениях и профиле. Подтвердите телефон, чтобы покупатели могли связаться с вами."
+      title={t("profile.completeSellerProfile")}
+      description={
+        email
+          ? t("profile.addPhoneForSeller")
+          : t("profile.sellerOnboardingDescription")
+      }
     >
-      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-5">
+      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-4 sm:space-y-5">
         <AuthAlert variant="error" messages={errors.form} />
 
         <AuthFormField
-          label="Название компании или имя продавца"
+          label={t("auth.sellerNameLabel")}
           htmlFor="onboarding-company"
           error={getFieldError(errors, "company_name")}
         >
@@ -131,7 +143,7 @@ export function SellerOnboardingForm({
             className={cn(
               authInputClassName,
               getFieldError(errors, "company_name") &&
-                "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+                "border-red-200 focus:border-red-600 focus:ring-red-200",
             )}
             disabled={isSubmitting}
             required
@@ -146,17 +158,23 @@ export function SellerOnboardingForm({
           onTokenReset={() => setPhoneVerificationToken(null)}
           errors={errors}
           disabled={isSubmitting}
+          phoneHint={
+            email ? t("profile.addPhoneForSeller") : t("profile.sellerPhoneHint")
+          }
           showDevHint={isDev}
         />
 
         {email ? (
-          <AuthFormField label="Email (из Google)" htmlFor="onboarding-email">
+          <AuthFormField label="Email (Google)" htmlFor="onboarding-email">
             <input
               id="onboarding-email"
               type="email"
               value={email}
               readOnly
-              className={cn(authInputClassName, "bg-slate-50 text-[#64748B]")}
+              className={cn(
+                authInputClassName,
+                "bg-slate-50 text-slate-500 dark:bg-slate-900 dark:text-slate-400",
+              )}
             />
           </AuthFormField>
         ) : null}
@@ -169,10 +187,10 @@ export function SellerOnboardingForm({
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-              Сохранение...
+              {t("auth.signingIn")}
             </>
           ) : (
-            "Сохранить и перейти в кабинет"
+            t("profile.saveSellerProfile")
           )}
         </button>
       </form>

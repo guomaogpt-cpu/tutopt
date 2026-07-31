@@ -108,7 +108,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
       title={t("auth.registerTitle")}
       description={t("auth.registerDescription")}
     >
-      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-5">
+      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-4 sm:space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
         <AuthAlert variant="error" messages={errors.form} />
 
@@ -187,26 +187,29 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
               {t("auth.creatingAccount")}
             </>
           ) : (
-            t("auth.createAccount")
+            t("auth.register")
           )}
         </button>
 
-        <AuthDivider />
-
-        <GoogleAuthButton
-          enabled={googleEnabled}
-          role={role}
-          next={nextPath}
-          disabled={isSubmitting}
-        />
+        {googleEnabled ? (
+          <>
+            <AuthDivider />
+            <GoogleAuthButton
+              enabled={googleEnabled}
+              role={role}
+              next={nextPath}
+              disabled={isSubmitting}
+            />
+          </>
+        ) : null}
 
         <p className="text-center text-sm text-[#64748B]">
-          {t("auth.haveAccount")}{" "}
+          {t("auth.hasAccount")}{" "}
           <Link
             href={loginHref}
             className="font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
           >
-            {t("auth.signIn")}
+            {t("auth.login")}
           </Link>
         </p>
       </form>

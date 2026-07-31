@@ -1602,6 +1602,130 @@ export const DICTIONARY = {
     kg: "Телефонду SMS коду менен ырастаңыз",
     en: "Confirm your phone with the SMS code",
   },
+  "auth.login": { ru: "Войти", kg: "Кирүү", en: "Sign in" },
+  "auth.confirmCode": {
+    ru: "Код подтверждения",
+    kg: "Ырастоо коду",
+    en: "Confirmation code",
+  },
+  "auth.sendCode": {
+    ru: "Отправить код",
+    kg: "Код жөнөтүү",
+    en: "Send code",
+  },
+  "auth.resendCode": {
+    ru: "Отправить код ещё раз",
+    kg: "Кодду кайра жөнөтүү",
+    en: "Send code again",
+  },
+  "auth.codeSent": {
+    ru: "Код отправлен",
+    kg: "Код жөнөтүлдү",
+    en: "Code sent",
+  },
+  "auth.enterSmsCode": {
+    ru: "Введите код из SMS",
+    kg: "SMS кодду киргизиңиз",
+    en: "Enter the SMS code",
+  },
+  "auth.loginWithGoogle": {
+    ru: "Войти через Google",
+    kg: "Google менен кирүү",
+    en: "Sign in with Google",
+  },
+  "auth.hasAccount": {
+    ru: "Уже есть аккаунт?",
+    kg: "Аккаунтуңуз барбы?",
+    en: "Already have an account?",
+  },
+  "auth.signInRequired": {
+    ru: "Чтобы продолжить, войдите или зарегистрируйтесь.",
+    kg: "Улантуу үчүн кириңиз же катталыңыз.",
+    en: "Sign in or register to continue.",
+  },
+  "auth.invalidCredentials": {
+    ru: "Неверный телефон или пароль",
+    kg: "Телефон же сырсөз туура эмес",
+    en: "Invalid phone or password",
+  },
+  "auth.invalidCode": {
+    ru: "Неверный код",
+    kg: "Код туура эмес",
+    en: "Invalid code",
+  },
+  "auth.codeExpired": {
+    ru: "Код истёк",
+    kg: "Коддун мөөнөтү өттү",
+    en: "Code expired",
+  },
+  "auth.requiredFields": {
+    ru: "Заполните обязательные поля",
+    kg: "Милдеттүү талааларды толтуруңуз",
+    en: "Fill in the required fields",
+  },
+  "auth.tryAgainLater": {
+    ru: "Попробуйте позже",
+    kg: "Кийинчерээк аракет кылыңыз",
+    en: "Try again later",
+  },
+  "auth.phoneVerified": {
+    ru: "Телефон подтверждён",
+    kg: "Телефон ырасталды",
+    en: "Phone verified",
+  },
+  "profile.title": { ru: "Профиль", kg: "Профиль", en: "Profile" },
+  "profile.buyerDashboard": {
+    ru: "Кабинет покупателя",
+    kg: "Сатып алуучунун кабинети",
+    en: "Buyer dashboard",
+  },
+  "profile.sellerDashboard": {
+    ru: "Кабинет продавца",
+    kg: "Сатуучунун кабинети",
+    en: "Seller dashboard",
+  },
+  "profile.favorites": { ru: "Избранное", kg: "Тандалмалар", en: "Favorites" },
+  "profile.notifications": {
+    ru: "Уведомления",
+    kg: "Билдирмелер",
+    en: "Notifications",
+  },
+  "profile.myListings": {
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "profile.leads": { ru: "Мои заявки", kg: "Менин сурамдарым", en: "My requests" },
+  "profile.postListing": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post a listing",
+  },
+  "profile.completeSellerProfile": {
+    ru: "Профиль продавца",
+    kg: "Сатуучунун профили",
+    en: "Seller profile",
+  },
+  "profile.addPhoneForSeller": {
+    ru: "Добавьте телефон, чтобы продолжить как продавец",
+    kg: "Сатуучу катары улантуу үчүн телефонду кошуңуз",
+    en: "Add a phone number to continue as a seller",
+  },
+  "profile.sellerOnboardingDescription": {
+    ru: "Укажите данные, которые будут видны в объявлениях. Подтвердите телефон.",
+    kg: "Жарыяларда көрүнө турган маалыматтарды жазыңыз. Телефонду ырастаңыз.",
+    en: "Enter details visible on your listings. Confirm your phone.",
+  },
+  "profile.sellerPhoneHint": {
+    ru: "На этот номер покупатели смогут связаться с вами.",
+    kg: "Сатып алуучулар бул номерге байланыша алышат.",
+    en: "Buyers will be able to contact you on this number.",
+  },
+  "profile.saveSellerProfile": {
+    ru: "Сохранить и перейти в кабинет",
+    kg: "Сактап, кабинетке өтүү",
+    en: "Save and go to dashboard",
+  },
 
   // Roles — Phase 56
   "roles.accountType": { ru: "Тип аккаунта", kg: "Аккаунттун түрү", en: "Account type" },

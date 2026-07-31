@@ -25,6 +25,22 @@ type LoginFormProps = {
   googleEnabled: boolean;
 };
 
+function sanitizeLoginError(raw: string, invalidCredentials: string, tryAgain: string): string {
+  const lower = raw.toLowerCase();
+  if (
+    lower.includes("неверный") ||
+    lower.includes("invalid") ||
+    lower.includes("password") ||
+    lower.includes("телефон")
+  ) {
+    return invalidCredentials;
+  }
+  if (raw.includes("Prisma") || raw.includes("\n") || raw.length > 160) {
+    return tryAgain;
+  }
+  return raw;
+}
+
 export function LoginForm({ googleEnabled }: LoginFormProps) {
   const router = useRouter();
   const { t } = useTranslation();
@@ -41,14 +57,25 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
 
   useEffect(() => {
     if (oauthError) {
-      setErrors({ form: [oauthError], fields: {} });
+      setErrors({
+        form: [
+          sanitizeLoginError(oauthError, t("auth.invalidCredentials"), t("auth.tryAgainLater")),
+        ],
+        fields: {},
+      });
     }
-  }, [oauthError]);
+  }, [oauthError, t]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrors(emptyErrors);
     setSuccessMessage("");
+
+    if (!phone.trim() || !password) {
+      setErrors({ form: [t("auth.requiredFields")], fields: {} });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -61,9 +88,15 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
       }, 800);
     } catch (error) {
       if (error instanceof AuthRequestError) {
-        setErrors(error.formErrors);
+        const formMessages = error.formErrors.form.map((message) =>
+          sanitizeLoginError(message, t("auth.invalidCredentials"), t("auth.tryAgainLater")),
+        );
+        setErrors({
+          form: formMessages.length > 0 ? formMessages : [t("auth.invalidCredentials")],
+          fields: error.formErrors.fields,
+        });
       } else {
-        setErrors({ form: [t("auth.loginGenericError")], fields: {} });
+        setErrors({ form: [t("auth.tryAgainLater")], fields: {} });
       }
       setIsSubmitting(false);
     }
@@ -78,11 +111,8 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
   const passwordError = getFieldError(errors, "password");
 
   return (
-    <AuthFormCard
-      title={t("auth.loginTitle")}
-      description={t("auth.loginDescription")}
-    >
-      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-5">
+    <AuthFormCard title={t("auth.loginTitle")} description={t("auth.loginDescription")}>
+      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-4 sm:space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
         <AuthAlert variant="error" messages={errors.form} />
 
@@ -97,7 +127,7 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
             onChange={(event) => setPhone(event.target.value)}
             className={cn(
               authInputClassName,
-              phoneError && "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+              phoneError && "border-red-200 focus:border-red-600 focus:ring-red-200",
             )}
             disabled={isSubmitting}
             required
@@ -110,27 +140,27 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
             name="password"
             value={password}
             onChange={setPassword}
-            placeholder="Введите пароль"
+            placeholder={t("auth.password")}
             autoComplete="current-password"
             disabled={isSubmitting}
             hasError={Boolean(passwordError)}
           />
         </AuthFormField>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <label className="flex items-center gap-2 text-sm text-[#64748B]">
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <label className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(event) => setRememberMe(event.target.checked)}
               disabled={isSubmitting}
-              className="rounded border-[rgba(148,163,184,0.4)] text-[#2563EB] focus:ring-[#2563EB]/20"
+              className="rounded border-slate-300 text-blue-600 focus:ring-blue-600/20"
             />
             {t("auth.rememberMe")}
           </label>
           <Link
             href="/forgot-password"
-            className="text-sm font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
+            className="text-sm font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-400"
           >
             {t("auth.forgotPassword")}
           </Link>
@@ -143,21 +173,24 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
               {t("auth.signingIn")}
             </>
           ) : (
-            t("auth.signIn")
+            t("auth.login")
           )}
         </button>
 
-        <AuthDivider />
+        {googleEnabled ? (
+          <>
+            <AuthDivider />
+            <GoogleAuthButton enabled={googleEnabled} next={nextPath} disabled={isSubmitting} />
+          </>
+        ) : null}
 
-        <GoogleAuthButton enabled={googleEnabled} next={nextPath} disabled={isSubmitting} />
-
-        <p className="text-center text-sm text-[#64748B]">
+        <p className="text-center text-sm text-slate-500 dark:text-slate-400">
           {t("auth.noAccount")}{" "}
           <Link
             href={registerHref}
-            className="font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
+            className="font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-400"
           >
-            {t("auth.signUp")}
+            {t("auth.register")}
           </Link>
         </p>
       </form>

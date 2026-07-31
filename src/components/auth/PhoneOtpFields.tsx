@@ -11,6 +11,7 @@ import {
   verifyOtpRequest,
   type AuthFormErrors,
 } from "@/features/auth/lib/auth-client";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type PhoneOtpFieldsProps = {
@@ -25,6 +26,18 @@ type PhoneOtpFieldsProps = {
   showDevHint?: boolean;
 };
 
+function sanitizeOtpError(raw: string, fallback: string): string {
+  if (
+    raw.includes("Prisma") ||
+    raw.includes("\n") ||
+    raw.toLowerCase().includes("stack") ||
+    raw.length > 160
+  ) {
+    return fallback;
+  }
+  return raw;
+}
+
 export function PhoneOtpFields({
   phone,
   onPhoneChange,
@@ -33,9 +46,10 @@ export function PhoneOtpFields({
   onTokenReset,
   errors,
   disabled = false,
-  phoneHint = "На этот номер покупатели смогут связаться с вами.",
+  phoneHint,
   showDevHint = false,
 }: PhoneOtpFieldsProps) {
+  const { t } = useTranslation();
   const [code, setCode] = useState("");
   const [otpMessage, setOtpMessage] = useState("");
   const [otpError, setOtpError] = useState("");
@@ -44,6 +58,7 @@ export function PhoneOtpFields({
   const [cooldown, setCooldown] = useState(0);
   const [devToastCode, setDevToastCode] = useState<string | null>(null);
   const [demoModeToast, setDemoModeToast] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
 
   useEffect(() => {
     if (cooldown <= 0) {
@@ -76,7 +91,8 @@ export function PhoneOtpFields({
 
     try {
       const result = await sendOtpRequest(phone);
-      setOtpMessage(result.message);
+      setOtpMessage(t("auth.codeSent"));
+      setCodeSent(true);
       setCooldown(result.resendAvailableInSeconds || 60);
       setCode("");
       if (result.devOtpCode) {
@@ -85,9 +101,9 @@ export function PhoneOtpFields({
       }
     } catch (error) {
       if (error instanceof AuthRequestError) {
-        setOtpError(error.message);
+        setOtpError(sanitizeOtpError(error.message, t("auth.tryAgainLater")));
       } else {
-        setOtpError("Не удалось отправить код");
+        setOtpError(t("auth.tryAgainLater"));
       }
     } finally {
       setIsSending(false);
@@ -105,9 +121,16 @@ export function PhoneOtpFields({
       setDevToastCode(null);
     } catch (error) {
       if (error instanceof AuthRequestError) {
-        setOtpError(error.message);
+        const raw = error.message.toLowerCase();
+        if (raw.includes("истёк") || raw.includes("expired")) {
+          setOtpError(t("auth.codeExpired"));
+        } else if (raw.includes("неверн") || raw.includes("invalid")) {
+          setOtpError(t("auth.invalidCode"));
+        } else {
+          setOtpError(sanitizeOtpError(error.message, t("auth.invalidCode")));
+        }
       } else {
-        setOtpError("Не удалось подтвердить код");
+        setOtpError(t("auth.tryAgainLater"));
       }
     } finally {
       setIsVerifying(false);
@@ -133,25 +156,20 @@ export function PhoneOtpFields({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                Код подтверждения
+                {t("auth.confirmCode")}
               </p>
               <p className="mt-1 text-base font-bold tracking-wider text-slate-900 dark:text-slate-50">
-                Dev-код: {devToastCode}
+                Dev: {devToastCode}
               </p>
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 {demoModeToast
                   ? "Демо-режим: код показан только для тестирования"
                   : "Только для локального тестирования"}
               </p>
-              {demoModeToast ? (
-                <p className="mt-2 text-xs font-medium text-amber-700 dark:text-amber-400">
-                  Демо-режим production. Отключите DEMO_OTP_ENABLED перед реальным запуском.
-                </p>
-              ) : null}
             </div>
             <button
               type="button"
-              aria-label="Закрыть"
+              aria-label="Close"
               onClick={() => {
                 setDevToastCode(null);
                 setDemoModeToast(false);
@@ -165,7 +183,7 @@ export function PhoneOtpFields({
       ) : null}
 
       <AuthFormField
-        label="Телефон"
+        label={t("auth.phone")}
         htmlFor="otp-phone"
         hint={phoneHint}
         error={phoneError}
@@ -182,47 +200,56 @@ export function PhoneOtpFields({
             onTokenReset();
             setOtpMessage("");
             setOtpError("");
+            setCodeSent(false);
             setDevToastCode(null);
             setDemoModeToast(false);
           }}
           className={cn(
             authInputClassName,
-            phoneError && "border-[#FECACA] focus:border-[#DC2626] focus:ring-[#FECACA]",
+            phoneError && "border-red-200 focus:border-red-600 focus:ring-red-200",
           )}
           disabled={disabled || verified}
           required
         />
       </AuthFormField>
 
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <button
-          type="button"
-          onClick={() => void handleSendCode()}
-          disabled={disabled || isSending || cooldown > 0 || !phone.trim() || verified}
-          className={cn(
-            authButtonClassName,
-            "bg-white text-[#0F172A] ring-1 ring-inset ring-slate-200 hover:bg-slate-50 sm:w-auto sm:min-w-[160px]",
-          )}
-        >
-          {isSending ? (
-            <>
-              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-              Отправка...
-            </>
-          ) : cooldown > 0 ? (
-            `Повтор через ${cooldown}с`
-          ) : (
-            "Получить код"
-          )}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={() => void handleSendCode()}
+        disabled={disabled || isSending || cooldown > 0 || !phone.trim() || verified}
+        className={cn(
+          authButtonClassName,
+          "bg-white text-slate-900 ring-1 ring-inset ring-slate-200 hover:bg-slate-50 dark:bg-slate-950 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-900",
+        )}
+      >
+        {isSending ? (
+          <>
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            {t("auth.sendCode")}...
+          </>
+        ) : cooldown > 0 ? (
+          `${t("auth.resendCode")} (${cooldown}с)`
+        ) : codeSent ? (
+          t("auth.resendCode")
+        ) : (
+          t("auth.sendCode")
+        )}
+      </button>
 
-      {otpMessage ? <p className="text-sm text-[#059669]">{otpMessage}</p> : null}
-      {otpError ? <p className="text-sm text-[#DC2626]">{otpError}</p> : null}
-      {tokenError && !verified ? <p className="text-sm text-[#DC2626]">{tokenError}</p> : null}
+      {otpMessage ? (
+        <p className="text-sm text-emerald-600 dark:text-emerald-400">{otpMessage}</p>
+      ) : null}
+      {otpError ? <p className="text-sm text-red-600 dark:text-red-400">{otpError}</p> : null}
+      {tokenError && !verified ? (
+        <p className="text-sm text-red-600 dark:text-red-400">{tokenError}</p>
+      ) : null}
 
       {!verified ? (
-        <AuthFormField label="Код подтверждения" htmlFor="otp-code">
+        <AuthFormField
+          label={t("auth.confirmCode")}
+          htmlFor="otp-code"
+          hint={codeSent ? t("auth.enterSmsCode") : undefined}
+        >
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
               id="otp-code"
@@ -230,11 +257,14 @@ export function PhoneOtpFields({
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
-              placeholder="6 цифр"
+              placeholder="••••••"
               maxLength={6}
               value={code}
               onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
-              className={cn(authInputClassName, "sm:flex-1")}
+              className={cn(
+                authInputClassName,
+                "text-center text-xl font-semibold tracking-[0.35em] sm:flex-1 sm:text-left sm:text-base sm:font-normal sm:tracking-normal",
+              )}
               disabled={disabled || isVerifying}
             />
             <button
@@ -246,23 +276,23 @@ export function PhoneOtpFields({
               {isVerifying ? (
                 <>
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                  Проверка...
+                  ...
                 </>
               ) : (
-                "Подтвердить телефон"
+                t("auth.confirmCode")
               )}
             </button>
           </div>
         </AuthFormField>
       ) : (
-        <p className="rounded-xl bg-[#ECFDF5] px-3 py-2 text-sm font-medium text-[#047857]">
-          Телефон подтверждён
+        <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+          {t("auth.phoneVerified")}
         </p>
       )}
 
       {showDevHint ? (
-        <p className="text-xs text-[#94A3B8]">
-          В режиме разработки код также появляется справа сверху и в server console
+        <p className="text-xs text-slate-400 dark:text-slate-500">
+          Dev: код также появляется справа сверху и в server console
         </p>
       ) : null}
     </div>

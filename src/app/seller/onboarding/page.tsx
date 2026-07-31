@@ -4,7 +4,7 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { SellerOnboardingForm } from "@/components/seller/SellerOnboardingForm";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl, resolveNextParam } from "@/features/auth/lib/login-redirect";
 import { getEnv } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
@@ -21,9 +21,14 @@ type SellerOnboardingPageProps = {
 export default async function SellerOnboardingPage({ searchParams }: SellerOnboardingPageProps) {
   const user = await getCurrentUser();
   const params = await searchParams;
+  const nextPath = resolveNextParam(params.next);
+  const onboardingReturn =
+    nextPath !== "/"
+      ? `/seller/onboarding?next=${encodeURIComponent(nextPath)}`
+      : "/seller/onboarding";
 
   if (!user) {
-    redirect(buildLoginUrl("/seller/onboarding"));
+    redirect(buildLoginUrl(onboardingReturn));
   }
 
   if (user.role === UserRole.BUYER) {
@@ -35,7 +40,7 @@ export default async function SellerOnboardingPage({ searchParams }: SellerOnboa
   }
 
   if (!needsSellerOnboarding({ role: user.role, phone: user.phone })) {
-    redirect("/seller/dashboard");
+    redirect(nextPath !== "/" ? nextPath : "/seller/dashboard");
   }
 
   const sellerProfile = await prisma.sellerProfile.findUnique({
@@ -50,7 +55,7 @@ export default async function SellerOnboardingPage({ searchParams }: SellerOnboa
       <SellerOnboardingForm
         initialCompanyName={sellerProfile?.company_name ?? user.name}
         email={user.email}
-        nextPath={params.next}
+        nextPath={nextPath !== "/" ? nextPath : undefined}
         isDev={isDev}
       />
     </AuthLayout>

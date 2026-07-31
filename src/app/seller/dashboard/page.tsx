@@ -282,18 +282,18 @@ export default async function SellerDashboardPage() {
   const profileIncomplete = sellerTrust.level === "incomplete";
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
+    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] py-4 dark:bg-slate-950 sm:py-8">
       <Container size="lg" className="max-w-[1280px] min-w-0">
         <PageHeader className="pb-0">
           <PageHeaderContent>
-            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">
+            <PageTitle className="text-xl text-slate-900 sm:text-3xl dark:text-slate-100">
               {sellerProfile?.company_name ?? user.name}
             </PageTitle>
-            <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
+            <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
               Кабинет продавца — объявления и заявки покупателей
             </PageSubtitle>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-[#64748B]">
-              <span className="inline-flex items-center rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-xs font-medium text-[#2563EB]">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-slate-500 dark:text-slate-400">
+              <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 dark:bg-slate-800 dark:text-blue-400">
                 Продавец
               </span>
               {sellerCityName ? (
@@ -302,13 +302,13 @@ export default async function SellerDashboardPage() {
                   {sellerCityName}
                 </span>
               ) : null}
-              <span className="inline-flex items-center gap-1">
+              <span className="hidden items-center gap-1 sm:inline-flex">
                 <CalendarDays className="size-3.5" aria-hidden="true" />
                 На платформе с {memberSinceLabel}
               </span>
             </div>
             {profileIncomplete ? (
-              <p className="mt-2 text-sm font-medium text-[#D97706]">
+              <p className="mt-2 text-sm font-medium text-amber-600 dark:text-amber-400">
                 Профиль продавца заполнен не полностью.
               </p>
             ) : null}
@@ -316,17 +316,22 @@ export default async function SellerDashboardPage() {
           <PageHeaderActions className="w-full sm:w-auto">
             <Button
               asChild
-              className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:w-auto"
+              className="h-11 w-full rounded-xl bg-blue-600 hover:bg-blue-700 sm:w-auto"
             >
               <Link href="/listings/new">Подать объявление</Link>
             </Button>
           </PageHeaderActions>
         </PageHeader>
 
-        <div className="mt-6 space-y-8 lg:mt-8 lg:space-y-10">
+        <div className="mt-4 space-y-5 sm:mt-6 sm:space-y-8 lg:mt-8 lg:space-y-10">
           <SellerAccountStatusCard
             labels={restrictionLabels}
             hasRestrictions={hasRestrictions}
+          />
+
+          <SellerQuickActions
+            sellerProfileId={sellerProfile?.id ?? null}
+            verticalCounts={verticalCounts}
           />
 
           <SellerDashboardStatCards stats={stats} />
@@ -343,7 +348,7 @@ export default async function SellerDashboardPage() {
             <section aria-labelledby="seller-vertical-stats-title">
               <h2
                 id="seller-vertical-stats-title"
-                className="mb-3 text-lg font-bold text-[#0F172A] sm:text-xl"
+                className="mb-3 text-base font-bold text-slate-900 sm:text-xl dark:text-slate-100"
               >
                 По направлениям
               </h2>
@@ -355,9 +360,9 @@ export default async function SellerDashboardPage() {
                   }
                   return (
                     <li key={item.id}>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-[#334155] ring-1 ring-slate-200">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-700">
                         {item.label}
-                        <span className="rounded-full bg-[#EFF6FF] px-1.5 py-0.5 text-xs font-semibold text-[#2563EB]">
+                        <span className="rounded-full bg-blue-50 px-1.5 py-0.5 text-xs font-semibold text-blue-600 dark:bg-slate-800 dark:text-blue-400">
                           {count}
                         </span>
                       </span>
@@ -368,10 +373,6 @@ export default async function SellerDashboardPage() {
             </section>
           ) : null}
 
-          <SellerQuickActions
-            sellerProfileId={sellerProfile?.id ?? null}
-            verticalCounts={verticalCounts}
-          />
           <SellerRecentLeads leads={serializedRecentLeads} newLeadsCount={newLeadsCount} />
           <SellerDashboardListings
             listings={serializedListings.slice(0, 5)}

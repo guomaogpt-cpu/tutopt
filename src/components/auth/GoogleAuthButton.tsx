@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buildGoogleStartHref } from "@/features/auth/lib/auth-client";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type GoogleAuthButtonProps = {
   enabled: boolean;
@@ -19,6 +20,8 @@ export function GoogleAuthButton({
   disabled = false,
   className,
 }: GoogleAuthButtonProps) {
+  const { t } = useTranslation();
+
   if (!enabled) {
     return (
       <div className="space-y-2">
@@ -26,14 +29,14 @@ export function GoogleAuthButton({
           type="button"
           disabled
           className={cn(
-            "inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-400",
+            "inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-400 sm:h-11 dark:border-slate-700 dark:bg-slate-950",
             className,
           )}
         >
           <GoogleMark />
-          Продолжить с Google
+          {t("auth.loginWithGoogle")}
         </button>
-        <p className="text-center text-xs text-[#64748B]">
+        <p className="text-center text-xs text-slate-500 dark:text-slate-400">
           Google-вход будет доступен после настройки
         </p>
       </div>
@@ -45,13 +48,13 @@ export function GoogleAuthButton({
       href={buildGoogleStartHref({ role, next })}
       aria-disabled={disabled}
       className={cn(
-        "inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-[#0F172A] transition hover:bg-slate-50",
+        "inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 transition hover:bg-slate-50 sm:h-11 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900",
         disabled && "pointer-events-none opacity-60",
         className,
       )}
     >
       <GoogleMark />
-      Продолжить с Google
+      {t("auth.loginWithGoogle")}
     </Link>
   );
 }
@@ -59,9 +62,11 @@ export function GoogleAuthButton({
 export function AuthDivider({ label = "или" }: { label?: string }) {
   return (
     <div className="relative my-1 flex items-center gap-3" role="separator" aria-label={label}>
-      <div className="h-px flex-1 bg-slate-200" />
-      <span className="text-xs font-medium uppercase tracking-wide text-[#94A3B8]">{label}</span>
-      <div className="h-px flex-1 bg-slate-200" />
+      <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+      <span className="text-xs font-medium uppercase tracking-wide text-slate-400 dark:text-slate-500">
+        {label}
+      </span>
+      <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
     </div>
   );
 }
