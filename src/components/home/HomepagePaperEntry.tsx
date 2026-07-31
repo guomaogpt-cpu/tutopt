@@ -20,6 +20,7 @@ type EntryCard = {
   id: "OPT" | "MARKET" | "SERVICES" | "CARGO";
   labelKey: DictionaryKey;
   descriptionKey: DictionaryKey;
+  shortKey: DictionaryKey;
   href: string;
   icon: LucideIcon;
   accentBar: string;
@@ -32,6 +33,7 @@ const ENTRY_CARDS: EntryCard[] = [
     id: "MARKET",
     labelKey: "nav.market",
     descriptionKey: "home.marketDesc",
+    shortKey: "home.marketShort",
     href: "/market",
     icon: Megaphone,
     accentBar: "bg-violet-500",
@@ -42,6 +44,7 @@ const ENTRY_CARDS: EntryCard[] = [
     id: "SERVICES",
     labelKey: "nav.services",
     descriptionKey: "home.servicesDesc",
+    shortKey: "home.servicesShort",
     href: "/services",
     icon: Briefcase,
     accentBar: "bg-emerald-500",
@@ -52,6 +55,7 @@ const ENTRY_CARDS: EntryCard[] = [
     id: "OPT",
     labelKey: "nav.opt",
     descriptionKey: "home.optDesc",
+    shortKey: "home.optShort",
     href: "/opt",
     icon: Package,
     accentBar: "bg-blue-500",
@@ -62,6 +66,7 @@ const ENTRY_CARDS: EntryCard[] = [
     id: "CARGO",
     labelKey: "nav.cargo",
     descriptionKey: "home.cargoDesc",
+    shortKey: "home.cargoShort",
     href: "/cargo",
     icon: Truck,
     accentBar: "bg-orange-500",
@@ -72,9 +77,8 @@ const ENTRY_CARDS: EntryCard[] = [
 
 /**
  * Integrated marketplace entry for `/`.
- * paperBoard experiment disabled — no outer poster wrapper / PNG layout.
- * PNG paper banner kept as reference only.
- * Compact: no “TUTOPT” label / no large “ОБЪЯВЛЕНИЯ” heading.
+ * Mobile: compact 2×2 square tiles so all four sections fit above the fold.
+ * Desktop/tablet: wider cards in a row.
  */
 export function HomepagePaperEntry() {
   const { t } = useTranslation();
@@ -82,14 +86,14 @@ export function HomepagePaperEntry() {
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F8FAFC] pb-6 pt-4 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
+      className="overflow-x-clip bg-[#F8FAFC] pb-4 pt-3 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
       aria-labelledby="home-marketplace-lead"
     >
       <Container size="lg">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="flex flex-col gap-2.5 sm:gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           <p
             id="home-marketplace-lead"
-            className="min-w-0 max-w-xl text-xl font-bold leading-snug text-[#0F172A] sm:text-2xl lg:text-3xl dark:text-slate-100"
+            className="min-w-0 max-w-xl text-lg font-bold leading-snug text-[#0F172A] sm:text-2xl lg:text-3xl dark:text-slate-100"
           >
             {t("home.lead")}
           </p>
@@ -105,7 +109,7 @@ export function HomepagePaperEntry() {
         </div>
 
         <ul
-          className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
+          className="mt-3 grid grid-cols-2 gap-2.5 sm:mt-4 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
           aria-label={t("home.directions")}
         >
           {ENTRY_CARDS.map((card) => {
@@ -118,45 +122,52 @@ export function HomepagePaperEntry() {
                     trackVerticalClick(card.id, "homepage");
                   }}
                   className={cn(
-                    "group relative flex h-full min-h-[132px] flex-col overflow-hidden",
-                    "rounded-[20px] border border-slate-200/70 bg-white p-4 shadow-sm",
+                    "group relative flex h-full flex-col overflow-hidden",
+                    "rounded-2xl border border-slate-200/70 bg-white shadow-sm",
                     "dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
                     "transition duration-200",
                     "hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:hover:border-slate-700",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950",
-                    "sm:min-h-[140px] sm:p-5",
+                    // Mobile: compact near-square tiles (~120px)
+                    "aspect-square max-h-[140px] min-h-[110px] p-3",
+                    // Tablet+: taller cards with room for longer copy
+                    "sm:aspect-auto sm:max-h-none sm:min-h-[140px] sm:p-5",
                   )}
                 >
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start justify-between gap-2">
                     <span
                       className={cn(
-                        "flex size-10 shrink-0 items-center justify-center rounded-xl",
+                        "flex shrink-0 items-center justify-center rounded-xl",
+                        "size-9 sm:size-10",
                         card.iconWrap,
                         card.iconColor,
                         "dark:bg-slate-800",
                       )}
                       aria-hidden="true"
                     >
-                      <Icon className="size-5" strokeWidth={1.75} />
+                      <Icon className="size-4 sm:size-5" strokeWidth={1.75} />
                     </span>
                     <ArrowRight
-                      className="size-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 dark:text-slate-500 dark:group-hover:text-slate-300"
+                      className="size-3.5 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 sm:size-4 dark:text-slate-500 dark:group-hover:text-slate-300"
                       aria-hidden="true"
                     />
                   </div>
 
-                  <div className="mt-3 min-w-0 flex-1">
-                    <p className="text-[15px] font-bold tracking-tight text-[#0F172A] dark:text-slate-100">
+                  <div className="mt-auto min-w-0 pt-2 sm:mt-3 sm:flex-1 sm:pt-0">
+                    <p className="text-sm font-bold tracking-tight text-[#0F172A] sm:text-[15px] dark:text-slate-100">
                       {t(card.labelKey)}
                     </p>
-                    <p className="mt-1 text-xs leading-snug text-[#64748B] sm:text-[13px] dark:text-slate-400">
+                    <p className="mt-0.5 line-clamp-1 text-[11px] leading-snug text-[#64748B] sm:hidden dark:text-slate-400">
+                      {t(card.shortKey)}
+                    </p>
+                    <p className="mt-1 hidden text-xs leading-snug text-[#64748B] sm:line-clamp-2 sm:block sm:text-[13px] dark:text-slate-400">
                       {t(card.descriptionKey)}
                     </p>
                   </div>
 
                   <span
                     className={cn(
-                      "mt-4 h-[3px] w-10 rounded-full",
+                      "mt-2 hidden h-[3px] w-10 rounded-full sm:mt-4 sm:block",
                       card.accentBar,
                     )}
                     aria-hidden="true"

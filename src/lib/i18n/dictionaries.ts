@@ -261,6 +261,26 @@ export const DICTIONARY = {
     kg: "Жүк ташуу жана логистика",
     en: "Freight and logistics",
   },
+  "home.marketShort": {
+    ru: "Товары рядом",
+    kg: "Жакын товарлар",
+    en: "Local goods",
+  },
+  "home.servicesShort": {
+    ru: "Специалисты",
+    kg: "Адистер",
+    en: "Specialists",
+  },
+  "home.optShort": {
+    ru: "Для бизнеса",
+    kg: "Бизнес үчүн",
+    en: "For business",
+  },
+  "home.cargoShort": {
+    ru: "Доставка",
+    kg: "Жеткирүү",
+    en: "Delivery",
+  },
   "home.showcase": { ru: "Витрина", kg: "Витрина", en: "Showcase" },
   "home.newListings": {
     ru: "Новые объявления",
