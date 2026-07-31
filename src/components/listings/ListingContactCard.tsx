@@ -131,11 +131,13 @@ export function ListingContactCard({
           {t("listing.price")}
         </p>
         <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px] dark:text-blue-400">
-          {priceLabel}
+          {hasPrice ? priceLabel : t("listing.priceOnRequest")}
         </p>
-        <p className="text-sm text-[#64748B] dark:text-slate-400">
-          {t("listing.perUnitPrefix")} {unitLabel.toLowerCase()}
-        </p>
+        {hasPrice ? (
+          <p className="text-sm text-[#64748B] dark:text-slate-400">
+            {t("listing.perUnitPrefix")} {unitLabel.toLowerCase()}
+          </p>
+        ) : null}
       </div>
 
       <dl className="mt-5 space-y-2.5 border-b border-[rgba(148,163,184,0.14)] pb-5 text-sm dark:border-slate-800">

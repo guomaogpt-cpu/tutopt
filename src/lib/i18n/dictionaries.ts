@@ -838,6 +838,32 @@ export const DICTIONARY = {
   },
   "listing.showLess": { ru: "Свернуть", kg: "Жыйыштыруу", en: "Show less" },
   "listing.price": { ru: "Цена", kg: "Баасы", en: "Price" },
+  "listing.priceOnRequest": {
+    ru: "Цена по запросу",
+    kg: "Баасы сурам боюнча",
+    en: "Price on request",
+  },
+  "listing.mobile.mainInfo": {
+    ru: "Основное",
+    kg: "Негизги",
+    en: "Overview",
+  },
+  "listing.mobile.sendRequestSticky": {
+    ru: "Отправить запрос",
+    kg: "Сурам жөнөтүү",
+    en: "Send request",
+  },
+  "listing.mobile.signInToRequest": {
+    ru: "Войдите, чтобы отправить запрос продавцу.",
+    kg: "Сатуучуга сурам жөнөтүү үчүн кириңиз.",
+    en: "Sign in to send a request to the seller.",
+  },
+  "listing.galleryAriaLabel": {
+    ru: "Галерея товара",
+    kg: "Товар галереясы",
+    en: "Product gallery",
+  },
+  "listing.photo": { ru: "Фото", kg: "Сүрөт", en: "Photo" },
   "listing.minOrder": { ru: "Мин. партия", kg: "Мин. партия", en: "Min. order" },
   "listing.city": { ru: "Город", kg: "Шаар", en: "City" },
   "listing.brand": { ru: "Бренд", kg: "Бренд", en: "Brand" },

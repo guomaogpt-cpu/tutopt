@@ -298,7 +298,7 @@ export function ListingLeadForm({
             {t("lead.loginRequiredTitle")}
           </h3>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            {t("lead.loginRequiredDescription")}
+            {t("listing.mobile.signInToRequest")}
           </p>
           {listingSummary}
           <div className="mt-5 flex flex-col gap-2 sm:flex-row">

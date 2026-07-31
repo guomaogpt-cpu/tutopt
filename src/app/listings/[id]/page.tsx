@@ -5,6 +5,9 @@ import { ListingCharacteristics } from "@/components/listings/ListingCharacteris
 import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
 import { ListingGallery } from "@/components/listings/ListingGallery";
+import { ListingMainInfo } from "@/components/listings/ListingMainInfo";
+import { ListingMobileStickyCta } from "@/components/listings/ListingMobileStickyCta";
+import { ListingMobileSummary } from "@/components/listings/ListingMobileSummary";
 import { ListingRequestHint } from "@/components/listings/ListingRequestHint";
 import { ListingSellerCard } from "@/components/listings/ListingSellerCard";
 import { calculateSellerTrust } from "@/lib/trust/seller-trust";
@@ -140,6 +143,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const unitLabel = getListingUnitLabel(listing.unit, listing.vertical);
   const displayFlags = getListingDisplayFlags(listing.vertical);
 
+  const hasPrice = Number(listing.price.toString()) > 0;
   const priceLabel = formatListingCardPrice({
     price: listing.price,
     currency: listing.currency,
@@ -156,7 +160,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const leadRestrictedMessage =
     user && !isOwner ? getLeadRestrictionMessage(user) : null;
-  const hasPrice = Number(listing.price.toString()) > 0;
   const publishedDateLabel = listing.published_at
     ? formatListingDate(listing.published_at)
     : null;
@@ -224,10 +227,39 @@ export default async function ListingPage({ params }: ListingPageProps) {
           description: listing.description,
           price: listing.price,
           currency: listing.currency,
-          vertical: listing.vertical,
           images: listing.images,
+          vertical: listing.vertical,
         })
       : null;
+
+  const showUnitSuffix =
+    (listing.vertical === "OPT" || listing.vertical === "MARKET") && hasPrice;
+
+  const mainInfoItems = [
+    ...(displayFlags.showMoq
+      ? [
+          {
+            labelKey: "listing.minOrder" as const,
+            value: `${listing.moq} ${unitLabel.toLowerCase()}`,
+          },
+        ]
+      : []),
+    ...(listing.city
+      ? [{ labelKey: "listing.city" as const, value: listing.city.name }]
+      : []),
+    ...(displayFlags.showStock && listing.stock_quantity != null
+      ? [
+          {
+            labelKey: "listing.stock" as const,
+            value: String(listing.stock_quantity),
+          },
+        ]
+      : []),
+    { labelKey: "listing.unit" as const, value: unitLabel },
+    ...(publishedDateLabel
+      ? [{ labelKey: "listing.publishedAt" as const, value: publishedDateLabel }]
+      : []),
+  ];
 
   const characteristicItems = [
     {
@@ -238,7 +270,9 @@ export default async function ListingPage({ params }: ListingPageProps) {
     ...(listing.city
       ? [{ labelKey: "listing.city" as const, value: listing.city.name }]
       : []),
-    { labelKey: "listing.price" as const, value: priceLabel },
+    hasPrice
+      ? { labelKey: "listing.price" as const, value: priceLabel }
+      : { labelKey: "listing.price" as const, valueKey: "listing.priceOnRequest" as const },
     ...(displayFlags.showBrand && listing.brand
       ? [{ labelKey: "listing.brand" as const, value: listing.brand.name }]
       : []),
@@ -310,7 +344,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   );
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
+    <main className="min-w-0 bg-[#F5F7FA] pb-[calc(4.25rem+env(safe-area-inset-bottom))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
       <ListingViewTracker listingId={listing.id} vertical={listing.vertical} />
       {listing.status === ListingStatus.PUBLISHED ? (
         <RecentlyViewedTracker
@@ -334,7 +368,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
       <Container size="lg" className="min-w-0 max-w-[1280px]">
         <AppBreadcrumbs items={breadcrumbItems} />
 
-        <header className="mt-4 sm:mt-5">
+        <header className="mt-4 hidden lg:block">
           <div className="flex flex-wrap items-center gap-2">
             <VerticalListingBadge vertical={listing.vertical} size="md" />
             {showStatusBadge ? (
@@ -350,7 +384,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </Link>
             ) : null}
           </div>
-          <h1 className="mt-2 break-words text-[1.375rem] font-bold leading-tight tracking-tight text-[#0F172A] sm:text-[1.625rem] lg:text-[2rem] dark:text-slate-100">
+          <h1 className="mt-2 break-words text-[1.625rem] font-bold leading-tight tracking-tight text-[#0F172A] lg:text-[2rem] dark:text-slate-100">
             {listing.title}
           </h1>
           <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#64748B] dark:text-slate-400">
@@ -369,6 +403,21 @@ export default async function ListingPage({ params }: ListingPageProps) {
             ) : null}
           </p>
         </header>
+
+        {isOwner ? (
+          <div className="mt-4 flex flex-wrap items-center gap-2 lg:hidden">
+            {showStatusBadge ? (
+              <Badge variant="warning">{listingStatusLabels[listing.status]}</Badge>
+            ) : null}
+            <Badge variant="secondary">Ваше объявление</Badge>
+            <Link
+              href={`/listings/${listing.id}/edit`}
+              className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-[#334155] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+            >
+              Редактировать
+            </Link>
+          </div>
+        ) : null}
 
         {isOwner && (expiresDateLabel || expirationStatus === "expired") ? (
           <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-[rgba(148,163,184,0.25)] bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-900">
@@ -412,37 +461,58 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
         ) : null}
 
-        <div className="mt-6 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1.85fr)_minmax(300px,1fr)] lg:items-start lg:gap-8">
-          <div className="min-w-0 space-y-6">
-            <ListingGallery images={listing.images} title={listing.title} />
-
-            <div className="space-y-4 lg:hidden">
-              {contactCard}
-              {sellerCard}
+        <div className="mt-5 lg:mt-8 lg:grid lg:grid-cols-[minmax(0,1.85fr)_minmax(300px,1fr)] lg:items-start lg:gap-8">
+          <div className="flex min-w-0 flex-col gap-5 lg:gap-6">
+            <div className="order-1">
+              <ListingGallery images={listing.images} title={listing.title} />
             </div>
 
-            <ListingCharacteristics items={characteristicItems} />
-            <ListingDescription text={listing.description} />
-            {!isOwner ? <ListingVerticalHint vertical={listing.vertical} /> : null}
-            {!isOwner ? <ListingRequestHint /> : null}
-            <ListingLeadForm
-              key={`${listing.id}-${listing.vertical}`}
-              listingId={listing.id}
-              listingTitle={listing.title}
-              sellerName={sellerName}
-              moq={listing.moq}
-              unitLabel={unitLabel}
-              vertical={listing.vertical}
-              isAuthenticated={user !== null}
-              isOwner={isOwner}
-              restrictionMessage={leadRestrictedMessage}
-              defaultPhone={user?.phone}
-              defaultEmail={user?.email}
-            />
-            {isOwner ? <ListingQualityHints input={qualityInput} /> : null}
+            <div className="order-2 space-y-4 lg:hidden">
+              <ListingMobileSummary
+                title={listing.title}
+                priceLabel={priceLabel}
+                hasPrice={hasPrice}
+                unitLabel={unitLabel}
+                showUnitSuffix={showUnitSuffix}
+                cityName={listing.city?.name ?? null}
+                categoryName={listing.category.name}
+                vertical={listing.vertical}
+              />
+              <ListingMainInfo items={mainInfoItems} />
+            </div>
+
+            <div className="order-3 lg:hidden">{sellerCard}</div>
+
+            <div className="order-5 lg:order-3">
+              <ListingDescription text={listing.description} />
+            </div>
+
+            <div className="order-6 lg:order-2">
+              <ListingCharacteristics items={characteristicItems} />
+            </div>
+
+            <div className="order-7 space-y-5 lg:order-4 lg:space-y-6">
+              {!isOwner ? <ListingVerticalHint vertical={listing.vertical} /> : null}
+              {!isOwner ? <ListingRequestHint /> : null}
+              <ListingLeadForm
+                key={`${listing.id}-${listing.vertical}`}
+                listingId={listing.id}
+                listingTitle={listing.title}
+                sellerName={sellerName}
+                moq={listing.moq}
+                unitLabel={unitLabel}
+                vertical={listing.vertical}
+                isAuthenticated={user !== null}
+                isOwner={isOwner}
+                restrictionMessage={leadRestrictedMessage}
+                defaultPhone={user?.phone}
+                defaultEmail={user?.email}
+              />
+              {isOwner ? <ListingQualityHints input={qualityInput} /> : null}
+            </div>
           </div>
 
-          <aside className="hidden min-w-0 lg:block">
+          <aside className="mt-6 hidden min-w-0 lg:mt-0 lg:block">
             <div className="sticky top-24 space-y-4">
               {contactCard}
               {sellerCard}
@@ -466,6 +536,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
           sameCategoryIds={similarListings.sameCategoryIds}
         />
       </Container>
+
+      <ListingMobileStickyCta
+        listingId={listing.id}
+        isAuthenticated={user !== null}
+        isFavorited={isFavorited}
+        vertical={listing.vertical}
+        hasPrice={hasPrice}
+        isOwnListing={isOwner}
+        contactPhone={user ? sellerProfile.contact_phone : null}
+      />
     </main>
   );
 }

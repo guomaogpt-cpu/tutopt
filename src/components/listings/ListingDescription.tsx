@@ -29,11 +29,11 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
 
       <div
         className={cn(
-          "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
+          "rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-4 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
         )}
       >
         {hasText ? (
-          <p className="break-words whitespace-pre-wrap text-base leading-relaxed text-[#334155] dark:text-slate-300">
+          <p className="break-words whitespace-pre-wrap text-[15px] leading-relaxed text-[#334155] sm:text-base dark:text-slate-300">
             {displayText}
           </p>
         ) : (
@@ -43,7 +43,7 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
           <Button
             type="button"
             variant="link"
-            className="mt-4 h-auto p-0 text-[#2563EB] dark:text-blue-400"
+            className="mt-3 h-auto min-h-10 p-0 text-[#2563EB] dark:text-blue-400"
             onClick={() => setExpanded((current) => !current)}
           >
             {expanded ? t("listing.showLess") : t("listing.showMore")}
