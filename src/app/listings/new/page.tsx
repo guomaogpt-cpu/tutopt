@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { CreateListingPageHeader } from "@/components/listings/CreateListingPageHeader";
 import { NewListingForm } from "@/components/listings/NewListingForm";
 import {
   buildLoginUrl,
@@ -15,8 +15,6 @@ import {
 } from "@/features/verticals/verticals";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
-import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
-import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPrivatePageMetadata(
@@ -88,39 +86,14 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
   ]);
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
+    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] py-4 dark:bg-slate-950 sm:py-8">
       <Container size="md" className="max-w-[1100px] min-w-0">
-        <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
-          <ol className="flex flex-wrap items-center gap-1.5">
-            <li>
-              <Link href="/" className="transition hover:text-[#2563EB]">
-                Главная
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <Link href="/seller/dashboard" className="transition hover:text-[#2563EB]">
-                Кабинет продавца
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li className="line-clamp-1 font-medium text-[#334155]">Новое объявление</li>
-          </ol>
-        </nav>
-
-        <PageHeader className="mt-4 pb-0">
-          <PageHeaderContent>
-            <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Подать объявление</PageTitle>
-            <PageSubtitle className="text-sm text-[#64748B] sm:text-base">
-              Добавьте товар или предложение в выбранный раздел платформы
-            </PageSubtitle>
-          </PageHeaderContent>
-        </PageHeader>
+        <CreateListingPageHeader />
 
         {categories.length === 0 || cities.length === 0 ? (
-          <div className="mt-8 rounded-[22px] border border-[#FDE68A] bg-[#FFFBEB] p-6 text-sm text-[#92400E]">
+          <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200 sm:mt-8 sm:p-6">
             Для создания объявления нужны категории и города в базе. Запустите{" "}
-            <code className="rounded bg-[#FEF3C7] px-1">npm run db:seed</code>.
+            <code className="rounded bg-amber-100 px-1 dark:bg-amber-900/60">npm run db:seed</code>.
           </div>
         ) : (
           <NewListingForm

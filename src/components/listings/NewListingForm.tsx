@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ListingStatus, ListingUnit, ListingVertical } from "@prisma/client";
-import { Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
@@ -32,6 +32,8 @@ import {
   trackListingEditStart,
   trackListingEditSubmit,
 } from "@/lib/analytics/events";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -75,18 +77,25 @@ export type ListingFormInitialValues = {
 
 const emptyErrors: ListingFormErrors = { form: [], fields: {} };
 
+const VERTICAL_LABEL_KEY: Record<ListingVertical, DictionaryKey> = {
+  MARKET: "nav.market",
+  SERVICES: "nav.services",
+  OPT: "nav.opt",
+  CARGO: "nav.cargo",
+};
+
 function FieldError({ message }: { message?: string }) {
   if (!message) {
     return null;
   }
 
-  return <p className="text-sm text-[#DC2626]">{message}</p>;
+  return <p className="text-sm text-red-600 dark:text-red-400">{message}</p>;
 }
 
 function fieldInputClass(hasError: boolean): string {
   return cn(
-    "h-11 rounded-xl border-[rgba(148,163,184,0.25)]",
-    hasError && "border-[#FECACA] focus-visible:ring-[#FECACA]",
+    "h-11 w-full rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100",
+    hasError && "border-red-200 focus-visible:ring-red-200 dark:border-red-900",
   );
 }
 
@@ -116,6 +125,7 @@ export function NewListingForm({
   initialValues,
   cancelHref = "/seller/dashboard",
 }: NewListingFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const resolvedInitialVertical = initialValues?.vertical ?? initialVertical;
   const [vertical, setVertical] = useState<ListingVertical>(resolvedInitialVertical);
@@ -145,11 +155,47 @@ export function NewListingForm({
   const [clientError, setClientError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openPickerId, setOpenPickerId] = useState<string | null>(null);
+  const [createdListingId, setCreatedListingId] = useState<string | null>(null);
 
   const categoriesForVertical = useMemo(
     () => categories.filter((category) => category.vertical === vertical),
     [categories, vertical],
   );
+
+  const categoryLabel = useMemo(
+    () => categories.find((category) => category.id === categoryId)?.name ?? "",
+    [categories, categoryId],
+  );
+
+  const isDirty = useMemo(() => {
+    if (mode === "edit") {
+      return (
+        title !== (initialValues?.title ?? "") ||
+        description !== (initialValues?.description ?? "") ||
+        price !== (initialValues?.price ?? "") ||
+        cityId !== (initialValues?.cityId ?? "") ||
+        categoryId !== (initialValues?.categoryId ?? "") ||
+        imageUrls.length !== (initialValues?.imageUrls.length ?? 0)
+      );
+    }
+    return Boolean(
+      title.trim() ||
+        description.trim() ||
+        price.trim() ||
+        cityId ||
+        categoryId ||
+        imageUrls.length > 0,
+    );
+  }, [
+    mode,
+    title,
+    description,
+    price,
+    cityId,
+    categoryId,
+    imageUrls.length,
+    initialValues,
+  ]);
 
   useEffect(() => {
     if (mode === "edit" && initialValues) {
@@ -165,6 +211,20 @@ export function NewListingForm({
       setUnit(formConfig.defaultUnit);
     }
   }, [formConfig, unit]);
+
+  useEffect(() => {
+    if (!isDirty || isSubmitting || createdListingId) {
+      return;
+    }
+
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty, isSubmitting, createdListingId]);
 
   function handleVerticalChange(nextVertical: ListingVertical) {
     const nextConfig = getVerticalFormConfig(nextVertical);
@@ -226,18 +286,28 @@ export function NewListingForm({
     setErrors(emptyErrors);
     setClientError("");
 
+    if (!title.trim()) {
+      setClientError(t("createListing.validation.titleRequired"));
+      return;
+    }
+
+    if (!vertical) {
+      setClientError(t("createListing.validation.verticalRequired"));
+      return;
+    }
+
     if (!categoryId) {
-      setClientError("Выберите категорию");
+      setClientError(t("createListing.validation.categoryRequired"));
       return;
     }
 
     if (imageUrls.length === 0) {
-      setClientError("Добавьте хотя бы одно фото");
+      setClientError(t("createListing.validation.photoRequired"));
       return;
     }
 
     if (imageUrls.length > 10) {
-      setClientError("Можно загрузить не более 10 фотографий");
+      setClientError(t("createListing.validation.photoLimit"));
       return;
     }
 
@@ -248,12 +318,18 @@ export function NewListingForm({
     );
 
     if (serverImageUrls.length === 0) {
-      setClientError("Дождитесь окончания загрузки фото");
+      setClientError(t("createListing.validation.waitUpload"));
       return;
     }
 
     if (!cityId) {
-      setClientError("Выберите город");
+      setClientError(t("createListing.validation.cityRequired"));
+      return;
+    }
+
+    const priceValue = Number(price);
+    if (!Number.isFinite(priceValue) || priceValue < 0 || price.trim() === "") {
+      setClientError(t("createListing.validation.invalidPrice"));
       return;
     }
 
@@ -269,7 +345,7 @@ export function NewListingForm({
       const payload: CreateListingInput = {
         title: title.trim(),
         description: description.trim(),
-        price: Number(price),
+        price: priceValue,
         currency,
         moq: resolvedMoq,
         unit: unit as CreateListingInput["unit"],
@@ -292,10 +368,14 @@ export function NewListingForm({
           initialValues.status,
           result.listing.status ?? initialValues.status,
         );
-      } else {
-        trackCreateListingSubmit(vertical);
+        router.push(`/listings/${result.listing.id}`);
+        router.refresh();
+        return;
       }
-      router.push(`/listings/${result.listing.id}`);
+
+      trackCreateListingSubmit(vertical);
+      setCreatedListingId(result.listing.id);
+      setIsSubmitting(false);
       router.refresh();
     } catch (error) {
       if (error instanceof ListingRequestError) {
@@ -322,13 +402,70 @@ export function NewListingForm({
   const cityError = getListingFieldError(errors, "city_id");
   const imageError = getListingFieldError(errors, "image_urls");
 
+  const categoryRequiredMsg = t("createListing.validation.categoryRequired");
+  const cityRequiredMsg = t("createListing.validation.cityRequired");
+  const photoRequiredMsg = t("createListing.validation.photoRequired");
+  const photoLimitMsg = t("createListing.validation.photoLimit");
+
+  if (createdListingId) {
+    return (
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:mt-8 sm:rounded-[22px] sm:p-8">
+        <div className="mx-auto flex max-w-md flex-col items-center text-center">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-slate-800 dark:text-emerald-400">
+            <CheckCircle2 className="size-7" aria-hidden="true" />
+          </div>
+          <h2 className="mt-4 text-lg font-bold text-slate-900 dark:text-slate-100">
+            {t("createListing.submittedForModeration")}
+          </h2>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            {t("createListing.moderationNote")}
+          </p>
+          <div className="mt-6 flex w-full flex-col gap-2.5 sm:flex-row">
+            <Button
+              asChild
+              className="h-12 flex-1 rounded-xl bg-blue-600 hover:bg-blue-700"
+            >
+              <Link href={`/listings/${createdListingId}`}>
+                {t("createListing.openListing")}
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="h-12 flex-1 rounded-xl border-slate-200 dark:border-slate-700"
+            >
+              <Link href="/seller/listings">{t("createListing.myListings")}</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const submitLabel = isSubmitting
+    ? mode === "edit"
+      ? t("createListing.saving")
+      : t("createListing.publishing")
+    : mode === "edit"
+      ? t("createListing.saveChanges")
+      : t("createListing.publish");
+
+  const submitDisabled = isSubmitting || imageUrls.length === 0;
+
   return (
-    <form onSubmit={(event) => void handleSubmit(event)} className="mt-6 lg:mt-8">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-        <div className="min-w-0 space-y-6">
+    <form
+      onSubmit={(event) => void handleSubmit(event)}
+      className="mt-4 pb-24 sm:mt-6 sm:pb-0 lg:mt-8"
+    >
+      <p className="mb-3 overflow-x-auto whitespace-nowrap text-xs font-medium text-slate-500 sm:hidden dark:text-slate-400">
+        {t("createListing.progress")}
+      </p>
+
+      <div className="grid gap-4 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+        <div className="min-w-0 space-y-4 sm:space-y-6">
           {(clientError || errors.form.length > 0) && (
             <div
-              className="rounded-[18px] border border-[#FECACA] bg-[#FEF2F2] p-4 text-sm text-[#DC2626]"
+              className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/30 dark:text-red-400"
               role="alert"
             >
               {clientError ? <p>{clientError}</p> : null}
@@ -339,38 +476,15 @@ export function NewListingForm({
           )}
 
           <FormSection
-            title="Раздел"
-            description="Выберите, где будет размещено объявление."
+            dense
+            title={t("createListing.whatSelling")}
+            description={t("createListing.sections.main")}
           >
             <div className="space-y-2">
-              <label htmlFor="listing-vertical" className="text-sm font-medium text-[#0F172A]">
-                Раздел объявления
-              </label>
-              <Select
-                value={vertical}
-                onValueChange={(value) => handleVerticalChange(value as ListingVertical)}
-                disabled={isSubmitting}
+              <label
+                htmlFor="listing-title"
+                className="text-sm font-medium text-slate-900 dark:text-slate-100"
               >
-                <SelectTrigger
-                  id="listing-vertical"
-                  className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {VERTICAL_LIST.map((item) => (
-                    <SelectItem key={item.id} value={item.id}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </FormSection>
-
-          <FormSection title="Основная информация" description={formConfig.basicsDescription}>
-            <div className="space-y-2">
-              <label htmlFor="listing-title" className="text-sm font-medium text-[#0F172A]">
                 {formConfig.titleLabel}
               </label>
               <Input
@@ -385,9 +499,48 @@ export function NewListingForm({
                 disabled={isSubmitting}
                 className={fieldInputClass(Boolean(titleError))}
               />
-              <p className="text-xs text-[#64748B]">{formConfig.titleHint}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{formConfig.titleHint}</p>
               <FieldError message={titleError} />
             </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="listing-vertical"
+                className="text-sm font-medium text-slate-900 dark:text-slate-100"
+              >
+                {t("createListing.verticalLabel")}
+              </label>
+              <Select
+                value={vertical}
+                onValueChange={(value) => handleVerticalChange(value as ListingVertical)}
+                disabled={isSubmitting}
+              >
+                <SelectTrigger
+                  id="listing-vertical"
+                  className="h-11 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {VERTICAL_LIST.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {t(VERTICAL_LABEL_KEY[item.id])}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <CategoryPicker
+              categories={categoriesForVertical}
+              value={categoryId}
+              onChange={setCategoryId}
+              disabled={isSubmitting}
+              error={
+                categoryError ||
+                (clientError === categoryRequiredMsg ? clientError : undefined)
+              }
+            />
 
             {formConfig.showBrand ? (
               <OptionPicker
@@ -406,23 +559,31 @@ export function NewListingForm({
             ) : null}
           </FormSection>
 
-          <FormSection title="Категория" description={formConfig.categoryDescription}>
-            <CategoryPicker
-              categories={categoriesForVertical}
-              value={categoryId}
-              onChange={setCategoryId}
+          <FormSection dense title={t("createListing.sections.photos")}>
+            <ListingImageUpload
+              value={imageUrls}
+              onChange={setImageUrls}
               disabled={isSubmitting}
-              error={categoryError || (clientError === "Выберите категорию" ? clientError : undefined)}
+              error={
+                imageError ||
+                (clientError === photoRequiredMsg || clientError === photoLimitMsg
+                  ? clientError
+                  : undefined)
+              }
             />
           </FormSection>
 
           <FormSection
+            dense
             title={formConfig.priceSectionTitle}
             description={formConfig.priceSectionDescription}
           >
-            <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto]">
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5">
               <div className="space-y-2">
-                <label htmlFor="listing-price" className="text-sm font-medium text-[#0F172A]">
+                <label
+                  htmlFor="listing-price"
+                  className="text-sm font-medium text-slate-900 dark:text-slate-100"
+                >
                   {formConfig.priceLabel}
                 </label>
                 <Input
@@ -432,13 +593,14 @@ export function NewListingForm({
                   min="0"
                   step="0.01"
                   required
+                  inputMode="decimal"
                   value={price}
                   onChange={(event) => setPrice(event.target.value)}
                   placeholder="250"
                   disabled={isSubmitting}
                   className={fieldInputClass(Boolean(priceError))}
                 />
-                <p className="text-xs text-[#64748B]">{formConfig.priceHint}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{formConfig.priceHint}</p>
                 <FieldError message={priceError} />
               </div>
 
@@ -456,13 +618,16 @@ export function NewListingForm({
 
             <div
               className={cn(
-                "grid gap-5",
+                "grid gap-4 sm:gap-5",
                 formConfig.showMoq ? "sm:grid-cols-2" : "sm:grid-cols-1",
               )}
             >
               {formConfig.showMoq ? (
                 <div className="space-y-2">
-                  <label htmlFor="listing-moq" className="text-sm font-medium text-[#0F172A]">
+                  <label
+                    htmlFor="listing-moq"
+                    className="text-sm font-medium text-slate-900 dark:text-slate-100"
+                  >
                     {formConfig.moqLabel}
                   </label>
                   <Input
@@ -471,13 +636,14 @@ export function NewListingForm({
                     type="number"
                     min="1"
                     required
+                    inputMode="numeric"
                     value={moq}
                     onChange={(event) => setMoq(event.target.value)}
                     placeholder={formConfig.moqPlaceholder}
                     disabled={isSubmitting}
                     className={fieldInputClass(Boolean(moqError))}
                   />
-                  <p className="text-xs text-[#64748B]">{formConfig.moqHint}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{formConfig.moqHint}</p>
                   <FieldError message={moqError} />
                 </div>
               ) : null}
@@ -493,10 +659,35 @@ export function NewListingForm({
                 }))}
               />
             </div>
+
+            {formConfig.showStock ? (
+              <div className="space-y-2">
+                <label
+                  htmlFor="listing-stock"
+                  className="text-sm font-medium text-slate-900 dark:text-slate-100"
+                >
+                  {formConfig.stockLabel}
+                </label>
+                <Input
+                  id="listing-stock"
+                  name="stock_quantity"
+                  type="number"
+                  min="0"
+                  inputMode="numeric"
+                  value={stockQuantity}
+                  onChange={(event) => setStockQuantity(event.target.value)}
+                  placeholder={formConfig.stockPlaceholder}
+                  disabled={isSubmitting}
+                  className={fieldInputClass(false)}
+                />
+                <p className="text-xs text-slate-500 dark:text-slate-400">{formConfig.stockHint}</p>
+              </div>
+            ) : null}
           </FormSection>
 
           <FormSection
-            title={formConfig.locationSectionTitle}
+            dense
+            title={t("createListing.sections.location")}
             description={formConfig.locationSectionDescription}
             className={openPickerId === "city" ? "relative z-40" : undefined}
           >
@@ -511,53 +702,21 @@ export function NewListingForm({
               placeholder="Выберите город"
               searchable
               disabled={isSubmitting}
-              error={cityError || (clientError === "Выберите город" ? clientError : undefined)}
-            />
-
-            {formConfig.showStock ? (
-              <div className="space-y-2">
-                <label htmlFor="listing-stock" className="text-sm font-medium text-[#0F172A]">
-                  {formConfig.stockLabel}
-                </label>
-                <Input
-                  id="listing-stock"
-                  name="stock_quantity"
-                  type="number"
-                  min="0"
-                  value={stockQuantity}
-                  onChange={(event) => setStockQuantity(event.target.value)}
-                  placeholder={formConfig.stockPlaceholder}
-                  disabled={isSubmitting}
-                  className={fieldInputClass(false)}
-                />
-                <p className="text-xs text-[#64748B]">{formConfig.stockHint}</p>
-              </div>
-            ) : null}
-          </FormSection>
-
-          <FormSection
-            title="Фото"
-            description="Качественные фото повышают доверие и отклик."
-          >
-            <ListingImageUpload
-              value={imageUrls}
-              onChange={setImageUrls}
-              disabled={isSubmitting}
-              error={
-                imageError ||
-                (clientError === "Добавьте хотя бы одно фото" ? clientError : undefined) ||
-                (clientError === "Можно загрузить не более 10 фотографий" ? clientError : undefined)
-              }
+              error={cityError || (clientError === cityRequiredMsg ? clientError : undefined)}
             />
           </FormSection>
 
           <FormSection
-            title="Описание"
+            dense
+            title={t("createListing.sections.description")}
             description={formConfig.descriptionSectionDescription}
           >
             <div className="space-y-2">
-              <label htmlFor="listing-description" className="text-sm font-medium text-[#0F172A]">
-                Полное описание
+              <label
+                htmlFor="listing-description"
+                className="text-sm font-medium text-slate-900 dark:text-slate-100"
+              >
+                {t("createListing.sections.description")}
               </label>
               <Textarea
                 id="listing-description"
@@ -567,12 +726,12 @@ export function NewListingForm({
                 onChange={(event) => setDescription(event.target.value)}
                 placeholder={formConfig.descriptionPlaceholder}
                 className={cn(
-                  "min-h-[160px] resize-y rounded-xl border-[rgba(148,163,184,0.25)]",
-                  descriptionError && "border-[#FECACA] focus-visible:ring-[#FECACA]",
+                  "min-h-[140px] w-full resize-y rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:min-h-[160px]",
+                  descriptionError && "border-red-200 focus-visible:ring-red-200",
                 )}
                 disabled={isSubmitting}
               />
-              <ul className="text-xs leading-relaxed text-[#64748B]">
+              <ul className="hidden text-xs leading-relaxed text-slate-500 sm:block dark:text-slate-400">
                 {formConfig.descriptionTips.map((tip) => (
                   <li key={tip}>{tip}</li>
                 ))}
@@ -581,41 +740,128 @@ export function NewListingForm({
             </div>
           </FormSection>
 
-          <div className="rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.04)] sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
-            <Button
-              type="submit"
-              disabled={isSubmitting || imageUrls.length === 0}
-              className="h-12 w-full rounded-xl bg-[#2563EB] text-base hover:bg-[#1D4ED8]"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                  {mode === "edit" ? "Сохранение..." : "Отправка..."}
-                </>
-              ) : (
-                mode === "edit" ? "Сохранить изменения" : "Отправить на модерацию"
-              )}
-            </Button>
-            <p className="mt-3 text-center text-sm text-[#64748B]">
-              {mode === "edit"
-                ? "После редактирования объявление может быть отправлено на повторную модерацию."
-                : "После отправки объявление будет проверено модератором."}
-            </p>
-            <div className="mt-4 text-center">
-              <Link
-                href={cancelHref}
-                className="text-sm font-medium text-[#64748B] transition hover:text-[#2563EB]"
-              >
-                Отмена
-              </Link>
+          <FormSection dense title={t("createListing.sections.publish")}>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-950 sm:p-4">
+              <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                {t("createListing.reviewBeforePublish")}
+              </p>
+              <dl className="mt-3 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
+                <div className="flex justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">
+                    {t("createListing.summaryTitle")}
+                  </dt>
+                  <dd className="line-clamp-1 text-right font-medium">
+                    {title.trim() || t("createListing.summaryNoTitle")}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">
+                    {t("createListing.verticalLabel")}
+                  </dt>
+                  <dd className="line-clamp-1 text-right font-medium">
+                    {t(VERTICAL_LABEL_KEY[vertical])}
+                    {" · "}
+                    {categoryLabel || t("createListing.summaryNoCategory")}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">
+                    {t("createListing.sections.price")}
+                  </dt>
+                  <dd className="font-medium">
+                    {price.trim() ? `${price} ${currency}` : "—"}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">
+                    {t("createListing.sections.location")}
+                  </dt>
+                  <dd className="font-medium">
+                    {cityLabel || t("createListing.summaryNoCity")}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">
+                    {t("createListing.sections.photos")}
+                  </dt>
+                  <dd className="font-medium">
+                    {imageUrls.length} {t("createListing.summaryPhotos")}
+                  </dd>
+                </div>
+              </dl>
             </div>
-          </div>
+
+            <div className="hidden sm:block">
+              <Button
+                type="submit"
+                disabled={submitDisabled}
+                className="h-12 w-full rounded-xl bg-blue-600 text-base hover:bg-blue-700"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                    {submitLabel}
+                  </>
+                ) : (
+                  submitLabel
+                )}
+              </Button>
+              <p className="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
+                {mode === "edit"
+                  ? t("createListing.editModerationNote")
+                  : t("createListing.moderationNote")}
+              </p>
+              <div className="mt-4 text-center">
+                <Link
+                  href={cancelHref}
+                  className="text-sm font-medium text-slate-500 transition hover:text-blue-600 dark:text-slate-400"
+                >
+                  {t("createListing.cancel")}
+                </Link>
+              </div>
+            </div>
+
+            <div className="sm:hidden">
+              <p className="text-center text-xs text-slate-500 dark:text-slate-400">
+                {mode === "edit"
+                  ? t("createListing.editModerationNote")
+                  : t("createListing.moderationNote")}
+              </p>
+              <div className="mt-3 text-center">
+                <Link
+                  href={cancelHref}
+                  className="text-sm font-medium text-slate-500 dark:text-slate-400"
+                >
+                  {t("createListing.cancel")}
+                </Link>
+              </div>
+            </div>
+          </FormSection>
         </div>
 
         <NewListingSidebar {...sidebarPreview} className="hidden lg:block" />
       </div>
 
-      <NewListingSidebar {...sidebarPreview} className="mt-8 lg:hidden" />
+      {/* Sticky submit above bottom nav on mobile */}
+      <div
+        className="fixed inset-x-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 sm:hidden"
+        style={{ bottom: "calc(5rem + env(safe-area-inset-bottom))" }}
+      >
+        <Button
+          type="submit"
+          disabled={submitDisabled}
+          className="h-12 w-full rounded-xl bg-blue-600 text-base hover:bg-blue-700"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              {submitLabel}
+            </>
+          ) : (
+            submitLabel
+          )}
+        </Button>
+      </div>
     </form>
   );
 }
@@ -635,10 +881,10 @@ export function ListingAccessMessage({
     <EmptyState
       title={title}
       description={description}
-      className="mt-8 rounded-[22px] border border-[rgba(148,163,184,0.18)] bg-white dark:border-slate-800 dark:bg-slate-900"
+      className="mt-8 rounded-[22px] border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
       action={
         actionHref && actionLabel ? (
-          <Button asChild className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
+          <Button asChild className="h-11 rounded-xl bg-blue-600 hover:bg-blue-700">
             <Link href={actionHref}>{actionLabel}</Link>
           </Button>
         ) : null

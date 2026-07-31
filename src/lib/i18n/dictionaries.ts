@@ -1688,6 +1688,214 @@ export const DICTIONARY = {
   "notifications.from": { ru: "От:", kg: "Дан:", en: "From:" },
   "notifications.open": { ru: "Открыть →", kg: "Ачуу →", en: "Open →" },
 
+  // Create listing — Phase 69
+  "createListing.title": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post a listing",
+  },
+  "createListing.subtitle": {
+    ru: "Добавьте товар или предложение в выбранный раздел",
+    kg: "Тандалган бөлүмгө товар же сунуш кошуңуз",
+    en: "Add a product or offer to the selected section",
+  },
+  "createListing.signInRequired": {
+    ru: "Чтобы подать объявление, войдите или зарегистрируйтесь.",
+    kg: "Жарыя берүү үчүн кириңиз же катталыңыз.",
+    en: "Sign in or register to post a listing.",
+  },
+  "createListing.sections.main": {
+    ru: "Основное",
+    kg: "Негизги",
+    en: "Basics",
+  },
+  "createListing.sections.photos": {
+    ru: "Фото",
+    kg: "Сүрөт",
+    en: "Photos",
+  },
+  "createListing.sections.price": {
+    ru: "Цена",
+    kg: "Баа",
+    en: "Price",
+  },
+  "createListing.sections.location": {
+    ru: "Местоположение",
+    kg: "Жайгашкан жери",
+    en: "Location",
+  },
+  "createListing.sections.description": {
+    ru: "Описание",
+    kg: "Сүрөттөмө",
+    en: "Description",
+  },
+  "createListing.sections.publish": {
+    ru: "Публикация",
+    kg: "Жарыялоо",
+    en: "Publish",
+  },
+  "createListing.progress": {
+    ru: "1. Основное → 2. Фото → 3. Цена → 4. Описание",
+    kg: "1. Негизги → 2. Сүрөт → 3. Баа → 4. Сүрөттөмө",
+    en: "1. Basics → 2. Photos → 3. Price → 4. Description",
+  },
+  "createListing.whatSelling": {
+    ru: "Что продаёте?",
+    kg: "Эмне сатасыз?",
+    en: "What are you selling?",
+  },
+  "createListing.verticalLabel": {
+    ru: "Раздел",
+    kg: "Бөлүм",
+    en: "Section",
+  },
+  "createListing.photoHint": {
+    ru: "Добавьте фото товара или услуги.",
+    kg: "Товардын же кызматтын сүрөтүн кошуңуз.",
+    en: "Add photos of the item or service.",
+  },
+  "createListing.mainPhotoHint": {
+    ru: "Первое фото будет главным.",
+    kg: "Биринчи сүрөт негизги болот.",
+    en: "The first photo will be the main one.",
+  },
+  "createListing.photoCount": {
+    ru: "от 1 до 10 фото",
+    kg: "1ден 10го чейин сүрөт",
+    en: "1 to 10 photos",
+  },
+  "createListing.uploadPhotos": {
+    ru: "Загрузить фото",
+    kg: "Сүрөт жүктөө",
+    en: "Upload photos",
+  },
+  "createListing.addPhoto": {
+    ru: "Добавить",
+    kg: "Кошуу",
+    en: "Add",
+  },
+  "createListing.mainPhoto": {
+    ru: "Главное",
+    kg: "Негизги",
+    en: "Main",
+  },
+  "createListing.reviewBeforePublish": {
+    ru: "Проверьте данные перед публикацией.",
+    kg: "Жарыялоодон мурун маалыматтарды текшериңиз.",
+    en: "Review the details before publishing.",
+  },
+  "createListing.publish": {
+    ru: "Опубликовать",
+    kg: "Жарыялоо",
+    en: "Publish",
+  },
+  "createListing.publishing": {
+    ru: "Отправка...",
+    kg: "Жөнөтүлүүдө...",
+    en: "Publishing...",
+  },
+  "createListing.saveChanges": {
+    ru: "Сохранить изменения",
+    kg: "Өзгөртүүлөрдү сактоо",
+    en: "Save changes",
+  },
+  "createListing.saving": {
+    ru: "Сохранение...",
+    kg: "Сакталууда...",
+    en: "Saving...",
+  },
+  "createListing.moderationNote": {
+    ru: "После отправки объявление будет проверено модератором.",
+    kg: "Жөнөтүлгөндөн кийин жарыяны модератор текшерет.",
+    en: "After submission the listing will be reviewed by a moderator.",
+  },
+  "createListing.editModerationNote": {
+    ru: "После редактирования объявление может быть отправлено на повторную модерацию.",
+    kg: "Түзөтүүдөн кийин жарыя кайра модерацияга жөнөтүлүшү мүмкүн.",
+    en: "After editing the listing may be sent for re-moderation.",
+  },
+  "createListing.cancel": { ru: "Отмена", kg: "Жокко чыгаруу", en: "Cancel" },
+  "createListing.submittedForModeration": {
+    ru: "Объявление отправлено на модерацию.",
+    kg: "Жарыя модерацияга жөнөтүлдү.",
+    en: "Listing submitted for moderation.",
+  },
+  "createListing.openListing": {
+    ru: "Открыть объявление",
+    kg: "Жарыяны ачуу",
+    en: "Open listing",
+  },
+  "createListing.myListings": {
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "createListing.summaryPhotos": {
+    ru: "фото",
+    kg: "сүрөт",
+    en: "photos",
+  },
+  "createListing.summaryTitle": {
+    ru: "Название",
+    kg: "Аталышы",
+    en: "Title",
+  },
+  "createListing.summaryNoTitle": {
+    ru: "Без названия",
+    kg: "Аталышы жок",
+    en: "Untitled",
+  },
+  "createListing.summaryNoCity": {
+    ru: "Город не выбран",
+    kg: "Шаар тандалган жок",
+    en: "City not selected",
+  },
+  "createListing.summaryNoCategory": {
+    ru: "Категория не выбрана",
+    kg: "Категория тандалган жок",
+    en: "Category not selected",
+  },
+  "createListing.validation.titleRequired": {
+    ru: "Укажите название",
+    kg: "Аталышын жазыңыз",
+    en: "Title is required",
+  },
+  "createListing.validation.verticalRequired": {
+    ru: "Выберите раздел",
+    kg: "Бөлүмдү тандаңыз",
+    en: "Select a section",
+  },
+  "createListing.validation.categoryRequired": {
+    ru: "Выберите категорию",
+    kg: "Категорияны тандаңыз",
+    en: "Select a category",
+  },
+  "createListing.validation.invalidPrice": {
+    ru: "Укажите корректную цену",
+    kg: "Туура бааны жазыңыз",
+    en: "Enter a valid price",
+  },
+  "createListing.validation.cityRequired": {
+    ru: "Выберите город",
+    kg: "Шаарды тандаңыз",
+    en: "Select a city",
+  },
+  "createListing.validation.photoRequired": {
+    ru: "Добавьте хотя бы одно фото",
+    kg: "Жок дегенде бир сүрөт кошуңуз",
+    en: "Add at least one photo",
+  },
+  "createListing.validation.photoLimit": {
+    ru: "Можно загрузить не более 10 фотографий",
+    kg: "10дон ашык сүрөт жүктөөгө болбойт",
+    en: "You can upload up to 10 photos",
+  },
+  "createListing.validation.waitUpload": {
+    ru: "Дождитесь окончания загрузки фото",
+    kg: "Сүрөт жүктөлүп бүткөнчө күтүңүз",
+    en: "Wait until photo upload finishes",
+  },
+
   // Listing status — Phase 56
   "status.draft": { ru: "Черновик", kg: "Долбоор", en: "Draft" },
   "status.pendingModeration": {
