@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { CargoRequestStatus } from "@prisma/client";
 import { CargoRespondModal } from "@/components/seller/CargoRespondModal";
 import {
@@ -61,12 +62,15 @@ export function SellerCargoRequestsList({
   if (requests.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
-        <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-          {t("cargo.seller.noRequests")}
+        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+          {t("cargo.sellerEmptyTitle")}
         </p>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {t("cargo.sellerEmptyDescription")}
         </p>
+        <Button asChild className="mt-5 h-11 rounded-xl bg-orange-500 hover:bg-orange-600">
+          <Link href="/seller/cargo-settings">{t("cargo.settings.title")}</Link>
+        </Button>
       </div>
     );
   }

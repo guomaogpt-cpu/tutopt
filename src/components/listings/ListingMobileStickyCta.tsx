@@ -8,6 +8,7 @@ import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/log
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { cn } from "@/lib/utils";
 
 type ListingMobileStickyCtaProps = {
@@ -33,6 +34,7 @@ export function ListingMobileStickyCta({
 }: ListingMobileStickyCtaProps) {
   const router = useRouter();
   const { t } = useTranslation();
+  const theme = getVerticalTheme(vertical);
 
   if (isOwnListing) {
     return null;
@@ -80,7 +82,10 @@ export function ListingMobileStickyCta({
 
         <Button
           type="button"
-          className="h-12 min-w-0 flex-1 gap-2 rounded-xl bg-blue-600 text-sm font-semibold hover:bg-blue-700"
+          className={cn(
+            "h-12 min-w-0 flex-1 gap-2 rounded-xl text-sm font-semibold",
+            theme.primaryButton,
+          )}
           onClick={handlePrimaryAction}
         >
           <MessageSquare className="size-4 shrink-0" aria-hidden="true" />

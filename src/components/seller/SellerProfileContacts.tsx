@@ -86,7 +86,7 @@ export function SellerProfileContacts({
 
       <div className={cardClassName}>
         {!hasAnyContact ? (
-          <p className="text-sm text-[#64748B]">Продавец не указал контакты.</p>
+          <p className="text-sm text-[#64748B]">Контакты не указаны.</p>
         ) : (
           <div className="flex flex-col gap-3">
             {contactPhone ? (

@@ -47,7 +47,7 @@ export function FavoritesPageContent({
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B] dark:text-slate-400">
           {t("favorites.emptyDescription")}
         </p>
-        <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
+        <Button asChild className="mt-6 h-11 rounded-xl">
           <Link href="/listings">{t("catalog.goToCatalog")}</Link>
         </Button>
       </div>

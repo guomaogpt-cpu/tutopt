@@ -145,8 +145,11 @@ export async function getSellerCargoRequests(options?: {
   statusFilter?: CargoRequestStatus | null;
   sellerProfileId?: string | null;
   limit?: number;
+  /** When false, private name/phone are blanked before leaving the server. */
+  includeContacts?: boolean;
 }): Promise<SellerCargoRequestItem[]> {
   const sellerProfileId = options?.sellerProfileId ?? null;
+  const includeContacts = options?.includeContacts === true;
 
   const rows = await prisma.cargoRequest.findMany({
     where: options?.statusFilter ? { status: options.statusFilter } : undefined,
@@ -167,8 +170,8 @@ export async function getSellerCargoRequests(options?: {
   return rows.map((row) => ({
     id: row.id,
     created_at: row.created_at,
-    name: row.name,
-    phone: row.phone,
+    name: includeContacts ? row.name : "",
+    phone: includeContacts ? row.phone : "",
     company: row.company,
     from_location: row.from_location,
     to_location: row.to_location,

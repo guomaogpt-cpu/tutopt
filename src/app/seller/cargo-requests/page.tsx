@@ -100,10 +100,14 @@ export default async function SellerCargoRequestsPage({
     select: { id: true },
   });
 
+  const showContacts = user.role === UserRole.ADMIN;
+  const canRespond = Boolean(sellerProfile);
+
   const [allRequests, subscription] = await Promise.all([
     getSellerCargoRequests({
       statusFilter: null,
       sellerProfileId: sellerProfile?.id ?? null,
+      includeContacts: showContacts,
     }),
     sellerProfile
       ? getCargoSubscriptionForSeller(sellerProfile.id)
@@ -127,9 +131,6 @@ export default async function SellerCargoRequestsPage({
       }),
     );
   }
-
-  const showContacts = user.role === UserRole.ADMIN;
-  const canRespond = Boolean(sellerProfile);
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 dark:bg-slate-950 sm:py-8">

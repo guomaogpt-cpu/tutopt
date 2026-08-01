@@ -263,7 +263,7 @@ export function SellerProfileSidebar({
                 <SellerTrustSignalsList signals={trustSignals} maxItems={5} className="mt-2" />
               ) : (
                 <p className="mt-2 text-sm leading-relaxed text-[#64748B]">
-                  Продавец пока не заполнил подробную информацию.
+                  Автор пока не заполнил подробную информацию.
                 </p>
               )}
               <dl className="mt-3 space-y-1 text-xs text-[#64748B]">
@@ -352,7 +352,7 @@ export function SellerProfileSidebar({
                 </Button>
               </div>
             ) : !hasAnyContact ? (
-              <p className="mt-2 text-sm text-[#64748B]">Продавец не указал контакты.</p>
+              <p className="mt-2 text-sm text-[#64748B]">Контакты не указаны.</p>
             ) : (
               <div className="mt-2 flex flex-col gap-0.5">
                 {contactPhone ? (

@@ -28,7 +28,7 @@ export function SellerProfileAbout({ profile }: SellerProfileAboutProps) {
           </p>
         ) : (
           <p className="text-sm leading-relaxed text-[#64748B]">
-            Продавец пока не добавил описание компании.
+            Автор пока не добавил описание компании.
           </p>
         )}
 

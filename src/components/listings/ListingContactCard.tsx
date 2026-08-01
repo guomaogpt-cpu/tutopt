@@ -10,6 +10,7 @@ import { getListingStatusLabel } from "@/features/listings/lib/listing-status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { cn } from "@/lib/utils";
 
 type ListingContactCardProps = {
@@ -94,6 +95,7 @@ export function ListingContactCard({
 }: ListingContactCardProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
+  const theme = getVerticalTheme(vertical);
 
   function handleLoginToViewContacts() {
     router.push(buildLoginUrl(getCurrentPathFromWindow()));
@@ -176,7 +178,10 @@ export function ListingContactCard({
       <div className="mt-5 flex flex-col gap-3">
         <Button
           type="button"
-          className="h-12 w-full gap-2 rounded-xl bg-blue-600 text-base font-semibold hover:bg-blue-700"
+          className={cn(
+            "h-12 w-full gap-2 rounded-xl text-base font-semibold",
+            theme.primaryButton,
+          )}
           onClick={handleWriteToSeller}
         >
           <MessageSquare className="size-4" aria-hidden="true" />

@@ -26,6 +26,8 @@ import { Input } from "@/components/ui/input";
 import { Section } from "@/components/ui/section";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
 const leadCardClassName =
   "rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none";
@@ -59,6 +61,7 @@ export function ListingLeadForm({
 }: ListingLeadFormProps) {
   const router = useRouter();
   const { t } = useTranslation();
+  const theme = getVerticalTheme(vertical);
   const config = getLeadFormConfig(vertical);
   const defaultMessage = t("lead.messagePlaceholder");
   const [quantity, setQuantity] = useState(String(Math.max(1, moq)));
@@ -271,7 +274,7 @@ export function ListingLeadForm({
             </Button>
             <Button
               type="button"
-              className="h-11 w-full rounded-xl bg-blue-600 hover:bg-blue-700 sm:w-auto"
+              className={cn("h-11 w-full rounded-xl sm:w-auto", theme.primaryButton)}
               asChild
             >
               <Link href="/listings">{t("lead.continueBrowsing")}</Link>
@@ -303,7 +306,7 @@ export function ListingLeadForm({
           {listingSummary}
           <div className="mt-5 flex flex-col gap-2 sm:flex-row">
             <Button
-              className="h-11 w-full rounded-xl bg-blue-600 hover:bg-blue-700 sm:w-auto"
+              className={cn("h-11 w-full rounded-xl sm:w-auto", theme.primaryButton)}
               onClick={handleLoginRedirect}
             >
               {t("lead.signIn")}
@@ -513,7 +516,7 @@ export function ListingLeadForm({
           <Button
             type="submit"
             disabled={isPending}
-            className="h-11 w-full rounded-xl bg-blue-600 hover:bg-blue-700 sm:w-auto"
+            className={cn("h-11 w-full rounded-xl sm:w-auto", theme.primaryButton)}
           >
             {isPending ? t("lead.sending") : t("lead.submit")}
           </Button>

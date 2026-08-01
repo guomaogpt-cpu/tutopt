@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Building2, User } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useRouteVerticalTheme } from "@/lib/use-route-vertical-theme";
 import { cn } from "@/lib/utils";
 
 type ListingPostAsSelectorProps = {
@@ -19,6 +20,7 @@ export function ListingPostAsSelector({
   onChange,
 }: ListingPostAsSelectorProps) {
   const { t } = useTranslation();
+  const { theme } = useRouteVerticalTheme();
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 sm:p-5">
@@ -33,7 +35,7 @@ export function ListingPostAsSelector({
           className={cn(
             "flex items-center gap-2 rounded-xl border px-3 py-3 text-left text-sm transition",
             !postedAsCompany
-              ? "border-blue-500 bg-blue-50 text-slate-900 dark:border-blue-400 dark:bg-slate-800 dark:text-slate-100"
+              ? cn(theme.primaryBorder, theme.softBg, "text-slate-900 dark:text-slate-100")
               : "border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300",
           )}
         >
@@ -52,7 +54,7 @@ export function ListingPostAsSelector({
           className={cn(
             "flex items-center gap-2 rounded-xl border px-3 py-3 text-left text-sm transition",
             postedAsCompany && hasCompanyProfile
-              ? "border-blue-500 bg-blue-50 text-slate-900 dark:border-blue-400 dark:bg-slate-800 dark:text-slate-100"
+              ? cn(theme.primaryBorder, theme.softBg, "text-slate-900 dark:text-slate-100")
               : "border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300",
             !hasCompanyProfile && "cursor-not-allowed opacity-60",
           )}
@@ -69,10 +71,7 @@ export function ListingPostAsSelector({
       {!hasCompanyProfile ? (
         <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
           {t("company.createProfileHint")}{" "}
-          <Link
-            href="/account/company"
-            className="font-medium text-blue-600 hover:underline dark:text-blue-400"
-          >
+          <Link href="/account/company" className={cn("font-medium hover:underline", theme.softLink)}>
             {t("company.createProfile")}
           </Link>
         </p>

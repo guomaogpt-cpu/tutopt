@@ -2286,9 +2286,9 @@ export const DICTIONARY = {
     en: "Send request",
   },
   "listing.mobile.signInToRequest": {
-    ru: "Войдите, чтобы отправить запрос продавцу.",
-    kg: "Сатуучуга сурам жөнөтүү үчүн кириңиз.",
-    en: "Sign in to send a request to the seller.",
+    ru: "Войдите, чтобы отправить запрос.",
+    kg: "Сурам жөнөтүү үчүн кириңиз.",
+    en: "Sign in to send a request.",
   },
   "listing.galleryAriaLabel": {
     ru: "Галерея товара",
@@ -2339,12 +2339,12 @@ export const DICTIONARY = {
   },
   "listing.verified": { ru: "Проверен", kg: "Текшерилген", en: "Verified" },
   "listing.listingsCount": { ru: "Объявлений", kg: "Жарыялар", en: "Listings" },
-  "listing.seller": { ru: "Продавец", kg: "Сатуучу", en: "Seller" },
+  "listing.seller": { ru: "Автор", kg: "Автор", en: "Author" },
   "listing.supplier": { ru: "Поставщик", kg: "Жеткирүүчү", en: "Supplier" },
   "listing.trust": {
-    ru: "Доверие к продавцу",
-    kg: "Сатуучуга ишеним",
-    en: "Seller trust",
+    ru: "Доверие к автору",
+    kg: "Авторго ишеним",
+    en: "Author trust",
   },
   "listing.profileCompleted": {
     ru: "Профиль заполнен",
@@ -2377,9 +2377,9 @@ export const DICTIONARY = {
     en: "On platform since",
   },
   "listing.sellerProfile": {
-    ru: "Профиль продавца",
-    kg: "Сатуучунун профили",
-    en: "Seller profile",
+    ru: "Профиль автора",
+    kg: "Автордун профили",
+    en: "Author profile",
   },
   "listing.direction": { ru: "Направление", kg: "Багыт", en: "Direction" },
   "listing.category": { ru: "Категория", kg: "Категория", en: "Category" },
@@ -2551,9 +2551,9 @@ export const DICTIONARY = {
     en: "Listing",
   },
   "lead.sellerLabel": {
-    ru: "Продавец",
-    kg: "Сатуучу",
-    en: "Seller",
+    ru: "Автор",
+    kg: "Автор",
+    en: "Author",
   },
   "lead.minQuantityHint": {
     ru: "Мин.",
@@ -3382,9 +3382,9 @@ export const DICTIONARY = {
     en: "You do not have any requests yet.",
   },
   "accountRequests.emptyDescription": {
-    ru: "Когда вы отправите запрос продавцу или оставите карго-заявку, они появятся здесь.",
-    kg: "Сатуучуга сурам жөнөткөндө же карго сурам калтырганда, алар ушул жерде көрүнөт.",
-    en: "When you send a request to a seller or submit a cargo request, it will appear here.",
+    ru: "Когда вы отправите запрос по объявлению или оставите карго-заявку, они появятся здесь.",
+    kg: "Жарыя боюнча сурам жөнөткөндө же карго сурам калтырганда, алар ушул жерде көрүнөт.",
+    en: "When you send a listing request or submit a cargo request, it will appear here.",
   },
   "accountRequests.browseListings": {
     ru: "Смотреть объявления",
@@ -4080,6 +4080,11 @@ export const DICTIONARY = {
     ru: "Мои объявления",
     kg: "Менин жарыяларым",
     en: "My listings",
+  },
+  "createListing.postAnother": {
+    ru: "Подать ещё одно",
+    kg: "Дагы бирөөнү берүү",
+    en: "Post another",
   },
   "createListing.summaryPhotos": {
     ru: "фото",

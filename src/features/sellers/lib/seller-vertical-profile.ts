@@ -75,13 +75,13 @@ export function getSellerProfileLabel(primaryVertical: ListingVertical | null): 
     case "OPT":
       return "Поставщик";
     case "MARKET":
-      return "Продавец";
+      return "Автор";
     case "SERVICES":
       return "Исполнитель";
     case "CARGO":
       return "Перевозчик";
     default:
-      return "Продавец";
+      return "Автор";
   }
 }
 
@@ -106,7 +106,7 @@ export function getSellerCtaLabel(primaryVertical: ListingVertical | null): stri
     case "OPT":
       return "Запросить оптовое предложение";
     case "MARKET":
-      return "Написать продавцу";
+      return "Написать автору";
     case "SERVICES":
       return "Оставить заявку";
     case "CARGO":
@@ -122,7 +122,7 @@ export function getListingSellerCardCtaLabel(vertical: ListingVertical): string 
     case "OPT":
       return "Запросить предложение";
     case "MARKET":
-      return "Написать продавцу";
+      return "Написать автору";
     case "SERVICES":
       return "Оставить заявку";
     case "CARGO":
@@ -141,15 +141,15 @@ export function getSellerListingsEmptyMessage(
 ): string {
   switch (vertical) {
     case "OPT":
-      return "У продавца пока нет оптовых объявлений.";
+      return "У автора пока нет оптовых объявлений.";
     case "MARKET":
-      return "У продавца пока нет розничных объявлений.";
+      return "У автора пока нет розничных объявлений.";
     case "SERVICES":
       return "У исполнителя пока нет объявлений об услугах.";
     case "CARGO":
       return "У перевозчика пока нет объявлений.";
     default:
-      return "У продавца пока нет активных объявлений.";
+      return "У автора пока нет активных объявлений.";
   }
 }
 
@@ -157,7 +157,7 @@ export function getSellerProfileSeoTitle(
   sellerName: string | null | undefined,
   primaryVertical: ListingVertical | null,
 ): string {
-  const name = sellerName?.trim() || "Продавец";
+  const name = sellerName?.trim() || "Автор";
 
   switch (primaryVertical) {
     case "OPT":
@@ -167,7 +167,7 @@ export function getSellerProfileSeoTitle(
     case "CARGO":
       return `${name} — перевозки на ТутКарго`;
     case "MARKET":
-      return `${name} — продавец на ВсеТут`;
+      return `${name} — объявления на ВсеТут`;
     default:
       return `${name} — профиль на ВсеТут`;
   }

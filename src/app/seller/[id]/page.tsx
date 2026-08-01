@@ -44,8 +44,8 @@ export async function generateMetadata({
 
     if (!profile) {
       return buildPageMetadata({
-        title: "Продавец — ВсеТут",
-        description: "Профиль продавца на ВсеТут",
+        title: "Профиль — ВсеТут",
+        description: "Профиль на ВсеТут",
         path: `/seller/${id}`,
         noIndex: true,
       });
@@ -81,8 +81,8 @@ export async function generateMetadata({
   } catch (error) {
     console.error("[seller/[id]/metadata] Failed to load seller metadata", error);
     return buildPageMetadata({
-      title: "Продавец — ВсеТут",
-      description: "Профиль продавца на платформе ВсеТут.",
+      title: "Профиль — ВсеТут",
+      description: "Профиль на платформе ВсеТут.",
       path: `/seller/${id}`,
       noIndex: true,
     });

@@ -173,8 +173,38 @@
 
 - Hard redirects legacy → `/account*` после метрик.
 - Alias `/account/cargo-settings` вместо `/seller/cargo-settings`.
-- Полный copy-pass «продавец» на public company/seller pages.
+- Полный copy-pass «продавец» на public company/seller pages (частично сделано в Phase 88).
 - Mobile filter sheet polish на каталогах.
 - Admin empty-state CTA audit.
 - Optional deprecate dead `RoleSelector` component.
 - Visual theme pass на оставшихся legacy seller pages (P2/P3).
+
+---
+
+## Phase 88 fixes
+
+### P0 исправлены
+- Приватные `name`/`phone` карго-заявок больше не отдаются на `/seller/cargo-requests` не-админам (`includeContacts`).
+- Safe `next` ужесточён в `defaultPostAuthPath` / `buildSellerOnboardingUrl` через `isSafeInternalPath`.
+
+### P1 исправлены
+- Empty CTA на `/account` summaries (listings + requests).
+- Success `/listings/new`: добавлен «Подать ещё одно».
+- Vertical theme на MobileBottomNav, listing contact/sticky CTA, lead form, post-as selector.
+- Mobile bottom-nav padding на favorites / notifications / company.
+- Empty CTA на cargo board.
+- Guest header/settings login/register сохраняют `next` текущей страницы.
+- User-facing «Продавец» → «Автор» / нейтральные формулировки на профилях, карточках, dict keys.
+
+### Оставлено на P2/P3
+- Hard redirects legacy dashboards.
+- `/account/cargo-settings` alias.
+- Admin empty states + filter density.
+- Полный visual polish legacy seller pages.
+- Микроанимации empty states.
+
+### Основные routes (без изменений IA)
+- `/account`, `/account/listings`, `/account/requests`, `/listings/new`, `/cargo`
+
+### Legacy временно
+- `/buyer/*`, `/seller/dashboard|listings|leads`, `/seller/cargo-*`

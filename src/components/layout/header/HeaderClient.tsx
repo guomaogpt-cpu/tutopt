@@ -4,6 +4,10 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { Heart, Menu, Settings2, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import {
+  buildLoginUrl,
+  buildRegisterUrl,
+} from "@/features/auth/lib/login-redirect";
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import {
   getHeaderNavActiveClass,
@@ -28,6 +32,9 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const loginHref = buildLoginUrl(pathname);
+  const registerHref = buildRegisterUrl({ returnPath: pathname });
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/80">
@@ -70,14 +77,14 @@ export function HeaderClient({ user }: HeaderClientProps) {
                   className="h-10 shrink-0 font-medium"
                   asChild
                 >
-                  <Link href="/login">{t("auth.signIn")}</Link>
+                  <Link href={loginHref}>{t("auth.signIn")}</Link>
                 </Button>
                 <Button
                   variant="outline"
                   className="h-10 shrink-0 border-[#E5E7EB] font-medium"
                   asChild
                 >
-                  <Link href="/register">{t("auth.register")}</Link>
+                  <Link href={registerHref}>{t("auth.register")}</Link>
                 </Button>
               </>
             ) : (

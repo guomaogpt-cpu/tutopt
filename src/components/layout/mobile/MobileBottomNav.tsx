@@ -11,6 +11,7 @@ import {
   type MobileNavTabId,
 } from "@/features/navigation/lib/mobile-nav";
 import { useUnreadNotificationCount } from "@/features/notifications/lib/use-unread-notification-count";
+import { useRouteVerticalTheme } from "@/lib/use-route-vertical-theme";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ type NavItem = {
 export function MobileBottomNav({ user }: MobileBottomNavProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
+  const { theme } = useRouteVerticalTheme();
   const activeTab = getActiveMobileNavTab(pathname);
   const unreadCount = useUnreadNotificationCount();
   const showProfileBadge = Boolean(user) && unreadCount > 0;
@@ -89,8 +91,10 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
                 >
                   <span
                     className={cn(
-                      "flex size-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-600/25 transition group-hover:bg-blue-700",
-                      isActive && "ring-2 ring-blue-300 ring-offset-2 dark:ring-blue-500 dark:ring-offset-slate-950",
+                      "flex size-12 items-center justify-center rounded-full text-white shadow-lg transition",
+                      theme.primaryBg,
+                      theme.primaryBgHover,
+                      isActive && cn("ring-2 ring-offset-2 dark:ring-offset-slate-950", theme.ring),
                     )}
                   >
                     <Icon className="size-6" aria-hidden="true" />
@@ -98,7 +102,7 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
                   <span
                     className={cn(
                       "text-[10px] font-semibold leading-none text-slate-600 dark:text-slate-300",
-                      isActive && "text-blue-600 dark:text-blue-400",
+                      isActive && theme.primaryText,
                     )}
                   >
                     {t(item.labelKey)}
@@ -114,8 +118,8 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "relative flex min-w-[3.5rem] flex-col items-center gap-1 px-1 py-1.5 text-slate-600 transition hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400",
-                  isActive && "text-blue-600 dark:text-blue-400",
+                  "relative flex min-w-[3.5rem] flex-col items-center gap-1 px-1 py-1.5 text-slate-600 transition hover:opacity-90 dark:text-slate-300",
+                  isActive && theme.primaryText,
                 )}
               >
                 <span className="relative">
@@ -125,7 +129,10 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
                   />
                   {item.id === "profile" && showProfileBadge ? (
                     <span
-                      className="absolute -right-1 -top-0.5 size-2 rounded-full bg-blue-600 ring-2 ring-white dark:ring-slate-950"
+                      className={cn(
+                        "absolute -right-1 -top-0.5 size-2 rounded-full ring-2 ring-white dark:ring-slate-950",
+                        theme.primaryBg,
+                      )}
                       aria-hidden="true"
                     />
                   ) : null}

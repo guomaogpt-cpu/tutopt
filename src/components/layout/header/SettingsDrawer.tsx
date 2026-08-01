@@ -15,7 +15,11 @@ import {
   Sun,
 } from "lucide-react";
 import { logoutRequest } from "@/features/auth/lib/auth-client";
-import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
+import {
+  buildLoginUrl,
+  buildRegisterUrl,
+  getCreateListingHref,
+} from "@/features/auth/lib/login-redirect";
 import {
   getAccountHomeHref,
   getRoleLabel,
@@ -78,6 +82,8 @@ export function SettingsDrawer({
   const { locale, setLocale, t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const loginHref = buildLoginUrl(pathname);
+  const registerHref = buildRegisterUrl({ returnPath: pathname });
 
   useEffect(() => {
     setMounted(true);
@@ -167,7 +173,7 @@ export function SettingsDrawer({
                   className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
                   asChild
                 >
-                  <Link href="/login" onClick={closeDrawer}>
+                  <Link href={loginHref} onClick={closeDrawer}>
                     {t("auth.signIn")}
                   </Link>
                 </Button>
@@ -176,7 +182,7 @@ export function SettingsDrawer({
                   className="h-11 rounded-xl border-slate-200 dark:border-slate-700"
                   asChild
                 >
-                  <Link href="/register" onClick={closeDrawer}>
+                  <Link href={registerHref} onClick={closeDrawer}>
                     {t("auth.register")}
                   </Link>
                 </Button>

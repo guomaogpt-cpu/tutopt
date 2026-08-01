@@ -95,7 +95,26 @@ export function AccountRequestsSummary({
       ) : null}
 
       {leadsCount === 0 && cargoRequestsCount === 0 ? (
-        <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{t("account.noData")}</p>
+        <div className="mt-3 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center dark:border-slate-800 dark:bg-slate-950">
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            {t("accountRequests.emptyTitle")}
+          </p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {t("accountRequests.emptyDescription")}
+          </p>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <Button asChild className="h-10 w-full rounded-xl sm:w-auto">
+              <Link href="/listings">{t("accountRequests.browseListings")}</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="h-10 w-full rounded-xl dark:border-slate-700 sm:w-auto"
+            >
+              <Link href="/cargo">{t("accountRequests.submitCargoRequest")}</Link>
+            </Button>
+          </div>
+        </div>
       ) : null}
     </section>
   );

@@ -68,7 +68,17 @@ export function AccountListingsSummary({
       </dl>
 
       {recentListings.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">{t("account.noData")}</p>
+        <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center dark:border-slate-800 dark:bg-slate-950">
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            {t("accountListings.emptyTitle")}
+          </p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {t("accountListings.emptyDescription")}
+          </p>
+          <Button asChild className="mt-4 h-10 w-full rounded-xl sm:w-auto">
+            <Link href="/listings/new">{t("accountListings.postListing")}</Link>
+          </Button>
+        </div>
       ) : (
         <ul className="mt-4 space-y-2">
           {recentListings.map((listing) => (

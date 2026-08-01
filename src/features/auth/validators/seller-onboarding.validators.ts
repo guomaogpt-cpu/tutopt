@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { isValidKgPhone, normalizePhone } from "@/features/auth/lib/phone";
+import { isSafeInternalPath } from "@/features/auth/lib/login-redirect";
 
 export const sellerOnboardingSchema = z.object({
   company_name: z
     .string()
     .trim()
-    .min(2, "Укажите название компании или имя продавца")
+    .min(2, "Укажите название компании или ваше имя")
     .max(200, "Название слишком длинное"),
   phone: z
     .string()
@@ -23,14 +24,14 @@ export type SellerOnboardingInput = z.infer<typeof sellerOnboardingSchema>;
 export const SELLER_ONBOARDING_PATH = "/seller/onboarding";
 
 export function buildSellerOnboardingUrl(next?: string): string {
-  if (next && next.startsWith("/") && !next.startsWith("//") && next !== SELLER_ONBOARDING_PATH) {
+  if (next && isSafeInternalPath(next) && next !== SELLER_ONBOARDING_PATH) {
     return `${SELLER_ONBOARDING_PATH}?next=${encodeURIComponent(next)}`;
   }
   return SELLER_ONBOARDING_PATH;
 }
 
 export function defaultPostAuthPath(role: string, next?: string | null): string {
-  if (next && next.startsWith("/") && !next.startsWith("//") && next !== "/") {
+  if (next && isSafeInternalPath(next) && next !== "/") {
     return next;
   }
 

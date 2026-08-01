@@ -437,10 +437,10 @@ export function NewListingForm({
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             {t("createListing.moderationNote")}
           </p>
-          <div className="mt-6 flex w-full flex-col gap-2.5 sm:flex-row">
+          <div className="mt-6 flex w-full flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:justify-center">
             <Button
               asChild
-              className={cn("h-12 flex-1 rounded-xl", theme.primaryButton)}
+              className={cn("h-12 flex-1 rounded-xl sm:min-w-[10rem] sm:flex-none", theme.primaryButton)}
             >
               <Link href={`/listings/${createdListingId}`}>
                 {t("createListing.openListing")}
@@ -449,9 +449,18 @@ export function NewListingForm({
             <Button
               asChild
               variant="outline"
-              className="h-12 flex-1 rounded-xl border-slate-200 dark:border-slate-700"
+              className="h-12 flex-1 rounded-xl border-slate-200 dark:border-slate-700 sm:min-w-[10rem] sm:flex-none"
             >
               <Link href="/account/listings">{t("createListing.myListings")}</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="h-12 flex-1 rounded-xl border-slate-200 dark:border-slate-700 sm:min-w-[10rem] sm:flex-none"
+            >
+              <Link href={`/listings/new?vertical=${vertical}`}>
+                {t("createListing.postAnother")}
+              </Link>
             </Button>
           </div>
         </div>
