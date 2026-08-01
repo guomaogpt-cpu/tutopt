@@ -77,17 +77,18 @@ Stored notification titles use RU fallback text (notification table is plain tex
 
 ## 9. Not implemented
 
-- Telegram notifications
 - WhatsApp / WhatsApp Business API notifications
 - Email notifications
 - Exact geolocation / paid subscriptions
 
-Preference matrix and settings UI are in **Phase 75** (`CargoSubscription` / `/seller/cargo-settings`).
+Preference matrix and settings UI: **Phase 75** (`CargoSubscription` / `/seller/cargo-settings`).
 
-## 10. Future Phase 76
+Telegram channel: **Phase 76** — `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`.
 
-- Telegram bot notifications
+## 10. Future Phase 77
+
+- Telegram bot webhook for automatic chatId linking
 - Email notifications
 - WhatsApp Business API later
-- Richer route filters
+- Notification delivery logs
 

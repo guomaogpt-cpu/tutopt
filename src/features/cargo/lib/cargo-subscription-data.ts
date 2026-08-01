@@ -12,6 +12,14 @@ export type CargoSubscriptionSettings = CargoSubscriptionPrefs & {
   notifyEmail: boolean;
   notifyTelegram: boolean;
   notifyWhatsApp: boolean;
+  telegramChatId: string | null;
+  telegramUsername: string | null;
+  telegramConnectedAt: Date | null;
+};
+
+export type CargoTelegramRecipient = {
+  userId: string;
+  chatId: string;
 };
 
 const subscriptionSelect = {
@@ -24,6 +32,9 @@ const subscriptionSelect = {
   notify_email: true,
   notify_telegram: true,
   notify_whatsapp: true,
+  telegram_chat_id: true,
+  telegram_username: true,
+  telegram_connected_at: true,
 } as const;
 
 type SubscriptionRow = {
@@ -36,6 +47,9 @@ type SubscriptionRow = {
   notify_email: boolean;
   notify_telegram: boolean;
   notify_whatsapp: boolean;
+  telegram_chat_id: string | null;
+  telegram_username: string | null;
+  telegram_connected_at: Date | null;
 };
 
 function mapRow(row: SubscriptionRow): CargoSubscriptionSettings {
@@ -52,8 +66,25 @@ function mapRow(row: SubscriptionRow): CargoSubscriptionSettings {
     notifyEmail: row.notify_email,
     notifyTelegram: row.notify_telegram,
     notifyWhatsApp: row.notify_whatsapp,
+    telegramChatId: row.telegram_chat_id,
+    telegramUsername: row.telegram_username,
+    telegramConnectedAt: row.telegram_connected_at,
     ...lists,
   };
+}
+
+function resolveTelegramConnectedAt(input: {
+  previousChatId: string | null | undefined;
+  previousConnectedAt: Date | null | undefined;
+  nextChatId: string | null;
+}): Date | null {
+  if (!input.nextChatId) {
+    return null;
+  }
+  if (input.previousChatId === input.nextChatId && input.previousConnectedAt) {
+    return input.previousConnectedAt;
+  }
+  return new Date();
 }
 
 export async function getCargoSubscriptionForSeller(
@@ -77,6 +108,23 @@ export async function upsertCargoSubscriptionSettings(input: {
   settings: CargoSubscriptionSettings;
 }): Promise<CargoSubscriptionSettings> {
   const lists = normalizeSubscriptionJsonLists(input.settings);
+  const telegramChatId = input.settings.telegramChatId?.trim() || null;
+  const telegramUsername = input.settings.telegramUsername?.trim() || null;
+  const notifyTelegram = Boolean(input.settings.notifyTelegram && telegramChatId);
+
+  const existing = await prisma.cargoSubscription.findUnique({
+    where: { seller_profile_id: input.sellerProfileId },
+    select: {
+      telegram_chat_id: true,
+      telegram_connected_at: true,
+    },
+  });
+
+  const telegramConnectedAt = resolveTelegramConnectedAt({
+    previousChatId: existing?.telegram_chat_id,
+    previousConnectedAt: existing?.telegram_connected_at,
+    nextChatId: telegramChatId,
+  });
 
   const row = await prisma.cargoSubscription.upsert({
     where: { seller_profile_id: input.sellerProfileId },
@@ -90,8 +138,11 @@ export async function upsertCargoSubscriptionSettings(input: {
       to_locations: lists.toLocations as Prisma.InputJsonValue,
       notify_in_app: input.settings.notifyInApp,
       notify_email: input.settings.notifyEmail,
-      notify_telegram: input.settings.notifyTelegram,
+      notify_telegram: notifyTelegram,
       notify_whatsapp: input.settings.notifyWhatsApp,
+      telegram_chat_id: telegramChatId,
+      telegram_username: telegramUsername,
+      telegram_connected_at: telegramConnectedAt,
     },
     update: {
       user_id: input.userId,
@@ -102,8 +153,11 @@ export async function upsertCargoSubscriptionSettings(input: {
       to_locations: lists.toLocations as Prisma.InputJsonValue,
       notify_in_app: input.settings.notifyInApp,
       notify_email: input.settings.notifyEmail,
-      notify_telegram: input.settings.notifyTelegram,
+      notify_telegram: notifyTelegram,
       notify_whatsapp: input.settings.notifyWhatsApp,
+      telegram_chat_id: telegramChatId,
+      telegram_username: telegramUsername,
+      telegram_connected_at: telegramConnectedAt,
     },
     select: subscriptionSelect,
   });
@@ -127,6 +181,9 @@ export async function setCargoSubscription(input: {
       notifyEmail: existing?.notifyEmail ?? false,
       notifyTelegram: existing?.notifyTelegram ?? false,
       notifyWhatsApp: existing?.notifyWhatsApp ?? false,
+      telegramChatId: existing?.telegramChatId ?? null,
+      telegramUsername: existing?.telegramUsername ?? null,
+      telegramConnectedAt: existing?.telegramConnectedAt ?? null,
       serviceTypes: existing?.serviceTypes ?? [],
       directions: existing?.directions ?? [],
       fromLocations: existing?.fromLocations ?? [],
@@ -174,7 +231,6 @@ export async function findCargoNotificationRecipients(
   for (const seller of cargoSellers) {
     const subRow = seller.sellerProfile?.cargoRequestSubscription;
     if (!subRow) {
-      // Fallback: published CARGO listing, no subscription prefs yet
       recipientIds.add(seller.id);
       continue;
     }
@@ -185,7 +241,6 @@ export async function findCargoNotificationRecipients(
     }
   }
 
-  // Explicit subscribers without a published cargo listing (opt-in)
   const extraSubscribers = await prisma.cargoSubscription.findMany({
     where: {
       enabled: true,
@@ -209,6 +264,50 @@ export async function findCargoNotificationRecipients(
   }
 
   return [...recipientIds];
+}
+
+/**
+ * Sellers with Telegram enabled who match the request prefs.
+ * Requires enabled + notifyTelegram + telegramChatId + soft matching.
+ */
+export async function findCargoTelegramRecipients(
+  request: CargoSubscriptionMatchInput,
+): Promise<CargoTelegramRecipient[]> {
+  const rows = await prisma.cargoSubscription.findMany({
+    where: {
+      enabled: true,
+      notify_telegram: true,
+      telegram_chat_id: { not: null },
+      user: { is_blocked: false },
+    },
+    select: {
+      user_id: true,
+      ...subscriptionSelect,
+    },
+  });
+
+  const recipients: CargoTelegramRecipient[] = [];
+  const seenUsers = new Set<string>();
+
+  for (const row of rows) {
+    const chatId = row.telegram_chat_id?.trim();
+    if (!chatId || seenUsers.has(row.user_id)) {
+      continue;
+    }
+
+    const prefs = mapRow(row);
+    if (!prefs.enabled || !prefs.notifyTelegram) {
+      continue;
+    }
+    if (!matchesCargoSubscriptionFilters(prefs, request)) {
+      continue;
+    }
+
+    seenUsers.add(row.user_id);
+    recipients.push({ userId: row.user_id, chatId });
+  }
+
+  return recipients;
 }
 
 export function requestMatchesSellerSubscription(

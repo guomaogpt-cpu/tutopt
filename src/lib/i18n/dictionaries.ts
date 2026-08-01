@@ -1157,14 +1157,99 @@ export const DICTIONARY = {
     en: "Email notifications (soon)",
   },
   "cargo.settings.notifyTelegram": {
-    ru: "Telegram-уведомления (скоро)",
-    kg: "Telegram билдирмелери (жакында)",
-    en: "Telegram notifications (soon)",
+    ru: "Telegram-уведомления",
+    kg: "Telegram билдирмелери",
+    en: "Telegram notifications",
   },
   "cargo.settings.notifyWhatsApp": {
     ru: "WhatsApp-уведомления (скоро)",
     kg: "WhatsApp билдирмелери (жакында)",
     en: "WhatsApp notifications (soon)",
+  },
+  "cargo.telegram.title": {
+    ru: "Telegram-уведомления",
+    kg: "Telegram билдирмелери",
+    en: "Telegram notifications",
+  },
+  "cargo.telegram.description": {
+    ru: "Получайте новые подходящие карго-заявки в Telegram.",
+    kg: "Жаңы ылайыктуу карго сурамдарын Telegram аркылуу алыңыз.",
+    en: "Receive matching cargo requests in Telegram.",
+  },
+  "cargo.telegram.chatId": {
+    ru: "Telegram Chat ID",
+    kg: "Telegram Chat ID",
+    en: "Telegram Chat ID",
+  },
+  "cargo.telegram.username": {
+    ru: "Telegram username (необязательно)",
+    kg: "Telegram username (милдеттүү эмес)",
+    en: "Telegram username (optional)",
+  },
+  "cargo.telegram.enable": {
+    ru: "Включить Telegram-уведомления",
+    kg: "Telegram билдирмелерин иштетүү",
+    en: "Enable Telegram notifications",
+  },
+  "cargo.telegram.saveHint": {
+    ru: "Чтобы подключить Telegram, напишите нашему боту и укажите полученный Chat ID здесь.",
+    kg: "Telegramды туташтыруу үчүн ботко жазып, алынган Chat ID'ни бул жерге киргизиңиз.",
+    en: "To connect Telegram, message our bot and enter the Chat ID you receive here.",
+  },
+  "cargo.telegram.chatIdRequired": {
+    ru: "Укажите Telegram Chat ID, чтобы включить уведомления.",
+    kg: "Билдирмелерди иштетүү үчүн Telegram Chat ID киргизиңиз.",
+    en: "Enter a Telegram Chat ID to enable notifications.",
+  },
+  "cargo.telegram.testButton": {
+    ru: "Отправить тестовое сообщение",
+    kg: "Тест билдирүү жөнөтүү",
+    en: "Send test message",
+  },
+  "cargo.telegram.testSending": {
+    ru: "Отправка…",
+    kg: "Жөнөтүлүүдө…",
+    en: "Sending…",
+  },
+  "cargo.telegram.testSent": {
+    ru: "Тестовое сообщение отправлено",
+    kg: "Тест билдирүү жөнөтүлдү",
+    en: "Test message sent",
+  },
+  "cargo.telegram.testFailed": {
+    ru: "Не удалось отправить тестовое сообщение",
+    kg: "Тест билдирүүнү жөнөтүү мүмкүн болбоду",
+    en: "Could not send test message",
+  },
+  "cargo.telegram.tokenMissing": {
+    ru: "Telegram bot token не настроен на сервере.",
+    kg: "Telegram bot token серверде жөндөлгөн эмес.",
+    en: "Telegram bot token is not configured on the server.",
+  },
+  "cargo.telegram.connected": {
+    ru: "Telegram подключён",
+    kg: "Telegram туташкан",
+    en: "Telegram connected",
+  },
+  "cargo.telegram.notConnected": {
+    ru: "Telegram ещё не подключён",
+    kg: "Telegram азырынча туташкан эмес",
+    en: "Telegram is not connected yet",
+  },
+  "cargo.telegram.message.newRequestTitle": {
+    ru: "Новая карго-заявка",
+    kg: "Жаңы карго сурамы",
+    en: "New cargo request",
+  },
+  "cargo.telegram.message.openRequests": {
+    ru: "Открыть заявки:",
+    kg: "Сурамдарды ачуу:",
+    en: "Open requests:",
+  },
+  "cargo.telegram.testMessage": {
+    ru: "Тестовое сообщение ВсеТут. Telegram-уведомления по карго-заявкам подключены.",
+    kg: "ВсеТут тест билдирүүсү. Карго сурамдар боюнча Telegram билдирмелери туташтырылды.",
+    en: "VseTut test message. Telegram notifications for cargo requests are connected.",
   },
   "cargo.settings.save": {
     ru: "Сохранить настройки",

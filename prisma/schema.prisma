@@ -482,18 +482,22 @@ model CargoSubscription {
   directions        Json     @default("[]") @map("directions")
   from_locations    Json?    @map("from_locations")
   to_locations      Json?    @map("to_locations")
-  notify_in_app     Boolean  @default(true) @map("notify_in_app")
-  notify_email      Boolean  @default(false) @map("notify_email")
-  notify_telegram   Boolean  @default(false) @map("notify_telegram")
-  notify_whatsapp   Boolean  @default(false) @map("notify_whatsapp")
-  created_at        DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updated_at        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  notify_in_app          Boolean   @default(true) @map("notify_in_app")
+  notify_email           Boolean   @default(false) @map("notify_email")
+  notify_telegram        Boolean   @default(false) @map("notify_telegram")
+  notify_whatsapp        Boolean   @default(false) @map("notify_whatsapp")
+  telegram_chat_id       String?   @map("telegram_chat_id") @db.VarChar(64)
+  telegram_username      String?   @map("telegram_username") @db.VarChar(64)
+  telegram_connected_at  DateTime? @map("telegram_connected_at") @db.Timestamptz
+  created_at             DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updated_at             DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
   sellerProfile SellerProfile @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
   user          User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@index([enabled])
+  @@index([notify_telegram])
   @@map("cargo_request_subscriptions")
 }
 

@@ -42,12 +42,24 @@ const sectionClassName =
 const checkboxRowClassName =
   "flex min-h-11 items-start gap-3 rounded-xl border border-transparent px-1 py-2 hover:bg-slate-50 dark:hover:bg-slate-800/60";
 
+const fieldClassName =
+  "h-11 w-full rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
+
 export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
 
   const [enabled, setEnabled] = useState(initialSettings?.enabled ?? true);
   const [notifyInApp, setNotifyInApp] = useState(initialSettings?.notifyInApp ?? true);
+  const [notifyTelegram, setNotifyTelegram] = useState(
+    initialSettings?.notifyTelegram ?? false,
+  );
+  const [telegramChatId, setTelegramChatId] = useState(
+    initialSettings?.telegramChatId ?? "",
+  );
+  const [telegramUsername, setTelegramUsername] = useState(
+    initialSettings?.telegramUsername ?? "",
+  );
   const [serviceTypes, setServiceTypes] = useState<CargoServiceTypeId[]>(
     (initialSettings?.serviceTypes ?? []) as CargoServiceTypeId[],
   );
@@ -61,13 +73,24 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
     locationsToText(initialSettings?.toLocations ?? []),
   );
   const [isPending, setIsPending] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [testMessage, setTestMessage] = useState<string | null>(null);
+  const [testError, setTestError] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setSaved(false);
+    setTestMessage(null);
+    setTestError(null);
+
+    if (notifyTelegram && !telegramChatId.trim()) {
+      setError(t("cargo.telegram.chatIdRequired"));
+      return;
+    }
+
     setIsPending(true);
 
     try {
@@ -82,16 +105,24 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
           toLocations: textToLocations(toLocationsText),
           notifyInApp,
           notifyEmail: false,
-          notifyTelegram: false,
+          notifyTelegram,
           notifyWhatsApp: false,
+          telegramChatId: telegramChatId.trim() || null,
+          telegramUsername: telegramUsername.trim() || null,
         }),
       });
 
       const body = (await response.json()) as {
-        error?: { message?: string };
+        error?: { message?: string; details?: { fieldErrors?: Record<string, string[]> } };
       };
 
       if (!response.ok) {
+        const fieldError =
+          body.error?.details?.fieldErrors?.telegramChatId?.[0] ??
+          body.error?.message;
+        if (fieldError === "CARGO_TELEGRAM_CHAT_ID_REQUIRED") {
+          throw new Error(t("cargo.telegram.chatIdRequired"));
+        }
         throw new Error(body.error?.message ?? t("cargo.settings.saveError"));
       }
 
@@ -103,6 +134,60 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
       setIsPending(false);
     }
   }
+
+  async function handleTestTelegram() {
+    setTestMessage(null);
+    setTestError(null);
+
+    if (!telegramChatId.trim()) {
+      setTestError(t("cargo.telegram.chatIdRequired"));
+      return;
+    }
+
+    setIsTesting(true);
+
+    try {
+      const response = await fetch("/api/seller/cargo-subscriptions/telegram-test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chatId: telegramChatId.trim() }),
+      });
+
+      const body = (await response.json()) as {
+        data?: {
+          result: {
+            status: "sent" | "skipped" | "failed";
+            reason?: string;
+          };
+        };
+        error?: { message?: string };
+      };
+
+      if (!response.ok) {
+        if (body.error?.message === "CARGO_TELEGRAM_CHAT_ID_REQUIRED") {
+          throw new Error(t("cargo.telegram.chatIdRequired"));
+        }
+        throw new Error(body.error?.message ?? t("cargo.telegram.testFailed"));
+      }
+
+      const result = body.data?.result;
+      if (result?.status === "sent") {
+        setTestMessage(t("cargo.telegram.testSent"));
+        return;
+      }
+      if (result?.status === "skipped" && result.reason === "missing_token") {
+        setTestError(t("cargo.telegram.tokenMissing"));
+        return;
+      }
+      setTestError(t("cargo.telegram.testFailed"));
+    } catch (err) {
+      setTestError(err instanceof Error ? err.message : t("cargo.telegram.testFailed"));
+    } finally {
+      setIsTesting(false);
+    }
+  }
+
+  const telegramConnected = Boolean(initialSettings?.telegramChatId);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pb-24 sm:pb-8">
@@ -132,6 +217,90 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
             {t("cargo.settings.notifyInApp")}
           </span>
         </label>
+      </section>
+
+      <section className={sectionClassName}>
+        <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+          {t("cargo.telegram.title")}
+        </h2>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {t("cargo.telegram.description")}
+        </p>
+        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+          {t("cargo.telegram.saveHint")}
+        </p>
+        <p className="mt-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+          {telegramConnected ? t("cargo.telegram.connected") : t("cargo.telegram.notConnected")}
+        </p>
+
+        <div className="mt-4 grid grid-cols-1 gap-3">
+          <div className="min-w-0">
+            <label
+              htmlFor="cargo-telegram-chat-id"
+              className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
+            >
+              {t("cargo.telegram.chatId")}
+            </label>
+            <Input
+              id="cargo-telegram-chat-id"
+              value={telegramChatId}
+              onChange={(event) => setTelegramChatId(event.target.value)}
+              inputMode="numeric"
+              autoComplete="off"
+              className={fieldClassName}
+              placeholder="123456789"
+            />
+          </div>
+          <div className="min-w-0">
+            <label
+              htmlFor="cargo-telegram-username"
+              className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
+            >
+              {t("cargo.telegram.username")}
+            </label>
+            <Input
+              id="cargo-telegram-username"
+              value={telegramUsername}
+              onChange={(event) => setTelegramUsername(event.target.value)}
+              autoComplete="off"
+              className={fieldClassName}
+              placeholder="@username"
+            />
+          </div>
+        </div>
+
+        <label className={cn(checkboxRowClassName, "mt-3")}>
+          <input
+            type="checkbox"
+            checked={notifyTelegram}
+            onChange={(event) => setNotifyTelegram(event.target.checked)}
+            className="mt-1 size-4 shrink-0 rounded border-slate-300 text-rose-600 focus:ring-rose-500 dark:border-slate-600 dark:bg-slate-950"
+          />
+          <span className="min-w-0 text-sm font-medium text-slate-800 dark:text-slate-200">
+            {t("cargo.telegram.enable")}
+          </span>
+        </label>
+
+        <Button
+          type="button"
+          variant="outline"
+          disabled={isTesting || isPending}
+          onClick={handleTestTelegram}
+          className="mt-4 h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
+        >
+          {isTesting ? t("cargo.telegram.testSending") : t("cargo.telegram.testButton")}
+        </Button>
+
+        {testMessage ? (
+          <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-400" role="status">
+            {testMessage}
+          </p>
+        ) : null}
+        {testError ? (
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400" role="alert">
+            {testError}
+          </p>
+        ) : null}
       </section>
 
       <section className={sectionClassName}>
@@ -190,7 +359,7 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
               value={fromLocationsText}
               onChange={(event) => setFromLocationsText(event.target.value)}
               placeholder="Guangzhou, Urumqi"
-              className="h-11 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className={fieldClassName}
             />
           </div>
           <div className="min-w-0">
@@ -205,7 +374,7 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
               value={toLocationsText}
               onChange={(event) => setToLocationsText(event.target.value)}
               placeholder="Bishkek, Osh"
-              className="h-11 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className={fieldClassName}
             />
           </div>
         </div>

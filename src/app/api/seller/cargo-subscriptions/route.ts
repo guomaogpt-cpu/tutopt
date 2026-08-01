@@ -53,6 +53,9 @@ export async function POST(request: Request) {
           notifyEmail: input.notifyEmail,
           notifyTelegram: input.notifyTelegram,
           notifyWhatsApp: input.notifyWhatsApp,
+          telegramChatId: input.telegramChatId,
+          telegramUsername: input.telegramUsername,
+          telegramConnectedAt: null,
         },
       });
 
@@ -68,6 +71,9 @@ export async function POST(request: Request) {
           notifyEmail: settings.notifyEmail,
           notifyTelegram: settings.notifyTelegram,
           notifyWhatsApp: settings.notifyWhatsApp,
+          telegramChatId: settings.telegramChatId,
+          telegramUsername: settings.telegramUsername,
+          telegramConnectedAt: settings.telegramConnectedAt?.toISOString() ?? null,
         },
       });
     }

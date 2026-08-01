@@ -13,10 +13,13 @@ Core fields:
 
 - `enabled` (DB column `is_active`)
 - `service_types` / `directions` / `from_locations` / `to_locations` (JSON arrays)
-- `notify_in_app` (active in this phase)
-- `notify_email` / `notify_telegram` / `notify_whatsapp` (future flags only)
+- `notify_in_app` (active)
+- `notify_telegram` + `telegram_chat_id` / `telegram_username` / `telegram_connected_at` (Phase 76)
+- `notify_email` / `notify_whatsapp` (future flags only)
 
 Settings UI: `/seller/cargo-settings`
+
+Telegram channel details: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`.
 
 ## 2. How a cargo company chooses service types
 
@@ -60,18 +63,21 @@ If a subscription exists, prefs apply (including `enabled` / `notifyInApp`).
 
 ## 7. Not implemented in this phase
 
-- Telegram delivery
 - WhatsApp / WhatsApp Business API
 - Email delivery
 - Exact city/route graph matching / geolocation
 - Paid subscriptions
 - Hard blocking when request fields are incomplete
+- Telegram webhook / automatic chatId (manual Chat ID in Phase 76)
 
-## 8. Future Phase 76
+## 8. Phase 76+
 
-- Telegram bot notifications
+Telegram in-app delivery for matching cargo requests: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`.
+
+Later:
+
 - Email notifications
-- WhatsApp Business API later
+- WhatsApp Business API
 - Richer route filters and exact from/to city catalogs
 
 ## Related
@@ -79,3 +85,4 @@ If a subscription exists, prefs apply (including `enabled` / `notifyInApp`).
 - Form optional fields: `CargoRequest.service_type`, `CargoRequest.direction`
 - Seller board: `/seller/cargo-requests?matching=1`
 - Dashboard quick link to `/seller/cargo-settings`
+- Telegram: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`
