@@ -3151,6 +3151,146 @@ export const DICTIONARY = {
     kg: "Карго компаниялар",
     en: "Cargo companies",
   },
+  "accountRequests.title": {
+    ru: "Мои заявки",
+    kg: "Менин сурамдарым",
+    en: "My requests",
+  },
+  "accountRequests.description": {
+    ru: "Запросы по объявлениям и карго в одном месте",
+    kg: "Жарыя жана карго сурамдары бир жерде",
+    en: "Listing and cargo requests in one place",
+  },
+  "accountRequests.tabs.all": {
+    ru: "Все",
+    kg: "Баары",
+    en: "All",
+  },
+  "accountRequests.tabs.sent": {
+    ru: "Мои запросы",
+    kg: "Менин сурамдарым",
+    en: "My requests",
+  },
+  "accountRequests.tabs.received": {
+    ru: "Запросы на мои объявления",
+    kg: "Менин жарыяларыма сурамдар",
+    en: "Requests to my listings",
+  },
+  "accountRequests.tabs.cargoRequests": {
+    ru: "Карго-заявки",
+    kg: "Карго сурамдары",
+    en: "Cargo requests",
+  },
+  "accountRequests.tabs.cargoResponses": {
+    ru: "Отклики карго",
+    kg: "Карго жооптору",
+    en: "Cargo responses",
+  },
+  "accountRequests.sentTitle": {
+    ru: "Мои запросы по объявлениям",
+    kg: "Жарыяларга менин сурамдарым",
+    en: "My listing requests",
+  },
+  "accountRequests.receivedTitle": {
+    ru: "Запросы на мои объявления",
+    kg: "Менин жарыяларыма сурамдар",
+    en: "Requests to my listings",
+  },
+  "accountRequests.cargoRequestsTitle": {
+    ru: "Мои карго-заявки",
+    kg: "Менин карго сурамдарым",
+    en: "My cargo requests",
+  },
+  "accountRequests.cargoResponsesTitle": {
+    ru: "Отклики карго-компаний",
+    kg: "Карго компаниялардын жооптору",
+    en: "Cargo company responses",
+  },
+  "accountRequests.myCargoResponsesTitle": {
+    ru: "Мои отклики карго-компании",
+    kg: "Менин карго жоопторум",
+    en: "My cargo company responses",
+  },
+  "accountRequests.emptyTitle": {
+    ru: "У вас пока нет заявок.",
+    kg: "Азырынча сурамдарыңыз жок.",
+    en: "You do not have any requests yet.",
+  },
+  "accountRequests.emptyDescription": {
+    ru: "Когда вы отправите запрос продавцу или оставите карго-заявку, они появятся здесь.",
+    kg: "Сатуучуга сурам жөнөткөндө же карго сурам калтырганда, алар ушул жерде көрүнөт.",
+    en: "When you send a request to a seller or submit a cargo request, it will appear here.",
+  },
+  "accountRequests.browseListings": {
+    ru: "Смотреть объявления",
+    kg: "Жарыяларды көрүү",
+    en: "Browse listings",
+  },
+  "accountRequests.submitCargoRequest": {
+    ru: "Оставить карго-заявку",
+    kg: "Карго сурам калтыруу",
+    en: "Submit cargo request",
+  },
+  "accountRequests.openListing": {
+    ru: "Открыть объявление",
+    kg: "Жарыяны ачуу",
+    en: "Open listing",
+  },
+  "accountRequests.openCargoRequest": {
+    ru: "Открыть карго-заявку",
+    kg: "Карго сурамды ачуу",
+    en: "Open cargo request",
+  },
+  "accountRequests.viewResponses": {
+    ru: "Посмотреть отклики",
+    kg: "Жоопторду көрүү",
+    en: "View responses",
+  },
+  "accountRequests.responsesCount": {
+    ru: "Отклики",
+    kg: "Жооптор",
+    en: "Responses",
+  },
+  "accountRequests.message": {
+    ru: "Сообщение",
+    kg: "Билдирүү",
+    en: "Message",
+  },
+  "accountRequests.status": {
+    ru: "Статус",
+    kg: "Статус",
+    en: "Status",
+  },
+  "accountRequests.createdAt": {
+    ru: "Дата",
+    kg: "Күн",
+    en: "Date",
+  },
+  "accountRequests.route": {
+    ru: "Маршрут",
+    kg: "Маршрут",
+    en: "Route",
+  },
+  "accountRequests.item": {
+    ru: "Товар",
+    kg: "Товар",
+    en: "Item",
+  },
+  "accountRequests.price": {
+    ru: "Цена",
+    kg: "Баа",
+    en: "Price",
+  },
+  "accountRequests.estimatedTime": {
+    ru: "Срок",
+    kg: "Мөөнөт",
+    en: "Estimated time",
+  },
+  "accountRequests.comment": {
+    ru: "Комментарий",
+    kg: "Комментарий",
+    en: "Comment",
+  },
   "company.title": {
     ru: "Компания",
     kg: "Компания",

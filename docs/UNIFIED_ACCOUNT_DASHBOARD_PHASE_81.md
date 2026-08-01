@@ -50,6 +50,6 @@ Primary UX entry is `/account`.
 ## 7. Future
 
 - `/account/listings` management page — **done in Phase 82** — see `docs/ACCOUNT_LISTINGS_PHASE_82.md`
-- `/account/requests` unified leads page
+- `/account/requests` unified requests page — **done in Phase 83** — see `docs/ACCOUNT_REQUESTS_PHASE_83.md`
 - Account security settings
 - Soft redirects from buyer/seller dashboards to `/account`

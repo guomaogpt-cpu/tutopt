@@ -30,7 +30,7 @@ const footerColumns: FooterColumn[] = [
     links: [
       { labelKey: "footer.postListing", href: "/listings/new" },
       { labelKey: "footer.sellerDashboard", href: "/account" },
-      { labelKey: "footer.leads", href: "/seller/leads" },
+      { labelKey: "footer.leads", href: "/account/requests" },
     ],
   },
   {

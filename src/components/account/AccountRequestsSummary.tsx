@@ -33,7 +33,7 @@ export function AccountRequestsSummary({
           {t("account.myRequests")}
         </h2>
         <Button asChild variant="outline" size="sm" className="rounded-xl dark:border-slate-700">
-          <Link href="/buyer/dashboard">{t("account.viewAll")}</Link>
+          <Link href="/account/requests">{t("account.viewAll")}</Link>
         </Button>
       </div>
 
@@ -71,7 +71,7 @@ export function AccountRequestsSummary({
               {t("account.myCargoRequests")}
             </p>
             <Link
-              href="/account/cargo-requests"
+              href="/account/requests?tab=cargoRequests"
               className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
             >
               {t("account.viewAll")}
