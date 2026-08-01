@@ -29,7 +29,7 @@ export const HEADER_NAV_ACTIVE_CLASS: Record<string, string> = {
   "/services":
     "bg-emerald-600 text-white shadow-sm hover:bg-emerald-600 hover:text-white dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-600 dark:hover:text-white",
   "/cargo":
-    "bg-orange-500 text-white shadow-sm hover:bg-orange-500 hover:text-white dark:bg-orange-500 dark:text-white dark:hover:bg-orange-500 dark:hover:text-white",
+    "bg-orange-500 text-white shadow-sm hover:bg-orange-600 hover:text-white dark:bg-orange-500 dark:text-white dark:hover:bg-orange-600 dark:hover:text-white",
 };
 
 export const HEADER_NAV_ACTIVE_FALLBACK =

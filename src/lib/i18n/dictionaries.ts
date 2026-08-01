@@ -656,14 +656,189 @@ export const DICTIONARY = {
   },
 
   "cargo.heroTitle": {
-    ru: "Карго и доставка из Китая, Кыргызстана и других направлений",
-    kg: "Кытайдан, Кыргызстандан жана башка багыттардан карго жана жеткирүү",
-    en: "Cargo and delivery from China, Kyrgyzstan and other routes",
+    ru: "Карго и доставка",
+    kg: "Карго жана жеткирүү",
+    en: "Cargo and delivery",
   },
   "cargo.heroSubtitle": {
-    ru: "Опишите товар, маршрут и контакты — карго-компании смогут увидеть вашу заявку.",
-    kg: "Товарды, маршрутту жана байланыштарды жазыңыз — карго компаниялар сурамыңызды көрө алышат.",
-    en: "Describe the item, route and contacts — cargo companies will be able to see your request.",
+    ru: "Найдите карго-компанию или оставьте заявку на перевозку из Китая, Кыргызстана и других направлений.",
+    kg: "Карго компанияны табыңыз же Кытайдан, Кыргызстандан жана башка багыттардан жеткирүүгө сурам калтырыңыз.",
+    en: "Find a cargo company or submit a shipping request from China, Kyrgyzstan and other routes.",
+  },
+  "cargo.createRequest": {
+    ru: "Создать заявку",
+    kg: "Сурам түзүү",
+    en: "Create request",
+  },
+  "cargo.findCargoCompany": {
+    ru: "Найти карго-компанию",
+    kg: "Карго компанияны табуу",
+    en: "Find cargo company",
+  },
+  "cargo.searchPlaceholder": {
+    ru: "Найти карго-компанию, направление или услугу...",
+    kg: "Карго компанияны, багытты же кызматты издөө...",
+    en: "Find a cargo company, route or service...",
+  },
+  "cargo.searchTypeCompanies": {
+    ru: "Карго-компании",
+    kg: "Карго компаниялар",
+    en: "Cargo companies",
+  },
+  "cargo.searchTypeDirections": {
+    ru: "Направления",
+    kg: "Багыттар",
+    en: "Directions",
+  },
+  "cargo.searchTypeServices": {
+    ru: "Услуги карго",
+    kg: "Карго кызматтары",
+    en: "Cargo services",
+  },
+  "cargo.searchTypeRequests": {
+    ru: "Заявки",
+    kg: "Сурамдар",
+    en: "Requests",
+  },
+  "cargo.directionsTitle": {
+    ru: "Направления и услуги",
+    kg: "Багыттар жана кызматтар",
+    en: "Directions and services",
+  },
+  "cargo.directionChinaKyrgyzstan": {
+    ru: "Китай → Кыргызстан",
+    kg: "Кытай → Кыргызстан",
+    en: "China → Kyrgyzstan",
+  },
+  "cargo.directionGuangzhouBishkek": {
+    ru: "Гуанчжоу → Бишкек",
+    kg: "Гуанчжоу → Бишкек",
+    en: "Guangzhou → Bishkek",
+  },
+  "cargo.directionYiwuBishkek": {
+    ru: "Иу → Бишкек",
+    kg: "Иу → Бишкек",
+    en: "Yiwu → Bishkek",
+  },
+  "cargo.directionUrumqiBishkek": {
+    ru: "Урумчи → Бишкек",
+    kg: "Үрүмчү → Бишкек",
+    en: "Urumqi → Bishkek",
+  },
+  "cargo.autoDelivery": {
+    ru: "Автодоставка",
+    kg: "Авто жеткирүү",
+    en: "Road delivery",
+  },
+  "cargo.airDelivery": {
+    ru: "Авиадоставка",
+    kg: "Авиа жеткирүү",
+    en: "Air delivery",
+  },
+  "cargo.railDelivery": {
+    ru: "ЖД доставка",
+    kg: "Темир жол жеткирүү",
+    en: "Rail delivery",
+  },
+  "cargo.warehouse": {
+    ru: "Склад",
+    kg: "Склад",
+    en: "Warehouse",
+  },
+  "cargo.customs": {
+    ru: "Таможня",
+    kg: "Бажы",
+    en: "Customs",
+  },
+  "cargo.other": {
+    ru: "Другое",
+    kg: "Башка",
+    en: "Other",
+  },
+  "cargo.noCompaniesTitle": {
+    ru: "Пока нет карго-компаний.",
+    kg: "Азырынча карго компаниялар жок.",
+    en: "No cargo companies yet.",
+  },
+  "cargo.noCompaniesDescription": {
+    ru: "Добавьте карточку компании, чтобы клиенты находили вас.",
+    kg: "Кардарлар сизди табышы үчүн компания карточкасын кошуңуз.",
+    en: "Add a company card so clients can find you.",
+  },
+  "cargo.verifiedCargoCompany": {
+    ru: "Проверенная карго-компания",
+    kg: "Текшерилген карго компания",
+    en: "Verified cargo company",
+  },
+  "cargo.activeRequestsTitle": {
+    ru: "Актуальные заявки на перевозку",
+    kg: "Учурдагы жеткирүү сурамдары",
+    en: "Active shipping requests",
+  },
+  "cargo.activeRequestsDescription": {
+    ru: "Контакты скрыты. Полные детали доступны по правилам сервиса.",
+    kg: "Байланыштар жашыруун. Толук маалымат сервис эрежелери боюнча.",
+    en: "Contacts are hidden. Full details follow service rules.",
+  },
+  "cargo.loginToViewRequests": {
+    ru: "Войти, чтобы посмотреть",
+    kg: "Көрүү үчүн кирүү",
+    en: "Log in to view",
+  },
+  "cargo.respondToRequest": {
+    ru: "Откликнуться",
+    kg: "Жооп берүү",
+    en: "Respond",
+  },
+  "cargo.viewAllRequests": {
+    ru: "Все заявки",
+    kg: "Бардык сурамдар",
+    en: "All requests",
+  },
+  "cargo.needShippingTitle": {
+    ru: "Нужна перевозка?",
+    kg: "Жеткирүү керекпи?",
+    en: "Need shipping?",
+  },
+  "cargo.needShippingDescription": {
+    ru: "Опишите товар и маршрут — карго-компании увидят заявку.",
+    kg: "Товарды жана маршрутту жазыңыз — карго компаниялар сурамыңызды көрөт.",
+    en: "Describe the item and route — cargo companies will see your request.",
+  },
+  "cargo.areYouCargoCompanyTitle": {
+    ru: "Вы карго-компания?",
+    kg: "Сиз карго компаниясызбы?",
+    en: "Are you a cargo company?",
+  },
+  "cargo.areYouCargoCompanyDescription": {
+    ru: "Добавьте компанию, подключите Telegram и получайте заявки.",
+    kg: "Компанияны кошуңуз, Telegramди туташтырыңыз жана сурамдарды алыңыз.",
+    en: "Add your company, connect Telegram and receive requests.",
+  },
+  "cargo.setupNotifications": {
+    ru: "Настроить уведомления",
+    kg: "Билдирмелерди жөндөө",
+    en: "Set up notifications",
+  },
+  "cargo.requestModalTitle": {
+    ru: "Заявка на перевозку",
+    kg: "Жеткирүү сурамы",
+    en: "Shipping request",
+  },
+  "cargo.requestModalDescription": {
+    ru: "Заполните маршрут и контакты. Карго-компании смогут откликнуться.",
+    kg: "Маршрутту жана байланыштарды толтуруңуз. Карго компаниялар жооп бере алышат.",
+    en: "Fill in the route and contacts. Cargo companies will be able to respond.",
+  },
+  "cargo.requestSuccessTitle": {
+    ru: "Заявка отправлена",
+    kg: "Сурам жөнөтүлдү",
+    en: "Request submitted",
+  },
+  "cargo.requestSuccessDescription": {
+    ru: "Карго-компании увидят заявку и смогут связаться с вами.",
+    kg: "Карго компаниялар сурамыңызды көрүп, сиз менен байланыша алышат.",
+    en: "Cargo companies will see the request and can contact you.",
   },
   "cargo.requestTitle": {
     ru: "Оставить заявку на перевозку",
@@ -789,16 +964,6 @@ export const DICTIONARY = {
     ru: "Карго-компании",
     kg: "Карго компаниялар",
     en: "Cargo companies",
-  },
-  "cargo.noCompaniesTitle": {
-    ru: "Карго-компании пока не добавлены.",
-    kg: "Карго компаниялар азырынча кошула элек.",
-    en: "No cargo companies have been added yet.",
-  },
-  "cargo.noCompaniesDescription": {
-    ru: "Вы можете оставить заявку, и мы покажем её в разделе карго.",
-    kg: "Сурам калтырсаңыз, ал карго бөлүмүндө көрсөтүлөт.",
-    en: "You can submit a request and it will appear in the cargo section.",
   },
   "cargo.validation.nameRequired": {
     ru: "Укажите имя",

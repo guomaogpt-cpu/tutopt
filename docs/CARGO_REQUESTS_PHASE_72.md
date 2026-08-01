@@ -4,7 +4,7 @@
 
 `CargoRequest` is a client shipping request — not a listing.
 
-Customers describe cargo, route and contacts on `/cargo`. Cargo companies and admins review requests in the seller cabinet. Listing verticals (market, services, wholesale, cargo company ads) stay separate.
+Customers describe cargo, route and contacts on `/cargo` (Phase 84: form opens in a modal — see `docs/CARGO_PAGE_REDESIGN_PHASE_84.md`). Cargo companies and admins review requests in the seller cabinet. Listing verticals (market, services, wholesale, cargo company ads) stay separate.
 
 ## 2. Fields
 

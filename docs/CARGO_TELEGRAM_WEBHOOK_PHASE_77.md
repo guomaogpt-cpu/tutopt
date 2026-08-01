@@ -100,3 +100,5 @@ Unchanged from Phase 76: no client phone, name/company, or free-text comment.
 ## Related UX
 
 Telegram connect status is also summarized on the unified cabinet `/account` (Phase 81). Settings remain at `/seller/cargo-settings`.
+
+Public `/cargo` landing was redesigned in Phase 84 (`docs/CARGO_PAGE_REDESIGN_PHASE_84.md`): request form opens in a modal; Telegram flows are unchanged.

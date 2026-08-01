@@ -77,11 +77,11 @@ const ENTRY_CARDS: EntryCard[] = [
     shortKey: "home.cargoShort",
     href: "/cargo",
     icon: Truck,
-    accentBar: "bg-rose-500",
-    iconWrap: "bg-rose-100 dark:bg-rose-950/60",
-    iconColor: "text-rose-600 dark:text-rose-300",
+    accentBar: "bg-orange-500",
+    iconWrap: "bg-orange-100 dark:bg-orange-950/60",
+    iconColor: "text-orange-600 dark:text-orange-300",
     mobileTile:
-      "border-rose-200/80 bg-gradient-to-br from-rose-50 to-orange-50 dark:border-rose-800/60 dark:from-rose-950/45 dark:to-slate-900",
+      "border-orange-200/80 bg-gradient-to-br from-orange-50 to-amber-50 dark:border-orange-800/60 dark:from-orange-950/45 dark:to-slate-900",
   },
 ];
 

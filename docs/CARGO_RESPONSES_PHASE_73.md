@@ -95,3 +95,4 @@ See also `docs/CARGO_SUBSCRIPTIONS_PHASE_75.md` and `docs/CARGO_NOTIFICATIONS_PH
 - guest client dashboard via magic link/code
 - accepting a best response / status ACCEPTED UX
 - Unified account view of cargo requests/responses — **Phase 83** `/account/requests` — see `docs/ACCOUNT_REQUESTS_PHASE_83.md`
+- Cargo landing redesign (request form in modal) — **Phase 84** — see `docs/CARGO_PAGE_REDESIGN_PHASE_84.md`

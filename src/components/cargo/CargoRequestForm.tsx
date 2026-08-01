@@ -36,7 +36,7 @@ const fieldClassName =
 const labelClassName = "mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200";
 
 const sectionTitleClassName =
-  "text-sm font-semibold uppercase tracking-wide text-rose-700 dark:text-rose-300";
+  "text-sm font-semibold uppercase tracking-wide text-orange-700 dark:text-orange-300";
 
 type FieldKey =
   | "name"
@@ -50,6 +50,12 @@ type FieldKey =
   | "dimensions"
   | "quantity"
   | "comment";
+
+type CargoRequestFormProps = {
+  variant?: "page" | "modal";
+  /** Called after successful submit (e.g. close modal after a short delay). */
+  onSuccessClose?: () => void;
+};
 
 function mapValidationMessage(
   code: string | undefined,
@@ -71,8 +77,12 @@ function mapValidationMessage(
   }
 }
 
-export function CargoRequestForm() {
+export function CargoRequestForm({
+  variant = "page",
+  onSuccessClose,
+}: CargoRequestFormProps) {
   const { t } = useTranslation();
+  const isModal = variant === "modal";
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
@@ -174,13 +184,28 @@ export function CargoRequestForm() {
 
   if (isSuccess) {
     return (
-      <div className="rounded-2xl border border-rose-200/70 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+      <div
+        className={cn(
+          isModal
+            ? "py-2"
+            : "rounded-2xl border border-orange-200/70 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
+        )}
+      >
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-          {t("cargo.successTitle")}
+          {t("cargo.requestSuccessTitle")}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-          {t("cargo.successDescription")}
+          {t("cargo.requestSuccessDescription")}
         </p>
+        {onSuccessClose ? (
+          <Button
+            type="button"
+            onClick={onSuccessClose}
+            className="mt-5 h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
+          >
+            {t("common.close")}
+          </Button>
+        ) : null}
       </div>
     );
   }
@@ -188,17 +213,23 @@ export function CargoRequestForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-rose-200/70 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
+      className={cn(
+        isModal
+          ? "space-y-0"
+          : "rounded-2xl border border-orange-200/70 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
+      )}
       noValidate
     >
-      <div className="mb-5">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-          {t("cargo.requestTitle")}
-        </h2>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-          {t("cargo.requestDescription")}
-        </p>
-      </div>
+      {!isModal ? (
+        <div className="mb-5">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            {t("cargo.requestTitle")}
+          </h2>
+          <p className="mt-1.5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            {t("cargo.requestDescription")}
+          </p>
+        </div>
+      ) : null}
 
       <fieldset className="space-y-3">
         <legend className={sectionTitleClassName}>{t("cargo.contactSection")}</legend>
@@ -370,7 +401,7 @@ export function CargoRequestForm() {
             accept="image/jpeg,image/png,image/webp"
             onChange={handlePhotoChange}
             disabled={isUploading || isPending}
-            className={cn(fieldClassName, "h-auto py-2 file:mr-3 file:rounded-lg file:border-0 file:bg-rose-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-rose-700 dark:file:bg-slate-800 dark:file:text-rose-300")}
+            className={cn(fieldClassName, "h-auto py-2 file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-orange-700 dark:file:bg-slate-800 dark:file:text-orange-300")}
           />
           {photoName ? (
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
@@ -378,7 +409,7 @@ export function CargoRequestForm() {
               <button
                 type="button"
                 onClick={clearPhoto}
-                className="font-medium text-rose-700 underline-offset-2 hover:underline dark:text-rose-300"
+                className="font-medium text-orange-700 underline-offset-2 hover:underline dark:text-orange-300"
               >
                 {t("cargo.removePhoto")}
               </button>
@@ -462,7 +493,7 @@ export function CargoRequestForm() {
       <Button
         type="submit"
         disabled={isPending || isUploading}
-        className="mt-5 h-12 w-full rounded-xl bg-rose-600 text-white hover:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-500 sm:w-auto sm:min-w-[14rem]"
+        className="mt-5 h-12 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 dark:bg-orange-500 dark:hover:bg-orange-600 sm:w-auto sm:min-w-[14rem]"
       >
         {isPending ? t("cargo.submitting") : t("cargo.submitRequest")}
       </Button>

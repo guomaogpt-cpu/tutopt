@@ -17,7 +17,7 @@ export function CargoVerifiedFilter() {
         className={cn(
           "rounded-full px-3 py-1.5 text-xs font-medium transition",
           !verifiedOnly
-            ? "bg-rose-600 text-white"
+            ? "bg-orange-500 text-white"
             : "border border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300",
         )}
       >
