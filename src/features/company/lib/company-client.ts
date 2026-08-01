@@ -70,3 +70,17 @@ export async function upsertCompanyProfileRequest(
 
   return (body as { data: { company: CompanyProfileSummary } }).data.company;
 }
+
+export async function submitCompanyVerificationRequest(): Promise<void> {
+  const response = await fetch("/api/account/company/verification", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const body = (await response.json()) as ApiErrorBody | { data: unknown };
+
+  if (!response.ok) {
+    const errors = mapApiErrors(body as ApiErrorBody);
+    throw new CompanyRequestError(errors.form[0] ?? "Request failed", errors);
+  }
+}

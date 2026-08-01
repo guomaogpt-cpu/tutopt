@@ -49,18 +49,19 @@ Unchanged split:
 
 ## 7. Not implemented
 
-- Company verification
 - Team members / staff roles
 - Company legal documents UI
 - Paid company plans
 - Subscriptions per company (still per user / seller profile)
 
+Company verification: see `docs/COMPANY_VERIFICATION_PHASE_80.md` (Phase 80).
+
 ## 8. Future
 
 - Dedicated `CompanyProfile` if multi-company per user is needed
-- Company verification & reviews
 - Company analytics
 - Cargo subscription scoped to company
+- Document-based verification / trust score
 
 ## Schema
 

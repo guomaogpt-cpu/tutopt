@@ -1,4 +1,4 @@
-import type { CompanyType, SellerProfile } from "@prisma/client";
+import type { CompanyType, CompanyVerificationStatus, SellerProfile } from "@prisma/client";
 
 export const COMPANY_TYPES: CompanyType[] = [
   "STORE",
@@ -20,6 +20,9 @@ export type CompanyProfileSummary = {
   cityId: string | null;
   cityName: string | null;
   isConfigured: boolean;
+  verificationStatus: CompanyVerificationStatus;
+  verifiedAt: string | null;
+  createdAt: string;
 };
 
 export function isCompanyProfileConfigured(
@@ -39,6 +42,9 @@ export function toCompanyProfileSummary(profile: {
   contact_phone: string;
   city_id: string | null;
   city?: { name: string } | null;
+  verification_status: CompanyVerificationStatus;
+  verified_at: Date | null;
+  created_at: Date;
 }): CompanyProfileSummary {
   return {
     id: profile.id,
@@ -52,6 +58,9 @@ export function toCompanyProfileSummary(profile: {
     cityId: profile.city_id,
     cityName: profile.city?.name ?? null,
     isConfigured: isCompanyProfileConfigured(profile),
+    verificationStatus: profile.verification_status,
+    verifiedAt: profile.verified_at ? profile.verified_at.toISOString() : null,
+    createdAt: profile.created_at.toISOString(),
   };
 }
 

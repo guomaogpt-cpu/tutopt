@@ -6,6 +6,8 @@ import { BadgeCheck, Building2 } from "lucide-react";
 import { SellerTrustCompactBlock } from "@/components/seller/SellerTrustBlock";
 import { ReportDialog } from "@/components/reports/ReportDialog";
 import { trackListingDetailAction } from "@/lib/analytics/events";
+import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
+import type { CompanyVerificationStatus } from "@prisma/client";
 import {
   buildSellerProfileHref,
 } from "@/features/sellers/lib/seller-vertical-profile";
@@ -22,6 +24,7 @@ type ListingSellerCardProps = {
   companyName: string;
   avatarUrl: string | null;
   isVerified: boolean;
+  verificationStatus?: CompanyVerificationStatus | null;
   sellerCity: string | null;
   sellerSinceLabel: string;
   publishedListingCount: number;
@@ -53,6 +56,7 @@ export function ListingSellerCard({
   companyName,
   avatarUrl,
   isVerified,
+  verificationStatus = null,
   sellerCity,
   sellerSinceLabel,
   publishedListingCount,
@@ -103,7 +107,13 @@ export function ListingSellerCard({
             <Badge variant="secondary" className="rounded-full text-[11px]">
               {roleLabel}
             </Badge>
-            {isVerified ? (
+            {postedAsCompany && verificationStatus ? (
+              <CompanyVerificationBadge
+                status={verificationStatus}
+                isCargo={vertical === "CARGO"}
+                compact
+              />
+            ) : isVerified ? (
               <Badge variant="secondary" className="gap-1 rounded-full text-[11px]">
                 <BadgeCheck className="size-3.5" aria-hidden="true" />
                 {t("listing.verified")}

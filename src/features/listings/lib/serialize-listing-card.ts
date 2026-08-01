@@ -22,6 +22,7 @@ export const listingCardSelect = {
       company_name: true,
       company_type: true,
       slug: true,
+      verification_status: true,
       user: { select: { name: true } },
     },
   },

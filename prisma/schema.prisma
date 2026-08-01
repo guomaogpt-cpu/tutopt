@@ -49,6 +49,13 @@ enum CompanyType {
   OTHER
 }
 
+enum CompanyVerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
 enum ListingUnit {
   PIECE
   PACK
@@ -110,6 +117,8 @@ enum NotificationType {
   NEW_LEAD
   NEW_CARGO_REQUEST
   NEW_CARGO_RESPONSE
+  COMPANY_VERIFIED
+  COMPANY_VERIFICATION_REJECTED
 }
 
 enum CargoResponseStatus {
@@ -207,6 +216,7 @@ model User {
   emailVerificationTokens  EmailVerificationToken[]
   auditLogs                AuditLog[]                @relation("AuditActor")
   reviewedDocuments        SellerDocument[]          @relation("DocumentReviewer")
+  companiesVerified        SellerProfile[]           @relation("CompanyVerifiedBy")
   listingViews             UserListingView[]
   categorySubscriptions    CategorySubscription[]
   listingContactEvents     ListingContactEvent[]
@@ -237,18 +247,22 @@ model SellerProfile {
   whatsapp      String?      @db.VarChar(50)
   telegram      String?      @db.VarChar(100)
   website       String?      @db.VarChar(255)
-  company_type  CompanyType? @map("company_type")
-  region_id     String       @map("region_id") @db.Uuid
-  city_id       String?      @map("city_id") @db.Uuid
-  is_verified   Boolean      @default(false) @map("is_verified")
-  is_pro        Boolean      @default(false) @map("is_pro")
-  verified_at   DateTime?    @map("verified_at") @db.Timestamptz
-  rating_avg    Decimal      @default(0) @map("rating_avg") @db.Decimal(3, 2)
-  rating_count  Int          @default(0) @map("rating_count")
-  created_at    DateTime     @default(now()) @map("created_at") @db.Timestamptz
-  updated_at    DateTime     @updatedAt @map("updated_at") @db.Timestamptz
+  company_type          CompanyType?                 @map("company_type")
+  region_id             String                       @map("region_id") @db.Uuid
+  city_id               String?                      @map("city_id") @db.Uuid
+  is_verified           Boolean                      @default(false) @map("is_verified")
+  is_pro                Boolean                      @default(false) @map("is_pro")
+  verification_status   CompanyVerificationStatus    @default(UNVERIFIED) @map("verification_status")
+  verified_at           DateTime?                    @map("verified_at") @db.Timestamptz
+  verified_by_id        String?                      @map("verified_by_id") @db.Uuid
+  verification_note     String?                      @map("verification_note") @db.Text
+  rating_avg            Decimal                      @default(0) @map("rating_avg") @db.Decimal(3, 2)
+  rating_count          Int                          @default(0) @map("rating_count")
+  created_at            DateTime                     @default(now()) @map("created_at") @db.Timestamptz
+  updated_at            DateTime                     @updatedAt @map("updated_at") @db.Timestamptz
 
   user       User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  verifiedBy User?            @relation("CompanyVerifiedBy", fields: [verified_by_id], references: [id], onDelete: SetNull)
   region     Region           @relation(fields: [region_id], references: [id], onDelete: Restrict)
   city       City?            @relation(fields: [city_id], references: [id], onDelete: SetNull)
   documents  SellerDocument[]
@@ -263,6 +277,7 @@ model SellerProfile {
   @@index([city_id])
   @@index([is_verified])
   @@index([company_type])
+  @@index([verification_status])
   @@map("seller_profiles")
 }
 

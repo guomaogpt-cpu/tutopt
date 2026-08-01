@@ -43,4 +43,6 @@ Seed list updated in `prisma/seed-data/categories.ts` (China / Kyrgyzstan / inte
 ## Related
 
 - Phase 79 company profile: `docs/COMPANY_PROFILE_PHASE_79.md`
+- Phase 80 verification: `docs/COMPANY_VERIFICATION_PHASE_80.md`
 - Gap: cargo subscriptions remain per user/seller profile (not per company yet)
+- Verified cargo filter: `/cargo?verified=1`

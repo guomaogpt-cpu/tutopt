@@ -42,6 +42,9 @@ export default async function AccountCompanyPage() {
         contact_phone: true,
         city_id: true,
         city: { select: { name: true } },
+        verification_status: true,
+        verified_at: true,
+        created_at: true,
       },
     }),
     prisma.city.findMany({

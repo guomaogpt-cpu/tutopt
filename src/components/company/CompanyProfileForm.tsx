@@ -8,10 +8,12 @@ import { useState, type FormEvent } from "react";
 import type { CompanyType } from "@prisma/client";
 import {
   CompanyRequestError,
+  submitCompanyVerificationRequest,
   upsertCompanyProfileRequest,
 } from "@/features/company/lib/company-client";
 import type { CompanyProfileSummary } from "@/features/company/lib/company-profile";
 import { COMPANY_TYPES } from "@/features/company/lib/company-profile";
+import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { uploadListingImageRequest } from "@/features/listings/lib/upload-client";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -68,8 +70,33 @@ export function CompanyProfileForm({
   const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
+  const [isSubmittingVerification, setIsSubmittingVerification] = useState(false);
+  const [verificationMessage, setVerificationMessage] = useState("");
 
   const isEdit = Boolean(initial?.isConfigured);
+  const verificationStatus = initial?.verificationStatus ?? "UNVERIFIED";
+  const canSubmitVerification =
+    isEdit &&
+    (verificationStatus === "UNVERIFIED" || verificationStatus === "REJECTED");
+
+  async function handleSubmitVerification() {
+    setFormError("");
+    setVerificationMessage("");
+    setIsSubmittingVerification(true);
+    try {
+      await submitCompanyVerificationRequest();
+      setVerificationMessage(t("company.verification.submitted"));
+      router.refresh();
+    } catch (error) {
+      if (error instanceof CompanyRequestError) {
+        setFormError(error.formErrors.form[0] ?? t("company.saveError"));
+      } else {
+        setFormError(t("company.saveError"));
+      }
+    } finally {
+      setIsSubmittingVerification(false);
+    }
+  }
 
   async function handleLogoChange(file: File | null) {
     if (!file) {
@@ -323,6 +350,39 @@ export function CompanyProfileForm({
               {t("post.cargoCompany")}
             </Link>
           </div>
+        </div>
+      ) : null}
+
+      {isEdit ? (
+        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+              {t("company.verification.status")}
+            </p>
+            <CompanyVerificationBadge status={verificationStatus} showOwnerStatus />
+          </div>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            {t("company.verification.submitDescription")}
+          </p>
+          {canSubmitVerification ? (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isSubmittingVerification}
+              onClick={() => void handleSubmitVerification()}
+              className="mt-3 h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 sm:w-auto"
+            >
+              {isSubmittingVerification ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : null}
+              {t("company.verification.submit")}
+            </Button>
+          ) : null}
+          {verificationMessage ? (
+            <p className="mt-2 text-sm text-emerald-600 dark:text-emerald-400">
+              {verificationMessage}
+            </p>
+          ) : null}
         </div>
       ) : null}
     </form>

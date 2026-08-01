@@ -3036,6 +3036,131 @@ export const DICTIONARY = {
     kg: "Компаниянын профили сакталган жок",
     en: "Could not save company profile",
   },
+  "company.verification.status": {
+    ru: "Статус проверки",
+    kg: "Текшерүү статусу",
+    en: "Verification status",
+  },
+  "company.verification.unverified": {
+    ru: "Не проверена",
+    kg: "Текшерилген эмес",
+    en: "Not verified",
+  },
+  "company.verification.pending": {
+    ru: "На проверке",
+    kg: "Текшерүүдө",
+    en: "Under review",
+  },
+  "company.verification.verified": {
+    ru: "Проверенная компания",
+    kg: "Текшерилген компания",
+    en: "Verified company",
+  },
+  "company.verification.rejected": {
+    ru: "Проверка отклонена",
+    kg: "Текшерүү четке кагылды",
+    en: "Verification rejected",
+  },
+  "company.verification.submit": {
+    ru: "Отправить компанию на проверку",
+    kg: "Компанияны текшерүүгө жөнөтүү",
+    en: "Submit company for verification",
+  },
+  "company.verification.submitDescription": {
+    ru: "Мы проверим данные компании. После проверки на странице появится бейдж.",
+    kg: "Компаниянын маалыматтарын текшеребиз. Текшерүүдөн кийин баракчада белги көрсөтүлөт.",
+    en: "We will review the company information. After approval, a badge will appear on the company page.",
+  },
+  "company.verification.submitted": {
+    ru: "Компания отправлена на проверку",
+    kg: "Компания текшерүүгө жөнөтүлдү",
+    en: "Company submitted for verification",
+  },
+  "company.verification.verifiedBadge": {
+    ru: "Проверенная компания",
+    kg: "Текшерилген компания",
+    en: "Verified company",
+  },
+  "company.verification.verifiedCargoBadge": {
+    ru: "Проверенная карго-компания",
+    kg: "Текшерилген карго компания",
+    en: "Verified cargo company",
+  },
+  "company.verification.trustBlockTitle": {
+    ru: "Доверие",
+    kg: "Ишеним",
+    en: "Trust",
+  },
+  "company.verification.registeredAt": {
+    ru: "На сайте с",
+    kg: "Сайтта",
+    en: "Registered",
+  },
+  "company.verification.activeListings": {
+    ru: "Активные объявления",
+    kg: "Активдүү жарыялар",
+    en: "Active listings",
+  },
+  "company.verification.verifiedOnly": {
+    ru: "Только проверенные",
+    kg: "Текшерилгендер гана",
+    en: "Verified only",
+  },
+  "company.verification.ownerVerifiedNotification": {
+    ru: "Ваша компания прошла проверку.",
+    kg: "Сиздин компания текшерүүдөн өттү.",
+    en: "Your company has been verified.",
+  },
+  "company.verification.ownerRejectedNotification": {
+    ru: "Проверка компании отклонена. Проверьте данные и отправьте повторно.",
+    kg: "Компанияны текшерүү четке кагылды. Маалыматты текшерип, кайра жөнөтүңүз.",
+    en: "Company verification was rejected. Check your details and submit again.",
+  },
+  "admin.companies.title": {
+    ru: "Компании",
+    kg: "Компаниялар",
+    en: "Companies",
+  },
+  "admin.companies.description": {
+    ru: "Проверка профилей компаний",
+    kg: "Компания профилдерин текшерүү",
+    en: "Company profile verification",
+  },
+  "admin.companies.verify": {
+    ru: "Проверить",
+    kg: "Текшерүү",
+    en: "Verify",
+  },
+  "admin.companies.reject": {
+    ru: "Отклонить",
+    kg: "Четке кагуу",
+    en: "Reject",
+  },
+  "admin.companies.reset": {
+    ru: "Сбросить",
+    kg: "Кайтаруу",
+    en: "Reset",
+  },
+  "admin.companies.note": {
+    ru: "Заметка admin",
+    kg: "Админ белгиси",
+    en: "Admin note",
+  },
+  "admin.companies.owner": {
+    ru: "Владелец",
+    kg: "Ээси",
+    en: "Owner",
+  },
+  "admin.companies.companyType": {
+    ru: "Тип компании",
+    kg: "Компаниянын түрү",
+    en: "Company type",
+  },
+  "admin.companies.verificationStatus": {
+    ru: "Статус проверки",
+    kg: "Текшерүү статусу",
+    en: "Verification status",
+  },
   "post.chooseType": {
     ru: "Что хотите разместить?",
     kg: "Эмне жайгаштыргыңыз келет?",

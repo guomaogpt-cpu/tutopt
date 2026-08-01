@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { CargoVerifiedFilter } from "@/components/cargo/CargoVerifiedFilter";
 import { Button } from "@/components/ui/button";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { VERTICAL_LATEST_LISTINGS_GRID_CLASS } from "@/features/verticals/vertical-landing-ui";
@@ -19,12 +20,15 @@ export function CargoCompaniesSection({ listings }: CargoCompaniesSectionProps) 
   return (
     <section aria-labelledby="cargo-companies-heading" className="mt-10 sm:mt-12">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h2
-          id="cargo-companies-heading"
-          className="text-lg font-bold text-slate-900 sm:text-xl dark:text-slate-100"
-        >
-          {t("cargo.companiesTitle")}
-        </h2>
+        <div>
+          <h2
+            id="cargo-companies-heading"
+            className="text-lg font-bold text-slate-900 sm:text-xl dark:text-slate-100"
+          >
+            {t("cargo.companiesTitle")}
+          </h2>
+          <CargoVerifiedFilter />
+        </div>
         {listings.length > 0 ? (
           <Link
             href={config.listingsHref}

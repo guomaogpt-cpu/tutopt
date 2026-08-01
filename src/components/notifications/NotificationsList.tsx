@@ -85,6 +85,9 @@ function getNotificationIcon(type: NotificationType) {
     case NotificationTypeEnum.NEW_CARGO_REQUEST:
     case NotificationTypeEnum.NEW_CARGO_RESPONSE:
       return Inbox;
+    case NotificationTypeEnum.COMPANY_VERIFIED:
+    case NotificationTypeEnum.COMPANY_VERIFICATION_REJECTED:
+      return BellRing;
     default:
       return BellRing;
   }

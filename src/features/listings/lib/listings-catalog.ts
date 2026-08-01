@@ -45,6 +45,7 @@ export type ListingCardData = {
     company_name: string;
     company_type: string | null;
     slug: string;
+    verification_status: string;
     user: { name: string };
   };
   images: { url: string }[];

@@ -20,6 +20,8 @@ export const sellerProfileSelect = {
   telegram: true,
   website: true,
   is_verified: true,
+  verification_status: true,
+  verified_at: true,
   created_at: true,
   city: { select: { name: true } },
   region: { select: { name: true } },

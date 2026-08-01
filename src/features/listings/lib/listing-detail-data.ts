@@ -47,6 +47,8 @@ export const listingDetailSelect = {
       description: true,
       logo_url: true,
       is_verified: true,
+      verification_status: true,
+      verified_at: true,
       contact_phone: true,
       whatsapp: true,
       telegram: true,

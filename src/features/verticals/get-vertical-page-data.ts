@@ -22,8 +22,18 @@ export type VerticalPageData = {
 
 export async function getVerticalPageData(
   verticalId: ListingVertical,
+  options?: { verifiedOnly?: boolean },
 ): Promise<VerticalPageData> {
   const notExpired = buildNotExpiredListingFilter();
+  const verifiedOnly = Boolean(options?.verifiedOnly);
+  const verifiedFilter = verifiedOnly
+    ? {
+        sellerProfile: {
+          verification_status: "VERIFIED" as const,
+        },
+      }
+    : {};
+
   const [categories, listings, publishedCount] = await Promise.all([
     prisma.category.findMany({
       where: {
@@ -40,6 +50,7 @@ export async function getVerticalPageData(
         status: ListingStatus.PUBLISHED,
         vertical: verticalId,
         AND: [notExpired],
+        ...verifiedFilter,
       },
       orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
       take: 8,
@@ -50,6 +61,7 @@ export async function getVerticalPageData(
         status: ListingStatus.PUBLISHED,
         vertical: verticalId,
         AND: [notExpired],
+        ...verifiedFilter,
       },
     }),
   ]);

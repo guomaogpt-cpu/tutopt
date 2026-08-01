@@ -6,7 +6,9 @@ import { MapPin, Package } from "lucide-react";
 import { useState } from "react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
+import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { getListingCardGlowClass } from "@/features/listings/lib/listing-card-glow";
+import type { CompanyVerificationStatus } from "@prisma/client";
 import {
   formatListingCardPrice,
   getListingUnitLabel,
@@ -231,6 +233,16 @@ export function ListingCard({
                 <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-slate-800 dark:text-blue-300">
                   {t("company.badge")}
                 </span>
+              ) : null}
+              {listing.posted_as_company &&
+              listing.sellerProfile.verification_status === "VERIFIED" ? (
+                <CompanyVerificationBadge
+                  status={
+                    listing.sellerProfile.verification_status as CompanyVerificationStatus
+                  }
+                  isCargo={listing.vertical === "CARGO"}
+                  compact
+                />
               ) : null}
               <span className="truncate">
                 {listing.posted_as_company && listing.sellerProfile.company_type

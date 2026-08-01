@@ -5,7 +5,10 @@ import { notFound } from "next/navigation";
 import type { CompanyType } from "@prisma/client";
 import { Building2, MapPin } from "lucide-react";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { Container } from "@/components/layout/Container";
+import { getCompanyVerificationLabelKey } from "@/features/company/lib/company-verification";
+import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
@@ -137,6 +140,11 @@ export default async function CompanyPublicPage({
                 <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   {typeLabel}
                 </span>
+                <CompanyVerificationBadge
+                  status={profile.verification_status}
+                  isCargo={profile.company_type === "CARGO"}
+                  showOwnerStatus={profile.verification_status === "PENDING"}
+                />
               </div>
               <h1 className="mt-2 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl">
                 {profile.company_name}
@@ -175,6 +183,52 @@ export default async function CompanyPublicPage({
               </Button>
             ) : null}
           </div>
+        </section>
+
+        <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+            {translate("ru", "company.verification.trustBlockTitle")}
+          </h2>
+          <dl className="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="text-slate-500 dark:text-slate-400">
+                {translate("ru", "company.verification.status")}
+              </dt>
+              <dd className="mt-1 font-medium text-slate-900 dark:text-slate-100">
+                {translate(
+                  "ru",
+                  profile.verification_status === "REJECTED"
+                    ? "company.verification.unverified"
+                    : getCompanyVerificationLabelKey(profile.verification_status),
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-slate-500 dark:text-slate-400">
+                {translate("ru", "company.verification.registeredAt")}
+              </dt>
+              <dd className="mt-1 font-medium text-slate-900 dark:text-slate-100">
+                {formatListingDate(profile.created_at)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-slate-500 dark:text-slate-400">
+                {translate("ru", "company.verification.activeListings")}
+              </dt>
+              <dd className="mt-1 font-medium text-slate-900 dark:text-slate-100">
+                {listings.length}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-slate-500 dark:text-slate-400">
+                {translate("ru", "company.type")}
+              </dt>
+              <dd className="mt-1 font-medium text-slate-900 dark:text-slate-100">
+                {typeLabel}
+                {cityName ? ` · ${cityName}` : ""}
+              </dd>
+            </div>
+          </dl>
         </section>
 
         <section className="mt-8">

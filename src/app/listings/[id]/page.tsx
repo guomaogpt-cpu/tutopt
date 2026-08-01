@@ -334,6 +334,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
       companyName={sellerProfile.company_name}
       avatarUrl={sellerAvatar}
       isVerified={sellerProfile.is_verified}
+      verificationStatus={sellerProfile.verification_status}
       sellerCity={sellerCity}
       sellerSinceLabel={formatListingDate(sellerProfile.created_at)}
       publishedListingCount={sellerListingCount}
