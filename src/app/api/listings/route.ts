@@ -23,8 +23,12 @@ export async function POST(request: Request) {
   return withApiHandler(async () => {
     const user = await requireAuth();
 
-    if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
-      throw new ForbiddenError("Only sellers can create listings");
+    if (
+      user.role !== UserRole.SELLER &&
+      user.role !== UserRole.ADMIN &&
+      user.role !== UserRole.BUYER
+    ) {
+      throw new ForbiddenError("Only authenticated accounts can create listings");
     }
 
     const listingRestrictionMessage = getCreateListingRestrictionMessage(user);

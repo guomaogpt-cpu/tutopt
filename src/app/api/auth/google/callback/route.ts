@@ -80,11 +80,8 @@ export async function GET(request: Request) {
         },
       });
     } else {
-      const role =
-        state.role === UserRole.SELLER || state.role === UserRole.BUYER
-          ? state.role
-          : UserRole.BUYER;
-
+      // Phase 78: Google signup always creates a normal account.
+      // Publishing capability is granted later via soft SellerProfile creation.
       user = await prisma.user.create({
         data: {
           email,
@@ -94,14 +91,11 @@ export async function GET(request: Request) {
           phone: null,
           name: googleUser.name?.trim() || email.split("@")[0] || "User",
           avatar_url: googleUser.picture ?? null,
-          role,
+          role: UserRole.BUYER,
           email_verified_at: new Date(),
           last_login_at: new Date(),
         },
       });
-
-      // SellerProfile intentionally NOT created here — contact_phone is required in Prisma.
-      // SELLER completes profile (real phone + company) on /seller/onboarding.
     }
 
     await createSession(user.id);

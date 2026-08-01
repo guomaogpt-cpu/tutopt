@@ -119,11 +119,11 @@ export function SellerOnboardingForm({
 
   return (
     <AuthFormCard
-      title={t("profile.completeSellerProfile")}
+      title={t("account.createCompanyProfile")}
       description={
         email
           ? t("profile.addPhoneForSeller")
-          : t("profile.sellerOnboardingDescription")
+          : t("account.companyProfile")
       }
     >
       <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-4 sm:space-y-5">

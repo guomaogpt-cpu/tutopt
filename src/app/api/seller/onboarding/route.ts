@@ -17,8 +17,8 @@ export async function POST(request: Request) {
   return withApiHandler(async () => {
     const user = await requireAuth();
 
-    if (user.role !== UserRole.SELLER) {
-      throw new ForbiddenError("Онбординг доступен только продавцам");
+    if (user.role !== UserRole.SELLER && user.role !== UserRole.BUYER && user.role !== UserRole.ADMIN) {
+      throw new ForbiddenError("Заполните контакты для публикации");
     }
 
     if (isUserBlocked(user)) {
@@ -44,6 +44,7 @@ export async function POST(request: Request) {
         phone: input.phone,
         name: input.company_name,
         phone_verified_at: new Date(),
+        role: user.role === UserRole.ADMIN ? UserRole.ADMIN : UserRole.SELLER,
       },
       select: {
         id: true,

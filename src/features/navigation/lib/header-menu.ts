@@ -26,7 +26,7 @@ export type HeaderMenuItem = {
 };
 
 const buyerDashboardItem: HeaderMenuItem = {
-  label: "Кабинет покупателя",
+  label: "Личный кабинет",
   href: "/buyer/dashboard",
   icon: User,
 };
@@ -35,7 +35,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
   if (!user) {
     return [
       { label: "Войти", href: "/login", icon: User },
-      { label: "Регистрация", href: "/register", icon: User },
+      { label: "Создать аккаунт", href: "/register", icon: User },
     ];
   }
 
@@ -43,13 +43,15 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
     case "BUYER":
       return [
         buyerDashboardItem,
+        { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
+        { label: "Мои объявления", href: "/seller/listings", icon: List },
         { label: "Избранное", href: "/favorites", icon: Heart },
         { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     case "SELLER":
       return [
-        { label: "Кабинет продавца", href: "/seller/dashboard", icon: LayoutDashboard },
+        { label: "Личный кабинет", href: "/seller/dashboard", icon: LayoutDashboard },
         { label: "Мои объявления", href: "/seller/listings", icon: List },
         { label: "Заявки", href: "/seller/leads", icon: Inbox },
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },

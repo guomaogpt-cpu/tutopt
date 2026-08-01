@@ -21,8 +21,8 @@ import { SellerQuickActions } from "@/components/seller/SellerQuickActions";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPrivatePageMetadata(
-  "Кабинет продавца",
-  "Кабинет продавца ВсеТут.",
+  "Мои объявления",
+  "Управление объявлениями на ВсеТут.",
 );
 import {
   SellerRecentLeads,
@@ -30,7 +30,7 @@ import {
 } from "@/components/seller/SellerRecentLeads";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { countSellerVerticals } from "@/features/sellers/lib/seller-vertical-profile";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
@@ -55,14 +55,12 @@ export default async function SellerDashboardPage() {
   }
 
   if (user.role === UserRole.BUYER) {
-    redirect(buildSellerUpgradeUrl("/seller/dashboard"));
-  }
-
-  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
+    // Phase 78: buyers can open the listings cabinet; empty until they post.
+  } else if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
     redirect(buildSellerOnboardingUrl("/seller/dashboard"));
   }
 
-  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN && user.role !== UserRole.BUYER) {
     return (
       <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
         <Container size="lg" className="max-w-[1280px]">
@@ -72,10 +70,10 @@ export default async function SellerDashboardPage() {
             </PageHeaderContent>
           </PageHeader>
           <ListingAccessMessage
-            title="Создание объявлений доступно только продавцам"
-            description="Станьте продавцом в текущем аккаунте, чтобы публиковать товары и получать заявки."
-            actionHref={buildSellerUpgradeUrl("/seller/dashboard")}
-            actionLabel="Стать продавцом"
+            title="Создание объявлений доступно после входа"
+            description="Войдите в аккаунт, чтобы публиковать товары и получать заявки."
+            actionHref={buildLoginUrl("/seller/dashboard")}
+            actionLabel="Войти"
           />
         </Container>
       </main>
@@ -290,11 +288,11 @@ export default async function SellerDashboardPage() {
               {sellerProfile?.company_name ?? user.name}
             </PageTitle>
             <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
-              Кабинет продавца — объявления и заявки покупателей
+              Личный кабинет — объявления и заявки
             </PageSubtitle>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 dark:bg-slate-800 dark:text-blue-400">
-                Продавец
+                Аккаунт
               </span>
               {sellerCityName ? (
                 <span className="inline-flex items-center gap-1">

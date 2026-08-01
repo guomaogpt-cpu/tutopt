@@ -560,9 +560,9 @@ export const DICTIONARY = {
     en: "Are you a cargo company?",
   },
   "cargo.addCompanyDescription": {
-    ru: "Добавьте свою компанию, чтобы клиенты могли находить вас и отправлять заявки.",
-    kg: "Компанияңызды кошуңуз, кардарлар сизди таап, сурам жөнөтө алышат.",
-    en: "Add your company so customers can find you and send requests.",
+    ru: "Разместите карточку карго-компании — это не заявка на перевозку.",
+    kg: "Карго компаниянын карточкасын жайгаштырыңыз — бул жеткирүү сурамы эмес.",
+    en: "Publish a cargo company card — this is not a shipping request.",
   },
   "cargo.addCompanyButton": {
     ru: "Добавить карго-компанию",
@@ -2675,7 +2675,18 @@ export const DICTIONARY = {
     kg: "Телефон менен же Google аркылуу кириңиз.",
     en: "Sign in with your phone and password, or with Google.",
   },
-  "auth.registerTitle": { ru: "Регистрация", kg: "Катталуу", en: "Register" },
+  "auth.registerTitle": { ru: "Создать аккаунт", kg: "Аккаунт түзүү", en: "Create account" },
+  "auth.createAccount": { ru: "Создать аккаунт", kg: "Аккаунт түзүү", en: "Create account" },
+  "auth.signInToPost": {
+    ru: "Войдите, чтобы подать объявление",
+    kg: "Жарыя берүү үчүн кириңиз",
+    en: "Sign in to post a listing",
+  },
+  "auth.returnToPost": {
+    ru: "После входа вернёмся к публикации",
+    kg: "Киргенден кийин жарыяга кайтабыз",
+    en: "After signing in we will return to posting",
+  },
   "auth.registerDescription": {
     ru: "Создайте аккаунт по телефону. Альтернатива — вход через Google.",
     kg: "Телефон боюнча аккаунт түзүңүз. Google аркылуу да кирүүгө болот.",
@@ -2722,7 +2733,6 @@ export const DICTIONARY = {
     kg: "Аккаунт түзүлүүдө...",
     en: "Creating account...",
   },
-  "auth.createAccount": { ru: "Создать аккаунт", kg: "Аккаунт түзүү", en: "Create account" },
   "auth.buyerNameLabel": { ru: "Ваше имя", kg: "Атыңыз", en: "Your name" },
   "auth.sellerNameLabel": {
     ru: "Название компании или имя продавца",
@@ -2812,14 +2822,119 @@ export const DICTIONARY = {
   },
   "profile.title": { ru: "Профиль", kg: "Профиль", en: "Profile" },
   "profile.buyerDashboard": {
-    ru: "Кабинет покупателя",
-    kg: "Сатып алуучунун кабинети",
-    en: "Buyer dashboard",
+    ru: "Личный кабинет",
+    kg: "Жеке кабинет",
+    en: "Dashboard",
   },
   "profile.sellerDashboard": {
-    ru: "Кабинет продавца",
-    kg: "Сатуучунун кабинети",
-    en: "Seller dashboard",
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "account.dashboard": {
+    ru: "Личный кабинет",
+    kg: "Жеке кабинет",
+    en: "Dashboard",
+  },
+  "account.profile": {
+    ru: "Профиль",
+    kg: "Профиль",
+    en: "Profile",
+  },
+  "account.myListings": {
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "account.myRequests": {
+    ru: "Мои заявки",
+    kg: "Менин сурамдарым",
+    en: "My requests",
+  },
+  "account.favorites": {
+    ru: "Избранное",
+    kg: "Тандалмалар",
+    en: "Favorites",
+  },
+  "account.notifications": {
+    ru: "Уведомления",
+    kg: "Билдирмелер",
+    en: "Notifications",
+  },
+  "account.companyProfile": {
+    ru: "Профиль компании",
+    kg: "Компаниянын профили",
+    en: "Company profile",
+  },
+  "account.createCompanyProfile": {
+    ru: "Контакты для публикации",
+    kg: "Жарыялоо үчүн байланыштар",
+    en: "Contact details for posting",
+  },
+  "post.chooseType": {
+    ru: "Что хотите разместить?",
+    kg: "Эмне жайгаштыргыңыз келет?",
+    en: "What do you want to post?",
+  },
+  "post.market": {
+    ru: "Объявление",
+    kg: "Жарыя",
+    en: "Listing",
+  },
+  "post.service": {
+    ru: "Услугу",
+    kg: "Кызмат",
+    en: "Service",
+  },
+  "post.wholesale": {
+    ru: "Оптовое предложение",
+    kg: "Дүң сунуш",
+    en: "Wholesale offer",
+  },
+  "post.cargoCompany": {
+    ru: "Карго-компанию",
+    kg: "Карго компания",
+    en: "Cargo company",
+  },
+  "post.marketDescription": {
+    ru: "Товар или частное предложение",
+    kg: "Товар же жеке сунуш",
+    en: "A product or private offer",
+  },
+  "post.serviceDescription": {
+    ru: "Услуга мастера или компании",
+    kg: "Уста же компаниянын кызматы",
+    en: "A service from a specialist or company",
+  },
+  "post.wholesaleDescription": {
+    ru: "Оптовые товары и поставки",
+    kg: "Дүң товарлар жана жеткирүүлөр",
+    en: "Wholesale goods and supply",
+  },
+  "post.cargoCompanyDescription": {
+    ru: "Карточка компании, которая перевозит грузы",
+    kg: "Жүк ташуучу компаниянын карточкасы",
+    en: "A company card for freight services",
+  },
+  "cargo.requestVsCompanyTitle": {
+    ru: "Заявка и карго-компания — это разное",
+    kg: "Сурам жана карго компания — ар башка",
+    en: "Shipping request and cargo company are different",
+  },
+  "cargo.requestVsCompanyDescription": {
+    ru: "Не путайте заявку клиента и карточку перевозчика.",
+    kg: "Кардардын сурамын жана ташуучунун карточкасын чаташтырбаңыз.",
+    en: "Do not confuse a client request with a carrier company card.",
+  },
+  "cargo.needShipping": {
+    ru: "Карго-заявка — когда вам нужно перевезти товар.",
+    kg: "Карго сурамы — товарды ташытуу керек болгондо.",
+    en: "Cargo request — when you need to ship goods.",
+  },
+  "cargo.addCargoCompany": {
+    ru: "Карго-компания — когда вы оказываете услуги перевозки.",
+    kg: "Карго компания — жеткирүү кызматын көрсөтсөңүз.",
+    en: "Cargo company — when you provide shipping services.",
   },
   "profile.favorites": { ru: "Избранное", kg: "Тандалмалар", en: "Favorites" },
   "profile.notifications": {

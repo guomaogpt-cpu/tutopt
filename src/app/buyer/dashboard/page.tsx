@@ -21,8 +21,8 @@ import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardSta
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPrivatePageMetadata(
-  "Кабинет покупателя",
-  "Кабинет покупателя ВсеТут.",
+  "Личный кабинет",
+  "Личный кабинет ВсеТут.",
 );
 import { getBuyerDashboardData } from "@/features/buyer/lib/buyer-dashboard-data";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -130,11 +130,11 @@ export default async function BuyerDashboardPage() {
               {user.name}
             </PageTitle>
             <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
-              Кабинет покупателя — заявки, избранное и поиск
+              Личный кабинет — избранное, заявки и объявления
             </PageSubtitle>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 dark:bg-slate-800 dark:text-blue-400">
-                Покупатель
+                Аккаунт
               </span>
               {user.phone_verified_at ? (
                 <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">

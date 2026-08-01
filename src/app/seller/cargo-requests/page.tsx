@@ -6,7 +6,7 @@ import { CargoSubscriptionSettingsLink } from "@/components/seller/CargoSubscrip
 import { SellerCargoRequestsList } from "@/components/seller/SellerCargoRequestsList";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getSellerCargoRequests } from "@/features/cargo/lib/cargo-requests-data";
 import {
@@ -62,14 +62,12 @@ export default async function SellerCargoRequestsPage({
   }
 
   if (user.role === UserRole.BUYER) {
-    redirect(buildSellerUpgradeUrl("/seller/cargo-requests"));
-  }
-
-  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
+    // Allowed: board for users who publish cargo companies.
+  } else if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
     redirect(buildSellerOnboardingUrl("/seller/cargo-requests"));
   }
 
-  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN && user.role !== UserRole.BUYER) {
     return (
       <main className="min-w-0 bg-[#F5F7FA] py-6 dark:bg-slate-950 sm:py-8">
         <Container size="lg" className="max-w-[1280px]">
@@ -81,10 +79,10 @@ export default async function SellerCargoRequestsPage({
             </PageHeaderContent>
           </PageHeader>
           <ListingAccessMessage
-            title="Раздел доступен только продавцам"
-            description="Станьте продавцом, чтобы видеть карго-заявки клиентов."
-            actionHref={buildSellerUpgradeUrl("/seller/cargo-requests")}
-            actionLabel="Стать продавцом"
+            title="Войдите, чтобы видеть карго-заявки"
+            description="Сначала добавьте карго-компанию, затем отвечайте на заявки."
+            actionHref={buildLoginUrl("/seller/cargo-requests")}
+            actionLabel="Войти"
           />
         </Container>
       </main>

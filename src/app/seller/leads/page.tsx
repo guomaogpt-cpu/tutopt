@@ -5,7 +5,7 @@ import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { SellerLeadsTable } from "@/components/seller/SellerLeadsTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getSellerLeads } from "@/features/leads/lib/leads-data";
 import { parseSellerLeadStatusFilter } from "@/features/leads/lib/lead-status";
@@ -39,14 +39,12 @@ export default async function SellerLeadsPage({ searchParams }: SellerLeadsPageP
   }
 
   if (user.role === UserRole.BUYER) {
-    redirect(buildSellerUpgradeUrl("/seller/leads"));
-  }
-
-  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
+    // Allowed: leads appear after publishing listings.
+  } else if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
     redirect(buildSellerOnboardingUrl("/seller/leads"));
   }
 
-  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN && user.role !== UserRole.BUYER) {
     return (
       <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
         <Container size="lg" className="max-w-[1280px]">
@@ -58,10 +56,10 @@ export default async function SellerLeadsPage({ searchParams }: SellerLeadsPageP
             </PageHeaderContent>
           </PageHeader>
           <ListingAccessMessage
-            title="Раздел доступен только продавцам"
-            description="Станьте продавцом в текущем аккаунте, чтобы получать заявки от покупателей."
-            actionHref={buildSellerUpgradeUrl("/seller/leads")}
-            actionLabel="Стать продавцом"
+            title="Войдите, чтобы видеть заявки"
+            description="Заявки появляются после публикации объявлений."
+            actionHref={buildLoginUrl("/seller/leads")}
+            actionLabel="Войти"
           />
         </Container>
       </main>

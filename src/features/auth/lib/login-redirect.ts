@@ -29,12 +29,8 @@ export function buildLoginUrl(returnPath: string): string {
   return `/login?next=${encodeURIComponent(safePath)}`;
 }
 
-export function buildRegisterUrl(options?: { role?: "SELLER"; returnPath?: string }): string {
+export function buildRegisterUrl(options?: { returnPath?: string }): string {
   const params = new URLSearchParams();
-
-  if (options?.role === "SELLER") {
-    params.set("role", "SELLER");
-  }
 
   if (options?.returnPath && isSafeInternalPath(options.returnPath)) {
     params.set("next", options.returnPath);
@@ -44,6 +40,7 @@ export function buildRegisterUrl(options?: { role?: "SELLER"; returnPath?: strin
   return query ? `/register?${query}` : "/register";
 }
 
+/** @deprecated Prefer posting flow; kept for legacy deep links to company profile setup. */
 export function buildSellerUpgradeUrl(returnPath?: string): string {
   if (returnPath && isSafeInternalPath(returnPath) && returnPath !== "/seller/upgrade") {
     return `/seller/upgrade?next=${encodeURIComponent(returnPath)}`;
@@ -67,10 +64,8 @@ export function getCreateListingHref(user: HeaderUser | null): string {
   switch (user.role) {
     case "SELLER":
     case "ADMIN":
-      return "/listings/new";
     case "BUYER":
-      // Page guard also redirects; explicit upgrade path avoids register.
-      return buildSellerUpgradeUrl("/listings/new");
+      return "/listings/new";
     default:
       return buildLoginUrl("/listings/new");
   }

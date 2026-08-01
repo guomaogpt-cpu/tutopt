@@ -6,6 +6,7 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
+import { CreateListingVerticalChooser } from "@/components/listings/CreateListingVerticalChooser";
 import { FormSection } from "@/components/listings/FormSection";
 import type { ListingQualityInput } from "@/lib/moderation/listing-quality";
 import { ListingImageUpload } from "@/components/listings/ListingImageUpload";
@@ -22,10 +23,7 @@ import {
 import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-config";
 import type { CategoryItem } from "@/features/listings/types/category";
 import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
-import {
-  DEFAULT_LISTING_VERTICAL,
-  VERTICAL_LIST,
-} from "@/features/verticals/verticals";
+import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import {
   trackCreateListingStart,
   trackCreateListingSubmit,
@@ -51,7 +49,7 @@ type NewListingFormProps = {
   categories: CategoryItem[];
   cities: SelectOption[];
   brands: SelectOption[];
-  initialVertical?: ListingVertical;
+  initialVertical?: ListingVertical | null;
   initialCategoryId?: string;
   mode?: "create" | "edit";
   listingId?: string;
@@ -118,24 +116,26 @@ export function NewListingForm({
   categories,
   cities,
   brands,
-  initialVertical = DEFAULT_LISTING_VERTICAL,
+  initialVertical = null,
   initialCategoryId,
   mode = "create",
   listingId,
   initialValues,
-  cancelHref = "/seller/dashboard",
+  cancelHref = "/seller/listings",
 }: NewListingFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const resolvedInitialVertical = initialValues?.vertical ?? initialVertical;
-  const [vertical, setVertical] = useState<ListingVertical>(resolvedInitialVertical);
-  const formConfig = getVerticalFormConfig(vertical);
+  const [vertical, setVertical] = useState<ListingVertical | null>(resolvedInitialVertical);
+  const needsChooser = mode === "create" && !resolvedInitialVertical;
+  const [chooserDone, setChooserDone] = useState(!needsChooser);
+  const formConfig = getVerticalFormConfig(vertical ?? "MARKET");
   const [title, setTitle] = useState(initialValues?.title ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
   const [categoryId, setCategoryId] = useState(() =>
     resolveInitialCategoryId(
       categories,
-      resolvedInitialVertical,
+      resolvedInitialVertical ?? "MARKET",
       initialValues?.categoryId ?? initialCategoryId,
     ),
   );
@@ -202,7 +202,9 @@ export function NewListingForm({
       trackListingEditStart(initialValues.vertical, initialValues.status);
       return;
     }
-    trackCreateListingStart(resolvedInitialVertical);
+    if (resolvedInitialVertical) {
+      trackCreateListingStart(resolvedInitialVertical);
+    }
   }, [initialValues, mode, resolvedInitialVertical]);
 
   useEffect(() => {
@@ -257,7 +259,7 @@ export function NewListingForm({
     cityId: cityId || null,
     cityName: cityLabel || null,
     categoryId: categoryId || null,
-    vertical,
+    vertical: vertical ?? "MARKET",
     imageCount: imageUrls.length,
     moq: Number.isFinite(Number(moq)) ? Number(moq) : null,
     unit,
@@ -441,6 +443,22 @@ export function NewListingForm({
           </div>
         </div>
       </div>
+    );
+  }
+
+  if (!chooserDone || !vertical) {
+    return (
+      <CreateListingVerticalChooser
+        onSelect={(nextVertical) => {
+          handleVerticalChange(nextVertical);
+          setChooserDone(true);
+          if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            url.searchParams.set("vertical", nextVertical);
+            window.history.replaceState({}, "", `${url.pathname}?${url.searchParams.toString()}`);
+          }
+        }}
+      />
     );
   }
 

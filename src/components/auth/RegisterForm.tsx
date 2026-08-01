@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { AuthAlert, AuthFormCard, AuthFormField } from "@/components/auth/AuthFormCard";
 import { AuthDivider, GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { PhoneOtpFields } from "@/components/auth/PhoneOtpFields";
-import { RoleSelector } from "@/components/auth/RoleSelector";
 import { authButtonClassName } from "@/components/auth/auth-form-styles";
 import {
   AuthRequestError,
@@ -25,8 +24,6 @@ import { authInputClassName } from "@/components/auth/auth-form-styles";
 
 const emptyErrors: AuthFormErrors = { form: [], fields: {} };
 
-type RegisterRole = "BUYER" | "SELLER";
-
 type RegisterFormProps = {
   googleEnabled: boolean;
   isDev: boolean;
@@ -37,22 +34,14 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const nextPath = resolveNextParam(searchParams.get("next"));
-  const initialRole = searchParams.get("role") === "SELLER" ? "SELLER" : "BUYER";
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<RegisterRole>(initialRole);
   const [phoneVerificationToken, setPhoneVerificationToken] = useState<string | null>(null);
   const [errors, setErrors] = useState<AuthFormErrors>(emptyErrors);
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (searchParams.get("role") === "SELLER") {
-      setRole("SELLER");
-    }
-  }, [searchParams]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,7 +62,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
       name: name.trim(),
       phone: phone.trim(),
       password,
-      role: role as RegisterInput["role"],
+      role: "BUYER",
       phoneVerificationToken,
     };
 
@@ -104,23 +93,13 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
       : "/login";
 
   return (
-    <AuthFormCard
-      title={t("auth.registerTitle")}
-      description={t("auth.registerDescription")}
-    >
+    <AuthFormCard title={t("auth.createAccount")} description={t("auth.registerDescription")}>
       <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-4 sm:space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
         <AuthAlert variant="error" messages={errors.form} />
 
-        <RoleSelector
-          value={role}
-          onChange={setRole}
-          disabled={isSubmitting}
-          error={getFieldError(errors, "role")}
-        />
-
         <AuthFormField
-          label={role === "SELLER" ? t("auth.sellerNameLabel") : t("auth.buyerNameLabel")}
+          label={t("auth.buyerNameLabel")}
           htmlFor="register-name"
           error={getFieldError(errors, "name")}
         >
@@ -128,10 +107,8 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
             id="register-name"
             name="name"
             type="text"
-            autoComplete="organization"
-            placeholder={
-              role === "SELLER" ? t("auth.sellerNamePlaceholder") : t("auth.buyerNameLabel")
-            }
+            autoComplete="name"
+            placeholder={t("auth.buyerNameLabel")}
             value={name}
             onChange={(event) => setName(event.target.value)}
             className={cn(
@@ -151,11 +128,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
           onTokenReset={() => setPhoneVerificationToken(null)}
           errors={errors}
           disabled={isSubmitting}
-          phoneHint={
-            role === "SELLER"
-              ? "На этот номер покупатели смогут связаться с вами."
-              : "На этот номер будет привязан ваш аккаунт."
-          }
+          phoneHint="На этот номер будет привязан ваш аккаунт."
           showDevHint={isDev}
         />
 
@@ -187,29 +160,21 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
               {t("auth.creatingAccount")}
             </>
           ) : (
-            t("auth.register")
+            t("auth.createAccount")
           )}
         </button>
 
         {googleEnabled ? (
           <>
             <AuthDivider />
-            <GoogleAuthButton
-              enabled={googleEnabled}
-              role={role}
-              next={nextPath}
-              disabled={isSubmitting}
-            />
+            <GoogleAuthButton enabled={googleEnabled} next={nextPath} />
           </>
         ) : null}
 
-        <p className="text-center text-sm text-[#64748B]">
-          {t("auth.hasAccount")}{" "}
-          <Link
-            href={loginHref}
-            className="font-medium text-[#2563EB] transition hover:text-[#1D4ED8]"
-          >
-            {t("auth.login")}
+        <p className="text-center text-sm text-slate-500 dark:text-slate-400">
+          {t("auth.haveAccount")}{" "}
+          <Link href={loginHref} className="font-semibold text-blue-600 hover:underline">
+            {t("auth.loginTitle")}
           </Link>
         </p>
       </form>

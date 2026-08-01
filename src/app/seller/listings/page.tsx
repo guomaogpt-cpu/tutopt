@@ -8,7 +8,7 @@ import { SellerListingsFilters } from "@/components/seller/SellerListingsFilters
 import { SellerListingsPagination } from "@/components/seller/SellerListingsPagination";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import {
@@ -47,17 +47,15 @@ export default async function SellerListingsPage({ searchParams }: SellerListing
   }
 
   if (user.role === UserRole.BUYER) {
-    redirect(buildSellerUpgradeUrl("/seller/listings"));
-  }
-
-  if (
+    // Allowed: own listings cabinet (empty until first post).
+  } else if (
     user.role === UserRole.SELLER &&
     needsSellerOnboarding({ role: user.role, phone: user.phone })
   ) {
     redirect(buildSellerOnboardingUrl("/seller/listings"));
   }
 
-  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN && user.role !== UserRole.BUYER) {
     return (
       <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
         <Container size="lg" className="max-w-[1280px]">
@@ -67,10 +65,10 @@ export default async function SellerListingsPage({ searchParams }: SellerListing
             </PageHeaderContent>
           </PageHeader>
           <ListingAccessMessage
-            title="Управление объявлениями доступно только продавцам"
-            description="Станьте продавцом в текущем аккаунте, чтобы публиковать товары и управлять объявлениями."
-            actionHref={buildSellerUpgradeUrl("/seller/listings")}
-            actionLabel="Стать продавцом"
+            title="Войдите, чтобы управлять объявлениями"
+            description="После входа вы сможете публиковать и редактировать свои объявления."
+            actionHref={buildLoginUrl("/seller/listings")}
+            actionLabel="Войти"
           />
         </Container>
       </main>

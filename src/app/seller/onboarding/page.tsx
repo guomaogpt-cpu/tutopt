@@ -3,15 +3,15 @@ import { redirect } from "next/navigation";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { SellerOnboardingForm } from "@/components/seller/SellerOnboardingForm";
 import { getCurrentUser } from "@/features/auth/lib/session";
-import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
+import { isSellerPhoneComplete } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl, resolveNextParam } from "@/features/auth/lib/login-redirect";
 import { getEnv } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPrivatePageMetadata(
-  "Онбординг продавца",
-  "Заполнение профиля продавца на ВсеТут.",
+  "Контакты для публикации",
+  "Заполните контактные данные для публикации на ВсеТут.",
 );
 
 type SellerOnboardingPageProps = {
@@ -31,16 +31,16 @@ export default async function SellerOnboardingPage({ searchParams }: SellerOnboa
     redirect(buildLoginUrl(onboardingReturn));
   }
 
-  if (user.role === UserRole.BUYER) {
-    redirect("/buyer/dashboard");
-  }
-
-  if (user.role !== UserRole.SELLER) {
+  if (
+    user.role !== UserRole.BUYER &&
+    user.role !== UserRole.SELLER &&
+    user.role !== UserRole.ADMIN
+  ) {
     redirect("/");
   }
 
-  if (!needsSellerOnboarding({ role: user.role, phone: user.phone })) {
-    redirect(nextPath !== "/" ? nextPath : "/seller/dashboard");
+  if (isSellerPhoneComplete(user.phone)) {
+    redirect(nextPath !== "/" ? nextPath : "/listings/new");
   }
 
   const sellerProfile = await prisma.sellerProfile.findUnique({
@@ -55,7 +55,7 @@ export default async function SellerOnboardingPage({ searchParams }: SellerOnboa
       <SellerOnboardingForm
         initialCompanyName={sellerProfile?.company_name ?? user.name}
         email={user.email}
-        nextPath={nextPath !== "/" ? nextPath : undefined}
+        nextPath={nextPath !== "/" ? nextPath : "/listings/new"}
         isDev={isDev}
       />
     </AuthLayout>

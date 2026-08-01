@@ -17,9 +17,9 @@ export function getAccountHomeHref(role: UserRole): string {
 export function getRoleLabel(role: UserRole): string {
   switch (role) {
     case "BUYER":
-      return "Покупатель";
+      return "Аккаунт";
     case "SELLER":
-      return "Продавец";
+      return "Аккаунт";
     case "MODERATOR":
       return "Модератор";
     case "ADMIN":

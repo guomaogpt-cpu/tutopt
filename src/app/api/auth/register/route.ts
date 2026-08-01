@@ -2,7 +2,6 @@ import { AuthProvider, UserRole } from "@prisma/client";
 import { hashPassword } from "@/features/auth/lib/password";
 import { verifyPhoneVerificationToken } from "@/features/auth/lib/phone-otp";
 import { createSession, publicUserSelect } from "@/features/auth/lib/session";
-import { createSellerProfileForUser } from "@/features/listings/lib/seller-profile";
 import { registerSchema } from "@/features/auth/validators/auth.validators";
 import { getClientIpFromRequest } from "@/lib/security/client-ip";
 import { assertRegisterRateLimit } from "@/lib/security/rate-limit";
@@ -18,10 +17,6 @@ export async function POST(request: Request) {
 
     const input = await parseJsonBody(request, registerSchema);
 
-    if (input.role !== UserRole.BUYER && input.role !== UserRole.SELLER) {
-      throw new ConflictError("Недопустимая роль");
-    }
-
     verifyPhoneVerificationToken(input.phoneVerificationToken, input.phone);
 
     const existingPhone = await prisma.user.findUnique({ where: { phone: input.phone } });
@@ -31,6 +26,8 @@ export async function POST(request: Request) {
 
     const password_hash = await hashPassword(input.password);
 
+    // Phase 78: registration always creates a normal account (BUYER in DB).
+    // Publishing capability is granted later via soft SellerProfile creation.
     const user = await prisma.user.create({
       data: {
         phone: input.phone,
@@ -38,20 +35,11 @@ export async function POST(request: Request) {
         password_hash,
         auth_provider: AuthProvider.PASSWORD,
         name: input.name,
-        role: input.role,
+        role: UserRole.BUYER,
         phone_verified_at: new Date(),
       },
       select: publicUserSelect,
     });
-
-    if (input.role === UserRole.SELLER) {
-      await createSellerProfileForUser({
-        userId: user.id,
-        companyName: input.name,
-        contactPhone: input.phone,
-        contactEmail: null,
-      });
-    }
 
     await createSession(user.id);
 

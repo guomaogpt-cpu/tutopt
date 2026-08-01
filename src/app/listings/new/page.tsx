@@ -2,17 +2,11 @@ import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { CreateListingPageHeader } from "@/components/listings/CreateListingPageHeader";
 import { NewListingForm } from "@/components/listings/NewListingForm";
-import {
-  buildLoginUrl,
-  buildSellerUpgradeUrl,
-} from "@/features/auth/lib/login-redirect";
-import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
+import { needsPhoneForPosting } from "@/features/auth/lib/seller-onboarding";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
-import {
-  DEFAULT_LISTING_VERTICAL,
-  parseListingVerticalParam,
-} from "@/features/verticals/verticals";
+import { parseListingVerticalParam } from "@/features/verticals/verticals";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
@@ -32,11 +26,12 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
     typeof rawParams.vertical === "string" ? rawParams.vertical : undefined;
   const categoryParam =
     typeof rawParams.category === "string" ? rawParams.category.trim() : undefined;
-  const initialVertical =
-    parseListingVerticalParam(verticalParam) ?? DEFAULT_LISTING_VERTICAL;
-  const returnPath = categoryParam
-    ? `/listings/new?vertical=${initialVertical}&category=${categoryParam}`
-    : `/listings/new?vertical=${initialVertical}`;
+  const initialVertical = parseListingVerticalParam(verticalParam);
+  const returnPath = initialVertical
+    ? categoryParam
+      ? `/listings/new?vertical=${initialVertical}&category=${encodeURIComponent(categoryParam)}`
+      : `/listings/new?vertical=${initialVertical}`
+    : "/listings/new";
 
   const user = await getCurrentUser();
 
@@ -44,20 +39,20 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
     redirect(buildLoginUrl(returnPath));
   }
 
-  if (user.role === UserRole.BUYER) {
-    redirect(buildSellerUpgradeUrl(returnPath));
-  }
-
-  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
-    redirect(buildSellerOnboardingUrl(returnPath));
-  }
-
   if (user.role === UserRole.MODERATOR) {
     redirect("/");
   }
 
-  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+  if (
+    user.role !== UserRole.BUYER &&
+    user.role !== UserRole.SELLER &&
+    user.role !== UserRole.ADMIN
+  ) {
     redirect("/");
+  }
+
+  if (needsPhoneForPosting(user.phone)) {
+    redirect(buildSellerOnboardingUrl(returnPath));
   }
 
   const [categories, cities, brands] = await Promise.all([

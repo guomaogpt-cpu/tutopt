@@ -20,6 +20,11 @@ export function needsSellerOnboarding(input: {
   return input.role === "SELLER" && !isSellerPhoneComplete(input.phone);
 }
 
+/** Any account posting listings needs a verified phone on the profile. */
+export function needsPhoneForPosting(phone: string | null | undefined): boolean {
+  return !isSellerPhoneComplete(phone);
+}
+
 /** BUYER upgrade can skip OTP when phone already exists and is verified. */
 export function hasVerifiedSellerPhone(input: {
   phone: string | null | undefined;

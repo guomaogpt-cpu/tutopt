@@ -5,7 +5,7 @@ import { ListingAccessMessage } from "@/components/listings/NewListingForm";
 import { CargoSettingsForm } from "@/components/seller/CargoSettingsForm";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
-import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getCargoSubscriptionForSeller } from "@/features/cargo/lib/cargo-subscription-data";
 import { Button } from "@/components/ui/button";
@@ -35,14 +35,12 @@ export default async function SellerCargoSettingsPage() {
   }
 
   if (user.role === UserRole.BUYER) {
-    redirect(buildSellerUpgradeUrl("/seller/cargo-settings"));
-  }
-
-  if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
+    // Allowed once a company profile exists; otherwise prompt to create cargo listing.
+  } else if (user.role === UserRole.SELLER && needsSellerOnboarding({ role: user.role, phone: user.phone })) {
     redirect(buildSellerOnboardingUrl("/seller/cargo-settings"));
   }
 
-  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+  if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN && user.role !== UserRole.BUYER) {
     return (
       <main className="min-w-0 bg-[#F5F7FA] py-6 dark:bg-slate-950 sm:py-8">
         <Container size="lg" className="max-w-[800px]">
@@ -54,10 +52,10 @@ export default async function SellerCargoSettingsPage() {
             </PageHeaderContent>
           </PageHeader>
           <ListingAccessMessage
-            title="Раздел доступен только продавцам"
-            description="Станьте продавцом, чтобы настраивать карго-заявки."
-            actionHref={buildSellerUpgradeUrl("/seller/cargo-settings")}
-            actionLabel="Стать продавцом"
+            title="Войдите, чтобы настроить карго"
+            description="Сначала добавьте карго-компанию, затем подключите уведомления."
+            actionHref={buildLoginUrl("/seller/cargo-settings")}
+            actionLabel="Войти"
           />
         </Container>
       </main>
@@ -74,10 +72,10 @@ export default async function SellerCargoSettingsPage() {
       <main className="min-w-0 bg-[#F5F7FA] py-6 dark:bg-slate-950 sm:py-8">
         <Container size="lg" className="max-w-[800px]">
           <ListingAccessMessage
-            title="Нужен профиль продавца"
-            description="Завершите онбординг продавца, чтобы управлять настройками карго."
-            actionHref={buildSellerOnboardingUrl("/seller/cargo-settings")}
-            actionLabel="Заполнить профиль"
+            title="Сначала добавьте карго-компанию"
+            description="Создайте карточку карго-компании, затем настройте заявки и Telegram."
+            actionHref="/listings/new?vertical=cargo"
+            actionLabel="Добавить карго-компанию"
           />
         </Container>
       </main>

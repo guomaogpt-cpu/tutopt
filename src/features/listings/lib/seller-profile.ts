@@ -1,4 +1,4 @@
-import { AuthProvider, type SellerProfile, type User } from "@prisma/client";
+import { AuthProvider, UserRole, type SellerProfile, type User } from "@prisma/client";
 import { isSellerPhoneComplete } from "@/features/auth/lib/seller-onboarding";
 import type { PublicUser } from "@/features/auth/lib/session";
 import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
@@ -51,11 +51,22 @@ export async function createSellerProfileForUser(
   });
 }
 
+/**
+ * Ensures a company/seller profile exists for posting.
+ * Soft-promotes BUYER → SELLER when phone is verified (UX no longer forces role at signup).
+ */
 export async function ensureSellerProfile(user: PublicUser): Promise<SellerProfile> {
   if (!isSellerPhoneComplete(user.phone)) {
     throw new ValidationError(
-      "Завершите onboarding продавца и подтвердите телефон, прежде чем создавать объявления.",
+      "Подтвердите телефон, прежде чем публиковать объявления.",
     );
+  }
+
+  if (user.role === UserRole.BUYER) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { role: UserRole.SELLER },
+    });
   }
 
   return createSellerProfileForUser({

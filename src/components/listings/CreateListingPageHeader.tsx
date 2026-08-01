@@ -7,7 +7,7 @@ import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
 
 type CreateListingPageHeaderProps = {
-  initialVertical?: ListingVertical;
+  initialVertical?: ListingVertical | null;
 };
 
 export function CreateListingPageHeader({
@@ -30,8 +30,8 @@ export function CreateListingPageHeader({
           </li>
           <li aria-hidden="true">/</li>
           <li>
-            <Link href="/seller/dashboard" className="transition hover:text-blue-600">
-              Кабинет продавца
+            <Link href="/seller/listings" className="transition hover:text-blue-600">
+              {t("account.myListings")}
             </Link>
           </li>
           <li aria-hidden="true">/</li>
