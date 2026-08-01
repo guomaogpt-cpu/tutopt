@@ -4,6 +4,7 @@ import type { ListingVertical } from "@prisma/client";
 import { Building2, Package, Store, Truck } from "lucide-react";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { cn } from "@/lib/utils";
 
 type CreateListingVerticalChooserProps = {
@@ -62,6 +63,7 @@ export function CreateListingVerticalChooser({
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {OPTIONS.map((option) => {
           const Icon = option.vertical === "CARGO" ? Building2 : option.icon;
+          const theme = getVerticalTheme(option.vertical);
           return (
             <button
               key={option.vertical}
@@ -69,10 +71,17 @@ export function CreateListingVerticalChooser({
               onClick={() => onSelect(option.vertical)}
               className={cn(
                 "flex min-h-[88px] items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition",
-                "hover:border-blue-300 hover:bg-white dark:border-slate-700 dark:bg-slate-950 dark:hover:border-blue-500/40 dark:hover:bg-slate-900",
+                "hover:bg-white dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900",
+                theme.primaryBorder,
+                "hover:border-current",
               )}
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-slate-800 dark:text-blue-400">
+              <span
+                className={cn(
+                  "flex size-10 shrink-0 items-center justify-center rounded-xl",
+                  theme.softIcon,
+                )}
+              >
                 <Icon className="size-5" aria-hidden="true" />
               </span>
               <span className="min-w-0">

@@ -38,11 +38,11 @@ const ENTRY_CARDS: EntryCard[] = [
     shortKey: "home.marketShort",
     href: "/market",
     icon: Megaphone,
-    accentBar: "bg-violet-500",
-    iconWrap: "bg-violet-100 dark:bg-violet-950/60",
-    iconColor: "text-violet-600 dark:text-violet-300",
+    accentBar: "bg-purple-500",
+    iconWrap: "bg-purple-100 dark:bg-purple-950/60",
+    iconColor: "text-purple-600 dark:text-purple-300",
     mobileTile:
-      "border-violet-200/80 bg-gradient-to-br from-violet-50 to-violet-100/70 dark:border-violet-800/60 dark:from-violet-950/50 dark:to-slate-900",
+      "border-purple-200/80 bg-gradient-to-br from-purple-50 to-purple-100/70 dark:border-purple-800/60 dark:from-purple-950/50 dark:to-slate-900",
   },
   {
     id: "SERVICES",
@@ -51,11 +51,11 @@ const ENTRY_CARDS: EntryCard[] = [
     shortKey: "home.servicesShort",
     href: "/services",
     icon: Briefcase,
-    accentBar: "bg-emerald-500",
-    iconWrap: "bg-emerald-100 dark:bg-emerald-950/60",
-    iconColor: "text-emerald-600 dark:text-emerald-300",
+    accentBar: "bg-green-500",
+    iconWrap: "bg-green-100 dark:bg-green-950/60",
+    iconColor: "text-green-600 dark:text-green-300",
     mobileTile:
-      "border-emerald-200/80 bg-gradient-to-br from-emerald-50 to-emerald-100/70 dark:border-emerald-800/60 dark:from-emerald-950/50 dark:to-slate-900",
+      "border-green-200/80 bg-gradient-to-br from-green-50 to-green-100/70 dark:border-green-800/60 dark:from-green-950/50 dark:to-slate-900",
   },
   {
     id: "OPT",

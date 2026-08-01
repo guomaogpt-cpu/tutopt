@@ -11,6 +11,7 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { cn } from "@/lib/utils";
 
 type ListingsPaginationProps = {
@@ -20,6 +21,7 @@ type ListingsPaginationProps = {
 
 export function ListingsPagination({ filters, totalCount }: ListingsPaginationProps) {
   const totalPages = Math.max(1, Math.ceil(totalCount / LISTINGS_PER_PAGE));
+  const theme = getVerticalTheme(filters.vertical);
 
   if (totalPages <= 1) {
     return null;
@@ -67,7 +69,12 @@ export function ListingsPagination({ filters, totalCount }: ListingsPaginationPr
                 className={cn(
                   "size-11 min-w-11 rounded-xl sm:size-10 sm:min-w-10",
                   page === filters.page &&
-                    "border-[#2563EB]/30 bg-[#EFF6FF] font-semibold text-[#2563EB] shadow-none hover:bg-[#EFF6FF] dark:border-blue-700 dark:bg-blue-950/50 dark:text-blue-300 dark:hover:bg-blue-950/50",
+                    cn(
+                      "font-semibold shadow-none",
+                      theme.primaryBorder,
+                      theme.softBg,
+                      theme.primaryText,
+                    ),
                 )}
                 asChild
               >

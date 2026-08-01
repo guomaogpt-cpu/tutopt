@@ -94,7 +94,7 @@ export function ServicesCompactHero({ categories }: ServicesCompactHeroProps) {
 
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <Button
-                className="h-11 w-full rounded-xl bg-white text-teal-800 hover:bg-white/95 active:scale-[0.98] sm:w-auto"
+                className="h-11 w-full rounded-xl bg-white text-green-700 hover:bg-white/95 active:scale-[0.98] sm:w-auto"
                 asChild
               >
                 <Link href={config.createListingHref}>{t("services.postService")}</Link>

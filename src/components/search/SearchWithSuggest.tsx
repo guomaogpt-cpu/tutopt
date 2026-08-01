@@ -27,7 +27,10 @@ import {
 } from "@/features/search/lib/search-suggest-types";
 import { resolveSearchVertical } from "@/features/verticals/verticals";
 import { trackSearch } from "@/lib/analytics/events";
+import { useRouteVerticalTheme } from "@/lib/use-route-vertical-theme";
 import { cn } from "@/lib/utils";
+import type { ListingVertical } from "@prisma/client";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 
 export type SearchWithSuggestProps = {
   id?: string;
@@ -37,6 +40,8 @@ export type SearchWithSuggestProps = {
   className?: string;
   inputClassName?: string;
   disabled?: boolean;
+  /** Override route-based theme (e.g. create-listing chooser). */
+  themeVertical?: ListingVertical | null;
 };
 
 export function SearchWithSuggest({
@@ -47,6 +52,7 @@ export function SearchWithSuggest({
   className = "",
   inputClassName = "",
   disabled = false,
+  themeVertical,
 }: SearchWithSuggestProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -55,6 +61,11 @@ export function SearchWithSuggest({
   const inputId = id ?? `search-with-suggest-${generatedId}`;
   const dropdownId = `${inputId}-dropdown`;
   const containerRef = useRef<HTMLDivElement>(null);
+  const routeTheme = useRouteVerticalTheme();
+  const theme =
+    themeVertical !== undefined
+      ? getVerticalTheme(themeVertical)
+      : routeTheme.theme;
 
   const urlQuery = pathname === "/listings" ? (searchParams.get("q") ?? "") : "";
   const [query, setQuery] = useState(urlQuery);
@@ -289,7 +300,8 @@ export function SearchWithSuggest({
             type="submit"
             disabled={disabled}
             className={cn(
-              "shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8]",
+              "shrink-0",
+              theme.primaryButton,
               compact
                 ? "h-11 w-full rounded-xl px-5 sm:mt-0 sm:w-auto sm:min-w-[7.5rem] sm:rounded-l-none sm:rounded-r-xl"
                 : "mt-2.5 h-12 w-full rounded-[14px] px-5 md:mt-0 md:h-14 md:w-[180px] md:rounded-l-none md:rounded-r-2xl",
@@ -352,7 +364,7 @@ export function SearchWithSuggest({
         type="submit"
         size="icon"
         disabled={disabled}
-        className="h-10 w-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
+        className={cn("h-10 w-10 shrink-0 sm:hidden", theme.primaryButton)}
         aria-label={resolvedButtonLabel}
       >
         <Search className="size-4" aria-hidden="true" />
@@ -360,7 +372,7 @@ export function SearchWithSuggest({
       <Button
         type="submit"
         disabled={disabled}
-        className="hidden h-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:inline-flex"
+        className={cn("hidden h-10 shrink-0 sm:inline-flex", theme.primaryButton)}
       >
         {resolvedButtonLabel}
       </Button>

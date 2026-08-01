@@ -33,6 +33,7 @@ import {
 } from "@/lib/analytics/events";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -135,6 +136,7 @@ export function NewListingForm({
   const [vertical, setVertical] = useState<ListingVertical | null>(resolvedInitialVertical);
   const needsChooser = mode === "create" && !resolvedInitialVertical;
   const [chooserDone, setChooserDone] = useState(!needsChooser);
+  const theme = getVerticalTheme(vertical);
   const formConfig = getVerticalFormConfig(vertical ?? "MARKET");
   const [title, setTitle] = useState(initialValues?.title ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
@@ -438,7 +440,7 @@ export function NewListingForm({
           <div className="mt-6 flex w-full flex-col gap-2.5 sm:flex-row">
             <Button
               asChild
-              className="h-12 flex-1 rounded-xl bg-blue-600 hover:bg-blue-700"
+              className={cn("h-12 flex-1 rounded-xl", theme.primaryButton)}
             >
               <Link href={`/listings/${createdListingId}`}>
                 {t("createListing.openListing")}
@@ -892,7 +894,7 @@ export function NewListingForm({
               <Button
                 type="submit"
                 disabled={submitDisabled}
-                className="h-12 w-full rounded-xl bg-blue-600 text-base hover:bg-blue-700"
+                className={cn("h-12 w-full rounded-xl text-base", theme.primaryButton)}
               >
                 {isSubmitting ? (
                   <>
@@ -947,7 +949,7 @@ export function NewListingForm({
         <Button
           type="submit"
           disabled={submitDisabled}
-          className="h-12 w-full rounded-xl bg-blue-600 text-base hover:bg-blue-700"
+          className={cn("h-12 w-full rounded-xl text-base", theme.primaryButton)}
         >
           {isSubmitting ? (
             <>
@@ -974,6 +976,8 @@ export function ListingAccessMessage({
   actionHref?: string;
   actionLabel?: string;
 }) {
+  const theme = getVerticalTheme(null);
+
   return (
     <EmptyState
       title={title}
@@ -981,7 +985,7 @@ export function ListingAccessMessage({
       className="mt-8 rounded-[22px] border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
       action={
         actionHref && actionLabel ? (
-          <Button asChild className="h-11 rounded-xl bg-blue-600 hover:bg-blue-700">
+          <Button asChild className={cn("h-11 rounded-xl", theme.primaryButton)}>
             <Link href={actionHref}>{actionLabel}</Link>
           </Button>
         ) : null

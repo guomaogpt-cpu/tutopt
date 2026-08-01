@@ -1,5 +1,6 @@
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 
 export type NavLinkItem = {
   labelKey: DictionaryKey;
@@ -20,20 +21,15 @@ export const HEADER_PRIMARY_LINKS: NavLinkItem[] = [
   { labelKey: "nav.cargo", href: "/cargo" },
 ];
 
-/** Soft active pill per direction — local Tailwind classes only. */
+/** Soft active pill per direction — from vertical theme (Phase 86). */
 export const HEADER_NAV_ACTIVE_CLASS: Record<string, string> = {
-  "/opt":
-    "bg-blue-600 text-white shadow-sm hover:bg-blue-600 hover:text-white dark:bg-blue-600 dark:text-white dark:hover:bg-blue-600 dark:hover:text-white",
-  "/market":
-    "bg-violet-600 text-white shadow-sm hover:bg-violet-600 hover:text-white dark:bg-violet-600 dark:text-white dark:hover:bg-violet-600 dark:hover:text-white",
-  "/services":
-    "bg-emerald-600 text-white shadow-sm hover:bg-emerald-600 hover:text-white dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-600 dark:hover:text-white",
-  "/cargo":
-    "bg-orange-500 text-white shadow-sm hover:bg-orange-600 hover:text-white dark:bg-orange-500 dark:text-white dark:hover:bg-orange-600 dark:hover:text-white",
+  "/opt": getVerticalTheme("OPT").navActive,
+  "/market": getVerticalTheme("MARKET").navActive,
+  "/services": getVerticalTheme("SERVICES").navActive,
+  "/cargo": getVerticalTheme("CARGO").navActive,
 };
 
-export const HEADER_NAV_ACTIVE_FALLBACK =
-  "bg-blue-600 text-white shadow-sm hover:bg-blue-600 hover:text-white dark:bg-blue-600 dark:text-white";
+export const HEADER_NAV_ACTIVE_FALLBACK = getVerticalTheme(null).navActive;
 
 export function getHeaderNavActiveClass(href: string): string {
   return HEADER_NAV_ACTIVE_CLASS[href] ?? HEADER_NAV_ACTIVE_FALLBACK;

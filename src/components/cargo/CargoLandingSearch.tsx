@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { cn } from "@/lib/utils";
 
 type SearchType = "companies" | "directions" | "services" | "requests";
@@ -33,6 +34,7 @@ export function CargoLandingSearch({ isAuthenticated }: CargoLandingSearchProps)
   const router = useRouter();
   const [searchType, setSearchType] = useState<SearchType>("companies");
   const [query, setQuery] = useState("");
+  const theme = getVerticalTheme("CARGO");
 
   const availableTypes = SEARCH_TYPES.filter(
     (item) => !item.authOnly || isAuthenticated,
@@ -105,7 +107,7 @@ export function CargoLandingSearch({ isAuthenticated }: CargoLandingSearchProps)
             />
             <Button
               type="submit"
-              className="h-11 shrink-0 rounded-xl bg-orange-500 px-4 text-white hover:bg-orange-600"
+              className={cn("h-11 shrink-0 rounded-xl px-4", theme.primaryButton)}
             >
               <Search className="size-4 sm:mr-1.5" aria-hidden="true" />
               <span className="hidden sm:inline">{t("search.find")}</span>

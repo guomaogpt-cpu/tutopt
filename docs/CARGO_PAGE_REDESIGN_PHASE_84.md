@@ -49,3 +49,7 @@ Phone, name, company, free-text comment, and other private fields stay off the p
 - Cargo company ratings
 - Favorite cargo companies
 - Public rate cards
+
+## Related
+
+- Phase 86 vertical color themes: `docs/VERTICAL_THEME_PHASE_86.md` (cargo chrome is orange end-to-end)

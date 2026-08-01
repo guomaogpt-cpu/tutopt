@@ -14,9 +14,12 @@ type VerticalListingBadgeProps = {
 
 const BADGE_TONES: Record<ListingVertical, string> = {
   OPT: "border-blue-200/80 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/80 dark:text-blue-300",
-  MARKET: "border-indigo-200/80 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-300",
-  SERVICES: "border-teal-200/80 bg-teal-50 text-teal-700 dark:border-teal-800 dark:bg-teal-950/80 dark:text-teal-300",
-  CARGO: "border-rose-200/80 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/80 dark:text-rose-300",
+  MARKET:
+    "border-purple-200/80 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950/80 dark:text-purple-300",
+  SERVICES:
+    "border-green-200/80 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950/80 dark:text-green-300",
+  CARGO:
+    "border-orange-200/80 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950/80 dark:text-orange-300",
 };
 
 const BADGE_LABEL_KEYS: Record<ListingVertical, DictionaryKey> = {

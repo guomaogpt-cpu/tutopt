@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { cn } from "@/lib/utils";
 
 export type FilterDraft = {
@@ -343,6 +344,7 @@ type FilterActionsProps = {
   onApply: () => void;
   applyDisabled?: boolean;
   className?: string;
+  vertical?: ListingVertical | null;
 };
 
 function FilterActions({
@@ -350,8 +352,10 @@ function FilterActions({
   onApply,
   applyDisabled = false,
   className,
+  vertical = null,
 }: FilterActionsProps) {
   const { t } = useTranslation();
+  const theme = getVerticalTheme(vertical);
 
   return (
     <div className={cn("flex gap-3", className)}>
@@ -365,7 +369,7 @@ function FilterActions({
       </Button>
       <Button
         type="button"
-        className="h-12 flex-1 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
+        className={cn("h-12 flex-1 rounded-xl", theme.primaryButton)}
         onClick={onApply}
         disabled={applyDisabled}
       >
@@ -489,6 +493,7 @@ export function CatalogFiltersPanel({
               onReset={handleResetPanel}
               onApply={handleApplyPanel}
               applyDisabled={Boolean(priceError)}
+              vertical={draft.vertical}
             />
           </DrawerFooter>
         </DrawerContent>
@@ -526,6 +531,7 @@ export function CatalogFiltersPanel({
           onApply={handleApplyPanel}
           applyDisabled={Boolean(priceError)}
           className="w-full"
+          vertical={draft.vertical}
         />
       </CardFooter>
     </Card>

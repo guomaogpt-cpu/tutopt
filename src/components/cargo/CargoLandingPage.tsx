@@ -11,6 +11,8 @@ import { CargoRequestModal } from "@/components/cargo/CargoRequestModal";
 import { Container } from "@/components/ui/container";
 import type { PublicCargoRequestCard } from "@/features/cargo/lib/cargo-requests-data";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
 type CargoLandingPageProps = {
   listings: ListingCardData[];
@@ -28,7 +30,7 @@ export function CargoLandingPage({
   const [requestOpen, setRequestOpen] = useState(false);
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-gradient-to-b from-orange-50/40 to-slate-50 pb-[calc(5rem+env(safe-area-inset-bottom))] dark:from-slate-950 dark:to-slate-950 md:pb-8">
+    <main className={cn("min-w-0 overflow-x-clip bg-gradient-to-b pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8", getVerticalTheme("CARGO").pageWash)}>
       <CargoCompactHero onCreateRequest={() => setRequestOpen(true)} />
 
       <Container size="lg" className="py-5 sm:py-7">

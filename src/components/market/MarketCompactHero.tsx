@@ -100,7 +100,7 @@ export function MarketCompactHero({
 
               <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 md:flex md:flex-wrap">
                 <Button
-                  className="h-11 w-full rounded-xl bg-white text-indigo-700 hover:bg-white/95 active:scale-[0.98] md:w-auto"
+                  className="h-11 w-full rounded-xl bg-white text-purple-700 hover:bg-white/95 active:scale-[0.98] md:w-auto"
                   asChild
                 >
                   <Link href={config.createListingHref}>

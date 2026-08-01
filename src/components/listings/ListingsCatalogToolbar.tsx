@@ -43,15 +43,9 @@ import {
 } from "@/components/ui/select";
 import { translate, type Locale } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
 import { cn } from "@/lib/utils";
 import type { ListingVertical } from "@prisma/client";
-
-const VERTICAL_TAB_ACTIVE: Record<ListingVertical, string> = {
-  OPT: "bg-blue-600 text-white shadow-sm",
-  MARKET: "bg-indigo-600 text-white shadow-sm",
-  SERVICES: "bg-teal-700 text-white shadow-sm",
-  CARGO: "bg-rose-600 text-white shadow-sm",
-};
 
 const VERTICAL_TAB_INACTIVE =
   "bg-white text-[#64748B] ring-1 ring-[rgba(148,163,184,0.22)] hover:bg-[#F8FAFC] hover:text-[#334155] dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200";
@@ -98,6 +92,7 @@ export function ListingsCatalogToolbar({
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const showBrandFilter = catalogShowsBrandFilter(filters.vertical);
+  const theme = getVerticalTheme(filters.vertical);
   const sortLabel =
     t(
       listingSortOptions.find((option) => option.value === filters.sort)?.labelKey ??
@@ -259,7 +254,7 @@ export function ListingsCatalogToolbar({
               className={cn(
                 "h-9 shrink-0 rounded-full px-3.5 text-sm font-medium transition-colors",
                 filters.vertical === null
-                  ? "bg-[#2563EB] text-white shadow-sm"
+                  ? "bg-blue-600 text-white shadow-sm dark:bg-blue-600"
                   : VERTICAL_TAB_INACTIVE,
               )}
             >
@@ -276,7 +271,9 @@ export function ListingsCatalogToolbar({
                   onClick={() => handleVerticalChange(vertical.id)}
                   className={cn(
                     "h-9 shrink-0 rounded-full px-3.5 text-sm font-medium transition-colors",
-                    isActive ? VERTICAL_TAB_ACTIVE[vertical.id] : VERTICAL_TAB_INACTIVE,
+                    isActive
+                      ? cn(getVerticalTheme(vertical.id).activeChip, "shadow-sm")
+                      : VERTICAL_TAB_INACTIVE,
                   )}
                 >
                   {t(
@@ -336,14 +333,17 @@ export function ListingsCatalogToolbar({
             <Button
               type="submit"
               size="icon"
-              className="size-11 shrink-0 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
+              className={cn("size-11 shrink-0 rounded-xl sm:hidden", theme.primaryButton)}
               aria-label={t("search.find")}
             >
               <Search className="size-5" aria-hidden="true" />
             </Button>
             <Button
               type="submit"
-              className="hidden h-12 shrink-0 rounded-xl bg-[#2563EB] px-6 text-base hover:bg-[#1D4ED8] sm:inline-flex"
+              className={cn(
+                "hidden h-12 shrink-0 rounded-xl px-6 text-base sm:inline-flex",
+                theme.primaryButton,
+              )}
             >
               {t("search.find")}
             </Button>
@@ -396,7 +396,7 @@ export function ListingsCatalogToolbar({
                 {panelFiltersOnly ? (
                   <Badge
                     variant="default"
-                    className="ml-0.5 size-2 rounded-full bg-[#2563EB] p-0"
+                    className={cn("ml-0.5 size-2 rounded-full p-0", theme.primaryBg)}
                     aria-hidden="true"
                   >
                     <span className="sr-only">{t("filters.activeFilters")}</span>
@@ -447,7 +447,7 @@ export function ListingsCatalogToolbar({
               type="button"
               variant="ghost"
               size="sm"
-              className="h-9 shrink-0 rounded-full px-3 text-[#2563EB] hover:text-[#1D4ED8]"
+              className={cn("h-9 shrink-0 rounded-full px-3", theme.softLink)}
               onClick={handleResetAll}
             >
               {t("filters.clearAll")}

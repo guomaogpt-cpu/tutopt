@@ -6,6 +6,7 @@ import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { useRouteVerticalTheme } from "@/lib/use-route-vertical-theme";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +45,7 @@ function HeaderSearchStatic({
   placeholder,
 }: HeaderSearchProps & { placeholder: string }) {
   const { t } = useTranslation();
+  const { theme } = useRouteVerticalTheme();
 
   return (
     <form className={cn("flex min-w-0 items-center gap-2", className)}>
@@ -72,7 +74,7 @@ function HeaderSearchStatic({
         type="button"
         disabled
         size="icon"
-        className="h-10 w-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:hidden"
+        className={cn("h-10 w-10 shrink-0 sm:hidden", theme.primaryButton)}
         aria-label={t("search.find")}
       >
         <Search className="size-4" aria-hidden="true" />
@@ -80,7 +82,7 @@ function HeaderSearchStatic({
       <Button
         type="button"
         disabled
-        className="hidden h-10 shrink-0 bg-[#2563EB] hover:bg-[#1D4ED8] sm:inline-flex"
+        className={cn("hidden h-10 shrink-0 sm:inline-flex", theme.primaryButton)}
       >
         {t("search.find")}
       </Button>

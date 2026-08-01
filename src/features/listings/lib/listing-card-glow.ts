@@ -1,8 +1,8 @@
 import type { ListingVertical } from "@prisma/client";
 
 const GLOW_BY_VERTICAL: Record<ListingVertical, string> = {
-  MARKET: "bg-violet-400/25",
-  SERVICES: "bg-emerald-400/25",
+  MARKET: "bg-purple-400/25",
+  SERVICES: "bg-green-400/25",
   OPT: "bg-blue-400/25",
   CARGO: "bg-orange-400/25",
 };
@@ -49,7 +49,7 @@ export function getListingCardGlowClass(
     haystack.includes("сад") ||
     haystack.includes("service")
   ) {
-    return "bg-emerald-400/25";
+    return "bg-green-400/25";
   }
 
   if (
@@ -68,7 +68,7 @@ export function getListingCardGlowClass(
     haystack.includes("красот") ||
     haystack.includes("market")
   ) {
-    return "bg-violet-400/25";
+    return "bg-purple-400/25";
   }
 
   return "bg-slate-300/20";
