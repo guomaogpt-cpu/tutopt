@@ -1192,14 +1192,94 @@ export const DICTIONARY = {
     en: "Enable Telegram notifications",
   },
   "cargo.telegram.saveHint": {
-    ru: "Чтобы подключить Telegram, напишите нашему боту и укажите полученный Chat ID здесь.",
-    kg: "Telegramды туташтыруу үчүн ботко жазып, алынган Chat ID'ни бул жерге киргизиңиз.",
-    en: "To connect Telegram, message our bot and enter the Chat ID you receive here.",
+    ru: "Ручной режим: укажите Chat ID, если бот-ссылка недоступна.",
+    kg: "Кол режим: бот шилтемеси жок болсо Chat ID киргизиңиз.",
+    en: "Manual mode: enter Chat ID if the bot link is unavailable.",
   },
   "cargo.telegram.chatIdRequired": {
     ru: "Укажите Telegram Chat ID, чтобы включить уведомления.",
     kg: "Билдирмелерди иштетүү үчүн Telegram Chat ID киргизиңиз.",
     en: "Enter a Telegram Chat ID to enable notifications.",
+  },
+  "cargo.telegram.connectButton": {
+    ru: "Подключить Telegram",
+    kg: "Telegramды туташтыруу",
+    en: "Connect Telegram",
+  },
+  "cargo.telegram.openBot": {
+    ru: "Открыть Telegram bot",
+    kg: "Telegram ботту ачуу",
+    en: "Open Telegram bot",
+  },
+  "cargo.telegram.copyLink": {
+    ru: "Скопировать ссылку",
+    kg: "Шилтемени көчүрүү",
+    en: "Copy link",
+  },
+  "cargo.telegram.linkCopied": {
+    ru: "Ссылка скопирована",
+    kg: "Шилтеме көчүрүлдү",
+    en: "Link copied",
+  },
+  "cargo.telegram.linkCreated": {
+    ru: "Ссылка создана. Откройте бота и нажмите Start.",
+    kg: "Шилтеме түзүлдү. Ботту ачып, Start басыңыз.",
+    en: "Link created. Open the bot and press Start.",
+  },
+  "cargo.telegram.linkExpired": {
+    ru: "Ссылка устарела. Создайте новую в настройках.",
+    kg: "Шилтеменин мөөнөтү өттү. Жөндөөлөрдөн жаңысын түзүңүз.",
+    en: "Link expired. Create a new one in settings.",
+  },
+  "cargo.telegram.connected": {
+    ru: "Telegram подключён",
+    kg: "Telegram туташтырылды",
+    en: "Telegram connected",
+  },
+  "cargo.telegram.disconnected": {
+    ru: "Telegram отключён",
+    kg: "Telegram өчүрүлдү",
+    en: "Telegram disconnected",
+  },
+  "cargo.telegram.disconnect": {
+    ru: "Отключить Telegram",
+    kg: "Telegramды өчүрүү",
+    en: "Disconnect Telegram",
+  },
+  "cargo.telegram.manualMode": {
+    ru: "Ручной ввод Chat ID",
+    kg: "Chat ID кол менен киргизүү",
+    en: "Enter Chat ID manually",
+  },
+  "cargo.telegram.connectInstruction": {
+    ru: "Откройте бота и нажмите Start.",
+    kg: "Ботту ачып, Start басыңыз.",
+    en: "Open the bot and press Start.",
+  },
+  "cargo.telegram.botUsernameMissing": {
+    ru: "Telegram bot username не настроен на сервере.",
+    kg: "Telegram bot username серверде жөндөлгөн эмес.",
+    en: "Telegram bot username is not configured on the server.",
+  },
+  "cargo.telegram.connectFailed": {
+    ru: "Не удалось подключить Telegram",
+    kg: "Telegramды туташтыруу мүмкүн болбоду",
+    en: "Could not connect Telegram",
+  },
+  "cargo.telegram.webhookConnectedMessage": {
+    ru: "Telegram подключён. Теперь вы будете получать подходящие карго-заявки.",
+    kg: "Telegram туташтырылды. Эми ылайыктуу карго сурамдарын аласыз.",
+    en: "Telegram connected. You will now receive matching cargo requests.",
+  },
+  "cargo.telegram.statusEnabled": {
+    ru: "Telegram подключён",
+    kg: "Telegram туташтырылды",
+    en: "Telegram connected",
+  },
+  "cargo.telegram.statusDisabled": {
+    ru: "Telegram выключен",
+    kg: "Telegram өчүрүлгөн",
+    en: "Telegram disabled",
   },
   "cargo.telegram.testButton": {
     ru: "Отправить тестовое сообщение",
@@ -1225,11 +1305,6 @@ export const DICTIONARY = {
     ru: "Telegram bot token не настроен на сервере.",
     kg: "Telegram bot token серверде жөндөлгөн эмес.",
     en: "Telegram bot token is not configured on the server.",
-  },
-  "cargo.telegram.connected": {
-    ru: "Telegram подключён",
-    kg: "Telegram туташкан",
-    en: "Telegram connected",
   },
   "cargo.telegram.notConnected": {
     ru: "Telegram ещё не подключён",

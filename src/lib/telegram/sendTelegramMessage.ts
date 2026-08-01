@@ -1,3 +1,8 @@
+import {
+  getTelegramBotToken,
+  isTelegramBotConfigured,
+} from "@/lib/telegram/env";
+
 export type SendTelegramResult =
   | { status: "sent" }
   | { status: "skipped"; reason: "missing_token" | "missing_chat_id" }
@@ -9,14 +14,7 @@ type SendTelegramMessageParams = {
   parseMode?: "HTML" | "Markdown" | "MarkdownV2";
 };
 
-function getTelegramBotToken(): string | null {
-  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
-  return token && token.length > 0 ? token : null;
-}
-
-export function isTelegramBotConfigured(): boolean {
-  return getTelegramBotToken() != null;
-}
+export { isTelegramBotConfigured };
 
 /**
  * Sends a Telegram Bot API message. Never throws for transport/API failures.

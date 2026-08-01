@@ -15,11 +15,12 @@ Core fields:
 - `service_types` / `directions` / `from_locations` / `to_locations` (JSON arrays)
 - `notify_in_app` (active)
 - `notify_telegram` + `telegram_chat_id` / `telegram_username` / `telegram_connected_at` (Phase 76)
-- `notify_email` / `notify_whatsapp` (future flags only)
+- connect token fields (Phase 77): `telegram_connect_token`, `telegram_connect_token_expires_at`
 
 Settings UI: `/seller/cargo-settings`
 
-Telegram channel details: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`.
+Telegram channel: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`  
+Telegram bot connect webhook: `docs/CARGO_TELEGRAM_WEBHOOK_PHASE_77.md`.
 
 ## 2. How a cargo company chooses service types
 
@@ -68,11 +69,13 @@ If a subscription exists, prefs apply (including `enabled` / `notifyInApp`).
 - Exact city/route graph matching / geolocation
 - Paid subscriptions
 - Hard blocking when request fields are incomplete
-- Telegram webhook / automatic chatId (manual Chat ID in Phase 76)
+- Telegram webhook / automatic chatId — done in Phase 77 (`docs/CARGO_TELEGRAM_WEBHOOK_PHASE_77.md`)
 
 ## 8. Phase 76+
 
-Telegram in-app delivery for matching cargo requests: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`.
+Telegram delivery for matching cargo requests: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`.
+
+Bot connect via `/start` token + webhook: `docs/CARGO_TELEGRAM_WEBHOOK_PHASE_77.md`.
 
 Later:
 
@@ -86,3 +89,4 @@ Later:
 - Seller board: `/seller/cargo-requests?matching=1`
 - Dashboard quick link to `/seller/cargo-settings`
 - Telegram: `docs/CARGO_TELEGRAM_NOTIFICATIONS_PHASE_76.md`
+- Telegram webhook: `docs/CARGO_TELEGRAM_WEBHOOK_PHASE_77.md`

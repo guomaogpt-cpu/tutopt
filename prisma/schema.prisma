@@ -489,6 +489,8 @@ model CargoSubscription {
   telegram_chat_id       String?   @map("telegram_chat_id") @db.VarChar(64)
   telegram_username      String?   @map("telegram_username") @db.VarChar(64)
   telegram_connected_at  DateTime? @map("telegram_connected_at") @db.Timestamptz
+  telegram_connect_token String?   @unique @map("telegram_connect_token") @db.VarChar(64)
+  telegram_connect_token_expires_at DateTime? @map("telegram_connect_token_expires_at") @db.Timestamptz
   created_at             DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updated_at             DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 

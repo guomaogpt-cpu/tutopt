@@ -53,6 +53,8 @@ Railway/Nixpacks определит Next.js по `package.json`. Дополни�
 | `GOOGLE_REDIRECT_URI` | Нет* | `https://tutopt-production.up.railway.app/api/auth/google/callback` |
 | `DEMO_OTP_ENABLED` | Нет** | Временно `true` для теста OTP без SMS; перед реальными пользователями — `false` |
 | `TELEGRAM_BOT_TOKEN` | Нет | BotFather token для Telegram-уведомлений карго-продавцам; без токена отправка пропускается |
+| `TELEGRAM_BOT_USERNAME` | Нет | Username бота без `@` для deep-link подключения (`t.me/<username>?start=…`) |
+| `TELEGRAM_WEBHOOK_SECRET` | Нет | Опциональный secret для `POST /api/webhooks/telegram` |
 
 \* Без Google-переменных работает вход по телефону/паролю; кнопка Google будет disabled.
 

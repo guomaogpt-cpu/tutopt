@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { CargoSubscriptionSettings } from "@/features/cargo/lib/cargo-subscription-data";
 import {
   CARGO_DIRECTION_IDS,
@@ -34,6 +34,14 @@ function textToLocations(value: string): string[] {
     .map((item) => item.trim())
     .filter((item) => item.length > 0)
     .slice(0, 30);
+}
+
+function maskChatId(chatId: string): string {
+  const trimmed = chatId.trim();
+  if (trimmed.length <= 4) {
+    return `…${trimmed}`;
+  }
+  return `…${trimmed.slice(-4)}`;
 }
 
 const sectionClassName =
@@ -74,10 +82,36 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
   );
   const [isPending, setIsPending] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
+  const [waitingForConnect, setWaitingForConnect] = useState(false);
+  const [connectUrl, setConnectUrl] = useState<string | null>(null);
+  const [copyDone, setCopyDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [testMessage, setTestMessage] = useState<string | null>(null);
   const [testError, setTestError] = useState<string | null>(null);
+  const [connectMessage, setConnectMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    setNotifyTelegram(initialSettings?.notifyTelegram ?? false);
+    setTelegramChatId(initialSettings?.telegramChatId ?? "");
+    setTelegramUsername(initialSettings?.telegramUsername ?? "");
+    if (initialSettings?.telegramChatId) {
+      setWaitingForConnect(false);
+      setConnectUrl(null);
+    }
+  }, [initialSettings]);
+
+  useEffect(() => {
+    if (!waitingForConnect) {
+      return;
+    }
+    const id = window.setInterval(() => {
+      router.refresh();
+    }, 4000);
+    return () => window.clearInterval(id);
+  }, [waitingForConnect, router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -135,6 +169,79 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
     }
   }
 
+  async function handleConnectTelegram() {
+    setError(null);
+    setConnectMessage(null);
+    setCopyDone(false);
+    setIsConnecting(true);
+
+    try {
+      const response = await fetch("/api/cargo/telegram/connect-link", {
+        method: "POST",
+      });
+      const body = (await response.json()) as {
+        data?: { link: { url: string; expiresAt: string } };
+        error?: { message?: string };
+      };
+
+      if (!response.ok) {
+        if (body.error?.message === "TELEGRAM_BOT_USERNAME_MISSING") {
+          throw new Error(t("cargo.telegram.botUsernameMissing"));
+        }
+        throw new Error(body.error?.message ?? t("cargo.telegram.connectFailed"));
+      }
+
+      const url = body.data?.link.url;
+      if (!url) {
+        throw new Error(t("cargo.telegram.connectFailed"));
+      }
+
+      setConnectUrl(url);
+      setWaitingForConnect(true);
+      setConnectMessage(t("cargo.telegram.linkCreated"));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("cargo.telegram.connectFailed"));
+    } finally {
+      setIsConnecting(false);
+    }
+  }
+
+  async function handleCopyLink() {
+    if (!connectUrl) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(connectUrl);
+      setCopyDone(true);
+    } catch {
+      setCopyDone(false);
+    }
+  }
+
+  async function handleDisconnectTelegram() {
+    setError(null);
+    setIsDisconnecting(true);
+    try {
+      const response = await fetch("/api/cargo/telegram/disconnect", {
+        method: "POST",
+      });
+      const body = (await response.json()) as {
+        error?: { message?: string };
+      };
+      if (!response.ok) {
+        throw new Error(body.error?.message ?? t("cargo.telegram.connectFailed"));
+      }
+      setNotifyTelegram(false);
+      setConnectUrl(null);
+      setWaitingForConnect(false);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("cargo.telegram.connectFailed"));
+    } finally {
+      setIsDisconnecting(false);
+    }
+  }
+
   async function handleTestTelegram() {
     setTestMessage(null);
     setTestError(null);
@@ -187,7 +294,8 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
     }
   }
 
-  const telegramConnected = Boolean(initialSettings?.telegramChatId);
+  const hasChatId = Boolean(telegramChatId.trim());
+  const telegramLinked = hasChatId;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pb-24 sm:pb-8">
@@ -226,70 +334,104 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {t("cargo.telegram.description")}
         </p>
-        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-          {t("cargo.telegram.saveHint")}
-        </p>
-        <p className="mt-2 text-xs font-medium text-slate-600 dark:text-slate-300">
-          {telegramConnected ? t("cargo.telegram.connected") : t("cargo.telegram.notConnected")}
-        </p>
 
-        <div className="mt-4 grid grid-cols-1 gap-3">
-          <div className="min-w-0">
-            <label
-              htmlFor="cargo-telegram-chat-id"
-              className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
-            >
-              {t("cargo.telegram.chatId")}
+        {telegramLinked ? (
+          <div className="mt-3 space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={cn(
+                  "inline-flex rounded-full px-2.5 py-1 text-xs font-medium",
+                  notifyTelegram
+                    ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
+                    : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
+                )}
+              >
+                {notifyTelegram
+                  ? t("cargo.telegram.statusEnabled")
+                  : t("cargo.telegram.statusDisabled")}
+              </span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                {telegramUsername
+                  ? `@${telegramUsername.replace(/^@+/, "")}`
+                  : maskChatId(telegramChatId)}
+              </span>
+            </div>
+
+            <label className={checkboxRowClassName}>
+              <input
+                type="checkbox"
+                checked={notifyTelegram}
+                onChange={(event) => setNotifyTelegram(event.target.checked)}
+                className="mt-1 size-4 shrink-0 rounded border-slate-300 text-rose-600 focus:ring-rose-500 dark:border-slate-600 dark:bg-slate-950"
+              />
+              <span className="min-w-0 text-sm font-medium text-slate-800 dark:text-slate-200">
+                {t("cargo.telegram.enable")}
+              </span>
             </label>
-            <Input
-              id="cargo-telegram-chat-id"
-              value={telegramChatId}
-              onChange={(event) => setTelegramChatId(event.target.value)}
-              inputMode="numeric"
-              autoComplete="off"
-              className={fieldClassName}
-              placeholder="123456789"
-            />
+
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isTesting || isPending}
+                onClick={handleTestTelegram}
+                className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
+              >
+                {isTesting ? t("cargo.telegram.testSending") : t("cargo.telegram.testButton")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isDisconnecting || isPending}
+                onClick={handleDisconnectTelegram}
+                className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
+              >
+                {t("cargo.telegram.disconnect")}
+              </Button>
+            </div>
           </div>
-          <div className="min-w-0">
-            <label
-              htmlFor="cargo-telegram-username"
-              className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
+        ) : (
+          <div className="mt-3 space-y-3">
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
+              {t("cargo.telegram.notConnected")}
+            </p>
+            <Button
+              type="button"
+              disabled={isConnecting || isPending}
+              onClick={handleConnectTelegram}
+              className="h-11 w-full rounded-xl bg-rose-600 text-white hover:bg-rose-700"
             >
-              {t("cargo.telegram.username")}
-            </label>
-            <Input
-              id="cargo-telegram-username"
-              value={telegramUsername}
-              onChange={(event) => setTelegramUsername(event.target.value)}
-              autoComplete="off"
-              className={fieldClassName}
-              placeholder="@username"
-            />
+              {isConnecting ? t("cargo.subscription.saving") : t("cargo.telegram.connectButton")}
+            </Button>
+
+            {connectUrl ? (
+              <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-950">
+                {connectMessage ? (
+                  <p className="text-sm text-emerald-700 dark:text-emerald-400">{connectMessage}</p>
+                ) : null}
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {t("cargo.telegram.connectInstruction")}
+                </p>
+                <a
+                  href={connectUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block break-all text-sm font-medium text-rose-700 underline-offset-2 hover:underline dark:text-rose-300"
+                >
+                  {t("cargo.telegram.openBot")}
+                </a>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCopyLink}
+                  className="h-10 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 sm:w-auto"
+                >
+                  {copyDone ? t("cargo.telegram.linkCopied") : t("cargo.telegram.copyLink")}
+                </Button>
+              </div>
+            ) : null}
           </div>
-        </div>
-
-        <label className={cn(checkboxRowClassName, "mt-3")}>
-          <input
-            type="checkbox"
-            checked={notifyTelegram}
-            onChange={(event) => setNotifyTelegram(event.target.checked)}
-            className="mt-1 size-4 shrink-0 rounded border-slate-300 text-rose-600 focus:ring-rose-500 dark:border-slate-600 dark:bg-slate-950"
-          />
-          <span className="min-w-0 text-sm font-medium text-slate-800 dark:text-slate-200">
-            {t("cargo.telegram.enable")}
-          </span>
-        </label>
-
-        <Button
-          type="button"
-          variant="outline"
-          disabled={isTesting || isPending}
-          onClick={handleTestTelegram}
-          className="mt-4 h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
-        >
-          {isTesting ? t("cargo.telegram.testSending") : t("cargo.telegram.testButton")}
-        </Button>
+        )}
 
         {testMessage ? (
           <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-400" role="status">
@@ -301,6 +443,63 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
             {testError}
           </p>
         ) : null}
+
+        <details className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700">
+          <summary className="cursor-pointer select-none px-3 py-2.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+            {t("cargo.telegram.manualMode")}
+          </summary>
+          <div className="space-y-3 border-t border-slate-200 px-3 py-3 dark:border-slate-700">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {t("cargo.telegram.saveHint")}
+            </p>
+            <div className="min-w-0">
+              <label
+                htmlFor="cargo-telegram-chat-id"
+                className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
+              >
+                {t("cargo.telegram.chatId")}
+              </label>
+              <Input
+                id="cargo-telegram-chat-id"
+                value={telegramChatId}
+                onChange={(event) => setTelegramChatId(event.target.value)}
+                inputMode="numeric"
+                autoComplete="off"
+                className={fieldClassName}
+                placeholder="123456789"
+              />
+            </div>
+            <div className="min-w-0">
+              <label
+                htmlFor="cargo-telegram-username"
+                className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
+              >
+                {t("cargo.telegram.username")}
+              </label>
+              <Input
+                id="cargo-telegram-username"
+                value={telegramUsername}
+                onChange={(event) => setTelegramUsername(event.target.value)}
+                autoComplete="off"
+                className={fieldClassName}
+                placeholder="@username"
+              />
+            </div>
+            {!telegramLinked ? (
+              <label className={checkboxRowClassName}>
+                <input
+                  type="checkbox"
+                  checked={notifyTelegram}
+                  onChange={(event) => setNotifyTelegram(event.target.checked)}
+                  className="mt-1 size-4 shrink-0 rounded border-slate-300 text-rose-600 focus:ring-rose-500 dark:border-slate-600 dark:bg-slate-950"
+                />
+                <span className="min-w-0 text-sm font-medium text-slate-800 dark:text-slate-200">
+                  {t("cargo.telegram.enable")}
+                </span>
+              </label>
+            ) : null}
+          </div>
+        </details>
       </section>
 
       <section className={sectionClassName}>

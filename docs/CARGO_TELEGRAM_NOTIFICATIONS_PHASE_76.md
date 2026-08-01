@@ -2,14 +2,20 @@
 
 ## 1. How to enable Telegram notifications
 
-1. Open `/seller/cargo-settings`
-2. Enter **Telegram Chat ID** (from the bot; manual for now)
-3. Optionally enter Telegram username
-4. Enable **Включить Telegram-уведомления**
-5. Save settings
-6. Optionally click **Отправить тестовое сообщение**
+Preferred (Phase 77):
 
-In-app notifications keep working independently.
+1. Open `/seller/cargo-settings`
+2. Click **Подключить Telegram**
+3. Open the bot link and press **Start**
+4. Status becomes connected; notifications use the linked chat
+
+Manual fallback (Phase 76):
+
+1. Expand **Ручной ввод Chat ID**
+2. Enter Chat ID (+ optional username)
+3. Enable Telegram notifications and save
+
+See `docs/CARGO_TELEGRAM_WEBHOOK_PHASE_77.md` for webhook setup.
 
 ## 2. Fields added on CargoSubscription
 
@@ -24,9 +30,11 @@ Table `cargo_request_subscriptions`:
 
 ## 3. Environment
 
-Railway Variables (add later; do not commit secrets):
+Railway Variables (do not commit secrets):
 
 - `TELEGRAM_BOT_TOKEN` — BotFather token
+- `TELEGRAM_BOT_USERNAME` — bot username without `@` (Phase 77 connect links)
+- `TELEGRAM_WEBHOOK_SECRET` — optional webhook auth (Phase 77)
 - `NEXT_PUBLIC_APP_URL` — already required; used for “Open requests” link
 
 If `TELEGRAM_BOT_TOKEN` is missing:
@@ -79,23 +87,20 @@ Sent: item name, route, optional service type/direction labels, weight, dimensio
 
 ## 8. Not implemented
 
-- Telegram webhook
-- automatic chatId discovery / bot commands
-- WhatsApp
-- email
+- bot commands beyond `/start` (see Phase 77 for webhook connect)
+- Telegram menu
 - rich HTML templates / delivery logs
 - admin UI listing Telegram status per seller (**gap**)
+- WhatsApp / Email
 
-## 9. Future Phase 77
+## 9. Phase 77
 
-- Telegram bot webhook for automatic chatId linking
-- email notifications
-- notification delivery logs
-- optional admin visibility of Telegram connected state
+Bot webhook + start-token connect flow: `docs/CARGO_TELEGRAM_WEBHOOK_PHASE_77.md`.
 
 ## Related
 
 - `src/lib/telegram/sendTelegramMessage.ts`
 - `src/lib/telegram/cargo-telegram-notify.ts`
+- `docs/CARGO_TELEGRAM_WEBHOOK_PHASE_77.md`
 - `docs/CARGO_SUBSCRIPTIONS_PHASE_75.md`
 - `docs/CARGO_NOTIFICATIONS_PHASE_74.md`
