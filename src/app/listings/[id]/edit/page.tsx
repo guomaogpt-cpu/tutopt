@@ -119,8 +119,8 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
         <nav aria-label="Хлебные крошки" className="text-sm text-[#64748B]">
           <ol className="flex flex-wrap items-center gap-1.5">
             <li>
-              <Link href="/seller/dashboard" className="transition hover:text-[#2563EB]">
-                Кабинет продавца
+              <Link href="/account/listings" className="transition hover:text-[#2563EB]">
+                Мои объявления
               </Link>
             </li>
             <li aria-hidden="true">/</li>
@@ -149,8 +149,8 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
           <ListingAccessMessage
             title="Редактирование недоступно"
             description={restrictionMessage}
-            actionHref="/seller/dashboard"
-            actionLabel="Вернуться в кабинет"
+            actionHref="/account/listings"
+            actionLabel="К моим объявлениям"
           />
         ) : categories.length === 0 || cities.length === 0 ? (
           <ListingAccessMessage

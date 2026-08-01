@@ -105,7 +105,7 @@ export async function createNewLeadNotification(input: {
       type: NotificationType.NEW_LEAD,
       title: config.notificationTitle,
       message: config.notificationMessage(input.listingTitle),
-      link: "/seller/leads",
+      link: "/account/requests",
     },
   });
 }
@@ -185,7 +185,7 @@ export async function createNewCargoResponseNotifications(input: {
 
   if (input.requestOwnerId) {
     // Owner link wins if the owner is also an admin (one notification)
-    recipientLinks.set(input.requestOwnerId, "/buyer/cargo-requests");
+    recipientLinks.set(input.requestOwnerId, "/account/requests");
   }
 
   recipientLinks.delete(input.actorId);

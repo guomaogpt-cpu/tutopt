@@ -363,7 +363,7 @@ export function ListingLeadForm({
             {t("form.ownListingLeadNotice")}
           </p>
           <Button variant="outline" className="mt-5 h-11 rounded-xl" asChild>
-            <Link href="/seller/leads">{t("form.goToLeads")}</Link>
+            <Link href="/account/requests">{t("form.goToLeads")}</Link>
           </Button>
         </div>
       </Section>

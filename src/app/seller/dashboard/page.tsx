@@ -13,6 +13,7 @@ import {
   Package,
 } from "lucide-react";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
+import { AccountMigrateNotice } from "@/components/account/AccountMigrateNotice";
 import { SellerAccountStatusCard } from "@/components/seller/SellerAccountStatusCard";
 import { SellerDashboardListings } from "@/components/seller/SellerDashboardListings";
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
@@ -66,7 +67,7 @@ export default async function SellerDashboardPage() {
         <Container size="lg" className="max-w-[1280px]">
           <PageHeader className="pb-0">
             <PageHeaderContent>
-              <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Кабинет продавца</PageTitle>
+              <PageTitle className="text-2xl text-[#0F172A] sm:text-3xl">Личный кабинет</PageTitle>
             </PageHeaderContent>
           </PageHeader>
           <ListingAccessMessage
@@ -307,7 +308,7 @@ export default async function SellerDashboardPage() {
             </div>
             {profileIncomplete ? (
               <p className="mt-2 text-sm font-medium text-amber-600 dark:text-amber-400">
-                Профиль продавца заполнен не полностью.
+                Профиль заполнен не полностью.
               </p>
             ) : null}
           </PageHeaderContent>
@@ -322,6 +323,8 @@ export default async function SellerDashboardPage() {
         </PageHeader>
 
         <div className="mt-4 space-y-5 sm:mt-6 sm:space-y-8 lg:mt-8 lg:space-y-10">
+          <AccountMigrateNotice href="/account" />
+
           <SellerAccountStatusCard
             labels={restrictionLabels}
             hasRestrictions={hasRestrictions}

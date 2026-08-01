@@ -28,12 +28,12 @@ export async function POST(request: Request) {
           : defaultPostAuthPath(UserRole.SELLER, null);
       return jsonData({
         alreadySeller: true,
-        redirectTo: next === "/seller/upgrade" ? "/seller/dashboard" : next,
+        redirectTo: next === "/seller/upgrade" ? "/account" : next,
       });
     }
 
     if (user.role !== UserRole.BUYER) {
-      throw new ForbiddenError("Стать продавцом можно только из аккаунта покупателя");
+      throw new ForbiddenError("Подготовка профиля доступна из личного аккаунта");
     }
 
     const phoneAlreadyVerified = hasVerifiedSellerPhone({
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     }
 
     if (!isSellerPhoneComplete(nextPhone) || !nextPhone) {
-      throw new ValidationError("Укажите корректный телефон продавца");
+      throw new ValidationError("Укажите корректный телефон");
     }
 
     const contactPhone: string = nextPhone;
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
 
     return jsonData({
       user: updatedUser,
-      redirectTo: next === "/seller/upgrade" ? "/seller/dashboard" : next,
+      redirectTo: next === "/seller/upgrade" ? "/account" : next,
     });
   });
 }

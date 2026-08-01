@@ -67,7 +67,7 @@ export function SellerQuickActions({
           </div>
         </Link>
 
-        <Link href="/seller/listings" className={cardClassName}>
+        <Link href="/account/listings" className={cardClassName}>
           <div className={iconWrapClassName}>
             <ListChecks className="size-5" aria-hidden="true" />
           </div>
@@ -77,7 +77,7 @@ export function SellerQuickActions({
           </div>
         </Link>
 
-        <Link href="/seller/leads" className={cardClassName}>
+        <Link href="/account/requests" className={cardClassName}>
           <div className={iconWrapClassName}>
             <Inbox className="size-5" aria-hidden="true" />
           </div>

@@ -15,6 +15,7 @@ import { LeadStatus } from "@prisma/client";
 import { BuyerFavoritesSection } from "@/components/buyer/BuyerFavoritesSection";
 import { BuyerLeadsSection } from "@/components/buyer/BuyerLeadsSection";
 import { BuyerQuickActions } from "@/components/buyer/BuyerQuickActions";
+import { AccountMigrateNotice } from "@/components/account/AccountMigrateNotice";
 import { RecentlyViewedPanel } from "@/components/buyer/RecentlyViewedPanel";
 import { SavedSearchesPanel } from "@/components/buyer/SavedSearchesPanel";
 import { SellerDashboardStatCards } from "@/components/seller/SellerDashboardStatCards";
@@ -166,6 +167,8 @@ export default async function BuyerDashboardPage() {
         </PageHeader>
 
         <div className="mt-4 space-y-5 sm:mt-6 sm:space-y-8 lg:mt-8 lg:space-y-10">
+          <AccountMigrateNotice href="/account" />
+
           {blocked || leadsRestricted ? (
             <div
               role="status"

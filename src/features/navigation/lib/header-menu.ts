@@ -6,6 +6,7 @@ import {
   List,
   LogOut,
   PlusCircle,
+  Settings2,
   Shield,
   User,
   type LucideIcon,
@@ -47,9 +48,10 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
         { label: "Профиль компании", href: "/account/company", icon: LayoutDashboard },
         { label: "Мои объявления", href: "/account/listings", icon: List },
-        { label: "Заявки", href: "/account/requests", icon: Inbox },
+        { label: "Мои заявки", href: "/account/requests", icon: Inbox },
         { label: "Избранное", href: "/favorites", icon: Heart },
         { label: "Уведомления", href: "/notifications", icon: Inbox },
+        { label: "Карго-настройки", href: "/seller/cargo-settings", icon: Settings2 },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     case "MODERATOR":

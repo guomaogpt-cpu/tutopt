@@ -72,7 +72,7 @@ export function NewListingSidebar({
         <ul className="mt-4 space-y-2.5 text-sm leading-relaxed text-[#64748B] dark:text-slate-400">
           <li>Объявление попадёт на модерацию</li>
           <li>После одобрения появится в каталоге</li>
-          <li>Покупатели смогут отправлять заявки</li>
+          <li>Клиенты смогут отправлять заявки</li>
         </ul>
       </div>
 

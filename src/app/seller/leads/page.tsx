@@ -2,6 +2,7 @@ import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
+import { AccountMigrateNotice } from "@/components/account/AccountMigrateNotice";
 import { SellerLeadsTable } from "@/components/seller/SellerLeadsTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
@@ -22,7 +23,7 @@ import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPrivatePageMetadata(
   "Заявки",
-  "Заявки покупателей для продавца на ВсеТут.",
+  "Заявки по вашим объявлениям на ВсеТут.",
 );
 
 export const dynamic = "force-dynamic";
@@ -85,7 +86,7 @@ export default async function SellerLeadsPage({ searchParams }: SellerLeadsPageP
         <PageHeader className="pb-0">
           <PageHeaderContent>
             <PageTitle className="text-2xl text-slate-900 sm:text-3xl dark:text-slate-100">
-              Заявки покупателей
+              Заявки
             </PageTitle>
             <PageSubtitle className="text-sm text-slate-500 sm:text-base dark:text-slate-400">
               Запросы по вашим объявлениям
@@ -97,10 +98,14 @@ export default async function SellerLeadsPage({ searchParams }: SellerLeadsPageP
               asChild
               className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
             >
-              <Link href="/seller/dashboard">Кабинет продавца</Link>
+              <Link href="/account">Личный кабинет</Link>
             </Button>
           </PageHeaderActions>
         </PageHeader>
+
+        <div className="mt-4">
+          <AccountMigrateNotice href="/account/requests" />
+        </div>
 
         <div className="mt-6 lg:mt-8">
           <SellerLeadsTable leads={leads} statusFilter={statusFilter} />

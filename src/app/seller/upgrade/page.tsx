@@ -9,8 +9,8 @@ import { getEnv } from "@/shared/config/env";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata = buildPrivatePageMetadata(
-  "Стать продавцом",
-  "Подключение профиля продавца на ВсеТут.",
+  "Подготовка профиля",
+  "Подготовка профиля для публикации объявлений на ВсеТут.",
 );
 
 type SellerUpgradePageProps = {
@@ -28,7 +28,7 @@ export default async function SellerUpgradePage({ searchParams }: SellerUpgradeP
   }
 
   if (user.role === UserRole.SELLER) {
-    redirect(nextPath === "/seller/upgrade" ? "/seller/dashboard" : nextPath);
+    redirect(nextPath === "/seller/upgrade" ? "/account" : nextPath);
   }
 
   if (user.role !== UserRole.BUYER) {

@@ -168,9 +168,8 @@ function getInitials(name: string): string {
 function getRoleLabel(role: HeaderUser["role"]): string {
   switch (role) {
     case "BUYER":
-      return "Покупатель";
     case "SELLER":
-      return "Продавец";
+      return "Аккаунт";
     case "MODERATOR":
       return "Модератор";
     case "ADMIN":

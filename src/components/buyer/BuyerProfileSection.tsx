@@ -18,8 +18,8 @@ function getInitials(name: string): string {
 }
 
 const roleLabels: Record<PublicUser["role"], string> = {
-  BUYER: "Покупатель",
-  SELLER: "Продавец",
+  BUYER: "Аккаунт",
+  SELLER: "Аккаунт",
   MODERATOR: "Модератор",
   ADMIN: "Администратор",
 };

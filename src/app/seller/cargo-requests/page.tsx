@@ -2,6 +2,7 @@ import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
+import { AccountMigrateNotice } from "@/components/account/AccountMigrateNotice";
 import { CargoSubscriptionSettingsLink } from "@/components/seller/CargoSubscriptionSettingsLink";
 import { SellerCargoRequestsList } from "@/components/seller/SellerCargoRequestsList";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -148,10 +149,14 @@ export default async function SellerCargoRequestsPage({
               asChild
               className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
             >
-              <Link href="/seller/dashboard">Кабинет продавца</Link>
+              <Link href="/account">Личный кабинет</Link>
             </Button>
           </PageHeaderActions>
         </PageHeader>
+
+        <div className="mt-4">
+          <AccountMigrateNotice href="/account/requests" />
+        </div>
 
         {sellerProfile ? (
           <div className="mt-6">

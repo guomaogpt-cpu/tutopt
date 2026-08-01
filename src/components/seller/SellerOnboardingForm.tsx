@@ -100,7 +100,7 @@ export function SellerOnboardingForm({
         });
       }
 
-      const redirectTo = body.data?.redirectTo ?? "/seller/dashboard";
+      const redirectTo = body.data?.redirectTo ?? "/account";
       trackSellerOnboardingComplete();
       router.push(redirectTo);
       router.refresh();

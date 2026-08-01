@@ -61,7 +61,7 @@ export function BuyerQuickActions() {
           </div>
         </Link>
 
-        <Link href="/buyer/cargo-requests" className={cardClassName}>
+        <Link href="/account/requests" className={cardClassName}>
           <div className={iconWrapClassName}>
             <Truck className="size-5" aria-hidden="true" />
           </div>

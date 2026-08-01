@@ -46,7 +46,7 @@ export function SellerRecentLeads({ leads, newLeadsCount = 0 }: SellerRecentLead
           ) : null}
         </div>
         <Link
-          href="/seller/leads"
+          href="/account/requests"
           className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
         >
           {t("sellerLeads.allRequests")} →
@@ -79,7 +79,7 @@ export function SellerRecentLeads({ leads, newLeadsCount = 0 }: SellerRecentLead
                     <LeadStatusBadge status={lead.status} />
                   </div>
                   <Link
-                    href={`/seller/leads`}
+                    href="/account/requests"
                     className="mt-1 block truncate text-sm font-semibold text-slate-900 transition hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400"
                   >
                     {lead.listingTitle}

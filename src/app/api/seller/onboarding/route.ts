@@ -86,7 +86,7 @@ export async function POST(request: Request) {
 
     return jsonData({
       user: updatedUser,
-      redirectTo: next === "/seller/onboarding" ? "/seller/dashboard" : next,
+      redirectTo: next === "/seller/onboarding" ? "/account" : next,
     });
   });
 }

@@ -84,20 +84,20 @@ export function SellerUpgradeForm({
             }
           }
         }
-        throw new AuthRequestError(body.error?.message ?? "Не удалось стать продавцом", {
-          form: body.error?.message ? [body.error.message] : ["Не удалось стать продавцом"],
+        throw new AuthRequestError(body.error?.message ?? "Не удалось подготовить профиль", {
+          form: body.error?.message ? [body.error.message] : ["Не удалось подготовить профиль"],
           fields,
         });
       }
 
-      router.push(body.data?.redirectTo ?? "/seller/dashboard");
+      router.push(body.data?.redirectTo ?? "/account");
       router.refresh();
     } catch (error) {
       if (error instanceof AuthRequestError) {
         setErrors(error.formErrors);
       } else {
         setErrors({
-          form: ["Не удалось стать продавцом. Попробуйте позже."],
+          form: ["Не удалось подготовить профиль. Попробуйте позже."],
           fields: {},
         });
       }
@@ -107,8 +107,8 @@ export function SellerUpgradeForm({
 
   return (
     <AuthFormCard
-      title="Стать продавцом"
-      description="Заполните данные продавца, чтобы публиковать товары и получать заявки."
+      title="Подготовка профиля"
+      description="Укажите название и телефон, чтобы публиковать объявления и получать заявки."
     >
       <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-5">
         <AuthAlert variant="error" messages={errors.form} />
@@ -128,7 +128,7 @@ export function SellerUpgradeForm({
         </div>
 
         <AuthFormField
-          label="Название компании или имя продавца"
+          label="Название компании или ваше имя"
           htmlFor="upgrade-company"
           error={getFieldError(errors, "company_name")}
         >
@@ -182,7 +182,7 @@ export function SellerUpgradeForm({
               Сохранение...
             </>
           ) : (
-            "Стать продавцом"
+            "Сохранить и продолжить"
           )}
         </button>
       </form>

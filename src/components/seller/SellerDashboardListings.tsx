@@ -30,7 +30,7 @@ export function SellerDashboardListings({
           </div>
           <p className="mt-5 text-base font-semibold text-[#0F172A]">У вас пока нет объявлений</p>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
-            Создайте первое объявление, чтобы начать получать заявки от покупателей.
+            Разместите товар, услугу, оптовое предложение или карточку карго-компании.
           </p>
           <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
             <Link href="/listings/new">Подать объявление</Link>
@@ -56,7 +56,7 @@ export function SellerDashboardListings({
           variant="outline"
           className="h-10 gap-1.5 rounded-xl border-[rgba(148,163,184,0.25)] bg-white"
         >
-          <Link href="/seller/listings">
+          <Link href="/account/listings">
             Все мои объявления
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
