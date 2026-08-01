@@ -2867,9 +2867,174 @@ export const DICTIONARY = {
     en: "Company profile",
   },
   "account.createCompanyProfile": {
-    ru: "Контакты для публикации",
-    kg: "Жарыялоо үчүн байланыштар",
-    en: "Contact details for posting",
+    ru: "Создать профиль компании",
+    kg: "Компаниянын профилин түзүү",
+    en: "Create company profile",
+  },
+  "company.title": {
+    ru: "Компания",
+    kg: "Компания",
+    en: "Company",
+  },
+  "company.createTitle": {
+    ru: "Создать профиль компании",
+    kg: "Компаниянын профилин түзүү",
+    en: "Create company profile",
+  },
+  "company.editTitle": {
+    ru: "Редактировать профиль компании",
+    kg: "Компаниянын профилин түзөтүү",
+    en: "Edit company profile",
+  },
+  "company.name": {
+    ru: "Название компании",
+    kg: "Компаниянын аталышы",
+    en: "Company name",
+  },
+  "company.type": {
+    ru: "Тип компании",
+    kg: "Компаниянын түрү",
+    en: "Company type",
+  },
+  "company.city": {
+    ru: "Город",
+    kg: "Шаар",
+    en: "City",
+  },
+  "company.phone": {
+    ru: "Телефон",
+    kg: "Телефон",
+    en: "Phone",
+  },
+  "company.description": {
+    ru: "Описание",
+    kg: "Сүрөттөмө",
+    en: "Description",
+  },
+  "company.website": {
+    ru: "Сайт",
+    kg: "Сайт",
+    en: "Website",
+  },
+  "company.logo": {
+    ru: "Логотип",
+    kg: "Логотип",
+    en: "Logo",
+  },
+  "company.save": {
+    ru: "Сохранить",
+    kg: "Сактоо",
+    en: "Save",
+  },
+  "company.saved": {
+    ru: "Профиль компании сохранён",
+    kg: "Компаниянын профили сакталды",
+    en: "Company profile saved",
+  },
+  "company.create": {
+    ru: "Создать профиль",
+    kg: "Профиль түзүү",
+    en: "Create profile",
+  },
+  "company.createProfile": {
+    ru: "Создать профиль компании",
+    kg: "Компаниянын профилин түзүү",
+    en: "Create company profile",
+  },
+  "company.profile": {
+    ru: "Профиль компании",
+    kg: "Компаниянын профили",
+    en: "Company profile",
+  },
+  "company.publicProfile": {
+    ru: "Публичный профиль компании",
+    kg: "Компаниянын ачык профили",
+    en: "Public company profile",
+  },
+  "company.postAs": {
+    ru: "Разместить от имени:",
+    kg: "Кимдин атынан жайгаштыруу:",
+    en: "Post as:",
+  },
+  "company.postAsPersonal": {
+    ru: "Личный аккаунт",
+    kg: "Жеке аккаунт",
+    en: "Personal account",
+  },
+  "company.postAsCompany": {
+    ru: "Компания: {companyName}",
+    kg: "Компания: {companyName}",
+    en: "Company: {companyName}",
+  },
+  "company.badge": {
+    ru: "Компания",
+    kg: "Компания",
+    en: "Company",
+  },
+  "company.noProfile": {
+    ru: "Профиль компании ещё не создан",
+    kg: "Компаниянын профили азырынча жок",
+    en: "Company profile is not created yet",
+  },
+  "company.createProfileHint": {
+    ru: "Заполните профиль компании, чтобы публиковать от её имени.",
+    kg: "Компаниянын атынан жарыялоо үчүн профилди толтуруңуз.",
+    en: "Fill in your company profile to post on its behalf.",
+  },
+  "company.types.store": {
+    ru: "Магазин",
+    kg: "Дүкөн",
+    en: "Store",
+  },
+  "company.types.supplier": {
+    ru: "Поставщик",
+    kg: "Жеткирүүчү",
+    en: "Supplier",
+  },
+  "company.types.service": {
+    ru: "Сервисная компания",
+    kg: "Кызмат көрсөтүүчү компания",
+    en: "Service company",
+  },
+  "company.types.cargo": {
+    ru: "Карго-компания",
+    kg: "Карго компания",
+    en: "Cargo company",
+  },
+  "company.types.other": {
+    ru: "Другое",
+    kg: "Башка",
+    en: "Other",
+  },
+  "company.public.listingsTitle": {
+    ru: "Объявления компании",
+    kg: "Компаниянын жарыялары",
+    en: "Company listings",
+  },
+  "company.public.noListings": {
+    ru: "У компании пока нет активных объявлений",
+    kg: "Компанияда азырынча активдүү жарыялар жок",
+    en: "This company has no active listings yet",
+  },
+  "company.public.contact": {
+    ru: "Связаться",
+    kg: "Байланышуу",
+    en: "Contact",
+  },
+  "company.logoUploadError": {
+    ru: "Не удалось загрузить логотип",
+    kg: "Логотип жүктөлгөн жок",
+    en: "Could not upload logo",
+  },
+  "company.typeRequired": {
+    ru: "Выберите тип компании",
+    kg: "Компаниянын түрүн тандаңыз",
+    en: "Select a company type",
+  },
+  "company.saveError": {
+    ru: "Не удалось сохранить профиль компании",
+    kg: "Компаниянын профили сакталган жок",
+    en: "Could not save company profile",
   },
   "post.chooseType": {
     ru: "Что хотите разместить?",

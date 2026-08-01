@@ -55,12 +55,13 @@ UI copy on `/cargo` explains the difference. Telegram/settings stay under `/sell
 
 ## 7. Future
 
-- Dedicated `CompanyProfile` model
+- Dedicated multi-company `CompanyProfile` if one user needs several companies
 - Company verification
 - Staff roles inside a company
 - Unified account dashboard (merge buyer/seller cabinets)
 
 ## Related
 
+- Phase 79: `docs/COMPANY_PROFILE_PHASE_79.md` — company profile UX on top of `SellerProfile`
 - `getCreateListingHref` → `/listings/new` for BUYER
 - `docs/CARGO_*` for cargo flows

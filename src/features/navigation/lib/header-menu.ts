@@ -42,8 +42,9 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
   switch (user.role) {
     case "BUYER":
       return [
-        buyerDashboardItem,
+        { label: "Личный кабинет", href: "/buyer/dashboard", icon: User },
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
+        { label: "Профиль компании", href: "/account/company", icon: LayoutDashboard },
         { label: "Мои объявления", href: "/seller/listings", icon: List },
         { label: "Избранное", href: "/favorites", icon: Heart },
         { label: "Уведомления", href: "/notifications", icon: Inbox },
@@ -52,6 +53,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
     case "SELLER":
       return [
         { label: "Личный кабинет", href: "/seller/dashboard", icon: LayoutDashboard },
+        { label: "Профиль компании", href: "/account/company", icon: User },
         { label: "Мои объявления", href: "/seller/listings", icon: List },
         { label: "Заявки", href: "/seller/leads", icon: Inbox },
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },

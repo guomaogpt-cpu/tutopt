@@ -221,13 +221,22 @@ export function ListingCard({
             <p
               className={cn(
                 "truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
-                "hidden sm:block",
+                "hidden sm:flex sm:items-center sm:gap-1.5",
                 isCompact
                   ? "mt-1.5 pt-1.5 text-[11px]"
                   : "mt-2 pt-2 text-xs md:text-[13px]",
               )}
             >
-              {listing.sellerProfile.company_name}
+              {listing.posted_as_company && listing.sellerProfile.company_type ? (
+                <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-slate-800 dark:text-blue-300">
+                  {t("company.badge")}
+                </span>
+              ) : null}
+              <span className="truncate">
+                {listing.posted_as_company && listing.sellerProfile.company_type
+                  ? listing.sellerProfile.company_name
+                  : listing.sellerProfile.user.name || listing.sellerProfile.company_name}
+              </span>
             </p>
           ) : null}
         </div>

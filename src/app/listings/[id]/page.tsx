@@ -171,7 +171,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
     isOwner && user?.role === UserRole.SELLER && listing.status === ListingStatus.PUBLISHED;
 
   const sellerName = sellerProfile.user.name;
-  const sellerAvatar = sellerProfile.logo_url ?? sellerProfile.user.avatar_url;
+  const postedAsCompany = Boolean(
+    listing.posted_as_company && sellerProfile.company_type,
+  );
+  const sellerAvatar = postedAsCompany
+    ? sellerProfile.logo_url ?? sellerProfile.user.avatar_url
+    : sellerProfile.user.avatar_url ?? sellerProfile.logo_url;
   const sellerCity = sellerProfile.city?.name ?? listing.city?.name ?? null;
 
   const sellerTrust = calculateSellerTrust({
@@ -333,8 +338,10 @@ export default async function ListingPage({ params }: ListingPageProps) {
       sellerSinceLabel={formatListingDate(sellerProfile.created_at)}
       publishedListingCount={sellerListingCount}
       sellerId={sellerProfile.id}
+      sellerSlug={sellerProfile.slug}
       listingId={listing.id}
       vertical={listing.vertical}
+      postedAsCompany={postedAsCompany}
       trustLevel={sellerTrust.level}
       trustSignals={sellerTrust.signals}
       isAuthenticated={user !== null}

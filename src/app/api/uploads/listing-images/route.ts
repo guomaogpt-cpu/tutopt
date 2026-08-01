@@ -11,8 +11,12 @@ export async function POST(request: Request) {
   return withApiHandler(async () => {
     const user = await requireAuth();
 
-    if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
-      throw new ForbiddenError("Only sellers can upload listing images");
+    if (
+      user.role !== UserRole.BUYER &&
+      user.role !== UserRole.SELLER &&
+      user.role !== UserRole.ADMIN
+    ) {
+      throw new ForbiddenError("Only authenticated accounts can upload images");
     }
 
     const restrictionMessage = getCreateListingRestrictionMessage(user);

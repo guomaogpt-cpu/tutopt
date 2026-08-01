@@ -54,6 +54,14 @@ export function CargoAddCompanyCta() {
             <Link href={href}>{t("cargo.addCompanyButton")}</Link>
           </Button>
         </div>
+        <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+          <Link
+            href="/account/company"
+            className="font-medium text-rose-700 hover:underline dark:text-rose-300"
+          >
+            {t("company.createProfile")}
+          </Link>
+        </p>
       </div>
     </section>
   );

@@ -34,13 +34,19 @@ export type ListingCardData = {
   unit: ListingUnit;
   status: ListingStatus;
   vertical: ListingVertical;
+  posted_as_company: boolean;
   stock_quantity: number | null;
   created_at: string;
   published_at: string | null;
   category: { name: string };
   city: { name: string } | null;
   brand: { name: string } | null;
-  sellerProfile: { company_name: string };
+  sellerProfile: {
+    company_name: string;
+    company_type: string | null;
+    slug: string;
+    user: { name: string };
+  };
   images: { url: string }[];
 };
 

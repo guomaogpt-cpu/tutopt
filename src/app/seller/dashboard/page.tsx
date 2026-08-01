@@ -329,6 +329,8 @@ export default async function SellerDashboardPage() {
 
           <SellerQuickActions
             sellerProfileId={sellerProfile?.id ?? null}
+            companyConfigured={Boolean(sellerProfile?.company_type)}
+            companySlug={sellerProfile?.slug ?? null}
             verticalCounts={verticalCounts}
           />
 

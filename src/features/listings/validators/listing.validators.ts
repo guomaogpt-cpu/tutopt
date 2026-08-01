@@ -41,6 +41,8 @@ export const createListingSchema = z.object({
   stock_quantity: z.coerce.number().int().min(0).optional().nullable(),
   /** Sent by create form; API defaults to OPT when omitted. */
   vertical: z.nativeEnum(ListingVertical).optional(),
+  /** Publish under configured company profile (ownership checked server-side). */
+  posted_as_company: z.boolean().optional(),
   image_urls: z
     .array(
       z

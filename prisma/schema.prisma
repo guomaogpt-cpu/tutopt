@@ -41,6 +41,14 @@ enum ListingVertical {
   CARGO
 }
 
+enum CompanyType {
+  STORE
+  SUPPLIER
+  SERVICE
+  CARGO
+  OTHER
+}
+
 enum ListingUnit {
   PIECE
   PACK
@@ -216,28 +224,29 @@ model User {
 }
 
 model SellerProfile {
-  id            String    @id @default(uuid()) @db.Uuid
-  user_id       String    @unique @map("user_id") @db.Uuid
-  company_name  String    @map("company_name") @db.VarChar(200)
-  slug          String    @unique @db.VarChar(220)
-  description   String?   @db.Text
-  logo_url      String?   @map("logo_url") @db.Text
-  inn           String?   @db.VarChar(20)
-  legal_address String?   @map("legal_address") @db.Text
-  contact_phone String    @map("contact_phone") @db.VarChar(20)
-  contact_email String?   @map("contact_email") @db.VarChar(255)
-  whatsapp      String?   @db.VarChar(50)
-  telegram      String?   @db.VarChar(100)
-  website       String?   @db.VarChar(255)
-  region_id     String    @map("region_id") @db.Uuid
-  city_id       String?   @map("city_id") @db.Uuid
-  is_verified   Boolean   @default(false) @map("is_verified")
-  is_pro        Boolean   @default(false) @map("is_pro")
-  verified_at   DateTime? @map("verified_at") @db.Timestamptz
-  rating_avg    Decimal   @default(0) @map("rating_avg") @db.Decimal(3, 2)
-  rating_count  Int       @default(0) @map("rating_count")
-  created_at    DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updated_at    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  id            String       @id @default(uuid()) @db.Uuid
+  user_id       String       @unique @map("user_id") @db.Uuid
+  company_name  String       @map("company_name") @db.VarChar(200)
+  slug          String       @unique @db.VarChar(220)
+  description   String?      @db.Text
+  logo_url      String?      @map("logo_url") @db.Text
+  inn           String?      @db.VarChar(20)
+  legal_address String?      @map("legal_address") @db.Text
+  contact_phone String       @map("contact_phone") @db.VarChar(20)
+  contact_email String?      @map("contact_email") @db.VarChar(255)
+  whatsapp      String?      @db.VarChar(50)
+  telegram      String?      @db.VarChar(100)
+  website       String?      @db.VarChar(255)
+  company_type  CompanyType? @map("company_type")
+  region_id     String       @map("region_id") @db.Uuid
+  city_id       String?      @map("city_id") @db.Uuid
+  is_verified   Boolean      @default(false) @map("is_verified")
+  is_pro        Boolean      @default(false) @map("is_pro")
+  verified_at   DateTime?    @map("verified_at") @db.Timestamptz
+  rating_avg    Decimal      @default(0) @map("rating_avg") @db.Decimal(3, 2)
+  rating_count  Int          @default(0) @map("rating_count")
+  created_at    DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updated_at    DateTime     @updatedAt @map("updated_at") @db.Timestamptz
 
   user       User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   region     Region           @relation(fields: [region_id], references: [id], onDelete: Restrict)
@@ -253,6 +262,7 @@ model SellerProfile {
   @@index([region_id])
   @@index([city_id])
   @@index([is_verified])
+  @@index([company_type])
   @@map("seller_profiles")
 }
 
@@ -319,6 +329,7 @@ model Listing {
   stock_quantity     Int?            @map("stock_quantity")
   status             ListingStatus   @default(DRAFT)
   vertical           ListingVertical @default(OPT)
+  posted_as_company  Boolean         @default(false) @map("posted_as_company")
   rejection_reason   String?         @map("rejection_reason") @db.Text
   view_count         Int             @default(0) @map("view_count")
   contact_count      Int             @default(0) @map("contact_count")

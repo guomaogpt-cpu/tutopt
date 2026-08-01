@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 
 type SellerQuickActionsProps = {
   sellerProfileId: string | null;
+  companyConfigured?: boolean;
+  companySlug?: string | null;
   verticalCounts?: Partial<Record<ListingVertical, number>>;
 };
 
@@ -32,12 +34,19 @@ const CREATE_LINKS: Array<{ vertical: ListingVertical; labelKey: DictionaryKey }
 
 export function SellerQuickActions({
   sellerProfileId,
+  companyConfigured = false,
+  companySlug = null,
   verticalCounts,
 }: SellerQuickActionsProps) {
   const { t } = useTranslation();
   const hasAnyListings =
     verticalCounts != null &&
     Object.values(verticalCounts).some((count) => (count ?? 0) > 0);
+  const publicProfileHref = companyConfigured
+    ? `/companies/${companySlug || sellerProfileId}`
+    : sellerProfileId
+      ? `/seller/${sellerProfileId}`
+      : null;
 
   return (
     <section aria-labelledby="seller-quick-actions-title">
@@ -106,14 +115,26 @@ export function SellerQuickActions({
           </Link>
         ) : null}
 
-        {sellerProfileId ? (
-          <Link href={`/seller/${sellerProfileId}`} className={cardClassName}>
+        <Link href="/account/company" className={cardClassName}>
+          <div className={iconWrapClassName}>
+            <ExternalLink className="size-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+              {t("company.profile")}
+            </p>
+            <p className="mt-0.5 text-xs text-[#64748B]">{t("company.createProfileHint")}</p>
+          </div>
+        </Link>
+
+        {publicProfileHref ? (
+          <Link href={publicProfileHref} className={cardClassName}>
             <div className={iconWrapClassName}>
               <ExternalLink className="size-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
               <p className="font-semibold text-[#0F172A] dark:text-slate-100">
-                {t("seller.publicProfile")}
+                {t("company.publicProfile")}
               </p>
               <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.publicProfileHint")}</p>
             </div>
@@ -128,7 +149,7 @@ export function SellerQuickActions({
             </div>
             <div className="min-w-0">
               <p className="font-semibold text-[#0F172A] dark:text-slate-100">
-                {t("seller.publicProfile")}
+                {t("company.publicProfile")}
               </p>
               <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.publicProfilePending")}</p>
             </div>

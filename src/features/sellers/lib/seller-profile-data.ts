@@ -10,6 +10,7 @@ import { prisma } from "@/shared/lib/prisma";
 export const sellerProfileSelect = {
   id: true,
   company_name: true,
+  company_type: true,
   slug: true,
   description: true,
   logo_url: true,

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
 import { CreateListingVerticalChooser } from "@/components/listings/CreateListingVerticalChooser";
+import { ListingPostAsSelector } from "@/components/listings/ListingPostAsSelector";
 import { FormSection } from "@/components/listings/FormSection";
 import type { ListingQualityInput } from "@/lib/moderation/listing-quality";
 import { ListingImageUpload } from "@/components/listings/ListingImageUpload";
@@ -55,6 +56,10 @@ type NewListingFormProps = {
   listingId?: string;
   initialValues?: ListingFormInitialValues;
   cancelHref?: string;
+  companyProfile?: {
+    isConfigured: boolean;
+    companyName: string;
+  } | null;
 };
 
 export type ListingFormInitialValues = {
@@ -122,6 +127,7 @@ export function NewListingForm({
   listingId,
   initialValues,
   cancelHref = "/seller/listings",
+  companyProfile = null,
 }: NewListingFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -150,6 +156,9 @@ export function NewListingForm({
   const [brandId, setBrandId] = useState(initialValues?.brandId ?? "");
   const [stockQuantity, setStockQuantity] = useState(
     initialValues?.stockQuantity == null ? "" : String(initialValues.stockQuantity),
+  );
+  const [postedAsCompany, setPostedAsCompany] = useState(
+    Boolean(companyProfile?.isConfigured && initialVertical === "CARGO"),
   );
   const [errors, setErrors] = useState<ListingFormErrors>(emptyErrors);
   const [clientError, setClientError] = useState("");
@@ -357,6 +366,8 @@ export function NewListingForm({
         stock_quantity:
           formConfig.showStock && stockQuantity ? Number(stockQuantity) : null,
         vertical,
+        posted_as_company:
+          mode === "create" ? Boolean(postedAsCompany && companyProfile?.isConfigured) : undefined,
         image_urls: serverImageUrls,
       };
       const result =
@@ -483,6 +494,15 @@ export function NewListingForm({
 
       <div className="grid gap-4 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
         <div className="min-w-0 space-y-4 sm:space-y-6">
+          {mode === "create" ? (
+            <ListingPostAsSelector
+              hasCompanyProfile={Boolean(companyProfile?.isConfigured)}
+              companyName={companyProfile?.companyName ?? null}
+              postedAsCompany={postedAsCompany}
+              onChange={setPostedAsCompany}
+            />
+          ) : null}
+
           {(clientError || errors.form.length > 0) && (
             <div
               className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/30 dark:text-red-400"

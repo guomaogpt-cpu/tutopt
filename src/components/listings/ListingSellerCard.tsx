@@ -9,6 +9,7 @@ import { trackListingDetailAction } from "@/lib/analytics/events";
 import {
   buildSellerProfileHref,
 } from "@/features/sellers/lib/seller-vertical-profile";
+import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
 import type { SellerTrustLevel, SellerTrustSignal } from "@/lib/trust/seller-trust";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -25,8 +26,10 @@ type ListingSellerCardProps = {
   sellerSinceLabel: string;
   publishedListingCount: number;
   sellerId: string;
+  sellerSlug?: string | null;
   listingId: string;
   vertical: ListingVertical;
+  postedAsCompany?: boolean;
   trustLevel?: SellerTrustLevel;
   trustSignals?: SellerTrustSignal[];
   isAuthenticated?: boolean;
@@ -54,8 +57,10 @@ export function ListingSellerCard({
   sellerSinceLabel,
   publishedListingCount,
   sellerId,
+  sellerSlug = null,
   listingId,
   vertical,
+  postedAsCompany = false,
   trustLevel,
   trustSignals = [],
   isAuthenticated = false,
@@ -63,10 +68,21 @@ export function ListingSellerCard({
   isOwnListing = false,
 }: ListingSellerCardProps) {
   const { t } = useTranslation();
-  const displayName = companyName.trim() || sellerName;
-  const roleLabel =
-    vertical === "OPT" ? t("listing.supplier") : t("listing.seller");
+  const displayName = postedAsCompany
+    ? companyName.trim() || sellerName
+    : sellerName.trim() || companyName;
+  const roleLabel = postedAsCompany
+    ? t("company.badge")
+    : vertical === "OPT"
+      ? t("listing.supplier")
+      : t("listing.seller");
   const analyticsParams = { vertical, hasPrice, isOwnListing };
+  const profileHref = postedAsCompany
+    ? buildCompanyProfileHref(sellerSlug || sellerId, vertical)
+    : buildSellerProfileHref(sellerSlug || sellerId, vertical);
+  const profileLabel = postedAsCompany
+    ? t("company.publicProfile")
+    : t("listing.sellerProfile");
 
   return (
     <div
@@ -99,10 +115,10 @@ export function ListingSellerCard({
             {displayName}
           </h2>
 
-          {companyName.trim() && companyName !== sellerName ? (
+          {companyName.trim() && !postedAsCompany && companyName !== sellerName ? (
             <p className="mt-1 flex items-center gap-1.5 text-sm text-[#64748B] dark:text-slate-400">
               <Building2 className="size-3.5 shrink-0" aria-hidden="true" />
-              <span className="truncate">{sellerName}</span>
+              <span className="truncate">{companyName}</span>
             </p>
           ) : null}
         </div>
@@ -142,10 +158,10 @@ export function ListingSellerCard({
         asChild
       >
         <Link
-          href={buildSellerProfileHref(sellerId, vertical)}
+          href={profileHref}
           onClick={() => trackListingDetailAction("seller_profile", analyticsParams)}
         >
-          {t("listing.sellerProfile")}
+          {profileLabel}
         </Link>
       </Button>
 

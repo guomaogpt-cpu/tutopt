@@ -95,6 +95,20 @@ export async function POST(request: Request) {
 
     const sellerProfile = await ensureSellerProfile(user);
 
+    const wantsCompany = Boolean(input.posted_as_company);
+    if (wantsCompany && !sellerProfile.company_type) {
+      throw new ValidationError(
+        "Сначала заполните профиль компании, чтобы публиковать от её имени.",
+        {
+          fieldErrors: {
+            posted_as_company: [
+              "Создайте профиль компании, прежде чем публиковать от компании",
+            ],
+          },
+        },
+      );
+    }
+
     const duplicate = await findRecentDuplicateListing({
       sellerProfileId: sellerProfile.id,
       title: input.title,
@@ -124,6 +138,7 @@ export async function POST(request: Request) {
         stock_quantity: input.stock_quantity ?? null,
         status: ListingStatus.PENDING_MODERATION,
         vertical,
+        posted_as_company: wantsCompany,
         images: {
           create: input.image_urls.map((url, index) => ({
             url,

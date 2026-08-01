@@ -55,7 +55,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
     redirect(buildSellerOnboardingUrl(returnPath));
   }
 
-  const [categories, cities, brands] = await Promise.all([
+  const [categories, cities, brands, sellerProfile] = await Promise.all([
     prisma.category.findMany({
       where: { is_active: true },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
@@ -78,7 +78,21 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
       orderBy: { name: "asc" },
       select: { id: true, name: true },
     }),
+    prisma.sellerProfile.findUnique({
+      where: { user_id: user.id },
+      select: {
+        company_name: true,
+        company_type: true,
+      },
+    }),
   ]);
+
+  const companyProfile = sellerProfile?.company_type
+    ? {
+        isConfigured: true as const,
+        companyName: sellerProfile.company_name,
+      }
+    : { isConfigured: false as const, companyName: "" };
 
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] py-4 dark:bg-slate-950 sm:py-8">
@@ -97,6 +111,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
             brands={brands.map((item) => ({ id: item.id, label: item.name }))}
             initialVertical={initialVertical}
             initialCategoryId={categoryParam}
+            companyProfile={companyProfile}
           />
         )}
       </Container>
