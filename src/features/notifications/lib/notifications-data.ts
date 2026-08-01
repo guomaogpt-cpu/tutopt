@@ -1,4 +1,5 @@
 import { NotificationType, type ListingVertical } from "@prisma/client";
+import { findCargoNotificationRecipients } from "@/features/cargo/lib/cargo-subscription-data";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { prisma } from "@/shared/lib/prisma";
 
@@ -114,6 +115,8 @@ export async function createNewCargoRequestNotifications(input: {
   itemName: string;
   fromLocation: string;
   toLocation: string;
+  serviceType?: string | null;
+  direction?: string | null;
 }): Promise<void> {
   // recipientId -> notification link (admins win over sellers for dedupe)
   const recipientLinks = new Map<string, string>();
@@ -127,40 +130,16 @@ export async function createNewCargoRequestNotifications(input: {
     recipientLinks.set(admin.id, "/admin/cargo-requests");
   }
 
-  const cargoSellers = await prisma.user.findMany({
-    where: {
-      role: { in: ["SELLER", "ADMIN"] },
-      is_blocked: false,
-      sellerProfile: {
-        listings: {
-          some: {
-            vertical: "CARGO",
-            status: "PUBLISHED",
-          },
-        },
-      },
-    },
-    select: { id: true },
+  const matchedSellerIds = await findCargoNotificationRecipients({
+    serviceType: input.serviceType ?? null,
+    direction: input.direction ?? null,
+    fromLocation: input.fromLocation,
+    toLocation: input.toLocation,
   });
 
-  for (const seller of cargoSellers) {
-    if (!recipientLinks.has(seller.id)) {
-      recipientLinks.set(seller.id, "/seller/cargo-requests");
-    }
-  }
-
-  // Optional opt-in (existing CargoRequestSubscription) — still one notification per user
-  const subscribers = await prisma.cargoRequestSubscription.findMany({
-    where: {
-      is_active: true,
-      user: { is_blocked: false },
-    },
-    select: { user_id: true },
-  });
-
-  for (const subscriber of subscribers) {
-    if (!recipientLinks.has(subscriber.user_id)) {
-      recipientLinks.set(subscriber.user_id, "/seller/cargo-requests");
+  for (const sellerId of matchedSellerIds) {
+    if (!recipientLinks.has(sellerId)) {
+      recipientLinks.set(sellerId, "/seller/cargo-requests");
     }
   }
 

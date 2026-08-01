@@ -12,10 +12,18 @@ Uses the existing `Notification` model and notification bell / `/notifications` 
 ## 2. Who gets `NEW_CARGO_REQUEST`
 
 1. All non-blocked **admin** users → link `/admin/cargo-requests`
-2. Sellers/admins with at least one **published** listing `vertical=CARGO` → link `/seller/cargo-requests`
-3. Optionally: active `CargoRequestSubscription` recipients (extra opt-in) if not already covered
+2. Cargo sellers matched by `CargoSubscription` prefs (or fallback) → `/seller/cargo-requests`
+
+### Matching (Phase 75 MVP)
+
+- Sellers with published `vertical=CARGO` and **no** subscription → notified (fallback)
+- Sellers with subscription → require `enabled` + `notifyInApp`, then soft-match `serviceTypes` / `directions` / optional from-to location lists
+- Missing request `serviceType`/`direction` does not hard-block
+- One notification per `userId`
 
 Guests and buyers without cargo listings are not notified.
+
+See `docs/CARGO_SUBSCRIPTIONS_PHASE_75.md`.
 
 ## 3. Who gets `NEW_CARGO_RESPONSE`
 
@@ -57,9 +65,10 @@ Stored notification titles use RU fallback text (notification table is plain tex
 
 - Title block: new shipping requests
 - Filters: All / New / Responded
+- Toggle/filter: show only matching requests (`?matching=1`)
+- Link to `/seller/cargo-settings` for subscription prefs
 - Badge «Новая» / «Вы откликнулись»
 - Newest first
-- Optional in-app subscription toggle (extra; not required to receive listing-based notifications)
 
 ## 8. Admin
 
@@ -71,19 +80,14 @@ Stored notification titles use RU fallback text (notification table is plain tex
 - Telegram notifications
 - WhatsApp / WhatsApp Business API notifications
 - Email notifications
-- Full preference matrix (`notifyTelegram`, direction filters, categories)
-- Real route-based subscription filters
+- Exact geolocation / paid subscriptions
 
-Optional table `cargo_request_subscriptions` already exists as a simple on/off opt-in; it is **not** the full future `CargoSubscription` model.
+Preference matrix and settings UI are in **Phase 75** (`CargoSubscription` / `/seller/cargo-settings`).
 
-## 10. Future Phase 75
+## 10. Future Phase 76
 
-Suggested `CargoSubscription` fields:
+- Telegram bot notifications
+- Email notifications
+- WhatsApp Business API later
+- Richer route filters
 
-- `userId`
-- `enabled`
-- `directions` / `fromLocation` / `toLocation`
-- `categories`
-- `notifyInApp` / `notifyTelegram` / `notifyEmail` / `notifyWhatsApp`
-
-Plus Telegram/email channel delivery and user preferences UI.

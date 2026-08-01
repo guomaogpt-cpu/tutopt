@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+  CARGO_DIRECTION_IDS,
+  CARGO_SERVICE_TYPE_IDS,
+} from "@/features/cargo/lib/cargo-subscription-options";
 
 export const CARGO_NAME_MAX = 100;
 export const CARGO_PHONE_MAX = 20;
@@ -71,6 +75,39 @@ export const createCargoRequestSchema = z.object({
   dimensions: optionalTrimmed(CARGO_DIMENSIONS_MAX),
   urgency: optionalTrimmed(CARGO_URGENCY_MAX),
   comment: optionalTrimmed(CARGO_COMMENT_MAX),
+  serviceType: z
+    .string()
+    .trim()
+    .optional()
+    .nullable()
+    .transform((value) => {
+      if (value == null) {
+        return null;
+      }
+      const trimmed = value.trim();
+      return trimmed.length > 0 ? trimmed : null;
+    })
+    .refine(
+      (value) =>
+        value == null || (CARGO_SERVICE_TYPE_IDS as readonly string[]).includes(value),
+      { message: "CARGO_SERVICE_TYPE_INVALID" },
+    ),
+  direction: z
+    .string()
+    .trim()
+    .optional()
+    .nullable()
+    .transform((value) => {
+      if (value == null) {
+        return null;
+      }
+      const trimmed = value.trim();
+      return trimmed.length > 0 ? trimmed : null;
+    })
+    .refine(
+      (value) => value == null || (CARGO_DIRECTION_IDS as readonly string[]).includes(value),
+      { message: "CARGO_DIRECTION_INVALID" },
+    ),
 });
 
 export type CreateCargoRequestInput = z.infer<typeof createCargoRequestSchema>;

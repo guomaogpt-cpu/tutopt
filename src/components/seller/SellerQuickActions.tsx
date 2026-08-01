@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink, Inbox, LayoutGrid, ListChecks, PlusCircle, Truck } from "lucide-react";
+import { ExternalLink, Inbox, LayoutGrid, ListChecks, PlusCircle, Settings2, Truck } from "lucide-react";
 import type { ListingVertical } from "@prisma/client";
 import { VERTICALS } from "@/features/verticals/verticals";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
@@ -89,6 +89,22 @@ export function SellerQuickActions({
             <p className="mt-0.5 text-xs text-[#64748B]">{t("seller.viewCargoRequestsHint")}</p>
           </div>
         </Link>
+
+        {(verticalCounts?.CARGO ?? 0) > 0 || sellerProfileId ? (
+          <Link href="/seller/cargo-settings" className={cardClassName}>
+            <div className={iconWrapClassName}>
+              <Settings2 className="size-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-[#0F172A] dark:text-slate-100">
+                {t("cargo.settings.title")}
+              </p>
+              <p className="mt-0.5 text-xs text-[#64748B] dark:text-slate-400">
+                {t("seller.cargoSettingsHint")}
+              </p>
+            </div>
+          </Link>
+        ) : null}
 
         {sellerProfileId ? (
           <Link href={`/seller/${sellerProfileId}`} className={cardClassName}>

@@ -17,6 +17,12 @@ import {
   CARGO_QUANTITY_MAX,
   CARGO_WEIGHT_MAX,
 } from "@/features/cargo/validators/cargo-request.validators";
+import {
+  CARGO_DIRECTION_IDS,
+  CARGO_DIRECTION_LABEL_KEY,
+  CARGO_SERVICE_TYPE_IDS,
+  CARGO_SERVICE_TYPE_LABEL_KEY,
+} from "@/features/cargo/lib/cargo-subscription-options";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -77,6 +83,8 @@ export function CargoRequestForm() {
   const [dimensions, setDimensions] = useState("");
   const [quantity, setQuantity] = useState("");
   const [comment, setComment] = useState("");
+  const [serviceType, setServiceType] = useState("");
+  const [direction, setDirection] = useState("");
   const [itemPhotoUrl, setItemPhotoUrl] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -144,6 +152,8 @@ export function CargoRequestForm() {
         dimensions: dimensions || null,
         urgency: null,
         comment: comment || null,
+        serviceType: serviceType || null,
+        direction: direction || null,
       });
       setIsSuccess(true);
     } catch (error) {
@@ -287,6 +297,44 @@ export function CargoRequestForm() {
                 {fieldErrors.toLocation}
               </p>
             ) : null}
+          </div>
+          <div className="min-w-0">
+            <label htmlFor="cargo-service-type" className={labelClassName}>
+              {t("cargo.serviceType")}
+            </label>
+            <select
+              id="cargo-service-type"
+              name="serviceType"
+              value={serviceType}
+              onChange={(event) => setServiceType(event.target.value)}
+              className={cn(fieldClassName, "w-full px-3")}
+            >
+              <option value="">—</option>
+              {CARGO_SERVICE_TYPE_IDS.map((id) => (
+                <option key={id} value={id}>
+                  {t(CARGO_SERVICE_TYPE_LABEL_KEY[id])}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="min-w-0">
+            <label htmlFor="cargo-direction" className={labelClassName}>
+              {t("cargo.direction")}
+            </label>
+            <select
+              id="cargo-direction"
+              name="direction"
+              value={direction}
+              onChange={(event) => setDirection(event.target.value)}
+              className={cn(fieldClassName, "w-full px-3")}
+            >
+              <option value="">—</option>
+              {CARGO_DIRECTION_IDS.map((id) => (
+                <option key={id} value={id}>
+                  {t(CARGO_DIRECTION_LABEL_KEY[id])}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </fieldset>

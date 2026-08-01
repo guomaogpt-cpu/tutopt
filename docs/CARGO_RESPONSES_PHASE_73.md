@@ -67,6 +67,8 @@ Hidden publicly:
 - board of requests
 - own responses only (other sellers’ responses not listed)
 - respond via system modal
+- subscription prefs on `/seller/cargo-settings` (service types, directions, in-app notify)
+- optional board filter: show only matching requests
 
 ## 9. Hidden publicly
 
@@ -81,14 +83,14 @@ Phone, name, company, free-text comment (may contain contacts).
 - payment
 - delivery tracking
 - automatic reveal of client phone to sellers after response
+- paid cargo lead packages
+- exact geo route matching
 
-## 11. Future Phase 74 / 75
+See also `docs/CARGO_SUBSCRIPTIONS_PHASE_75.md` and `docs/CARGO_NOTIFICATIONS_PHASE_74.md`.
 
-Cargo notifications added in Phase 74. See `docs/CARGO_NOTIFICATIONS_PHASE_74.md`.
+## 11. Future
 
-Later:
-
-- Telegram/email notifications
-- full cargo subscription preferences / route filters
+- Telegram/email/WhatsApp delivery (Phase 76)
+- richer route filters
 - guest client dashboard via magic link/code
 - accepting a best response / status ACCEPTED UX

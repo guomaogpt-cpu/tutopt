@@ -2,14 +2,17 @@ import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
-import { CargoSubscriptionToggle } from "@/components/seller/CargoSubscriptionToggle";
+import { CargoSubscriptionSettingsLink } from "@/components/seller/CargoSubscriptionSettingsLink";
 import { SellerCargoRequestsList } from "@/components/seller/SellerCargoRequestsList";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl, buildSellerUpgradeUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getSellerCargoRequests } from "@/features/cargo/lib/cargo-requests-data";
-import { getCargoSubscriptionForSeller } from "@/features/cargo/lib/cargo-subscription-data";
+import {
+  getCargoSubscriptionForSeller,
+  requestMatchesSellerSubscription,
+} from "@/features/cargo/lib/cargo-subscription-data";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import {
@@ -40,6 +43,13 @@ function parseBoardFilter(value: string | null): BoardFilter {
     return value;
   }
   return "all";
+}
+
+function parseMatchingOnly(value: string | string[] | undefined): boolean {
+  if (Array.isArray(value)) {
+    return value.includes("1") || value.includes("true");
+  }
+  return value === "1" || value === "true";
 }
 
 export default async function SellerCargoRequestsPage({
@@ -84,6 +94,7 @@ export default async function SellerCargoRequestsPage({
   const rawParams = await searchParams;
   const filterParam = typeof rawParams.filter === "string" ? rawParams.filter : null;
   const boardFilter = parseBoardFilter(filterParam);
+  const matchingOnly = parseMatchingOnly(rawParams.matching);
 
   const sellerProfile = await prisma.sellerProfile.findUnique({
     where: { user_id: user.id },
@@ -100,16 +111,26 @@ export default async function SellerCargoRequestsPage({
       : Promise.resolve(null),
   ]);
 
-  const requests =
+  let requests =
     boardFilter === "new"
       ? allRequests.filter((request) => request.status === "NEW")
       : boardFilter === "responded"
         ? allRequests.filter((request) => Boolean(request.ownResponse))
         : allRequests;
 
+  if (matchingOnly) {
+    requests = requests.filter((request) =>
+      requestMatchesSellerSubscription(subscription, {
+        serviceType: request.service_type,
+        direction: request.direction,
+        fromLocation: request.from_location,
+        toLocation: request.to_location,
+      }),
+    );
+  }
+
   const showContacts = user.role === UserRole.ADMIN;
   const canRespond = Boolean(sellerProfile);
-  const isSubscribed = subscription?.isActive ?? false;
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 dark:bg-slate-950 sm:py-8">
@@ -136,12 +157,12 @@ export default async function SellerCargoRequestsPage({
 
         {sellerProfile ? (
           <div className="mt-6">
-            <CargoSubscriptionToggle initiallyActive={isSubscribed} />
+            <CargoSubscriptionSettingsLink enabled={subscription?.enabled ?? null} />
           </div>
         ) : null}
 
         <div className="mt-6">
-          <SellerCargoBoardHeader activeFilter={boardFilter} />
+          <SellerCargoBoardHeader activeFilter={boardFilter} matchingOnly={matchingOnly} />
         </div>
 
         <div className="mt-4 lg:mt-6">

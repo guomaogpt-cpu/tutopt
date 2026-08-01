@@ -1111,6 +1111,181 @@ export const DICTIONARY = {
     kg: "Жазылууну өзгөртүү мүмкүн болбоду",
     en: "Could not update subscription",
   },
+  "cargo.settings.title": {
+    ru: "Настройки карго-заявок",
+    kg: "Карго сурамдарынын жөндөөлөрү",
+    en: "Cargo request settings",
+  },
+  "cargo.settings.description": {
+    ru: "Выберите, какие заявки на перевозку вы хотите получать.",
+    kg: "Кайсы жеткирүү сурамдарын алгыңыз келерин тандаңыз.",
+    en: "Choose which shipping requests you want to receive.",
+  },
+  "cargo.settings.enabled": {
+    ru: "Получать заявки",
+    kg: "Сурамдарды алуу",
+    en: "Receive requests",
+  },
+  "cargo.settings.serviceTypes": {
+    ru: "Типы услуг",
+    kg: "Кызмат түрлөрү",
+    en: "Service types",
+  },
+  "cargo.settings.directions": {
+    ru: "Направления",
+    kg: "Багыттар",
+    en: "Routes",
+  },
+  "cargo.settings.fromLocations": {
+    ru: "Города / точки отправления",
+    kg: "Жөнөтүү шаарлары / чекиттери",
+    en: "From locations",
+  },
+  "cargo.settings.toLocations": {
+    ru: "Города / точки назначения",
+    kg: "Жеткирүү шаарлары / чекиттери",
+    en: "To locations",
+  },
+  "cargo.settings.notifyInApp": {
+    ru: "Уведомления внутри сайта",
+    kg: "Сайт ичиндеги билдирмелер",
+    en: "In-app notifications",
+  },
+  "cargo.settings.notifyEmail": {
+    ru: "Email-уведомления (скоро)",
+    kg: "Email билдирмелери (жакында)",
+    en: "Email notifications (soon)",
+  },
+  "cargo.settings.notifyTelegram": {
+    ru: "Telegram-уведомления (скоро)",
+    kg: "Telegram билдирмелери (жакында)",
+    en: "Telegram notifications (soon)",
+  },
+  "cargo.settings.notifyWhatsApp": {
+    ru: "WhatsApp-уведомления (скоро)",
+    kg: "WhatsApp билдирмелери (жакында)",
+    en: "WhatsApp notifications (soon)",
+  },
+  "cargo.settings.save": {
+    ru: "Сохранить настройки",
+    kg: "Жөндөөлөрдү сактоо",
+    en: "Save settings",
+  },
+  "cargo.settings.saved": {
+    ru: "Настройки сохранены",
+    kg: "Жөндөөлөр сакталды",
+    en: "Settings saved",
+  },
+  "cargo.settings.saveError": {
+    ru: "Не удалось сохранить настройки",
+    kg: "Жөндөөлөрдү сактоо мүмкүн болбоду",
+    en: "Could not save settings",
+  },
+  "cargo.serviceType": {
+    ru: "Тип услуги",
+    kg: "Кызмат түрү",
+    en: "Service type",
+  },
+  "cargo.direction": {
+    ru: "Направление",
+    kg: "Багыт",
+    en: "Route",
+  },
+  "cargo.matchingOnly": {
+    ru: "Показывать только подходящие мне заявки",
+    kg: "Мага ылайыктуу сурамдарды гана көрсөтүү",
+    en: "Show only matching requests",
+  },
+  "cargo.serviceTypes.deliveryFromChina": {
+    ru: "Доставка из Китая",
+    kg: "Кытайдан жеткирүү",
+    en: "Delivery from China",
+  },
+  "cargo.serviceTypes.deliveryKyrgyzstan": {
+    ru: "Доставка по Кыргызстану",
+    kg: "Кыргызстан боюнча жеткирүү",
+    en: "Delivery across Kyrgyzstan",
+  },
+  "cargo.serviceTypes.internationalDelivery": {
+    ru: "Международная доставка",
+    kg: "Эл аралык жеткирүү",
+    en: "International delivery",
+  },
+  "cargo.serviceTypes.roadFreight": {
+    ru: "Автоперевозки",
+    kg: "Авто жеткирүү",
+    en: "Road freight",
+  },
+  "cargo.serviceTypes.airFreight": {
+    ru: "Авиадоставка",
+    kg: "Аба аркылуу жеткирүү",
+    en: "Air freight",
+  },
+  "cargo.serviceTypes.railFreight": {
+    ru: "Железнодорожная доставка",
+    kg: "Темир жол аркылуу жеткирүү",
+    en: "Rail freight",
+  },
+  "cargo.serviceTypes.warehousing": {
+    ru: "Складские услуги",
+    kg: "Кампа кызматтары",
+    en: "Warehousing",
+  },
+  "cargo.serviceTypes.customsClearance": {
+    ru: "Таможенное оформление",
+    kg: "Бажы жол-жоболоштуруу",
+    en: "Customs clearance",
+  },
+  "cargo.serviceTypes.other": {
+    ru: "Другое",
+    kg: "Башка",
+    en: "Other",
+  },
+  "cargo.directions.chinaKyrgyzstan": {
+    ru: "Китай → Кыргызстан",
+    kg: "Кытай → Кыргызстан",
+    en: "China → Kyrgyzstan",
+  },
+  "cargo.directions.guangzhouBishkek": {
+    ru: "Гуанчжоу → Бишкек",
+    kg: "Гуанчжоу → Бишкек",
+    en: "Guangzhou → Bishkek",
+  },
+  "cargo.directions.yiwuBishkek": {
+    ru: "Иу → Бишкек",
+    kg: "Иу → Бишкек",
+    en: "Yiwu → Bishkek",
+  },
+  "cargo.directions.urumqiBishkek": {
+    ru: "Урумчи → Бишкек",
+    kg: "Үрүмчү → Бишкек",
+    en: "Urumqi → Bishkek",
+  },
+  "cargo.directions.kyrgyzstanKazakhstan": {
+    ru: "Кыргызстан → Казахстан",
+    kg: "Кыргызстан → Казакстан",
+    en: "Kyrgyzstan → Kazakhstan",
+  },
+  "cargo.directions.bishkekRegions": {
+    ru: "Бишкек → регионы Кыргызстана",
+    kg: "Бишкек → Кыргызстандын аймактары",
+    en: "Bishkek → Kyrgyzstan regions",
+  },
+  "cargo.directions.international": {
+    ru: "Международные направления",
+    kg: "Эл аралык багыттар",
+    en: "International routes",
+  },
+  "cargo.directions.other": {
+    ru: "Другое",
+    kg: "Башка",
+    en: "Other",
+  },
+  "seller.cargoSettingsHint": {
+    ru: "Выберите, какие заявки получать.",
+    kg: "Кайсы сурамдарды алууну тандаңыз.",
+    en: "Choose which requests to receive.",
+  },
   "cargo.notifications.newRequest": {
     ru: "Новая карго-заявка: {itemName}",
     kg: "Жаңы карго сурамы: {itemName}",

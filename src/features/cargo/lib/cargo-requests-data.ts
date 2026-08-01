@@ -49,6 +49,8 @@ export type SellerCargoRequestItem = {
   dimensions: string | null;
   urgency: string | null;
   comment: string | null;
+  service_type: string | null;
+  direction: string | null;
   status: CargoRequestStatus;
   responseCount: number;
   ownResponse: CargoResponseItem | null;
@@ -121,6 +123,8 @@ const sellerRequestSelect = {
   dimensions: true,
   urgency: true,
   comment: true,
+  service_type: true,
+  direction: true,
   status: true,
   _count: {
     select: { responses: true },
@@ -176,6 +180,8 @@ export async function getSellerCargoRequests(options?: {
     dimensions: row.dimensions,
     urgency: row.urgency,
     comment: row.comment,
+    service_type: row.service_type,
+    direction: row.direction,
     status: row.status,
     responseCount: row._count.responses,
     ownResponse: row.responses[0] ?? null,
@@ -215,6 +221,8 @@ export async function getAdminCargoRequests(options?: {
     dimensions: row.dimensions,
     urgency: row.urgency,
     comment: row.comment,
+    service_type: row.service_type,
+    direction: row.direction,
     status: row.status,
     responseCount: row._count.responses,
     ownResponse: null,

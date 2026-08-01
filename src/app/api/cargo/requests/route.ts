@@ -30,6 +30,8 @@ export async function POST(request: Request) {
         dimensions: input.dimensions,
         urgency: input.urgency,
         comment: input.comment,
+        service_type: input.serviceType,
+        direction: input.direction,
         user_id: user?.id ?? null,
       },
       select: { id: true },
@@ -41,6 +43,8 @@ export async function POST(request: Request) {
         itemName: input.itemName,
         fromLocation: input.fromLocation,
         toLocation: input.toLocation,
+        serviceType: input.serviceType,
+        direction: input.direction,
       });
     } catch {
       // Request is already saved; notification failure must not fail the response.
