@@ -95,7 +95,7 @@ function getNotificationIcon(type: NotificationType) {
 
 function getEmptyStateAction(role: UserRole): { href: string; labelKey: DictionaryKey } {
   if (role === UserRoleEnum.SELLER || role === UserRoleEnum.ADMIN) {
-    return { href: "/seller/dashboard", labelKey: "notifications.goToSellerDashboard" };
+    return { href: "/account", labelKey: "notifications.goToSellerDashboard" };
   }
 
   if (role === UserRoleEnum.BUYER) {

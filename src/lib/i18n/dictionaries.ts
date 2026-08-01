@@ -2836,10 +2836,30 @@ export const DICTIONARY = {
     kg: "Жеке кабинет",
     en: "Dashboard",
   },
-  "account.profile": {
-    ru: "Профиль",
-    kg: "Профиль",
-    en: "Profile",
+  "account.title": {
+    ru: "Личный кабинет",
+    kg: "Жеке кабинет",
+    en: "Account",
+  },
+  "account.subtitle": {
+    ru: "Объявления, заявки, компания и карго в одном месте",
+    kg: "Жарыялар, сурамдар, компания жана карго бир жерде",
+    en: "Listings, requests, company and cargo in one place",
+  },
+  "account.quickActions": {
+    ru: "Быстрые действия",
+    kg: "Тез аракеттер",
+    en: "Quick actions",
+  },
+  "account.postListing": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post listing",
+  },
+  "account.submitCargoRequest": {
+    ru: "Оставить карго-заявку",
+    kg: "Карго сурам калтыруу",
+    en: "Submit cargo request",
   },
   "account.myListings": {
     ru: "Мои объявления",
@@ -2851,15 +2871,140 @@ export const DICTIONARY = {
     kg: "Менин сурамдарым",
     en: "My requests",
   },
+  "account.myCargoRequests": {
+    ru: "Мои карго-заявки",
+    kg: "Менин карго сурамдарым",
+    en: "My cargo requests",
+  },
   "account.favorites": {
     ru: "Избранное",
-    kg: "Тандалмалар",
+    kg: "Тандалгандар",
     en: "Favorites",
   },
   "account.notifications": {
     ru: "Уведомления",
     kg: "Билдирмелер",
     en: "Notifications",
+  },
+  "account.company": {
+    ru: "Профиль компании",
+    kg: "Компания профили",
+    en: "Company profile",
+  },
+  "account.companyMissingTitle": {
+    ru: "Профиль компании ещё не создан",
+    kg: "Компания профили азырынча жок",
+    en: "Company profile is not created yet",
+  },
+  "account.companyMissingDescription": {
+    ru: "Создайте профиль компании, чтобы публиковать объявления от имени бизнеса.",
+    kg: "Бизнес атынан жарыя берүү үчүн компания профилин түзүңүз.",
+    en: "Create a company profile to post listings as a business.",
+  },
+  "account.createCompany": {
+    ru: "Создать профиль компании",
+    kg: "Компания профилин түзүү",
+    en: "Create company profile",
+  },
+  "account.editCompany": {
+    ru: "Редактировать",
+    kg: "Түзөтүү",
+    en: "Edit",
+  },
+  "account.openCompany": {
+    ru: "Публичная страница",
+    kg: "Ачык баракча",
+    en: "Public page",
+  },
+  "account.cargo": {
+    ru: "Карго",
+    kg: "Карго",
+    en: "Cargo",
+  },
+  "account.cargoCompanyQuestion": {
+    ru: "Вы карго-компания?",
+    kg: "Сиз карго компаниясызбы?",
+    en: "Are you a cargo company?",
+  },
+  "account.cargoCompanyDescription": {
+    ru: "Добавьте компанию и получайте заявки на перевозку.",
+    kg: "Компанияны кошуп, ташуу сурамдарын алыңыз.",
+    en: "Add your company and receive shipping requests.",
+  },
+  "account.addCargoCompany": {
+    ru: "Добавить карго-компанию",
+    kg: "Карго компанияны кошуу",
+    en: "Add cargo company",
+  },
+  "account.cargoSettings": {
+    ru: "Карго-настройки",
+    kg: "Карго жөндөөлөрү",
+    en: "Cargo settings",
+  },
+  "account.cargoRequests": {
+    ru: "Карго-заявки",
+    kg: "Карго сурамдар",
+    en: "Cargo requests",
+  },
+  "account.cargoNotificationsOn": {
+    ru: "Уведомления о заявках включены",
+    kg: "Сурам билдирмелери күйүк",
+    en: "Request notifications are on",
+  },
+  "account.cargoNotificationsOff": {
+    ru: "Уведомления о заявках выключены",
+    kg: "Сурам билдирмелери өчүк",
+    en: "Request notifications are off",
+  },
+  "account.telegramConnected": {
+    ru: "Telegram подключён",
+    kg: "Telegram туташтырылган",
+    en: "Telegram connected",
+  },
+  "account.telegramNotConnected": {
+    ru: "Telegram не подключён",
+    kg: "Telegram туташтырылган эмес",
+    en: "Telegram not connected",
+  },
+  "account.listingsTotal": {
+    ru: "Всего",
+    kg: "Баары",
+    en: "Total",
+  },
+  "account.listingsActive": {
+    ru: "Активные",
+    kg: "Активдүү",
+    en: "Active",
+  },
+  "account.listingsPending": {
+    ru: "На модерации",
+    kg: "Модерацияда",
+    en: "Pending",
+  },
+  "account.listingsRejected": {
+    ru: "Отклонённые",
+    kg: "Четке кагылгандар",
+    en: "Rejected",
+  },
+  "account.listingsArchived": {
+    ru: "Архивные",
+    kg: "Архивдегилер",
+    en: "Archived",
+  },
+  "account.viewAll": {
+    ru: "Все",
+    kg: "Баары",
+    en: "View all",
+  },
+  "account.noData": {
+    ru: "Пока нет данных",
+    kg: "Азырынча маалымат жок",
+    en: "No data yet",
+  },
+  "account.profile": {
+    ru: "Профиль",
+    kg: "Профиль",
+    en: "Profile",
   },
   "account.companyProfile": {
     ru: "Профиль компании",

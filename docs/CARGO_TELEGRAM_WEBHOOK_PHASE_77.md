@@ -96,3 +96,7 @@ Unchanged from Phase 76: no client phone, name/company, or free-text comment.
 - `POST /api/cargo/telegram/disconnect`
 - `POST /api/seller/cargo-subscriptions/telegram-test`
 - `POST /api/webhooks/telegram`
+
+## Related UX
+
+Telegram connect status is also summarized on the unified cabinet `/account` (Phase 81). Settings remain at `/seller/cargo-settings`.

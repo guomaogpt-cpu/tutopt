@@ -1,16 +1,15 @@
 import type { UserRole } from "@prisma/client";
 
-/** Home dashboard for the settings drawer “Мой кабинет” link. */
+/** Home dashboard for settings drawer / mobile profile / header cabinet link. */
 export function getAccountHomeHref(role: UserRole): string {
   switch (role) {
-    case "SELLER":
-      return "/seller/dashboard";
     case "ADMIN":
     case "MODERATOR":
       return "/admin";
     case "BUYER":
+    case "SELLER":
     default:
-      return "/buyer/dashboard";
+      return "/account";
   }
 }
 

@@ -22,14 +22,14 @@ const footerColumns: FooterColumn[] = [
     links: [
       { labelKey: "footer.catalog", href: "/listings" },
       { labelKey: "footer.favorites", href: "/favorites" },
-      { labelKey: "footer.buyerDashboard", href: "/buyer/dashboard" },
+      { labelKey: "footer.buyerDashboard", href: "/account" },
     ],
   },
   {
     titleKey: "footer.sellersTitle",
     links: [
       { labelKey: "footer.postListing", href: "/listings/new" },
-      { labelKey: "footer.sellerDashboard", href: "/seller/dashboard" },
+      { labelKey: "footer.sellerDashboard", href: "/account" },
       { labelKey: "footer.leads", href: "/seller/leads" },
     ],
   },

@@ -34,12 +34,8 @@ export function defaultPostAuthPath(role: string, next?: string | null): string 
     return next;
   }
 
-  if (role === "SELLER") {
-    return "/seller/dashboard";
-  }
-
-  if (role === "BUYER") {
-    return "/buyer/dashboard";
+  if (role === "SELLER" || role === "BUYER") {
+    return "/account";
   }
 
   return "/";

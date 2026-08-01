@@ -15,6 +15,8 @@ export default function robots(): MetadataRoute.Robots {
         "/seller/onboarding",
         "/seller/upgrade",
         "/buyer/dashboard",
+        "/account",
+        "/account/",
         "/favorites",
         "/compare",
         "/notifications",

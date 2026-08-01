@@ -25,9 +25,9 @@ export type HeaderMenuItem = {
   disabled?: boolean;
 };
 
-const buyerDashboardItem: HeaderMenuItem = {
+const accountDashboardItem: HeaderMenuItem = {
   label: "Личный кабинет",
-  href: "/buyer/dashboard",
+  href: "/account",
   icon: User,
 };
 
@@ -41,22 +41,14 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
 
   switch (user.role) {
     case "BUYER":
+    case "SELLER":
       return [
-        { label: "Личный кабинет", href: "/buyer/dashboard", icon: User },
+        accountDashboardItem,
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
         { label: "Профиль компании", href: "/account/company", icon: LayoutDashboard },
         { label: "Мои объявления", href: "/seller/listings", icon: List },
-        { label: "Избранное", href: "/favorites", icon: Heart },
-        { label: "Уведомления", href: "/notifications", icon: Inbox },
-        { label: "Выйти", icon: LogOut, action: "logout" },
-      ];
-    case "SELLER":
-      return [
-        { label: "Личный кабинет", href: "/seller/dashboard", icon: LayoutDashboard },
-        { label: "Профиль компании", href: "/account/company", icon: User },
-        { label: "Мои объявления", href: "/seller/listings", icon: List },
         { label: "Заявки", href: "/seller/leads", icon: Inbox },
-        { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
+        { label: "Избранное", href: "/favorites", icon: Heart },
         { label: "Уведомления", href: "/notifications", icon: Inbox },
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
@@ -86,6 +78,6 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
         { label: "Выйти", icon: LogOut, action: "logout" },
       ];
     default:
-      return [buyerDashboardItem, { label: "Выйти", icon: LogOut, action: "logout" }];
+      return [accountDashboardItem, { label: "Выйти", icon: LogOut, action: "logout" }];
   }
 }

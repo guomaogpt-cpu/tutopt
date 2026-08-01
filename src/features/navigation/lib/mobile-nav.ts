@@ -1,11 +1,12 @@
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import { getAccountHomeHref } from "@/features/navigation/lib/account-home";
+import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 
 export type MobileNavTabId = "home" | "search" | "post" | "favorites" | "profile";
 
 export function getMobileProfileHref(user: HeaderUser | null): string {
   if (!user) {
-    return "/login";
+    return buildLoginUrl("/account");
   }
 
   return getAccountHomeHref(user.role);
@@ -21,6 +22,7 @@ export function getActiveMobileNavTab(pathname: string): MobileNavTabId | null {
   }
 
   if (
+    pathname.startsWith("/account") ||
     pathname.startsWith("/buyer") ||
     pathname.startsWith("/seller") ||
     pathname.startsWith("/admin") ||

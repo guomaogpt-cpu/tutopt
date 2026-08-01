@@ -62,6 +62,7 @@ Company verification: see `docs/COMPANY_VERIFICATION_PHASE_80.md` (Phase 80).
 - Company analytics
 - Cargo subscription scoped to company
 - Document-based verification / trust score
+- Unified cabinet: see Phase 81 `/account` (`docs/UNIFIED_ACCOUNT_DASHBOARD_PHASE_81.md`)
 
 ## Schema
 

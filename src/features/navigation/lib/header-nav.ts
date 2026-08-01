@@ -63,16 +63,12 @@ export function getMobileAccountLinks(
 
   switch (user.role) {
     case "BUYER":
-      return [
-        { label: "Кабинет покупателя", href: "/buyer/dashboard" },
-        { label: "Избранное", href: "/favorites" },
-        { label: "Уведомления", href: "/notifications" },
-      ];
     case "SELLER":
       return [
-        { label: "Кабинет продавца", href: "/seller/dashboard" },
+        { label: "Личный кабинет", href: "/account" },
         { label: "Мои объявления", href: "/seller/listings" },
         { label: "Заявки", href: "/seller/leads" },
+        { label: "Профиль компании", href: "/account/company" },
         { label: "Подать объявление", href: "/listings/new" },
         { label: "Избранное", href: "/favorites" },
         { label: "Уведомления", href: "/notifications" },

@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { AuthFormCard } from "@/components/auth/AuthFormCard";
@@ -32,11 +31,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
   const nextPath = resolveNextParam(params.next);
 
   if (user) {
-    if (user.role === UserRole.SELLER) {
-      redirect(nextPath !== "/" ? nextPath : "/seller/dashboard");
-    }
-
-    redirect(nextPath !== "/" ? nextPath : "/buyer/dashboard");
+    redirect(nextPath !== "/" ? nextPath : "/account");
   }
 
   const googleEnabled = isGoogleAuthConfigured();
