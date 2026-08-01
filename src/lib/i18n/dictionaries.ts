@@ -3016,6 +3016,141 @@ export const DICTIONARY = {
     kg: "Компаниянын профилин түзүү",
     en: "Create company profile",
   },
+  "accountListings.title": {
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "accountListings.description": {
+    ru: "Управляйте всеми своими публикациями в одном месте",
+    kg: "Бардык жарыяларыңызды бир жерден башкарыңыз",
+    en: "Manage all your publications in one place",
+  },
+  "accountListings.postListing": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post listing",
+  },
+  "accountListings.emptyTitle": {
+    ru: "У вас пока нет объявлений.",
+    kg: "Сизде азырынча жарыялар жок.",
+    en: "You do not have any listings yet.",
+  },
+  "accountListings.emptyDescription": {
+    ru: "Разместите товар, услугу, оптовое предложение или карточку карго-компании.",
+    kg: "Товар, кызмат, дүң сунуш же карго компания карточкасын жайгаштырыңыз.",
+    en: "Post an item, service, wholesale offer or cargo company card.",
+  },
+  "accountListings.open": {
+    ru: "Открыть",
+    kg: "Ачуу",
+    en: "Open",
+  },
+  "accountListings.edit": {
+    ru: "Редактировать",
+    kg: "Түзөтүү",
+    en: "Edit",
+  },
+  "accountListings.archive": {
+    ru: "Архивировать",
+    kg: "Архивдөө",
+    en: "Archive",
+  },
+  "accountListings.restore": {
+    ru: "Восстановить",
+    kg: "Калыбына келтирүү",
+    en: "Restore",
+  },
+  "accountListings.delete": {
+    ru: "Удалить",
+    kg: "Өчүрүү",
+    en: "Delete",
+  },
+  "accountListings.status": {
+    ru: "Статус",
+    kg: "Статус",
+    en: "Status",
+  },
+  "accountListings.type": {
+    ru: "Тип",
+    kg: "Түрү",
+    en: "Type",
+  },
+  "accountListings.postedAs": {
+    ru: "Опубликовано от",
+    kg: "Жарыяланган",
+    en: "Posted as",
+  },
+  "accountListings.personalAccount": {
+    ru: "личный аккаунт",
+    kg: "жеке аккаунт",
+    en: "personal account",
+  },
+  "accountListings.company": {
+    ru: "компания",
+    kg: "компания",
+    en: "company",
+  },
+  "accountListings.leadsCount": {
+    ru: "Заявки",
+    kg: "Өтүнмөлөр",
+    en: "Leads",
+  },
+  "accountListings.filters.all": {
+    ru: "Все",
+    kg: "Баары",
+    en: "All",
+  },
+  "accountListings.filters.active": {
+    ru: "Активные",
+    kg: "Активдүү",
+    en: "Active",
+  },
+  "accountListings.filters.pending": {
+    ru: "На модерации",
+    kg: "Модерацияда",
+    en: "Pending",
+  },
+  "accountListings.filters.rejected": {
+    ru: "Отклонённые",
+    kg: "Четке кагылган",
+    en: "Rejected",
+  },
+  "accountListings.filters.archived": {
+    ru: "Архивные",
+    kg: "Архивдегилер",
+    en: "Archived",
+  },
+  "accountListings.filters.expired": {
+    ru: "Истёкшие",
+    kg: "Мөөнөтү өткөндөр",
+    en: "Expired",
+  },
+  "accountListings.filters.draft": {
+    ru: "Черновики",
+    kg: "Черновиктер",
+    en: "Drafts",
+  },
+  "accountListings.types.market": {
+    ru: "Объявления",
+    kg: "Жарыялар",
+    en: "Listings",
+  },
+  "accountListings.types.services": {
+    ru: "Услуги",
+    kg: "Кызматтар",
+    en: "Services",
+  },
+  "accountListings.types.opt": {
+    ru: "Опт",
+    kg: "Дүң",
+    en: "Wholesale",
+  },
+  "accountListings.types.cargo": {
+    ru: "Карго-компании",
+    kg: "Карго компаниялар",
+    en: "Cargo companies",
+  },
   "company.title": {
     ru: "Компания",
     kg: "Компания",

@@ -30,7 +30,7 @@ export function CreateListingPageHeader({
           </li>
           <li aria-hidden="true">/</li>
           <li>
-            <Link href="/seller/listings" className="transition hover:text-blue-600">
+            <Link href="/account/listings" className="transition hover:text-blue-600">
               {t("account.myListings")}
             </Link>
           </li>

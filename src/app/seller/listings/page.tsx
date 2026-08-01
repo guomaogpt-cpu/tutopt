@@ -173,9 +173,9 @@ export default async function SellerListingsPage({ searchParams }: SellerListing
             <Button
               asChild
               variant="outline"
-              className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] bg-white sm:w-auto"
+              className="h-11 w-full rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-900 sm:w-auto"
             >
-              <Link href="/seller/dashboard">Кабинет продавца</Link>
+              <Link href="/account">Личный кабинет</Link>
             </Button>
             <Button
               asChild
@@ -185,6 +185,13 @@ export default async function SellerListingsPage({ searchParams }: SellerListing
             </Button>
           </PageHeaderActions>
         </PageHeader>
+
+        <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+          Новая версия страницы доступна в личном кабинете.{" "}
+          <Link href="/account/listings" className="font-semibold underline">
+            Открыть мои объявления
+          </Link>
+        </div>
 
         <div className="mt-6 space-y-4">
           {hasRestrictions ? (

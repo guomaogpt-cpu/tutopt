@@ -43,7 +43,7 @@ export function AccountListingsSummary({
           {t("account.myListings")}
         </h2>
         <Button asChild variant="outline" size="sm" className="rounded-xl dark:border-slate-700">
-          <Link href="/seller/listings">{t("account.viewAll")}</Link>
+          <Link href="/account/listings">{t("account.viewAll")}</Link>
         </Button>
       </div>
 

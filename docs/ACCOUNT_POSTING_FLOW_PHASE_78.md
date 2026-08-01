@@ -64,5 +64,6 @@ UI copy on `/cargo` explains the difference. Telegram/settings stay under `/sell
 
 - Phase 79: `docs/COMPANY_PROFILE_PHASE_79.md` — company profile UX on top of `SellerProfile`
 - Phase 81: `docs/UNIFIED_ACCOUNT_DASHBOARD_PHASE_81.md`
+- Phase 82: `docs/ACCOUNT_LISTINGS_PHASE_82.md` — `/account/listings` management
 - `getCreateListingHref` → `/listings/new` for BUYER
 - `docs/CARGO_*` for cargo flows

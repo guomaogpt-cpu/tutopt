@@ -15,7 +15,8 @@ export type SellerListingsStatusFilter =
   | "pending"
   | "rejected"
   | "archived"
-  | "expired";
+  | "expired"
+  | "draft";
 
 export type SellerListingsFilters = {
   status: SellerListingsStatusFilter;
@@ -31,6 +32,7 @@ const STATUS_VALUES: SellerListingsStatusFilter[] = [
   "rejected",
   "archived",
   "expired",
+  "draft",
 ];
 
 export const sellerListingsStatusOptions: {
@@ -43,6 +45,7 @@ export const sellerListingsStatusOptions: {
   { value: "rejected", label: "Отклонённые" },
   { value: "archived", label: "Архив" },
   { value: "expired", label: "Истёкшие" },
+  { value: "draft", label: "Черновики" },
 ];
 
 export function parseSellerListingsParams(
@@ -91,6 +94,9 @@ export function buildSellerListingsWhere(
       break;
     case "archived":
       where.status = ListingStatus.ARCHIVED;
+      break;
+    case "draft":
+      where.status = ListingStatus.DRAFT;
       break;
     case "expired":
       where.status = ListingStatus.PUBLISHED;

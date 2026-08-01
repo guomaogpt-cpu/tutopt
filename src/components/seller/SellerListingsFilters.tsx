@@ -26,9 +26,14 @@ const VERTICAL_ALL = "all";
 
 type SellerListingsFiltersProps = {
   filters: SellerListingsFiltersState;
+  /** Defaults to /seller/listings for legacy page. */
+  basePath?: string;
 };
 
-export function SellerListingsFilters({ filters }: SellerListingsFiltersProps) {
+export function SellerListingsFilters({
+  filters,
+  basePath = "/seller/listings",
+}: SellerListingsFiltersProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.q);
 
@@ -44,7 +49,7 @@ export function SellerListingsFilters({ filters }: SellerListingsFiltersProps) {
       statusFilter: merged.status,
       vertical: merged.vertical,
     });
-    router.push(`/seller/listings${buildSellerListingsQueryString(merged)}`);
+    router.push(`${basePath}${buildSellerListingsQueryString(merged)}`);
   }
 
   return (

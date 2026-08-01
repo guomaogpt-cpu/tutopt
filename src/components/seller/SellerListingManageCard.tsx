@@ -27,6 +27,7 @@ import {
   ConfirmDialogTitle,
   ConfirmDialogTrigger,
 } from "@/components/ui/confirm-dialog";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 export type SellerManagedListing = {
@@ -44,6 +45,9 @@ export type SellerManagedListing = {
   image_url: string | null;
   qualityLevel: QualityLevel;
   qualityWarnings: { code: string; label: string }[];
+  postedAsCompany?: boolean;
+  companyName?: string | null;
+  leadsCount?: number;
 };
 
 type ListingApiAction = "archive" | "restore" | "renew";
@@ -63,12 +67,16 @@ function formatShortDate(value: string): string {
 type SellerListingManageCardProps = {
   listing: SellerManagedListing;
   statusFilter: SellerListingsStatusFilter;
+  /** Use accountListings.* action labels when true. */
+  useAccountLabels?: boolean;
 };
 
 export function SellerListingManageCard({
   listing,
   statusFilter,
+  useAccountLabels = false,
 }: SellerListingManageCardProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [pendingAction, setPendingAction] = useState<ListingApiAction | null>(null);
   const [error, setError] = useState("");
@@ -84,6 +92,18 @@ export function SellerListingManageCard({
     listing.status === ListingStatusEnum.REJECTED;
   const canRestore = listing.status === ListingStatusEnum.ARCHIVED;
   const canRenew = isPublished;
+
+  const openLabel = useAccountLabels ? t("accountListings.open") : "Открыть";
+  const editLabel = useAccountLabels ? t("accountListings.edit") : "Редактировать";
+  const archiveLabel = useAccountLabels ? t("accountListings.archive") : "Архивировать";
+  const restoreLabel = useAccountLabels ? t("accountListings.restore") : "Восстановить";
+  const postedAsLabel = listing.postedAsCompany
+    ? `${t("accountListings.postedAs")}: ${t("accountListings.company")}${
+        listing.companyName ? ` · ${listing.companyName}` : ""
+      }`
+    : useAccountLabels
+      ? `${t("accountListings.postedAs")}: ${t("accountListings.personalAccount")}`
+      : null;
 
   async function runAction(action: ListingApiAction) {
     if (pendingAction) {
@@ -184,11 +204,19 @@ export function SellerListingManageCard({
           className="mt-2"
         />
 
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#64748B]">
-          <span className="text-base font-bold tracking-tight text-[#0F172A]">{listing.priceLabel}</span>
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#64748B] dark:text-slate-400">
+          <span className="text-base font-bold tracking-tight text-[#0F172A] dark:text-slate-100">
+            {listing.priceLabel}
+          </span>
           <span>{listing.categoryName}</span>
           {listing.cityName ? <span>{listing.cityName}</span> : null}
           <span>{dateLabel}</span>
+          {postedAsLabel ? <span>{postedAsLabel}</span> : null}
+          {typeof listing.leadsCount === "number" && listing.leadsCount > 0 ? (
+            <span>
+              {t("accountListings.leadsCount")}: {listing.leadsCount}
+            </span>
+          ) : null}
           {listing.expires_at ? (
             <span className="inline-flex items-center gap-1">
               <CalendarClock className="size-3.5" aria-hidden="true" />
@@ -210,7 +238,7 @@ export function SellerListingManageCard({
         <Button
           asChild
           variant="outline"
-          className="h-10 rounded-xl border-[rgba(148,163,184,0.25)]"
+          className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700 sm:h-10"
           onClick={() =>
             trackSellerListingActionClick({
               action: "open",
@@ -219,12 +247,12 @@ export function SellerListingManageCard({
             })
           }
         >
-          <Link href={`/listings/${listing.id}`}>Открыть</Link>
+          <Link href={`/listings/${listing.id}`}>{openLabel}</Link>
         </Button>
         <Button
           asChild
           variant="outline"
-          className="h-10 rounded-xl border-[rgba(148,163,184,0.25)]"
+          className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700 sm:h-10"
           onClick={() =>
             trackSellerListingActionClick({
               action: "edit",
@@ -233,7 +261,7 @@ export function SellerListingManageCard({
             })
           }
         >
-          <Link href={`/listings/${listing.id}/edit`}>Редактировать</Link>
+          <Link href={`/listings/${listing.id}/edit`}>{editLabel}</Link>
         </Button>
 
         {canRenew ? (
@@ -254,10 +282,10 @@ export function SellerListingManageCard({
 
         {canArchive ? (
           <ConfirmActionButton
-            label="Архивировать"
+            label={archiveLabel}
             title="Архивировать объявление?"
             description="Объявление будет скрыто с сайта и перемещено в архив. Его можно восстановить позже."
-            confirmLabel="Архивировать"
+            confirmLabel={archiveLabel}
             isPending={pendingAction === "archive"}
             disabled={pendingAction !== null}
             onConfirm={() => void runAction("archive")}
@@ -266,10 +294,10 @@ export function SellerListingManageCard({
 
         {canRestore ? (
           <ConfirmActionButton
-            label="Восстановить"
+            label={restoreLabel}
             title="Восстановить объявление?"
             description="Объявление вернётся из архива и отправится на модерацию перед публикацией."
-            confirmLabel="Восстановить"
+            confirmLabel={restoreLabel}
             isPending={pendingAction === "restore"}
             disabled={pendingAction !== null}
             onConfirm={() => void runAction("restore")}
@@ -306,7 +334,7 @@ function ConfirmActionButton({
           type="button"
           variant="outline"
           disabled={disabled}
-          className="h-10 rounded-xl border-[rgba(148,163,184,0.25)]"
+          className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700 sm:h-10"
         >
           {isPending ? (
             <Loader2 className="size-4 animate-spin" aria-hidden="true" />

@@ -49,7 +49,7 @@ Primary UX entry is `/account`.
 
 ## 7. Future
 
-- `/account/listings` native list page
+- `/account/listings` management page — **done in Phase 82** — see `docs/ACCOUNT_LISTINGS_PHASE_82.md`
 - `/account/requests` unified leads page
 - Account security settings
 - Soft redirects from buyer/seller dashboards to `/account`

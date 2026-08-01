@@ -66,7 +66,7 @@ export function getMobileAccountLinks(
     case "SELLER":
       return [
         { label: "Личный кабинет", href: "/account" },
-        { label: "Мои объявления", href: "/seller/listings" },
+        { label: "Мои объявления", href: "/account/listings" },
         { label: "Заявки", href: "/seller/leads" },
         { label: "Профиль компании", href: "/account/company" },
         { label: "Подать объявление", href: "/listings/new" },

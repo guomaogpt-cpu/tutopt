@@ -126,7 +126,7 @@ export function NewListingForm({
   mode = "create",
   listingId,
   initialValues,
-  cancelHref = "/seller/listings",
+  cancelHref = "/account/listings",
   companyProfile = null,
 }: NewListingFormProps) {
   const { t } = useTranslation();
@@ -449,7 +449,7 @@ export function NewListingForm({
               variant="outline"
               className="h-12 flex-1 rounded-xl border-slate-200 dark:border-slate-700"
             >
-              <Link href="/seller/listings">{t("createListing.myListings")}</Link>
+              <Link href="/account/listings">{t("createListing.myListings")}</Link>
             </Button>
           </div>
         </div>

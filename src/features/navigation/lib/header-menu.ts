@@ -46,7 +46,7 @@ export function getHeaderMenuItems(user: HeaderUser | null): HeaderMenuItem[] {
         accountDashboardItem,
         { label: "Подать объявление", href: "/listings/new", icon: PlusCircle },
         { label: "Профиль компании", href: "/account/company", icon: LayoutDashboard },
-        { label: "Мои объявления", href: "/seller/listings", icon: List },
+        { label: "Мои объявления", href: "/account/listings", icon: List },
         { label: "Заявки", href: "/seller/leads", icon: Inbox },
         { label: "Избранное", href: "/favorites", icon: Heart },
         { label: "Уведомления", href: "/notifications", icon: Inbox },

@@ -23,7 +23,7 @@ type QuickAction = {
 const ACTIONS: QuickAction[] = [
   { href: "/listings/new", labelKey: "account.postListing", icon: PlusCircle },
   { href: "/cargo", labelKey: "account.submitCargoRequest", icon: Truck },
-  { href: "/seller/listings", labelKey: "account.myListings", icon: ListChecks },
+  { href: "/account/listings", labelKey: "account.myListings", icon: ListChecks },
   { href: "/favorites", labelKey: "account.favorites", icon: Heart },
   { href: "/notifications", labelKey: "account.notifications", icon: Bell },
   { href: "/account/company", labelKey: "account.company", icon: Building2 },

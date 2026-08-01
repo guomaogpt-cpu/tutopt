@@ -10,11 +10,13 @@ import { Button } from "@/components/ui/button";
 type SellerListingsPaginationProps = {
   filters: SellerListingsFilters;
   totalCount: number;
+  basePath?: string;
 };
 
 export function SellerListingsPagination({
   filters,
   totalCount,
+  basePath = "/seller/listings",
 }: SellerListingsPaginationProps) {
   const totalPages = Math.max(1, Math.ceil(totalCount / SELLER_LISTINGS_PER_PAGE));
 
@@ -31,11 +33,11 @@ export function SellerListingsPagination({
         asChild={filters.page > 1}
         variant="outline"
         disabled={filters.page <= 1}
-        className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white"
+        className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-900"
       >
         {filters.page > 1 ? (
           <Link
-            href={`/seller/listings${buildSellerListingsQueryString(filters, { page: filters.page - 1 })}`}
+            href={`${basePath}${buildSellerListingsQueryString(filters, { page: filters.page - 1 })}`}
             aria-label="Предыдущая страница"
           >
             <ChevronLeft className="size-4" aria-hidden="true" />
@@ -49,8 +51,8 @@ export function SellerListingsPagination({
         )}
       </Button>
 
-      <span className="text-sm text-[#64748B]">
-        Страница <span className="font-medium text-[#0F172A]">{filters.page}</span> из{" "}
+      <span className="text-sm text-[#64748B] dark:text-slate-400">
+        Страница <span className="font-medium text-[#0F172A] dark:text-slate-100">{filters.page}</span> из{" "}
         {totalPages}
       </span>
 
@@ -58,11 +60,11 @@ export function SellerListingsPagination({
         asChild={filters.page < totalPages}
         variant="outline"
         disabled={filters.page >= totalPages}
-        className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white"
+        className="h-10 gap-1 rounded-xl border-[rgba(148,163,184,0.25)] bg-white dark:border-slate-700 dark:bg-slate-900"
       >
         {filters.page < totalPages ? (
           <Link
-            href={`/seller/listings${buildSellerListingsQueryString(filters, { page: filters.page + 1 })}`}
+            href={`${basePath}${buildSellerListingsQueryString(filters, { page: filters.page + 1 })}`}
             aria-label="Следующая страница"
           >
             Вперёд
