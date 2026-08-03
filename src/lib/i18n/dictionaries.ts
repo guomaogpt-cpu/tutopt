@@ -3234,6 +3234,11 @@ export const DICTIONARY = {
     kg: "Менин карго сурамдарым",
     en: "My cargo requests",
   },
+  "account.cargoResponsesShort": {
+    ru: "откликов",
+    kg: "отклик",
+    en: "responses",
+  },
   "account.favorites": {
     ru: "Избранное",
     kg: "Тандалгандар",

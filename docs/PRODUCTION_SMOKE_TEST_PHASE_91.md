@@ -107,3 +107,7 @@ Guest cargo create now requires login (P0 orphan fix). Ready for closed tester g
 ## Phase 94 cargo demo readiness
 
 See `docs/CARGO_DEMO_READINESS_PHASE_94.md`.
+
+## Phase 96 closed launch results and fixes
+
+See `docs/CARGO_CLOSED_LAUNCH_RESULTS_PHASE_96.md`.

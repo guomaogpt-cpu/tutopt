@@ -184,6 +184,18 @@ Privacy re-check (без новых P0): клиентский телефон т�
 
 ---
 
+## Статус заполнения (Phase 96)
+
+На момент Phase 96:
+
+- Таблица проблем §9: **пуста** (реальные проблемы ещё не внесены)
+- Метрики §10: **не заполнены**
+- Результаты и решение о расширении: `docs/CARGO_CLOSED_LAUNCH_RESULTS_PHASE_96.md`
+
 ## Phase 95 cargo closed launch preparation
 
 Closed launch kit: onboarding, client/company copy, feedback CTA, operator + metrics checklists. No chat/ratings/payments/CRM.
+
+## Phase 96 closed launch results and fixes
+
+See `docs/CARGO_CLOSED_LAUNCH_RESULTS_PHASE_96.md`. Live metrics still empty; P96-01 account status labels fixed; decision: another closed cycle to collect real results.

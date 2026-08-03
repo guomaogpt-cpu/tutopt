@@ -97,3 +97,7 @@ Product framing: MVP shipping request ↔ company response ↔ owner contacts (+
 ## Phase 95 cargo closed launch preparation
 
 See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Closed launch for 5–10 users: short onboarding, client/company instructions, feedback CTA, operator + metrics checklists.
+
+## Phase 96 closed launch results and fixes
+
+See `docs/CARGO_CLOSED_LAUNCH_RESULTS_PHASE_96.md`.

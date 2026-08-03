@@ -1,4 +1,9 @@
-import { ListingStatus, type CompanyType, type CompanyVerificationStatus } from "@prisma/client";
+import {
+  ListingStatus,
+  type CargoRequestStatus,
+  type CompanyType,
+  type CompanyVerificationStatus,
+} from "@prisma/client";
 import type { PublicUser } from "@/features/auth/lib/session";
 import {
   buildCompanyProfileHref,
@@ -52,7 +57,7 @@ export type AccountDashboardData = {
   recentCargoRequests: Array<{
     id: string;
     itemName: string;
-    status: string;
+    status: CargoRequestStatus;
     responseCount: number;
     fromLocation: string;
     toLocation: string;

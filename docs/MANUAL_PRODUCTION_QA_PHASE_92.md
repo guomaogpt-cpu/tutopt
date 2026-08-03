@@ -161,3 +161,7 @@ See `docs/CARGO_DEMO_READINESS_PHASE_94.md`.
 ## Phase 95 cargo closed launch preparation
 
 See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Onboarding + feedback CTA + closed-launch operator kit for first 5–10 users.
+
+## Phase 96 closed launch results and fixes
+
+See `docs/CARGO_CLOSED_LAUNCH_RESULTS_PHASE_96.md`. No live P0 logged; P1 account status labels fixed; need another closed cycle to fill metrics.

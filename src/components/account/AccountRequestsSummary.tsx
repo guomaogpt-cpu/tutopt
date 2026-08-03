@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import type { CargoRequestStatus } from "@prisma/client";
+import { CargoRequestStatusBadge } from "@/components/seller/SellerCargoRequestsList";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Button } from "@/components/ui/button";
 
@@ -11,7 +13,7 @@ type AccountRequestsSummaryProps = {
   recentCargoRequests: Array<{
     id: string;
     itemName: string;
-    status: string;
+    status: CargoRequestStatus;
     responseCount: number;
     fromLocation: string;
     toLocation: string;
@@ -83,10 +85,18 @@ export function AccountRequestsSummary({
                 key={request.id}
                 className="rounded-xl border border-slate-100 px-3 py-2 text-sm dark:border-slate-800"
               >
-                <p className="font-medium text-slate-800 dark:text-slate-100">{request.itemName}</p>
+                <div className="flex items-start justify-between gap-2">
+                  <Link
+                    href={`/cargo/requests/${request.id}`}
+                    className="min-w-0 font-medium text-slate-800 hover:underline dark:text-slate-100"
+                  >
+                    {request.itemName}
+                  </Link>
+                  <CargoRequestStatusBadge status={request.status} />
+                </div>
                 <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                  {request.fromLocation} → {request.toLocation} · {request.status} ·{" "}
-                  {request.responseCount}
+                  {request.fromLocation} → {request.toLocation} · {request.responseCount}{" "}
+                  {t("account.cargoResponsesShort")}
                 </p>
               </li>
             ))}
