@@ -14,9 +14,14 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 type CargoRequestModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  isAuthenticated?: boolean;
 };
 
-export function CargoRequestModal({ open, onOpenChange }: CargoRequestModalProps) {
+export function CargoRequestModal({
+  open,
+  onOpenChange,
+  isAuthenticated = false,
+}: CargoRequestModalProps) {
   const { t } = useTranslation();
   const [formKey, setFormKey] = useState(0);
 
@@ -40,6 +45,7 @@ export function CargoRequestModal({ open, onOpenChange }: CargoRequestModalProps
           <CargoRequestForm
             key={formKey}
             variant="modal"
+            isAuthenticated={isAuthenticated}
             onSuccessClose={() => onOpenChange(false)}
           />
         </div>

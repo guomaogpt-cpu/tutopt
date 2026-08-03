@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import Link from "next/link";
 import {
   CargoRequestError,
   createCargoRequest,
@@ -23,6 +24,7 @@ import {
   CARGO_SERVICE_TYPE_IDS,
   CARGO_SERVICE_TYPE_LABEL_KEY,
 } from "@/features/cargo/lib/cargo-subscription-options";
+import { buildLoginUrl, buildRegisterUrl } from "@/features/auth/lib/login-redirect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,6 +55,7 @@ type FieldKey =
 
 type CargoRequestFormProps = {
   variant?: "page" | "modal";
+  isAuthenticated?: boolean;
   /** Called after successful submit (e.g. close modal after a short delay). */
   onSuccessClose?: () => void;
 };
@@ -79,6 +82,7 @@ function mapValidationMessage(
 
 export function CargoRequestForm({
   variant = "page",
+  isAuthenticated = false,
   onSuccessClose,
 }: CargoRequestFormProps) {
   const { t } = useTranslation();
@@ -195,17 +199,56 @@ export function CargoRequestForm({
           {t("cargo.requestSuccessTitle")}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-          {t("cargo.requestSuccessDescription")}
+          {isAuthenticated
+            ? t("cargo.requestSuccessDescription")
+            : t("cargo.requestSuccessGuestDescription")}
         </p>
-        {onSuccessClose ? (
-          <Button
-            type="button"
-            onClick={onSuccessClose}
-            className="mt-5 h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
-          >
-            {t("common.close")}
-          </Button>
-        ) : null}
+        <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          {isAuthenticated ? (
+            <Button
+              asChild
+              className="h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
+            >
+              <Link href="/account/requests?tab=cargoRequests">
+                {t("cargo.viewMyRequests")}
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button
+                asChild
+                className="h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
+              >
+                <Link href={buildLoginUrl("/account/requests?tab=cargoRequests")}>
+                  {t("auth.signIn")}
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 sm:w-auto"
+              >
+                <Link
+                  href={buildRegisterUrl({
+                    returnPath: "/account/requests?tab=cargoRequests",
+                  })}
+                >
+                  {t("auth.register")}
+                </Link>
+              </Button>
+            </>
+          )}
+          {onSuccessClose ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onSuccessClose}
+              className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 sm:w-auto"
+            >
+              {t("common.close")}
+            </Button>
+          ) : null}
+        </div>
       </div>
     );
   }

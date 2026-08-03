@@ -89,3 +89,13 @@
 - Unified cargo ops under `/account/*`.
 - Deprecate unused `RoleSelector`.
 - Full public copy pass remaining seller SEO strings if needed.
+
+---
+
+## Phase 89 QA results
+
+Verified end-to-end flows in `docs/PRODUCT_QA_PHASE_89.md`.
+
+Key finding: after Phase 88 hid client phones on the cargo board, company response contacts were never shown to the request owner — fixed in Phase 89.
+
+Also tightened mobile padding, cargo success CTAs, vertical form titles, and staff mobile post CTA.

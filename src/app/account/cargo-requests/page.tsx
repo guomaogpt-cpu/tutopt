@@ -35,7 +35,7 @@ export default async function AccountCargoRequestsPage() {
   const requests = await getBuyerCargoRequests(user.id);
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] pb-[calc(5rem+env(safe-area-inset-bottom))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
+    <main className="min-w-0 bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
       <Container size="lg" className="max-w-[900px] min-w-0">
         <header className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -105,6 +105,29 @@ export default async function AccountCargoRequestsPage() {
                           {response.sellerProfile.company_name}
                         </p>
                         <p className="mt-1 text-slate-600 dark:text-slate-300">{response.comment}</p>
+                        {response.price ? (
+                          <p className="mt-1 text-slate-700 dark:text-slate-200">
+                            {response.price}
+                            {response.currency ? ` ${response.currency}` : null}
+                          </p>
+                        ) : null}
+                        {response.contact_phone || response.contact_name ? (
+                          <div className="mt-2 border-t border-slate-200 pt-2 dark:border-slate-800">
+                            {response.contact_name ? (
+                              <p className="text-slate-800 dark:text-slate-100">
+                                {response.contact_name}
+                              </p>
+                            ) : null}
+                            {response.contact_phone ? (
+                              <a
+                                href={`tel:${response.contact_phone}`}
+                                className="mt-0.5 inline-block font-semibold text-orange-700 hover:underline dark:text-orange-300"
+                              >
+                                {response.contact_phone}
+                              </a>
+                            ) : null}
+                          </div>
+                        ) : null}
                       </div>
                     ))
                   )}

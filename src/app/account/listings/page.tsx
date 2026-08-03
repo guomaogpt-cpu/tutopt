@@ -149,7 +149,7 @@ export default async function AccountListingsPage({ searchParams }: AccountListi
   const hasFilters = hasActiveSellerListingsFilters(filters);
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] pb-[calc(5rem+env(safe-area-inset-bottom))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
+    <main className="min-w-0 bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
       <Container size="lg" className="max-w-[1100px] min-w-0">
         <AccountListingsPageHeader />
 

@@ -208,3 +208,13 @@
 
 ### Legacy временно
 - `/buyer/*`, `/seller/dashboard|listings|leads`, `/seller/cargo-*`
+
+---
+
+## Phase 89 QA results
+
+Product QA checklist: `docs/PRODUCT_QA_PHASE_89.md`.
+
+**P0 fixed:** cargo response contacts shown to request owner.  
+**P1 fixed:** cargo success CTA, services/opt form titles, theme price, orange respond button, double mobile padding, staff post hide, response status i18n.  
+**Backlog:** `/cargo/requests/[id]` route, hard legacy redirects, cargo-settings alias, filter density.

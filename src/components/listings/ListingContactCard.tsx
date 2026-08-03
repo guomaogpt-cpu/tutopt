@@ -132,7 +132,10 @@ export function ListingContactCard({
         <p className="text-xs font-medium uppercase tracking-wide text-[#64748B] dark:text-slate-400">
           {t("listing.price")}
         </p>
-        <p className="text-[28px] font-extrabold leading-none tracking-tight text-[#2563EB] sm:text-[32px] dark:text-blue-400">
+        <p className={cn(
+          "text-[28px] font-extrabold leading-none tracking-tight sm:text-[32px]",
+          theme.primaryText,
+        )}>
           {hasPrice ? priceLabel : t("listing.priceOnRequest")}
         </p>
         {hasPrice ? (

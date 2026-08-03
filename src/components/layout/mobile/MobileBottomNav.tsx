@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Heart, Home, PlusCircle, Search, User } from "lucide-react";
-import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
+import { getCreateListingHref, shouldShowCreateListingCTA } from "@/features/auth/lib/login-redirect";
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import {
   getActiveMobileNavTab,
@@ -36,6 +36,8 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
   const unreadCount = useUnreadNotificationCount();
   const showProfileBadge = Boolean(user) && unreadCount > 0;
 
+  const showPost = shouldShowCreateListingCTA(user);
+
   const items: NavItem[] = [
     {
       id: "home",
@@ -49,13 +51,17 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
       labelKey: "mobileNav.search",
       icon: Search,
     },
-    {
-      id: "post",
-      href: getCreateListingHref(user),
-      labelKey: "mobileNav.post",
-      icon: PlusCircle,
-      isCenter: true,
-    },
+    ...(showPost
+      ? [
+          {
+            id: "post" as const,
+            href: getCreateListingHref(user),
+            labelKey: "mobileNav.post" as const,
+            icon: PlusCircle,
+            isCenter: true,
+          },
+        ]
+      : []),
     {
       id: "favorites",
       href: "/favorites",
@@ -76,7 +82,12 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 md:hidden dark:border-slate-800 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/90"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="mx-auto grid h-16 max-w-lg grid-cols-5 items-end px-1 pt-1">
+      <ul
+        className={cn(
+          "mx-auto grid h-16 max-w-lg items-end px-1 pt-1",
+          showPost ? "grid-cols-5" : "grid-cols-4",
+        )}
+      >
         {items.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;

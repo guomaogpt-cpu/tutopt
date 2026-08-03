@@ -2,9 +2,11 @@
 
 import type { CargoResponseStatus } from "@prisma/client";
 import Link from "next/link";
+import { Phone } from "lucide-react";
 import { ExpandableText } from "@/components/account/ExpandableText";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import { Button } from "@/components/ui/button";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +24,8 @@ type AccountCargoResponseCardProps = {
     itemName?: string;
     fromLocation?: string;
     toLocation?: string;
+    contactName?: string | null;
+    contactPhone?: string | null;
   };
   mode: "incoming" | "own";
 };
@@ -40,17 +44,17 @@ function responseStatusClass(status: CargoResponseStatus): string {
   }
 }
 
-function responseStatusLabel(status: CargoResponseStatus): string {
+function responseStatusKey(status: CargoResponseStatus): DictionaryKey {
   switch (status) {
     case "ACCEPTED":
-      return "ACCEPTED";
+      return "accountRequests.responseStatus.accepted";
     case "REJECTED":
-      return "REJECTED";
+      return "accountRequests.responseStatus.rejected";
     case "WITHDRAWN":
-      return "WITHDRAWN";
+      return "accountRequests.responseStatus.withdrawn";
     case "NEW":
     default:
-      return "NEW";
+      return "accountRequests.responseStatus.new";
   }
 }
 
@@ -60,6 +64,8 @@ export function AccountCargoResponseCard({ response, mode }: AccountCargoRespons
     response.price && response.currency
       ? `${response.price} ${response.currency}`
       : response.price;
+  const showContacts =
+    mode === "incoming" && Boolean(response.contactPhone || response.contactName);
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
@@ -93,7 +99,7 @@ export function AccountCargoResponseCard({ response, mode }: AccountCargoRespons
             responseStatusClass(response.status),
           )}
         >
-          {t("accountRequests.status")}: {responseStatusLabel(response.status)}
+          {t(responseStatusKey(response.status))}
         </span>
       </div>
 
@@ -121,6 +127,28 @@ export function AccountCargoResponseCard({ response, mode }: AccountCargoRespons
       <div className="mt-3">
         <ExpandableText label={t("accountRequests.comment")} text={response.comment} />
       </div>
+
+      {showContacts ? (
+        <div className="mt-3 rounded-xl border border-orange-100 bg-orange-50/80 px-3 py-2.5 text-sm dark:border-orange-900/50 dark:bg-orange-950/30">
+          <p className="text-xs font-medium uppercase tracking-wide text-orange-700 dark:text-orange-300">
+            {t("accountRequests.companyContacts")}
+          </p>
+          {response.contactName ? (
+            <p className="mt-1 font-medium text-slate-900 dark:text-slate-100">
+              {response.contactName}
+            </p>
+          ) : null}
+          {response.contactPhone ? (
+            <a
+              href={`tel:${response.contactPhone}`}
+              className="mt-1 inline-flex items-center gap-1.5 font-semibold text-orange-700 hover:underline dark:text-orange-300"
+            >
+              <Phone className="size-3.5" aria-hidden="true" />
+              {response.contactPhone}
+            </a>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="mt-4">
         <Button

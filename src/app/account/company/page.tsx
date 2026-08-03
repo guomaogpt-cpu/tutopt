@@ -61,7 +61,7 @@ export default async function AccountCompanyPage() {
       : null;
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] pb-[calc(5rem+env(safe-area-inset-bottom))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
+    <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
       <Container size="md" className="max-w-2xl min-w-0">
         <header className="mb-5 sm:mb-6">
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">

@@ -216,7 +216,7 @@ export function SellerCargoRequestsList({
             {canRespond && !hasOwnResponse && !isClosed ? (
               <Button
                 type="button"
-                className="mt-4 h-11 w-full rounded-xl bg-rose-600 text-white hover:bg-rose-700"
+                className="mt-4 h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600"
                 onClick={() => setActiveRequestId(request.id)}
               >
                 {t("cargo.seller.respondToRequest")}

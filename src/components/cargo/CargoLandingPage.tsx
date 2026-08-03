@@ -30,7 +30,7 @@ export function CargoLandingPage({
   const [requestOpen, setRequestOpen] = useState(false);
 
   return (
-    <main className={cn("min-w-0 overflow-x-clip bg-gradient-to-b pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8", getVerticalTheme("CARGO").pageWash)}>
+    <main className={cn("min-w-0 overflow-x-clip bg-gradient-to-b md:pb-8", getVerticalTheme("CARGO").pageWash)}>
       <CargoCompactHero onCreateRequest={() => setRequestOpen(true)} />
 
       <Container size="lg" className="py-5 sm:py-7">
@@ -48,7 +48,11 @@ export function CargoLandingPage({
         <CargoDualCta onCreateRequest={() => setRequestOpen(true)} />
       </Container>
 
-      <CargoRequestModal open={requestOpen} onOpenChange={setRequestOpen} />
+      <CargoRequestModal
+        open={requestOpen}
+        onOpenChange={setRequestOpen}
+        isAuthenticated={isAuthenticated}
+      />
     </main>
   );
 }

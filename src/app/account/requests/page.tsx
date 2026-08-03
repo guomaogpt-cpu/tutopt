@@ -83,6 +83,8 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
       itemName: request.item_name,
       fromLocation: request.from_location,
       toLocation: request.to_location,
+      contactName: response.contact_name,
+      contactPhone: response.contact_phone,
     })),
   );
 
@@ -106,7 +108,7 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
     (activeTab === "cargoResponses" && cargoResponsesCount > 0);
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] pb-[calc(5rem+env(safe-area-inset-bottom))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
+    <main className="min-w-0 bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
       <Container size="lg" className="max-w-[1100px] min-w-0">
         <AccountRequestsPageHeader />
 

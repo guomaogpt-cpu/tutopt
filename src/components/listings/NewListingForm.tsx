@@ -531,12 +531,18 @@ export function NewListingForm({
             title={
               vertical === "CARGO"
                 ? t("cargo.addCompanyButton")
-                : t("createListing.whatSelling")
+                : vertical === "SERVICES"
+                  ? t("services.formSectionTitle")
+                  : vertical === "OPT"
+                    ? t("opt.formSectionTitle")
+                    : t("createListing.whatSelling")
             }
             description={
               vertical === "CARGO"
                 ? t("cargo.addCompanyDescription")
-                : t("createListing.sections.main")
+                : vertical === "SERVICES"
+                  ? t("services.formDescriptionHint")
+                  : t("createListing.sections.main")
             }
           >
             <div className="space-y-2">

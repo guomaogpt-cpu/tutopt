@@ -836,9 +836,19 @@ export const DICTIONARY = {
     en: "Request submitted",
   },
   "cargo.requestSuccessDescription": {
-    ru: "Карго-компании увидят заявку и смогут связаться с вами.",
-    kg: "Карго компаниялар сурамыңызды көрүп, сиз менен байланыша алышат.",
-    en: "Cargo companies will see the request and can contact you.",
+    ru: "Карго-компании увидят заявку и оставят отклик с контактами. Смотрите отклики в «Мои заявки».",
+    kg: "Карго компаниялар сурамыңызды көрүп, байланыш менен жооп калтырышат. Жоопторду «Менин сурамдарымдан» караңыз.",
+    en: "Cargo companies will see the request and leave a response with contacts. Check responses in My requests.",
+  },
+  "cargo.requestSuccessGuestDescription": {
+    ru: "Заявка отправлена. Войдите в аккаунт, чтобы видеть отклики карго-компаний.",
+    kg: "Сурам жөнөтүлдү. Карго компаниялардын жоопторун көрүү үчүн аккаунтка кириңиз.",
+    en: "Request submitted. Sign in to see cargo company responses.",
+  },
+  "cargo.viewMyRequests": {
+    ru: "Мои заявки",
+    kg: "Менин сурамдарым",
+    en: "My requests",
   },
   "cargo.requestTitle": {
     ru: "Оставить заявку на перевозку",
@@ -846,9 +856,9 @@ export const DICTIONARY = {
     en: "Submit a shipping request",
   },
   "cargo.requestDescription": {
-    ru: "Опишите товар и маршрут. Карго-компании смогут увидеть заявку и связаться с вами.",
-    kg: "Товарды жана маршрутту жазыңыз. Карго компаниялар сурамыңызды көрүп, сиз менен байланышат.",
-    en: "Describe the item and route. Cargo companies will be able to see the request and contact you.",
+    ru: "Опишите товар и маршрут. Карго-компании увидят заявку и оставят отклик с контактами.",
+    kg: "Товарды жана маршрутту жазыңыз. Карго компаниялар сурамыңызды көрүп, байланыш менен жооп калтырышат.",
+    en: "Describe the item and route. Cargo companies will see the request and leave a response with contacts.",
   },
   "cargo.contactSection": {
     ru: "Контакты",
@@ -1762,6 +1772,11 @@ export const DICTIONARY = {
     ru: "Описание услуги",
     kg: "Кызматтын сүрөттөмөсү",
     en: "Service description",
+  },
+  "services.formSectionTitle": {
+    ru: "Какую услугу предлагаете?",
+    kg: "Кандай кызмат сунуштайсыз?",
+    en: "What service are you offering?",
   },
   "services.formCategory": {
     ru: "Категория услуги / профессия",
@@ -3426,6 +3441,31 @@ export const DICTIONARY = {
     kg: "Статус",
     en: "Status",
   },
+  "accountRequests.responseStatus.new": {
+    ru: "Новый",
+    kg: "Жаңы",
+    en: "New",
+  },
+  "accountRequests.responseStatus.accepted": {
+    ru: "Принят",
+    kg: "Кабыл алынды",
+    en: "Accepted",
+  },
+  "accountRequests.responseStatus.rejected": {
+    ru: "Отклонён",
+    kg: "Четке кагылды",
+    en: "Rejected",
+  },
+  "accountRequests.responseStatus.withdrawn": {
+    ru: "Отозван",
+    kg: "Кайтарылды",
+    en: "Withdrawn",
+  },
+  "accountRequests.companyContacts": {
+    ru: "Контакты компании",
+    kg: "Компаниянын байланыштары",
+    en: "Company contacts",
+  },
   "accountRequests.createdAt": {
     ru: "Дата",
     kg: "Күн",
@@ -3994,6 +4034,11 @@ export const DICTIONARY = {
     ru: "Что продаёте?",
     kg: "Эмне сатасыз?",
     en: "What are you selling?",
+  },
+  "opt.formSectionTitle": {
+    ru: "Какое оптовое предложение?",
+    kg: "Кандай дүң сунуш?",
+    en: "What wholesale offer?",
   },
   "createListing.verticalLabel": {
     ru: "Раздел",
