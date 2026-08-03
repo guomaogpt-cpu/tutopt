@@ -181,7 +181,7 @@ export function VerticalCategoryHighlights({
         </Drawer>
       </div>
 
-      <ul className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-4">
+      <ul className="mt-4 grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
         {featured.map(({ category, visual, href }) => {
           const Icon = visual.icon;
           return (
@@ -189,7 +189,7 @@ export function VerticalCategoryHighlights({
               <Link
                 href={href}
                 className={cn(
-                  "group flex h-full min-h-[108px] flex-col justify-between rounded-2xl border bg-white p-3.5 shadow-[0_4px_14px_rgba(15,23,42,0.04)] transition hover:-translate-y-0.5 sm:min-h-[120px] sm:p-4",
+                  "group flex h-full min-h-[88px] flex-col justify-between rounded-2xl border bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.04)] transition hover:-translate-y-0.5 sm:min-h-[108px] sm:p-4",
                   theme.cardBorder,
                   theme.cardHoverBorder,
                   theme.cardHoverShadow,

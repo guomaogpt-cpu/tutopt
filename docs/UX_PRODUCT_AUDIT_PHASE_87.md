@@ -223,3 +223,7 @@ Product QA checklist: `docs/PRODUCT_QA_PHASE_89.md`.
 
 Closed in `docs/POST_QA_GAPS_PHASE_90.md`: cargo request detail route, account cargo-settings, soft legacy redirects, filter density, admin empty states.
 
+## Phase 98 market listings MVP
+
+See `docs/MARKET_LISTINGS_MVP_PHASE_98.md`. Ordinary listings `/market` + `/listings` polished for closed user test (hero, categories, purple theme, contact CTA).
+

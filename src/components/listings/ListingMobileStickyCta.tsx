@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { ListingVertical } from "@prisma/client";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
+import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -40,9 +41,7 @@ export function ListingMobileStickyCta({
     return null;
   }
 
-  const ctaLabel = hasPrice
-    ? t("listing.mobile.sendRequestSticky")
-    : t("listing.requestOffer");
+  const ctaLabel = getLeadFormConfig(vertical).contactCtaLabel;
 
   function handlePrimaryAction() {
     trackListingDetailAction("contact_cta", {

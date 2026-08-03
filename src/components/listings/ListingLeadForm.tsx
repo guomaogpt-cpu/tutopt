@@ -63,7 +63,8 @@ export function ListingLeadForm({
   const { t } = useTranslation();
   const theme = getVerticalTheme(vertical);
   const config = getLeadFormConfig(vertical);
-  const defaultMessage = t("lead.messagePlaceholder");
+  const defaultMessage =
+    vertical === "MARKET" ? config.defaultMessage : t("lead.messagePlaceholder");
   const [quantity, setQuantity] = useState(String(Math.max(1, moq)));
   const [message, setMessage] = useState(defaultMessage);
   const [contactPhone, setContactPhone] = useState(defaultPhone ?? "");
@@ -388,7 +389,9 @@ export function ListingLeadForm({
       </h2>
 
       <div className={leadCardClassName}>
-        <p className="text-sm text-slate-600 dark:text-slate-400">{t("lead.description")}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          {vertical === "MARKET" ? config.subtitle : t("lead.description")}
+        </p>
         <div className="mt-4">{listingSummary}</div>
 
         <form onSubmit={(event) => void handleSubmit(event)} className="mt-5 space-y-4">
@@ -431,7 +434,7 @@ export function ListingLeadForm({
                 htmlFor="lead-phone"
                 className="text-sm font-medium text-slate-900 dark:text-slate-100"
               >
-                {t("form.phone")}
+                {t("lead.phoneLabel")}
               </label>
               <Input
                 id="lead-phone"
@@ -447,6 +450,7 @@ export function ListingLeadForm({
             </div>
           </div>
 
+          {config.showEmail ? (
           <div className="space-y-2">
             <label
               htmlFor="lead-email"
@@ -466,13 +470,14 @@ export function ListingLeadForm({
               <p className="text-xs text-destructive">{fieldErrors.contact_email}</p>
             ) : null}
           </div>
+          ) : null}
 
           <div className="space-y-2">
             <label
               htmlFor="lead-message"
               className="text-sm font-medium text-slate-900 dark:text-slate-100"
             >
-              {t("lead.messageLabel")}
+              {vertical === "MARKET" ? t("lead.messageLabelYours") : t("lead.messageLabel")}
             </label>
             <Textarea
               id="lead-message"
@@ -480,7 +485,11 @@ export function ListingLeadForm({
               onChange={(event) => setMessage(event.target.value)}
               rows={5}
               maxLength={LEAD_MESSAGE_MAX}
-              placeholder={t("lead.messagePlaceholder")}
+              placeholder={
+                vertical === "MARKET"
+                  ? config.messagePlaceholder
+                  : t("lead.messagePlaceholder")
+              }
               className="w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
             {fieldErrors.message ? (

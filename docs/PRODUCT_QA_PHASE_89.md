@@ -180,3 +180,7 @@ Checklist A–G prepared; UX: cargo open-detail CTA, Telegram refresh status, ph
 
 See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Prepare cargo MVP for closed launch (5–10 users): onboarding, instructions, feedback CTA, metrics/operator checklists.
 
+## Phase 98 market listings MVP
+
+See `docs/MARKET_LISTINGS_MVP_PHASE_98.md`. Market/listings MVP polish for ordinary ads (Lalafo-style entry).
+

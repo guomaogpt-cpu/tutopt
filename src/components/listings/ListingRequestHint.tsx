@@ -1,15 +1,32 @@
 "use client";
 
 import { Info } from "lucide-react";
+import type { ListingVertical } from "@prisma/client";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
-export function ListingRequestHint() {
+type ListingRequestHintProps = {
+  vertical?: ListingVertical;
+};
+
+export function ListingRequestHint({ vertical }: ListingRequestHintProps) {
   const { t } = useTranslation();
+  const theme = getVerticalTheme(vertical ?? null);
+  const hintKey =
+    vertical === "MARKET" ? "listing.requestHintMarket" : "listing.requestHint";
 
   return (
-    <div className="flex gap-2.5 rounded-xl border border-blue-200/80 bg-blue-50 px-3.5 py-3 text-sm leading-relaxed text-blue-900 dark:border-blue-900/50 dark:bg-blue-950/30 dark:text-blue-200">
+    <div
+      className={cn(
+        "flex gap-2.5 rounded-xl border px-3.5 py-3 text-sm leading-relaxed",
+        theme.primaryBorder,
+        theme.softBg,
+        theme.softText,
+      )}
+    >
       <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-      <p>{t("listing.requestHint")}</p>
+      <p>{t(hintKey)}</p>
     </div>
   );
 }

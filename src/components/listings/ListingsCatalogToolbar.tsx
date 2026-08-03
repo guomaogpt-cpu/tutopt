@@ -240,7 +240,18 @@ export function ListingsCatalogToolbar({
   return (
     <section className="space-y-3">
       <div className="overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
-        <div className="border-b border-[rgba(148,163,184,0.12)] bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-4 py-3 sm:px-5 sm:py-5 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
+        <div
+          className={cn(
+            "border-b border-[rgba(148,163,184,0.12)] bg-gradient-to-br via-white to-[#F8FAFC] px-4 py-3 sm:px-5 sm:py-5 dark:border-slate-800 dark:via-slate-900 dark:to-slate-950",
+            filters.vertical === "MARKET"
+              ? "from-purple-50 dark:from-slate-900"
+              : filters.vertical === "SERVICES"
+                ? "from-green-50 dark:from-slate-900"
+                : filters.vertical === "CARGO"
+                  ? "from-orange-50 dark:from-slate-900"
+                  : "from-[#EFF6FF] dark:from-slate-900",
+          )}
+        >
           <div
             className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             role="tablist"

@@ -14,7 +14,7 @@ export function AccountListingsEmptyState({ hasFilters }: AccountListingsEmptySt
 
   return (
     <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center dark:border-slate-800 dark:bg-slate-900 sm:px-6 sm:py-12">
-      <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-slate-800 dark:text-blue-400">
+      <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
         <Package className="size-6" aria-hidden="true" />
       </div>
       {hasFilters ? (

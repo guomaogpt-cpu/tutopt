@@ -22,9 +22,12 @@ import {
   shouldShowCreateListingCTA,
 } from "@/features/auth/lib/login-redirect";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
+import { getCatalogVerticalCopy } from "@/features/listings/lib/listing-display";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 import {
   SITE_NAME,
   VERTICAL_CATALOG_SEO,
@@ -152,6 +155,8 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const createListingHref = getCreateListingHref(headerUser);
   const showCreateListingCTA = shouldShowCreateListingCTA(headerUser);
   const activeVertical = filters.vertical ? VERTICALS[filters.vertical] : null;
+  const catalogCopy = getCatalogVerticalCopy(filters.vertical);
+  const theme = getVerticalTheme(filters.vertical);
 
   const breadcrumbItems = activeVertical
     ? [
@@ -165,16 +170,21 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
       ];
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
+    <main
+      className={cn(
+        "min-w-0 bg-gradient-to-b py-6 sm:py-8 dark:from-slate-950 dark:to-slate-950",
+        filters.vertical ? theme.pageWash : "from-[#F5F7FA] to-[#F5F7FA]",
+      )}
+    >
       <Container size="lg" className="min-w-0">
         <AppBreadcrumbs className="mb-4" items={breadcrumbItems} />
 
         <header className="mb-5 sm:mb-6">
           <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl dark:text-slate-100">
-            Каталог объявлений
+            {catalogCopy.title}
           </h1>
           <p className="mt-1.5 max-w-2xl text-sm text-[#64748B] sm:text-base">
-            Ищите товары, услуги, поставщиков и перевозчиков по всему Кыргызстану.
+            {catalogCopy.description}
           </p>
         </header>
 

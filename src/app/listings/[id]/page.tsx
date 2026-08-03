@@ -513,7 +513,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
             <div className="order-7 space-y-5 lg:order-4 lg:space-y-6">
               {!isOwner ? <ListingVerticalHint vertical={listing.vertical} /> : null}
-              {!isOwner ? <ListingRequestHint /> : null}
+              {!isOwner ? <ListingRequestHint vertical={listing.vertical} /> : null}
               <ListingLeadForm
                 key={`${listing.id}-${listing.vertical}`}
                 listingId={listing.id}

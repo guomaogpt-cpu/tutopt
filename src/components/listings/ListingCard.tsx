@@ -212,25 +212,30 @@ export function ListingCard({
               </>
             ) : null}
             {dateLabel ? (
-              <span className="hidden sm:inline" aria-hidden="true">
-                ·
-              </span>
+              <span aria-hidden="true">·</span>
             ) : null}
-            {dateLabel ? <span className="hidden shrink-0 sm:inline">{dateLabel}</span> : null}
+            {dateLabel ? <span className="shrink-0">{dateLabel}</span> : null}
           </div>
 
           {showSeller ? (
             <p
               className={cn(
                 "truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
-                "hidden sm:flex sm:items-center sm:gap-1.5",
+                "flex items-center gap-1.5",
                 isCompact
                   ? "mt-1.5 pt-1.5 text-[11px]"
                   : "mt-2 pt-2 text-xs md:text-[13px]",
               )}
             >
               {listing.posted_as_company && listing.sellerProfile.company_type ? (
-                <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-slate-800 dark:text-blue-300">
+                <span
+                  className={cn(
+                    "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold",
+                    listing.vertical === "MARKET"
+                      ? "bg-purple-50 text-purple-700 dark:bg-slate-800 dark:text-purple-300"
+                      : "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300",
+                  )}
+                >
                   {t("company.badge")}
                 </span>
               ) : null}

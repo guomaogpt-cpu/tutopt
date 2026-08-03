@@ -6,6 +6,7 @@ import { ListingStatus, type ListingStatus as ListingStatusType, type ListingVer
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
+import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { getListingStatusLabel } from "@/features/listings/lib/listing-status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -116,9 +117,7 @@ export function ListingContactCard({
   }
 
   const hasContacts = Boolean(contactPhone || whatsapp || telegram);
-  const contactCtaLabel = hasPrice
-    ? t("listing.sendRequest")
-    : t("listing.requestOffer");
+  const contactCtaLabel = getLeadFormConfig(vertical).contactCtaLabel;
 
   return (
     <div className={cardClassName}>

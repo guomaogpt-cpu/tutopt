@@ -9,6 +9,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { getCatalogVerticalCopy } from "@/features/listings/lib/listing-display";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
 type ListingsEmptyStateProps = {
   hasActiveFilters: boolean;
@@ -27,6 +29,7 @@ export function ListingsEmptyState({
 }: ListingsEmptyStateProps) {
   const { t } = useTranslation();
   const copy = getCatalogVerticalCopy(vertical);
+  const theme = getVerticalTheme(vertical);
   const createHref =
     vertical && !createListingHref.includes("vertical=")
       ? VERTICALS[vertical].createListingHref
@@ -94,18 +97,20 @@ export function ListingsEmptyState({
                 </Link>
               </Button>
               <Button
-                className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
+                className={cn("h-11 rounded-xl", theme.primaryButton)}
                 asChild
               >
                 <Link href={createHref}>
                   {vertical === "SERVICES"
                     ? t("services.postService")
-                    : t("listings.allListings")}
+                    : vertical === "MARKET"
+                      ? t("vertical.postListing")
+                      : t("listings.allListings")}
                 </Link>
               </Button>
             </>
           ) : showCreateListingCTA ? (
-            <Button className="h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]" asChild>
+            <Button className={cn("h-11 rounded-xl", theme.primaryButton)} asChild>
               <Link href={createHref}>
                 {vertical === "SERVICES"
                   ? t("services.postService")

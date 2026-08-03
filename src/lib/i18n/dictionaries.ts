@@ -492,6 +492,16 @@ export const DICTIONARY = {
     kg: "Жарыя берүү",
     en: "Post listing",
   },
+  "market.heroTitle": {
+    ru: "Объявления",
+    kg: "Жарыялар",
+    en: "Listings",
+  },
+  "market.heroSubtitle": {
+    ru: "Покупайте и продавайте товары рядом с вами.",
+    kg: "Жакын жерден товарларды сатып алыңыз жана сатыңыз.",
+    en: "Buy and sell goods near you.",
+  },
   "vertical.categories": {
     ru: "Категории",
     kg: "Категориялар",
@@ -2311,9 +2321,9 @@ export const DICTIONARY = {
     en: "Nothing found",
   },
   "listings.emptyFilteredDescription": {
-    ru: "Попробуйте изменить фильтры или сбросить поиск.",
-    kg: "Фильтрлерди өзгөртүп көрүңүз же издөөнү тазалаңыз.",
-    en: "Try changing filters or clearing the search.",
+    ru: "Попробуйте изменить запрос или выбрать другую категорию.",
+    kg: "Сурамды өзгөртүп же башка категорияны тандап көрүңүз.",
+    en: "Try changing the query or choosing another category.",
   },
   "listings.allListings": {
     ru: "Все объявления",
@@ -2565,10 +2575,20 @@ export const DICTIONARY = {
     kg: "Сурам жөнөтүүдөн мурун минималдуу партияны, бар-жогун жана жөнөтүү шарттарын тактаңыз.",
     en: "Before sending a request, confirm the minimum order, availability, and delivery terms.",
   },
+  "listing.requestHintMarket": {
+    ru: "Напишите автору объявления — уточните наличие, цену и условия передачи.",
+    kg: "Жарыянын авторуна жазыңыз — бар-жогун, бааны жана шарттарды тактаңыз.",
+    en: "Message the listing owner — ask about availability, price, and handover.",
+  },
   "listing.report": { ru: "Пожаловаться", kg: "Даттануу", en: "Report" },
 
   // Lead form — Phase 56 / 61
   "form.phone": { ru: "Телефон", kg: "Телефон", en: "Phone" },
+  "lead.phoneLabel": {
+    ru: "Телефон для связи",
+    kg: "Байланыш телефону",
+    en: "Contact phone",
+  },
   "form.email": { ru: "Email", kg: "Email", en: "Email" },
   "form.sending": { ru: "Отправка...", kg: "Жөнөтүлүүдө...", en: "Sending..." },
   "form.sendAnother": {
@@ -2608,6 +2628,11 @@ export const DICTIONARY = {
     kg: "Билдирүү",
     en: "Message",
   },
+  "lead.messageLabelYours": {
+    ru: "Ваше сообщение",
+    kg: "Сиздин билдирүүңүз",
+    en: "Your message",
+  },
   "lead.messagePlaceholder": {
     ru: "Здравствуйте. Меня интересует это объявление. Подскажите наличие, минимальную партию и условия отгрузки.",
     kg: "Саламатсызбы. Бул жарыя кызыктырат. Бар-жогун, минималдуу партияны жана жөнөтүү шарттарын айтып бериңизчи.",
@@ -2634,9 +2659,9 @@ export const DICTIONARY = {
     en: "Request sent.",
   },
   "lead.successDescription": {
-    ru: "Автор объявления увидит вашу заявку в личном кабинете.",
-    kg: "Жарыянын автору сурамыңызды жеке кабинетинен көрөт.",
-    en: "The listing owner will see your request in their account.",
+    ru: "Автор объявления получит ваши контакты и сообщение.",
+    kg: "Жарыянын автору сиздин байланыштарыңызды жана билдирүүңүздү алат.",
+    en: "The listing owner will receive your contacts and message.",
   },
   "lead.alreadySent": {
     ru: "Вы уже отправляли запрос по этому объявлению.",

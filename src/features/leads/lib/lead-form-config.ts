@@ -18,6 +18,7 @@ export type LeadFormConfig = {
   showQuantity: boolean;
   quantityLabel: string;
   quantityHint?: string;
+  showEmail: boolean;
   templates: string[];
   contactCtaLabel: string;
 };
@@ -26,33 +27,34 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
   switch (vertical) {
     case "MARKET":
       return {
-        title: "Написать продавцу",
-        subtitle: "Уточните наличие, состояние товара и условия передачи.",
-        messageLabel: "Сообщение продавцу",
+        title: "Связаться",
+        subtitle: "Напишите сообщение и оставьте телефон для связи.",
+        messageLabel: "Ваше сообщение",
         messagePlaceholder:
           "Здравствуйте. Товар ещё в наличии? Можно уточнить детали?",
         defaultMessage:
           "Здравствуйте. Товар ещё в наличии? Можно уточнить детали?",
-        submitLabel: "Отправить сообщение",
-        successTitle: "Сообщение отправлено",
-        successMessage: (sellerName) =>
-          `Сообщение отправлено продавцу ${sellerName}.`,
+        submitLabel: "Отправить",
+        successTitle: "Запрос отправлен.",
+        successMessage: () =>
+          "Запрос отправлен. Автор объявления получит ваши контакты и сообщение.",
         loginPrompt: (sellerName) =>
-          `Войдите, чтобы написать продавцу ${sellerName}.`,
+          `Войдите, чтобы связаться с автором ${sellerName}.`,
         sellerLeadTypeLabel: "Сообщение по товару",
         notificationTitle: "Новое сообщение по товару",
         notificationMessage: (listingTitle) =>
           `Покупатель написал по объявлению «${listingTitle}»`,
         listingLabel: "Товар",
         recipientLabel: "Продавец",
-        showQuantity: true,
+        showQuantity: false,
         quantityLabel: "Количество",
+        showEmail: false,
         templates: [
           "Товар в наличии?",
           "Можно фото/видео?",
           "Цена окончательная?",
         ],
-        contactCtaLabel: "Написать продавцу",
+        contactCtaLabel: "Связаться",
       };
     case "SERVICES":
       return {
@@ -77,6 +79,7 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
         recipientLabel: "Специалист",
         showQuantity: false,
         quantityLabel: "Количество",
+        showEmail: true,
         templates: ["Уточнить стоимость", "Уточнить сроки", "Нужен выезд"],
         contactCtaLabel: "Оставить заявку",
       };
@@ -104,6 +107,7 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
         showQuantity: true,
         quantityLabel: "Объём / вес",
         quantityHint: "Можно указать ориентировочный объём или вес",
+        showEmail: true,
         templates: [
           "Уточнить стоимость перевозки",
           "Есть груз Китай-Кыргызстан",
@@ -136,6 +140,7 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
         showQuantity: true,
         quantityLabel: "Количество",
         quantityHint: undefined,
+        showEmail: true,
         templates: [
           "Уточнить цену за партию",
           "Уточнить наличие",

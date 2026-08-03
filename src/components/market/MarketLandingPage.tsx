@@ -4,13 +4,17 @@ import {
   type MarketCategoryItem,
 } from "@/components/market/MarketCompactHero";
 import { Container } from "@/components/ui/container";
+import { VerticalCategoryHighlights } from "@/components/verticals/VerticalCategoryHighlights";
 import {
   VerticalEmptyState,
   VerticalLatestHeading,
 } from "@/components/verticals/VerticalLatestSectionLabels";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import { getMarketCategoryVisual } from "@/features/market/market-category-visuals";
 import { VERTICAL_LATEST_LISTINGS_GRID_CLASS } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
 type MarketLandingPageProps = {
   categories: MarketCategoryItem[];
@@ -24,21 +28,36 @@ export function MarketLandingPage({
   publishedCount,
 }: MarketLandingPageProps) {
   const config = VERTICALS.MARKET;
+  const theme = getVerticalTheme("MARKET");
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-gradient-to-b from-indigo-50/60 to-slate-50 dark:from-slate-950 dark:to-slate-950">
+    <main
+      className={cn(
+        "min-w-0 overflow-x-clip bg-gradient-to-b dark:from-slate-950 dark:to-slate-950",
+        theme.pageWash,
+      )}
+    >
       <MarketCompactHero
         categories={categories}
         listingCount={publishedCount}
       />
 
-      <Container size="lg" className="py-8 sm:py-10">
+      <Container size="lg" className="space-y-8 py-6 sm:space-y-10 sm:py-10">
+        <VerticalCategoryHighlights
+          vertical="MARKET"
+          categories={categories}
+          accent="violet"
+          getVisual={getMarketCategoryVisual}
+          headingId="market-categories-heading"
+          drawerDescription="Выберите категорию объявлений"
+        />
+
         <section aria-labelledby="market-listings-heading">
           <VerticalLatestHeading
             headingId="market-listings-heading"
             listingsHref={config.listingsHref}
             showAllLink={listings.length > 0}
-            linkClassName="shrink-0 text-sm font-medium text-indigo-700 hover:underline"
+            linkClassName={cn("shrink-0 text-sm font-medium hover:underline", theme.softLink)}
           />
 
           {listings.length === 0 ? (

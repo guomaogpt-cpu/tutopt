@@ -189,7 +189,7 @@ export function getCatalogVerticalCopy(
     case "MARKET":
       return {
         title: "Объявления",
-        description: "Товары от частных лиц и компаний.",
+        description: "Покупайте и продавайте товары рядом с вами.",
         emptyTitle: "В разделе объявлений пока пусто.",
         emptyDescription: "Разместите объявление и найдите покупателей.",
       };
