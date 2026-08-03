@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Phone } from "lucide-react";
 import { CargoRespondModal } from "@/components/seller/CargoRespondModal";
+import { CargoFeedbackCta } from "@/components/cargo/CargoFeedbackCta";
 import { CargoRequestStatusBadge } from "@/components/seller/SellerCargoRequestsList";
 import type { CargoRequestDetailData } from "@/features/cargo/lib/cargo-requests-data";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
@@ -302,6 +303,8 @@ export function CargoRequestDetailView({
           </ul>
         )}
       </section>
+
+      <CargoFeedbackCta />
 
       {respondOpen ? (
         <CargoRespondModal

@@ -93,3 +93,7 @@
 ## Phase 94 cargo demo readiness
 
 Product framing: MVP shipping request ↔ company response ↔ owner contacts (+ optional Telegram). Demo kit and copy polish shipped in this phase.
+
+## Phase 95 cargo closed launch preparation
+
+See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Closed launch for 5–10 users: short onboarding, client/company instructions, feedback CTA, operator + metrics checklists.

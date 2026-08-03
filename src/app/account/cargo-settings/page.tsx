@@ -2,6 +2,7 @@ import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ListingAccessMessage } from "@/components/listings/NewListingForm";
+import { CargoFeedbackCta } from "@/components/cargo/CargoFeedbackCta";
 import { CargoSettingsForm } from "@/components/seller/CargoSettingsForm";
 import { CargoSettingsPageCopy } from "@/components/seller/CargoSettingsPageCopy";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -115,6 +116,7 @@ export default async function AccountCargoSettingsPage() {
         <div className="mt-6">
           <CargoSettingsForm initialSettings={settings} />
         </div>
+        <CargoFeedbackCta className="mt-6" />
       </Container>
     </main>
   );

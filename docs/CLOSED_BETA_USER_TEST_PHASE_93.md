@@ -156,3 +156,7 @@ Webhook: `https://tutopt-production.up.railway.app/api/webhooks/telegram`
 ## Phase 94 cargo demo readiness
 
 See `docs/CARGO_DEMO_READINESS_PHASE_94.md`. Cargo framed as MVP for presentation; demo checklist + copy/empty/status polish.
+
+## Phase 95 cargo closed launch preparation
+
+See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Closed launch kit: client/company WhatsApp copy, feedback CTA, problem table, daily operator checklist.

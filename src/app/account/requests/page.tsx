@@ -9,6 +9,7 @@ import { AccountRequestsPageHeader } from "@/components/account/AccountRequestsP
 import { AccountRequestsSectionTitle } from "@/components/account/AccountRequestsSectionTitle";
 import { AccountRequestsTabs } from "@/components/account/AccountRequestsTabs";
 import { AccountSentLeadCard } from "@/components/account/AccountSentLeadCard";
+import { CargoFeedbackCta } from "@/components/cargo/CargoFeedbackCta";
 import { getSellerOwnCargoResponses } from "@/features/account/lib/seller-own-cargo-responses";
 import { parseAccountRequestsTab } from "@/features/account/lib/account-requests-tabs";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -208,6 +209,8 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
             </div>
           )}
         </div>
+
+        <CargoFeedbackCta className="mt-8" />
       </Container>
     </main>
   );

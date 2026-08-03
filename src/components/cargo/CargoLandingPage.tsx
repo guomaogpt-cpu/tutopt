@@ -6,6 +6,8 @@ import { CargoCompactHero } from "@/components/cargo/CargoCompactHero";
 import { CargoCompaniesSection } from "@/components/cargo/CargoCompaniesSection";
 import { CargoDirectionsSection } from "@/components/cargo/CargoDirectionsSection";
 import { CargoDualCta } from "@/components/cargo/CargoDualCta";
+import { CargoFeedbackCta } from "@/components/cargo/CargoFeedbackCta";
+import { CargoHowItWorks } from "@/components/cargo/CargoHowItWorks";
 import { CargoLandingSearch } from "@/components/cargo/CargoLandingSearch";
 import { CargoRequestModal } from "@/components/cargo/CargoRequestModal";
 import { Container } from "@/components/ui/container";
@@ -47,6 +49,8 @@ export function CargoLandingPage({
           onCreateRequest={() => setRequestOpen(true)}
         />
         <CargoDualCta onCreateRequest={() => setRequestOpen(true)} />
+        <CargoHowItWorks />
+        <CargoFeedbackCta className="mt-8 sm:mt-10" />
       </Container>
 
       <CargoRequestModal

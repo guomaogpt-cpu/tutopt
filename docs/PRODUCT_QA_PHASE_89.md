@@ -176,3 +176,7 @@ See `docs/MANUAL_PRODUCTION_QA_PHASE_92.md`.
 
 Checklist A–G prepared; UX: cargo open-detail CTA, Telegram refresh status, photo uploaded hint. Live login e2e remains owner-run.
 
+## Phase 95 cargo closed launch preparation
+
+See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Prepare cargo MVP for closed launch (5–10 users): onboarding, instructions, feedback CTA, metrics/operator checklists.
+
