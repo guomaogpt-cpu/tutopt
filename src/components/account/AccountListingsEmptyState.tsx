@@ -1,23 +1,47 @@
 "use client";
 
 import Link from "next/link";
+import type { ListingVertical } from "@prisma/client";
 import { Package } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Button } from "@/components/ui/button";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
 type AccountListingsEmptyStateProps = {
   hasFilters: boolean;
+  vertical?: ListingVertical | null;
 };
 
-export function AccountListingsEmptyState({ hasFilters }: AccountListingsEmptyStateProps) {
+export function AccountListingsEmptyState({
+  hasFilters,
+  vertical = null,
+}: AccountListingsEmptyStateProps) {
   const { t } = useTranslation();
+  const theme = getVerticalTheme(vertical);
+  const isServicesFilter = hasFilters && vertical === "SERVICES";
 
   return (
     <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-5 py-10 text-center dark:border-slate-800 dark:bg-slate-900 sm:px-6 sm:py-12">
       <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
         <Package className="size-6" aria-hidden="true" />
       </div>
-      {hasFilters ? (
+      {isServicesFilter ? (
+        <>
+          <p className="mt-5 text-base font-semibold text-slate-900 dark:text-slate-100">
+            {t("accountListings.emptyServicesTitle")}
+          </p>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+            {t("accountListings.emptyServicesDescription")}
+          </p>
+          <Button
+            asChild
+            className={cn("mt-6 h-11 w-full rounded-xl sm:w-auto", theme.primaryButton)}
+          >
+            <Link href="/listings/new?vertical=SERVICES">{t("services.postService")}</Link>
+          </Button>
+        </>
+      ) : hasFilters ? (
         <>
           <p className="mt-5 text-base font-semibold text-slate-900 dark:text-slate-100">
             {t("account.noData")}

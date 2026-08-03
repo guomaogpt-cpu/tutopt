@@ -6,6 +6,7 @@ import {
   ServicesCompactHero,
   type ServicesCategoryItem,
 } from "@/components/services/ServicesCompactHero";
+import { ServicesHowItWorks } from "@/components/services/ServicesHowItWorks";
 import { ServicesProfessionsGrid } from "@/components/services/ServicesProfessionsGrid";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -14,6 +15,8 @@ import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { VERTICAL_LATEST_LISTINGS_GRID_CLASS } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
 type ServicesLandingPageProps = {
   categories: ServicesCategoryItem[];
@@ -26,19 +29,25 @@ export function ServicesLandingPage({
 }: ServicesLandingPageProps) {
   const { t } = useTranslation();
   const config = VERTICALS.SERVICES;
+  const theme = getVerticalTheme("SERVICES");
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-gradient-to-b from-teal-50/60 to-slate-50 dark:from-slate-950 dark:to-slate-950">
+    <main
+      className={cn(
+        "min-w-0 overflow-x-clip bg-gradient-to-b dark:from-slate-950 dark:to-slate-950",
+        theme.pageWash,
+      )}
+    >
       <ServicesCompactHero categories={categories} />
       <ServicesProfessionsGrid categories={categories} />
 
-      <Container size="lg" className="py-5 sm:py-10">
+      <Container size="lg" className="space-y-8 py-5 sm:space-y-10 sm:py-10">
         <section aria-labelledby="services-listings-heading">
           <VerticalLatestHeading
             headingId="services-listings-heading"
             listingsHref={config.listingsHref}
             showAllLink={listings.length > 0}
-            linkClassName="shrink-0 text-sm font-medium text-teal-700 hover:underline dark:text-teal-400"
+            linkClassName={cn("shrink-0 text-sm font-medium hover:underline", theme.softLink)}
           />
 
           {listings.length === 0 ? (
@@ -51,14 +60,7 @@ export function ServicesLandingPage({
               </p>
               <div className="mt-5 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
                 <Button
-                  variant="outline"
-                  className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 sm:w-auto"
-                  asChild
-                >
-                  <Link href={config.listingsHref}>{t("services.allServices")}</Link>
-                </Button>
-                <Button
-                  className="h-11 w-full rounded-xl bg-teal-700 hover:bg-teal-800 sm:w-auto"
+                  className={cn("h-11 w-full rounded-xl sm:w-auto", theme.primaryButton)}
                   asChild
                 >
                   <Link href={config.createListingHref}>{t("services.postService")}</Link>
@@ -75,6 +77,8 @@ export function ServicesLandingPage({
             </div>
           )}
         </section>
+
+        <ServicesHowItWorks />
       </Container>
     </main>
   );

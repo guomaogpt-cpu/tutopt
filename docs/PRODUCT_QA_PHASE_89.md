@@ -184,3 +184,7 @@ See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Prepare cargo MVP for closed launch 
 
 See `docs/MARKET_LISTINGS_MVP_PHASE_98.md`. Market/listings MVP polish for ordinary ads (Lalafo-style entry).
 
+## Phase 99 services MVP
+
+See `docs/SERVICES_MVP_PHASE_99.md`.
+

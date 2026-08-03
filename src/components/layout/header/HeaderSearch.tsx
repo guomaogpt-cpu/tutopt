@@ -20,7 +20,28 @@ type HeaderSearchProps = {
 
 export function HeaderSearch(props: HeaderSearchProps) {
   const { t } = useTranslation();
-  const placeholder = t(props.placeholderKey ?? "search.headerPlaceholder");
+  const { vertical } = useRouteVerticalTheme();
+  const isGenericPlaceholder =
+    !props.placeholderKey ||
+    props.placeholderKey === "mobileSearch.placeholder" ||
+    props.placeholderKey === "search.headerPlaceholder";
+
+  let placeholderKey: DictionaryKey = "search.headerPlaceholder";
+  if (!isGenericPlaceholder && props.placeholderKey) {
+    placeholderKey = props.placeholderKey;
+  } else if (vertical === "SERVICES") {
+    placeholderKey = "services.searchPlaceholder";
+  } else if (vertical === "MARKET") {
+    placeholderKey = "search.marketPlaceholder";
+  } else if (vertical === "OPT") {
+    placeholderKey = "search.optPlaceholder";
+  } else if (vertical === "CARGO") {
+    placeholderKey = "search.cargoPlaceholder";
+  } else if (props.placeholderKey) {
+    placeholderKey = props.placeholderKey;
+  }
+
+  const placeholder = t(placeholderKey);
 
   if (props.syncDisabled) {
     return <HeaderSearchStatic {...props} placeholder={placeholder} />;

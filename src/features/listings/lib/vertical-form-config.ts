@@ -170,16 +170,16 @@ export const VERTICAL_FORM_CONFIG: Record<ListingVertical, VerticalFormConfig> =
     unitOptions: SERVICES_UNITS,
     defaultUnit: ListingUnit.PIECE,
     locationSectionTitle: "Город",
-    locationSectionDescription: "Укажите город, где оказываете услугу.",
+    locationSectionDescription: "Где оказываете услугу?",
     showBrand: false,
     showStock: false,
     stockLabel: "",
     stockHint: "",
     stockPlaceholder: "",
     descriptionSectionDescription:
-      "Опишите, какую услугу вы оказываете, в каком городе работаете и как с вами связаться через заявку.",
+      "Опишите услугу, опыт, условия работы и что входит в стоимость.",
     descriptionPlaceholder:
-      "Опишите услугу, опыт, условия работы, район выезда и сроки.",
+      "Опишите услугу, опыт, условия работы и что входит в стоимость.",
     descriptionTips: [
       "Опыт и специализация",
       "Район выезда",

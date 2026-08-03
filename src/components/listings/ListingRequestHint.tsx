@@ -14,7 +14,11 @@ export function ListingRequestHint({ vertical }: ListingRequestHintProps) {
   const { t } = useTranslation();
   const theme = getVerticalTheme(vertical ?? null);
   const hintKey =
-    vertical === "MARKET" ? "listing.requestHintMarket" : "listing.requestHint";
+    vertical === "MARKET"
+      ? "listing.requestHintMarket"
+      : vertical === "SERVICES"
+        ? "listing.requestHintServices"
+        : "listing.requestHint";
 
   return (
     <div

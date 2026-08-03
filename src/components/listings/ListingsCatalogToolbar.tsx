@@ -318,7 +318,13 @@ export function ListingsCatalogToolbar({
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder={t("mobileSearch.placeholder")}
+                placeholder={
+                  filters.vertical === "SERVICES"
+                    ? t("services.searchPlaceholder")
+                    : filters.vertical === "MARKET"
+                      ? t("search.marketPlaceholder")
+                      : t("mobileSearch.placeholder")
+                }
                 className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-10 pr-[4.5rem] text-base shadow-none sm:h-12 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
               <div className="absolute right-10 top-1/2 z-10 -translate-y-1/2">

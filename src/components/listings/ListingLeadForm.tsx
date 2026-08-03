@@ -64,7 +64,9 @@ export function ListingLeadForm({
   const theme = getVerticalTheme(vertical);
   const config = getLeadFormConfig(vertical);
   const defaultMessage =
-    vertical === "MARKET" ? config.defaultMessage : t("lead.messagePlaceholder");
+    vertical === "MARKET" || vertical === "SERVICES"
+      ? config.defaultMessage
+      : t("lead.messagePlaceholder");
   const [quantity, setQuantity] = useState(String(Math.max(1, moq)));
   const [message, setMessage] = useState(defaultMessage);
   const [contactPhone, setContactPhone] = useState(defaultPhone ?? "");
@@ -262,7 +264,9 @@ export function ListingLeadForm({
             {t("lead.successTitle")}
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-green-800 dark:text-green-300">
-            {t("lead.successDescription")}
+            {vertical === "SERVICES"
+              ? t("lead.successDescriptionServices")
+              : t("lead.successDescription")}
           </p>
           <div className="mt-5 flex flex-col gap-2 sm:flex-row">
             <Button
@@ -390,7 +394,9 @@ export function ListingLeadForm({
 
       <div className={leadCardClassName}>
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          {vertical === "MARKET" ? config.subtitle : t("lead.description")}
+          {vertical === "MARKET" || vertical === "SERVICES"
+            ? config.subtitle
+            : t("lead.description")}
         </p>
         <div className="mt-4">{listingSummary}</div>
 
@@ -477,7 +483,9 @@ export function ListingLeadForm({
               htmlFor="lead-message"
               className="text-sm font-medium text-slate-900 dark:text-slate-100"
             >
-              {vertical === "MARKET" ? t("lead.messageLabelYours") : t("lead.messageLabel")}
+              {vertical === "MARKET" || vertical === "SERVICES"
+                ? t("lead.messageLabelYours")
+                : t("lead.messageLabel")}
             </label>
             <Textarea
               id="lead-message"
@@ -486,7 +494,7 @@ export function ListingLeadForm({
               rows={5}
               maxLength={LEAD_MESSAGE_MAX}
               placeholder={
-                vertical === "MARKET"
+                vertical === "MARKET" || vertical === "SERVICES"
                   ? config.messagePlaceholder
                   : t("lead.messagePlaceholder")
               }

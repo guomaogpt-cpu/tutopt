@@ -45,7 +45,7 @@ export function ServicesProfessionsGrid({ categories }: ServicesProfessionsGridP
   return (
     <section
       aria-labelledby="services-professions-heading"
-      className="border-b border-teal-100/80 bg-white py-4 dark:border-slate-800 dark:bg-slate-950 sm:py-6"
+      className="border-b border-green-100/80 bg-white py-4 dark:border-slate-800 dark:bg-slate-950 sm:py-6"
     >
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-3 sm:mb-4">
@@ -69,9 +69,9 @@ export function ServicesProfessionsGrid({ categories }: ServicesProfessionsGridP
                   href={href}
                   className={cn(
                     "flex h-full min-h-[88px] flex-col gap-2 rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5 transition",
-                    "hover:border-teal-300 hover:bg-teal-50/60",
-                    "dark:border-slate-800 dark:bg-slate-900 dark:hover:border-teal-700 dark:hover:bg-slate-800",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/50",
+                    "hover:border-green-300 hover:bg-green-50/60",
+                    "dark:border-slate-800 dark:bg-slate-900 dark:hover:border-green-700 dark:hover:bg-slate-800",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400/50",
                   )}
                 >
                   <span

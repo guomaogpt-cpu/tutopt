@@ -58,30 +58,30 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
       };
     case "SERVICES":
       return {
-        title: "Оставить заявку на услугу",
-        subtitle: "Опишите задачу, сроки и место выполнения.",
-        messageLabel: "Описание задачи",
+        title: "Связаться",
+        subtitle: "Опишите задачу и оставьте телефон для связи.",
+        messageLabel: "Ваше сообщение",
         messagePlaceholder:
-          "Здравствуйте. Нужна услуга. Опишите, пожалуйста, условия, стоимость и ближайшее доступное время.",
+          "Здравствуйте. Интересует ваша услуга. Подскажите, пожалуйста, условия и стоимость.",
         defaultMessage:
-          "Здравствуйте. Нужна услуга. Опишите, пожалуйста, условия, стоимость и ближайшее доступное время.",
-        submitLabel: "Отправить заявку",
-        successTitle: "Заявка отправлена",
-        successMessage: (sellerName) =>
-          `Заявка отправлена специалисту ${sellerName}.`,
+          "Здравствуйте. Интересует ваша услуга. Подскажите, пожалуйста, условия и стоимость.",
+        submitLabel: "Отправить",
+        successTitle: "Запрос отправлен.",
+        successMessage: () =>
+          "Запрос отправлен. Исполнитель получит ваши контакты и сообщение.",
         loginPrompt: (sellerName) =>
-          `Войдите, чтобы оставить заявку специалисту ${sellerName}.`,
+          `Войдите, чтобы связаться с исполнителем ${sellerName}.`,
         sellerLeadTypeLabel: "Заявка на услугу",
         notificationTitle: "Новая заявка на услугу",
         notificationMessage: (listingTitle) =>
-          `Клиент оставил заявку по объявлению «${listingTitle}»`,
+          `Клиент оставил заявку по услуге «${listingTitle}»`,
         listingLabel: "Услуга",
-        recipientLabel: "Специалист",
+        recipientLabel: "Исполнитель",
         showQuantity: false,
         quantityLabel: "Количество",
-        showEmail: true,
+        showEmail: false,
         templates: ["Уточнить стоимость", "Уточнить сроки", "Нужен выезд"],
-        contactCtaLabel: "Оставить заявку",
+        contactCtaLabel: "Связаться",
       };
     case "CARGO":
       return {

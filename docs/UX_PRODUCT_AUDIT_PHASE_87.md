@@ -227,3 +227,7 @@ Closed in `docs/POST_QA_GAPS_PHASE_90.md`: cargo request detail route, account c
 
 See `docs/MARKET_LISTINGS_MVP_PHASE_98.md`. Ordinary listings `/market` + `/listings` polished for closed user test (hero, categories, purple theme, contact CTA).
 
+## Phase 99 services MVP
+
+See `docs/SERVICES_MVP_PHASE_99.md`. Services vertical polished separately from product listings (green theme, executor copy).
+

@@ -432,7 +432,9 @@ export function NewListingForm({
           <h2 className="mt-4 text-lg font-bold text-slate-900 dark:text-slate-100">
             {vertical === "CARGO"
               ? t("cargo.companySubmitted")
-              : t("createListing.submittedForModeration")}
+              : vertical === "SERVICES"
+                ? t("services.submittedForModeration")
+                : t("createListing.submittedForModeration")}
           </h2>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             {t("createListing.moderationNote")}
@@ -443,7 +445,9 @@ export function NewListingForm({
               className={cn("h-12 flex-1 rounded-xl sm:min-w-[10rem] sm:flex-none", theme.primaryButton)}
             >
               <Link href={`/listings/${createdListingId}`}>
-                {t("createListing.openListing")}
+                {vertical === "SERVICES"
+                  ? t("services.openService")
+                  : t("createListing.openListing")}
               </Link>
             </Button>
             <Button
@@ -459,7 +463,9 @@ export function NewListingForm({
               className="h-12 flex-1 rounded-xl border-slate-200 dark:border-slate-700 sm:min-w-[10rem] sm:flex-none"
             >
               <Link href={`/listings/new?vertical=${vertical}`}>
-                {t("createListing.postAnother")}
+                {vertical === "SERVICES"
+                  ? t("services.postAnotherService")
+                  : t("createListing.postAnother")}
               </Link>
             </Button>
           </div>
@@ -780,7 +786,11 @@ export function NewListingForm({
               openPickerId={openPickerId}
               onOpenPickerChange={setOpenPickerId}
               label={
-                vertical === "CARGO" ? t("cargo.form.cityOffice") : "Город"
+                vertical === "CARGO"
+                  ? t("cargo.form.cityOffice")
+                  : vertical === "SERVICES"
+                    ? t("services.formCity")
+                    : "Город"
               }
               value={cityId}
               onChange={setCityId}

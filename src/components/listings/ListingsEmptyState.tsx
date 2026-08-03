@@ -68,14 +68,18 @@ export function ListingsEmptyState({
       icon={SearchX}
       title={
         hasActiveFilters
-          ? t("listings.emptyFilteredTitle")
+          ? vertical === "SERVICES"
+            ? t("services.emptyFilteredTitle")
+            : t("listings.emptyFilteredTitle")
           : vertical === "SERVICES"
             ? t("services.emptyTitle")
             : copy.emptyTitle
       }
       description={
         hasActiveFilters
-          ? t("listings.emptyFilteredDescription")
+          ? vertical === "SERVICES"
+            ? t("services.emptyFilteredDescription")
+            : t("listings.emptyFilteredDescription")
           : vertical === "SERVICES"
             ? t("services.emptyDescription")
             : copy.emptyDescription
@@ -91,9 +95,7 @@ export function ListingsEmptyState({
                 asChild
               >
                 <Link href={resetHref}>
-                  {vertical === "SERVICES"
-                    ? t("services.allServices")
-                    : t("filters.reset")}
+                  {t("filters.reset")}
                 </Link>
               </Button>
               <Button

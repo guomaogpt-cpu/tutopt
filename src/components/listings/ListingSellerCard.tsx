@@ -79,7 +79,9 @@ export function ListingSellerCard({
     ? t("company.badge")
     : vertical === "OPT"
       ? t("listing.supplier")
-      : t("listing.seller");
+      : vertical === "SERVICES"
+        ? t("listing.executor")
+        : t("listing.seller");
   const analyticsParams = { vertical, hasPrice, isOwnListing };
   const profileHref = postedAsCompany
     ? buildCompanyProfileHref(sellerSlug || sellerId, vertical)

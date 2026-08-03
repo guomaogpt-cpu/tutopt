@@ -69,9 +69,9 @@ export const DICTIONARY = {
     en: "Find wholesale goods or a supplier...",
   },
   "search.servicesPlaceholder": {
-    ru: "Найти услугу или специалиста...",
-    kg: "Кызмат же адисти табуу...",
-    en: "Find a service or specialist...",
+    ru: "Какая услуга нужна?",
+    kg: "Кандай кызмат керек?",
+    en: "What service do you need?",
   },
   "search.cargoPlaceholder": {
     ru: "Найти доставку, карго или перевозчика...",
@@ -1852,31 +1852,56 @@ export const DICTIONARY = {
     en: "My cargo requests",
   },
 
-  // Services structure — Phase 71
+  // Services structure — Phase 71 / 99
   "services.heroTitle": {
-    ru: "Найдите специалиста или услугу",
-    kg: "Адисти же кызматты табыңыз",
-    en: "Find a specialist or service",
+    ru: "Услуги",
+    kg: "Кызматтар",
+    en: "Services",
   },
   "services.heroSubtitle": {
-    ru: "Ремонт, доставка, клининг, обучение, IT, автоуслуги и другие специалисты.",
-    kg: "Оңдоо, жеткирүү, клининг, окутуу, IT, авто кызматтар жана башка адистер.",
-    en: "Repair, delivery, cleaning, education, IT, auto services and other specialists.",
+    ru: "Найдите специалиста или разместите свою услугу.",
+    kg: "Адисти табыңыз же өз кызматыңызды жайгаштырыңыз.",
+    en: "Find a specialist or post your service.",
   },
   "services.searchPlaceholder": {
     ru: "Какая услуга нужна?",
     kg: "Кандай кызмат керек?",
     en: "What service do you need?",
   },
+  "services.findService": {
+    ru: "Найти услугу",
+    kg: "Кызмат табуу",
+    en: "Find a service",
+  },
+  "services.howItWorksTitle": {
+    ru: "Как это работает",
+    kg: "Бул кантип иштейт",
+    en: "How it works",
+  },
+  "services.howItWorks.step1": {
+    ru: "Выберите категорию или найдите нужную услугу.",
+    kg: "Категорияны тандаңыз же керек кызматты табыңыз.",
+    en: "Pick a category or search for the service you need.",
+  },
+  "services.howItWorks.step2": {
+    ru: "Откройте карточку и свяжитесь с исполнителем.",
+    kg: "Карточканы ачып, аткаруучу менен байланышыңыз.",
+    en: "Open the card and contact the provider.",
+  },
+  "services.howItWorks.step3": {
+    ru: "Или разместите свою услугу, чтобы клиенты нашли вас.",
+    kg: "Же өз кызматыңызды жайгаштырыңыз, кардарлар сизди тапсын.",
+    en: "Or post your service so clients can find you.",
+  },
   "services.professionsTitle": {
-    ru: "Профессии и услуги",
-    kg: "Кесиптер жана кызматтар",
-    en: "Professions and services",
+    ru: "Категории услуг",
+    kg: "Кызмат категориялары",
+    en: "Service categories",
   },
   "services.professionsSubtitle": {
-    ru: "Выберите направление, чтобы найти специалиста",
-    kg: "Адисти табуу үчүн багытты тандаңыз",
-    en: "Pick a direction to find a specialist",
+    ru: "Выберите направление",
+    kg: "Багытты тандаңыз",
+    en: "Choose a direction",
   },
   "services.allServices": {
     ru: "Все услуги",
@@ -1884,19 +1909,59 @@ export const DICTIONARY = {
     en: "All services",
   },
   "services.postService": {
-    ru: "Подать объявление",
-    kg: "Жарыя берүү",
-    en: "Post a listing",
+    ru: "Разместить услугу",
+    kg: "Кызмат жайгаштыруу",
+    en: "Post a service",
+  },
+  "services.pageTitle": {
+    ru: "Разместить услугу",
+    kg: "Кызмат жайгаштыруу",
+    en: "Post a service",
+  },
+  "services.pageSubtitle": {
+    ru: "Опишите услугу, город и стоимость — клиенты смогут связаться с вами.",
+    kg: "Кызматты, шаарды жана бааны жазыңыз — кардарлар байланыша алат.",
+    en: "Describe the service, city and price — clients can contact you.",
+  },
+  "services.formCity": {
+    ru: "Где оказываете услугу?",
+    kg: "Кызматты кайда көрсөтөсүз?",
+    en: "Where do you provide the service?",
+  },
+  "services.submittedForModeration": {
+    ru: "Услуга отправлена на модерацию.",
+    kg: "Кызмат модерацияга жөнөтүлдү.",
+    en: "Service submitted for moderation.",
+  },
+  "services.openService": {
+    ru: "Открыть услугу",
+    kg: "Кызматты ачуу",
+    en: "Open service",
+  },
+  "services.postAnotherService": {
+    ru: "Разместить ещё одну услугу",
+    kg: "Дагы бир кызмат жайгаштыруу",
+    en: "Post another service",
   },
   "services.emptyTitle": {
-    ru: "Пока нет специалистов в этой категории.",
-    kg: "Бул категорияда азырынча адистер жок.",
-    en: "No specialists in this category yet.",
+    ru: "Пока нет услуг.",
+    kg: "Азырынча кызматтар жок.",
+    en: "No services yet.",
   },
   "services.emptyDescription": {
-    ru: "Вы можете посмотреть другие услуги или разместить своё объявление.",
-    kg: "Башка кызматтарды көрүңүз же өз жарыяңызды жайгаштырыңыз.",
-    en: "You can browse other services or post your own listing.",
+    ru: "Разместите услугу, чтобы клиенты могли найти вас на сайте.",
+    kg: "Кызмат жайгаштырыңыз, кардарлар сайттан сизди тапсын.",
+    en: "Post a service so clients can find you on the site.",
+  },
+  "services.emptyFilteredTitle": {
+    ru: "Услуги не найдены.",
+    kg: "Кызматтар табылган жок.",
+    en: "No services found.",
+  },
+  "services.emptyFilteredDescription": {
+    ru: "Попробуйте изменить запрос, город или категорию.",
+    kg: "Сурамды, шаарды же категорияны өзгөртүп көрүңүз.",
+    en: "Try changing the query, city, or category.",
   },
   "services.profession": {
     ru: "Профессия",
@@ -1909,7 +1974,7 @@ export const DICTIONARY = {
     en: "Service category",
   },
   "services.priceByAgreement": {
-    ru: "Цена по договорённости",
+    ru: "Цена договорная",
     kg: "Баасы макулдашуу боюнча",
     en: "Price by agreement",
   },
@@ -1924,14 +1989,14 @@ export const DICTIONARY = {
     en: "What service are you offering?",
   },
   "services.formCategory": {
-    ru: "Категория услуги / профессия",
-    kg: "Кызмат категориясы / кесип",
-    en: "Service category / profession",
+    ru: "Категория услуги",
+    kg: "Кызмат категориясы",
+    en: "Service category",
   },
   "services.formDescriptionHint": {
-    ru: "Опишите, какую услугу вы оказываете, в каком городе работаете и как с вами связаться через заявку.",
-    kg: "Кандай кызмат көрсөтөрүңүздү, кайсы шаарда иштей турганыңызды жана сурам аркылуу кантип байланышса болорун жазыңыз.",
-    en: "Describe what service you provide, which city you work in, and how customers can contact you through a request.",
+    ru: "Опишите услугу, опыт, условия работы и что входит в стоимость.",
+    kg: "Кызматты, тажрыйбаны, шарттарды жана баага эмне кирерин жазыңыз.",
+    en: "Describe the service, experience, terms, and what is included.",
   },
   "services.categories.repairConstruction": {
     ru: "Ремонт и строительство",
@@ -2501,6 +2566,11 @@ export const DICTIONARY = {
   "listing.verified": { ru: "Проверен", kg: "Текшерилген", en: "Verified" },
   "listing.listingsCount": { ru: "Объявлений", kg: "Жарыялар", en: "Listings" },
   "listing.seller": { ru: "Автор", kg: "Автор", en: "Author" },
+  "listing.executor": {
+    ru: "Исполнитель",
+    kg: "Аткаруучу",
+    en: "Provider",
+  },
   "listing.supplier": { ru: "Поставщик", kg: "Жеткирүүчү", en: "Supplier" },
   "listing.trust": {
     ru: "Доверие к автору",
@@ -2579,6 +2649,11 @@ export const DICTIONARY = {
     ru: "Напишите автору объявления — уточните наличие, цену и условия передачи.",
     kg: "Жарыянын авторуна жазыңыз — бар-жогун, бааны жана шарттарды тактаңыз.",
     en: "Message the listing owner — ask about availability, price, and handover.",
+  },
+  "listing.requestHintServices": {
+    ru: "Напишите исполнителю — уточните условия, сроки и стоимость услуги.",
+    kg: "Аткаруучуга жазыңыз — шарттарды, мөөнөттөрдү жана бааны тактаңыз.",
+    en: "Message the provider — ask about terms, timing, and price.",
   },
   "listing.report": { ru: "Пожаловаться", kg: "Даттануу", en: "Report" },
 
@@ -2662,6 +2737,11 @@ export const DICTIONARY = {
     ru: "Автор объявления получит ваши контакты и сообщение.",
     kg: "Жарыянын автору сиздин байланыштарыңызды жана билдирүүңүздү алат.",
     en: "The listing owner will receive your contacts and message.",
+  },
+  "lead.successDescriptionServices": {
+    ru: "Исполнитель получит ваши контакты и сообщение.",
+    kg: "Аткаруучу сиздин байланыштарыңызды жана билдирүүңүздү алат.",
+    en: "The provider will receive your contacts and message.",
   },
   "lead.alreadySent": {
     ru: "Вы уже отправляли запрос по этому объявлению.",
@@ -3434,6 +3514,16 @@ export const DICTIONARY = {
     kg: "Товар, кызмат, дүң сунуш же карго компания карточкасын жайгаштырыңыз.",
     en: "Post an item, service, wholesale offer or cargo company card.",
   },
+  "accountListings.emptyServicesTitle": {
+    ru: "У вас пока нет услуг.",
+    kg: "Сизде азырынча кызматтар жок.",
+    en: "You do not have any services yet.",
+  },
+  "accountListings.emptyServicesDescription": {
+    ru: "Разместите услугу, чтобы клиенты могли найти вас на сайте.",
+    kg: "Кызмат жайгаштырыңыз, кардарлар сайттан сизди тапсын.",
+    en: "Post a service so clients can find you on the site.",
+  },
   "accountListings.open": {
     ru: "Открыть",
     kg: "Ачуу",
@@ -4010,7 +4100,7 @@ export const DICTIONARY = {
     en: "Listing",
   },
   "post.service": {
-    ru: "Услугу",
+    ru: "Услуга",
     kg: "Кызмат",
     en: "Service",
   },

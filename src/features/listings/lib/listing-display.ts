@@ -195,10 +195,10 @@ export function getCatalogVerticalCopy(
       };
     case "SERVICES":
       return {
-        title: "Услуги и специалисты",
-        description: "Мастера, компании и специалисты в Кыргызстане.",
-        emptyTitle: "В ТутУслуги пока нет объявлений.",
-        emptyDescription: "Добавьте услугу и получите первые заявки.",
+        title: "Услуги",
+        description: "Найдите специалиста или разместите свою услугу.",
+        emptyTitle: "Услуги не найдены.",
+        emptyDescription: "Попробуйте изменить запрос, город или категорию.",
       };
     case "CARGO":
       return {

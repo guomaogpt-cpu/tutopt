@@ -157,7 +157,10 @@ export default async function AccountListingsPage({ searchParams }: AccountListi
           <AccountListingsFilters filters={filters} />
 
           {serializedListings.length === 0 ? (
-            <AccountListingsEmptyState hasFilters={hasFilters} />
+            <AccountListingsEmptyState
+              hasFilters={hasFilters}
+              vertical={filters.vertical}
+            />
           ) : (
             <>
               <p className="text-sm text-slate-500 dark:text-slate-400">

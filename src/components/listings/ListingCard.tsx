@@ -233,7 +233,9 @@ export function ListingCard({
                     "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold",
                     listing.vertical === "MARKET"
                       ? "bg-purple-50 text-purple-700 dark:bg-slate-800 dark:text-purple-300"
-                      : "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300",
+                      : listing.vertical === "SERVICES"
+                        ? "bg-green-50 text-green-700 dark:bg-slate-800 dark:text-green-300"
+                        : "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300",
                   )}
                 >
                   {t("company.badge")}
