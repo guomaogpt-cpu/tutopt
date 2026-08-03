@@ -97,3 +97,9 @@ Checklist + UX diagnostics: `docs/MANUAL_PRODUCTION_QA_PHASE_92.md`.
 - Telegram refresh status CTA
 - Photo uploaded hint
 - Full A–G scenarios documented; live login still owner-run
+
+## Phase 93 live closed beta results
+
+See `docs/CLOSED_BETA_USER_TEST_PHASE_93.md`.
+
+Guest cargo create now requires login (P0 orphan fix). Ready for closed tester group after three accounts + Telegram env.

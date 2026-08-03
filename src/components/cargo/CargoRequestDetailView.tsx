@@ -218,10 +218,18 @@ export function CargoRequestDetailView({
         {detail.responses.length === 0 ? (
           <div className="mt-3 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 dark:border-slate-800 dark:bg-slate-950">
             <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-              {t("cargoRequest.noResponsesTitle")}
+              {!detail.isOwner &&
+              detail.viewerRole !== "admin" &&
+              detail.responseCount > 0
+                ? t("cargoRequest.responsesOwnerOnly")
+                : t("cargoRequest.noResponsesTitle")}
             </p>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              {t("cargoRequest.noResponsesDescription")}
+              {!detail.isOwner &&
+              detail.viewerRole !== "admin" &&
+              detail.responseCount > 0
+                ? t("cargoRequest.noAccessDescription")
+                : t("cargoRequest.noResponsesDescription")}
             </p>
           </div>
         ) : (

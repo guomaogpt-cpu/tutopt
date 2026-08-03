@@ -75,6 +75,9 @@ function mapValidationMessage(
       return t("cargo.validation.toRequired");
     case "CARGO_ITEM_REQUIRED":
       return t("cargo.validation.itemRequired");
+    case "CARGO_AUTH_REQUIRED":
+    case "UNAUTHORIZED":
+      return t("cargo.requestLoginDescription");
     default:
       return code && code.length > 0 ? code : t("cargo.submitError");
   }
@@ -107,6 +110,43 @@ export function CargoRequestForm({
   const [createdRequestId, setCreatedRequestId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
+  const loginReturnPath = "/cargo";
+
+  if (!isAuthenticated && !isSuccess) {
+    return (
+      <div
+        className={cn(
+          isModal
+            ? "py-2"
+            : "rounded-2xl border border-orange-200/70 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none",
+        )}
+      >
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          {t("cargo.requestLoginTitle")}
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+          {t("cargo.requestLoginDescription")}
+        </p>
+        <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+          <Button
+            asChild
+            className="h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
+          >
+            <Link href={buildLoginUrl(loginReturnPath)}>{t("auth.signIn")}</Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 sm:w-auto"
+          >
+            <Link href={buildRegisterUrl({ returnPath: loginReturnPath })}>
+              {t("auth.register")}
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   async function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];

@@ -5,6 +5,7 @@ import { sendCargoRequestTelegramNotifications } from "@/lib/telegram/cargo-tele
 import { getClientIpFromRequest } from "@/lib/security/client-ip";
 import { assertCargoRequestCreateRateLimits } from "@/lib/security/rate-limit";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
+import { UnauthorizedError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
 
 export async function POST(request: Request) {
@@ -12,7 +13,11 @@ export async function POST(request: Request) {
     const user = await getCurrentUser();
     const ip = getClientIpFromRequest(request);
 
-    assertCargoRequestCreateRateLimits(ip, user?.id ?? null);
+    if (!user) {
+      throw new UnauthorizedError("CARGO_AUTH_REQUIRED");
+    }
+
+    assertCargoRequestCreateRateLimits(ip, user.id);
 
     const input = await parseJsonBody(request, createCargoRequestSchema);
 
@@ -33,14 +38,14 @@ export async function POST(request: Request) {
         comment: input.comment,
         service_type: input.serviceType,
         direction: input.direction,
-        user_id: user?.id ?? null,
+        user_id: user.id,
       },
       select: { id: true },
     });
 
     try {
       await createNewCargoRequestNotifications({
-        actorId: user?.id ?? null,
+        actorId: user.id,
         requestId: cargoRequest.id,
         itemName: input.itemName,
         fromLocation: input.fromLocation,
@@ -55,7 +60,7 @@ export async function POST(request: Request) {
     try {
       await sendCargoRequestTelegramNotifications({
         requestId: cargoRequest.id,
-        actorId: user?.id ?? null,
+        actorId: user.id,
         itemName: input.itemName,
         fromLocation: input.fromLocation,
         toLocation: input.toLocation,

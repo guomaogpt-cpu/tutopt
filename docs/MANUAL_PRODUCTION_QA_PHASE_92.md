@@ -144,3 +144,12 @@ Webhook: `https://tutopt-production.up.railway.app/api/webhooks/telegram`
 | G Admin | Checklist (guards Phase 91) |
 
 **Requires owner manual run:** A–G на live с тестовыми аккаунтами.
+
+## Phase 93 live closed beta results
+
+See `docs/CLOSED_BETA_USER_TEST_PHASE_93.md`.
+
+- Closed beta kit + test data
+- P0: guest cargo requests required auth (no more orphan `user_id=null`)
+- P1: company back link; responses empty copy for non-owners
+- Live Pass/Fail still filled by testers with three accounts

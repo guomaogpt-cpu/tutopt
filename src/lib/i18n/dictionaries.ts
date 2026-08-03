@@ -830,6 +830,16 @@ export const DICTIONARY = {
     kg: "Маршрутту жана байланыштарды толтуруңуз. Карго компаниялар жооп бере алышат.",
     en: "Fill in the route and contacts. Cargo companies will be able to respond.",
   },
+  "cargo.requestLoginTitle": {
+    ru: "Войдите, чтобы оставить заявку",
+    kg: "Сурам калтыруу үчүн кириңиз",
+    en: "Sign in to submit a request",
+  },
+  "cargo.requestLoginDescription": {
+    ru: "Так заявка сохранится в личном кабинете, и вы увидите отклики карго-компаний с контактами.",
+    kg: "Ошентип сурам жеке кабинетте сакталып, карго компаниялардын байланыштуу жоопторун көрөсүз.",
+    en: "This way the request stays in your account, and you can see cargo company responses with contacts.",
+  },
   "cargo.requestSuccessTitle": {
     ru: "Заявка отправлена",
     kg: "Сурам жөнөтүлдү",
@@ -1215,6 +1225,11 @@ export const DICTIONARY = {
     ru: "Контакты клиента",
     kg: "Кардардын байланыштары",
     en: "Client contacts",
+  },
+  "cargoRequest.responsesOwnerOnly": {
+    ru: "Отклики видит только владелец заявки.",
+    kg: "Жоопторду сурамдын ээси гана көрөт.",
+    en: "Only the request owner can see responses.",
   },
   "cargoRequest.responsesTitle": {
     ru: "Отклики",
