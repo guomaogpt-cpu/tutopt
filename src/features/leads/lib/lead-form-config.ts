@@ -118,35 +118,35 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
     case "OPT":
     default:
       return {
-        title: "Запросить оптовое предложение",
-        subtitle: "Уточните партию, цену, наличие и условия отгрузки.",
-        messageLabel: "Сообщение поставщику",
+        title: "Связаться с поставщиком",
+        subtitle: "Уточните партию, наличие и условия поставки.",
+        messageLabel: "Ваше сообщение",
         messagePlaceholder:
-          "Здравствуйте. Интересует партия товара. Уточните, пожалуйста, цену, минимальный объём, наличие и условия доставки.",
+          "Здравствуйте. Интересует оптовое предложение. Подскажите, пожалуйста, минимальную партию, наличие и условия.",
         defaultMessage:
-          "Здравствуйте. Интересует партия товара. Уточните, пожалуйста, цену, минимальный объём, наличие и условия доставки.",
-        submitLabel: "Отправить запрос",
-        successTitle: "Запрос отправлен",
-        successMessage: (sellerName) =>
-          `Запрос отправлен поставщику ${sellerName}.`,
+          "Здравствуйте. Интересует оптовое предложение. Подскажите, пожалуйста, минимальную партию, наличие и условия.",
+        submitLabel: "Отправить",
+        successTitle: "Запрос отправлен.",
+        successMessage: () =>
+          "Запрос отправлен. Поставщик получит ваши контакты и сообщение.",
         loginPrompt: (sellerName) =>
-          `Войдите, чтобы отправить запрос поставщику ${sellerName}.`,
+          `Войдите, чтобы связаться с поставщиком ${sellerName}.`,
         sellerLeadTypeLabel: "Оптовый запрос",
         notificationTitle: "Новый оптовый запрос",
         notificationMessage: (listingTitle) =>
-          `Покупатель отправил оптовый запрос по объявлению «${listingTitle}»`,
+          `Покупатель отправил оптовый запрос по предложению «${listingTitle}»`,
         listingLabel: "Товар",
         recipientLabel: "Поставщик",
         showQuantity: true,
         quantityLabel: "Количество",
         quantityHint: undefined,
-        showEmail: true,
+        showEmail: false,
         templates: [
           "Уточнить цену за партию",
           "Уточнить наличие",
           "Уточнить доставку",
         ],
-        contactCtaLabel: "Отправить запрос",
+        contactCtaLabel: "Связаться с поставщиком",
       };
   }
 }

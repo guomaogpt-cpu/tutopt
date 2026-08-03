@@ -16,16 +16,21 @@ export function CreateListingPageHeader({
   const { t } = useTranslation();
   const isCargo = initialVertical === "CARGO";
   const isServices = initialVertical === "SERVICES";
+  const isOpt = initialVertical === "OPT";
   const pageTitle = isCargo
     ? t("cargo.addCompanyButton")
     : isServices
       ? t("services.pageTitle")
-      : t("createListing.title");
+      : isOpt
+        ? t("opt.pageTitle")
+        : t("createListing.title");
   const pageSubtitle = isCargo
     ? t("cargo.addCompanyDescription")
     : isServices
       ? t("services.pageSubtitle")
-      : t("createListing.subtitle");
+      : isOpt
+        ? t("opt.pageSubtitle")
+        : t("createListing.subtitle");
 
   return (
     <>

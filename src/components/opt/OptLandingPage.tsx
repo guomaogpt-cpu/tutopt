@@ -1,8 +1,12 @@
+"use client";
+
 import { ListingCard } from "@/components/listings/ListingCard";
+import { OptCategoryHighlights } from "@/components/opt/OptCategoryHighlights";
 import {
   OptCompactHero,
   type OptCategoryItem,
 } from "@/components/opt/OptCompactHero";
+import { OptForBusiness } from "@/components/opt/OptForBusiness";
 import { Container } from "@/components/ui/container";
 import {
   VerticalEmptyState,
@@ -11,6 +15,8 @@ import {
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { VERTICAL_LATEST_LISTINGS_GRID_CLASS } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
+import { getVerticalTheme } from "@/lib/vertical-theme";
+import { cn } from "@/lib/utils";
 
 type OptLandingPageProps = {
   categories: OptCategoryItem[];
@@ -19,18 +25,26 @@ type OptLandingPageProps = {
 
 export function OptLandingPage({ categories, listings }: OptLandingPageProps) {
   const config = VERTICALS.OPT;
+  const theme = getVerticalTheme("OPT");
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-gradient-to-b from-blue-50/50 to-slate-50 dark:from-slate-950 dark:to-slate-950">
+    <main
+      className={cn(
+        "min-w-0 overflow-x-clip bg-gradient-to-b dark:from-slate-950 dark:to-slate-950",
+        theme.pageWash,
+      )}
+    >
       <OptCompactHero categories={categories} />
 
-      <Container size="lg" className="py-8 sm:py-10">
+      <Container size="lg" className="space-y-8 py-6 sm:space-y-10 sm:py-10">
+        <OptCategoryHighlights categories={categories} />
+
         <section aria-labelledby="opt-listings-heading">
           <VerticalLatestHeading
             headingId="opt-listings-heading"
             listingsHref={config.listingsHref}
             showAllLink={listings.length > 0}
-            linkClassName="shrink-0 text-sm font-medium text-blue-700 hover:underline"
+            linkClassName={cn("shrink-0 text-sm font-medium hover:underline", theme.softLink)}
           />
 
           {listings.length === 0 ? (
@@ -45,6 +59,8 @@ export function OptLandingPage({ categories, listings }: OptLandingPageProps) {
             </div>
           )}
         </section>
+
+        <OptForBusiness />
       </Container>
     </main>
   );

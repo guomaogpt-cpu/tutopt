@@ -323,7 +323,9 @@ export function ListingsCatalogToolbar({
                     ? t("services.searchPlaceholder")
                     : filters.vertical === "MARKET"
                       ? t("search.marketPlaceholder")
-                      : t("mobileSearch.placeholder")
+                      : filters.vertical === "OPT"
+                        ? t("opt.searchPlaceholder")
+                        : t("mobileSearch.placeholder")
                 }
                 className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] bg-white pl-10 pr-[4.5rem] text-base shadow-none sm:h-12 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
               />

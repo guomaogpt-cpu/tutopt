@@ -181,10 +181,10 @@ export function getCatalogVerticalCopy(
   switch (vertical) {
     case "OPT":
       return {
-        title: "Оптовые объявления",
-        description: "Товары оптом, поставщики и предложения для бизнеса.",
-        emptyTitle: "В ТутОпт пока нет объявлений.",
-        emptyDescription: "Станьте первым поставщиком в этом разделе.",
+        title: "Оптовые предложения",
+        description: "Находите поставщиков, партии товаров и оптовые предложения.",
+        emptyTitle: "Оптовые предложения не найдены.",
+        emptyDescription: "Попробуйте изменить запрос, город или категорию.",
       };
     case "MARKET":
       return {

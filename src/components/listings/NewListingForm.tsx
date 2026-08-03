@@ -434,7 +434,9 @@ export function NewListingForm({
               ? t("cargo.companySubmitted")
               : vertical === "SERVICES"
                 ? t("services.submittedForModeration")
-                : t("createListing.submittedForModeration")}
+                : vertical === "OPT"
+                  ? t("opt.submittedForModeration")
+                  : t("createListing.submittedForModeration")}
           </h2>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             {t("createListing.moderationNote")}
@@ -447,7 +449,9 @@ export function NewListingForm({
               <Link href={`/listings/${createdListingId}`}>
                 {vertical === "SERVICES"
                   ? t("services.openService")
-                  : t("createListing.openListing")}
+                  : vertical === "OPT"
+                    ? t("opt.openOffer")
+                    : t("createListing.openListing")}
               </Link>
             </Button>
             <Button
@@ -465,7 +469,9 @@ export function NewListingForm({
               <Link href={`/listings/new?vertical=${vertical}`}>
                 {vertical === "SERVICES"
                   ? t("services.postAnotherService")
-                  : t("createListing.postAnother")}
+                  : vertical === "OPT"
+                    ? t("opt.postAnotherOffer")
+                    : t("createListing.postAnother")}
               </Link>
             </Button>
           </div>
@@ -496,7 +502,9 @@ export function NewListingForm({
       : t("createListing.publishing")
     : mode === "edit"
       ? t("createListing.saveChanges")
-      : t("createListing.publish");
+      : vertical === "OPT"
+        ? t("opt.postOffer")
+        : t("createListing.publish");
 
   const submitDisabled = isSubmitting || imageUrls.length === 0;
 
@@ -790,7 +798,9 @@ export function NewListingForm({
                   ? t("cargo.form.cityOffice")
                   : vertical === "SERVICES"
                     ? t("services.formCity")
-                    : "Город"
+                    : vertical === "OPT"
+                      ? t("opt.formCity")
+                      : "Город"
               }
               value={cityId}
               onChange={setCityId}

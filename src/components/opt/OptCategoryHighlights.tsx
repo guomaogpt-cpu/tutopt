@@ -16,7 +16,7 @@ export function OptCategoryHighlights({ categories }: OptCategoryHighlightsProps
       accent="blue"
       getVisual={getOptCategoryVisual}
       headingId="opt-categories-heading"
-      drawerDescription="Раздел «ТутОпт» — выберите категорию"
+      drawerDescription="Выберите категорию оптовых предложений"
       drawerNavLabel="Все оптовые категории"
     />
   );

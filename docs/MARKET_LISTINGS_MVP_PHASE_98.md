@@ -66,3 +66,7 @@ Market landing + catalog + contact copy polish for ordinary listings.
 ## Phase 99 services MVP
 
 See `docs/SERVICES_MVP_PHASE_99.md`. Services treated as a separate vertical from ordinary product listings.
+
+## Phase 100 opt B2B MVP
+
+See `docs/OPT_B2B_MVP_PHASE_100.md`.

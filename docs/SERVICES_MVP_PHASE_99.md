@@ -66,3 +66,7 @@
 ## Phase 99 services MVP
 
 Services landing + catalog + executor contact copy polish.
+
+## Phase 100 opt B2B MVP
+
+See `docs/OPT_B2B_MVP_PHASE_100.md`.

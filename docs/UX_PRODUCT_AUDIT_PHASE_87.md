@@ -231,3 +231,7 @@ See `docs/MARKET_LISTINGS_MVP_PHASE_98.md`. Ordinary listings `/market` + `/list
 
 See `docs/SERVICES_MVP_PHASE_99.md`. Services vertical polished separately from product listings (green theme, executor copy).
 
+## Phase 100 opt B2B MVP
+
+See `docs/OPT_B2B_MVP_PHASE_100.md`. Wholesale vertical polished as B2B (supplier/MOQ/blue theme).
+

@@ -63,10 +63,11 @@ export function ListingLeadForm({
   const { t } = useTranslation();
   const theme = getVerticalTheme(vertical);
   const config = getLeadFormConfig(vertical);
-  const defaultMessage =
-    vertical === "MARKET" || vertical === "SERVICES"
-      ? config.defaultMessage
-      : t("lead.messagePlaceholder");
+  const usesVerticalLeadCopy =
+    vertical === "MARKET" || vertical === "SERVICES" || vertical === "OPT";
+  const defaultMessage = usesVerticalLeadCopy
+    ? config.defaultMessage
+    : t("lead.messagePlaceholder");
   const [quantity, setQuantity] = useState(String(Math.max(1, moq)));
   const [message, setMessage] = useState(defaultMessage);
   const [contactPhone, setContactPhone] = useState(defaultPhone ?? "");
@@ -266,7 +267,9 @@ export function ListingLeadForm({
           <p className="mt-3 text-sm leading-relaxed text-green-800 dark:text-green-300">
             {vertical === "SERVICES"
               ? t("lead.successDescriptionServices")
-              : t("lead.successDescription")}
+              : vertical === "OPT"
+                ? t("lead.successDescriptionOpt")
+                : t("lead.successDescription")}
           </p>
           <div className="mt-5 flex flex-col gap-2 sm:flex-row">
             <Button
@@ -389,14 +392,12 @@ export function ListingLeadForm({
         id="listing-lead-form-title"
         className="mb-4 text-lg font-bold text-slate-900 sm:text-xl dark:text-slate-100"
       >
-        {t("lead.title")}
+        {usesVerticalLeadCopy ? config.title : t("lead.title")}
       </h2>
 
       <div className={leadCardClassName}>
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          {vertical === "MARKET" || vertical === "SERVICES"
-            ? config.subtitle
-            : t("lead.description")}
+          {usesVerticalLeadCopy ? config.subtitle : t("lead.description")}
         </p>
         <div className="mt-4">{listingSummary}</div>
 
@@ -483,7 +484,7 @@ export function ListingLeadForm({
               htmlFor="lead-message"
               className="text-sm font-medium text-slate-900 dark:text-slate-100"
             >
-              {vertical === "MARKET" || vertical === "SERVICES"
+              {usesVerticalLeadCopy
                 ? t("lead.messageLabelYours")
                 : t("lead.messageLabel")}
             </label>
@@ -494,7 +495,7 @@ export function ListingLeadForm({
               rows={5}
               maxLength={LEAD_MESSAGE_MAX}
               placeholder={
-                vertical === "MARKET" || vertical === "SERVICES"
+                usesVerticalLeadCopy
                   ? config.messagePlaceholder
                   : t("lead.messagePlaceholder")
               }

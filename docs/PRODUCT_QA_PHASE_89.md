@@ -188,3 +188,7 @@ See `docs/MARKET_LISTINGS_MVP_PHASE_98.md`. Market/listings MVP polish for ordin
 
 See `docs/SERVICES_MVP_PHASE_99.md`.
 
+## Phase 100 opt B2B MVP
+
+See `docs/OPT_B2B_MVP_PHASE_100.md`.
+

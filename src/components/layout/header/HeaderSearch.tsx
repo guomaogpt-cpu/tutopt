@@ -34,7 +34,7 @@ export function HeaderSearch(props: HeaderSearchProps) {
   } else if (vertical === "MARKET") {
     placeholderKey = "search.marketPlaceholder";
   } else if (vertical === "OPT") {
-    placeholderKey = "search.optPlaceholder";
+    placeholderKey = "opt.searchPlaceholder";
   } else if (vertical === "CARGO") {
     placeholderKey = "search.cargoPlaceholder";
   } else if (props.placeholderKey) {

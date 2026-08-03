@@ -18,7 +18,9 @@ export function ListingRequestHint({ vertical }: ListingRequestHintProps) {
       ? "listing.requestHintMarket"
       : vertical === "SERVICES"
         ? "listing.requestHintServices"
-        : "listing.requestHint";
+        : vertical === "OPT"
+          ? "listing.requestHintOpt"
+          : "listing.requestHint";
 
   return (
     <div

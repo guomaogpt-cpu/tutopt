@@ -70,7 +70,9 @@ export function ListingsEmptyState({
         hasActiveFilters
           ? vertical === "SERVICES"
             ? t("services.emptyFilteredTitle")
-            : t("listings.emptyFilteredTitle")
+            : vertical === "OPT"
+              ? t("opt.emptyFilteredTitle")
+              : t("listings.emptyFilteredTitle")
           : vertical === "SERVICES"
             ? t("services.emptyTitle")
             : copy.emptyTitle
@@ -79,7 +81,9 @@ export function ListingsEmptyState({
         hasActiveFilters
           ? vertical === "SERVICES"
             ? t("services.emptyFilteredDescription")
-            : t("listings.emptyFilteredDescription")
+            : vertical === "OPT"
+              ? t("opt.emptyFilteredDescription")
+              : t("listings.emptyFilteredDescription")
           : vertical === "SERVICES"
             ? t("services.emptyDescription")
             : copy.emptyDescription
@@ -107,7 +111,9 @@ export function ListingsEmptyState({
                     ? t("services.postService")
                     : vertical === "MARKET"
                       ? t("vertical.postListing")
-                      : t("listings.allListings")}
+                      : vertical === "OPT"
+                        ? t("opt.postOffer")
+                        : t("listings.allListings")}
                 </Link>
               </Button>
             </>
@@ -116,7 +122,9 @@ export function ListingsEmptyState({
               <Link href={createHref}>
                 {vertical === "SERVICES"
                   ? t("services.postService")
-                  : t("catalog.addListing")}
+                  : vertical === "OPT"
+                    ? t("opt.postOffer")
+                    : t("catalog.addListing")}
               </Link>
             </Button>
           ) : (

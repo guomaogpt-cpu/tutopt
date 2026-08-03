@@ -64,9 +64,9 @@ export const DICTIONARY = {
     en: "Find a product or listing...",
   },
   "search.optPlaceholder": {
-    ru: "Найти оптовый товар или поставщика...",
-    kg: "Дүң товар же жеткирүүчүнү табуу...",
-    en: "Find wholesale goods or a supplier...",
+    ru: "Что ищете оптом?",
+    kg: "Дүңүнөн эмне издейсиз?",
+    en: "What are you looking for wholesale?",
   },
   "search.servicesPlaceholder": {
     ru: "Какая услуга нужна?",
@@ -548,9 +548,9 @@ export const DICTIONARY = {
     en: "No listings in Classifieds yet",
   },
   "vertical.emptyOpt": {
-    ru: "В ТутОпте пока нет объявлений",
-    kg: "ТутОптто азырынча жарыялар жок",
-    en: "No listings in Wholesale yet",
+    ru: "Пока нет оптовых предложений.",
+    kg: "Азырынча дүң сунуштар жок.",
+    en: "No wholesale offers yet.",
   },
   "vertical.emptyServices": {
     ru: "В ТутУслугах пока нет объявлений",
@@ -2655,6 +2655,11 @@ export const DICTIONARY = {
     kg: "Аткаруучуга жазыңыз — шарттарды, мөөнөттөрдү жана бааны тактаңыз.",
     en: "Message the provider — ask about terms, timing, and price.",
   },
+  "listing.requestHintOpt": {
+    ru: "Перед запросом уточните минимальную партию, наличие и условия отгрузки.",
+    kg: "Сурамдан мурун минималдуу партияны, бар-жогун жана жөнөтүү шарттарын тактаңыз.",
+    en: "Before requesting, confirm MOQ, availability, and shipping terms.",
+  },
   "listing.report": { ru: "Пожаловаться", kg: "Даттануу", en: "Report" },
 
   // Lead form — Phase 56 / 61
@@ -2742,6 +2747,11 @@ export const DICTIONARY = {
     ru: "Исполнитель получит ваши контакты и сообщение.",
     kg: "Аткаруучу сиздин байланыштарыңызды жана билдирүүңүздү алат.",
     en: "The provider will receive your contacts and message.",
+  },
+  "lead.successDescriptionOpt": {
+    ru: "Поставщик получит ваши контакты и сообщение.",
+    kg: "Жеткирүүчү сиздин байланыштарыңызды жана билдирүүңүздү алат.",
+    en: "The supplier will receive your contacts and message.",
   },
   "lead.alreadySent": {
     ru: "Вы уже отправляли запрос по этому объявлению.",
@@ -3523,6 +3533,16 @@ export const DICTIONARY = {
     ru: "Разместите услугу, чтобы клиенты могли найти вас на сайте.",
     kg: "Кызмат жайгаштырыңыз, кардарлар сайттан сизди тапсын.",
     en: "Post a service so clients can find you on the site.",
+  },
+  "accountListings.emptyOptTitle": {
+    ru: "У вас пока нет оптовых предложений.",
+    kg: "Сизде азырынча дүң сунуштар жок.",
+    en: "You do not have any wholesale offers yet.",
+  },
+  "accountListings.emptyOptDescription": {
+    ru: "Разместите товар оптом, чтобы компании могли найти вас на сайте.",
+    kg: "Товарды дүңүнөн жайгаштырыңыз, компаниялар сайттан сизди тапсын.",
+    en: "Post wholesale goods so companies can find you on the site.",
   },
   "accountListings.open": {
     ru: "Открыть",
@@ -4337,6 +4357,91 @@ export const DICTIONARY = {
     ru: "Что продаёте?",
     kg: "Эмне сатасыз?",
     en: "What are you selling?",
+  },
+  "opt.heroTitle": {
+    ru: "Опт",
+    kg: "Дүң",
+    en: "Wholesale",
+  },
+  "opt.heroSubtitle": {
+    ru: "Находите поставщиков, партии товаров и оптовые предложения.",
+    kg: "Жеткирүүчүлөрдү, партияларды жана дүң сунуштарды табыңыз.",
+    en: "Find suppliers, batches, and wholesale offers.",
+  },
+  "opt.searchPlaceholder": {
+    ru: "Что ищете оптом?",
+    kg: "Дүңүнөн эмне издейсиз?",
+    en: "What are you looking for wholesale?",
+  },
+  "opt.findWholesale": {
+    ru: "Найти оптом",
+    kg: "Дүңүнөн табуу",
+    en: "Find wholesale",
+  },
+  "opt.postOffer": {
+    ru: "Разместить оптовое предложение",
+    kg: "Дүң сунуш жайгаштыруу",
+    en: "Post a wholesale offer",
+  },
+  "opt.forBusinessTitle": {
+    ru: "Для бизнеса",
+    kg: "Бизнес үчүн",
+    en: "For business",
+  },
+  "opt.forBusiness.step1": {
+    ru: "Найдите оптовое предложение по категории или поиску.",
+    kg: "Категория же издөө аркылуу дүң сунушту табыңыз.",
+    en: "Find a wholesale offer by category or search.",
+  },
+  "opt.forBusiness.step2": {
+    ru: "Откройте карточку и свяжитесь с поставщиком.",
+    kg: "Карточканы ачып, жеткирүүчү менен байланышыңыз.",
+    en: "Open the card and contact the supplier.",
+  },
+  "opt.forBusiness.step3": {
+    ru: "Или разместите своё оптовое предложение для компаний.",
+    kg: "Же компаниялар үчүн өз дүң сунушуңузду жайгаштырыңыз.",
+    en: "Or post your wholesale offer for companies.",
+  },
+  "opt.pageTitle": {
+    ru: "Разместить оптовое предложение",
+    kg: "Дүң сунуш жайгаштыруу",
+    en: "Post a wholesale offer",
+  },
+  "opt.pageSubtitle": {
+    ru: "Укажите товар, оптовую цену, минимальную партию и город.",
+    kg: "Товарды, дүң бааны, минималдуу партияны жана шаарды жазыңыз.",
+    en: "Add the product, wholesale price, MOQ, and city.",
+  },
+  "opt.formCity": {
+    ru: "Где находится товар?",
+    kg: "Товар кайда?",
+    en: "Where is the product?",
+  },
+  "opt.submittedForModeration": {
+    ru: "Оптовое предложение отправлено на модерацию.",
+    kg: "Дүң сунуш модерацияга жөнөтүлдү.",
+    en: "Wholesale offer submitted for moderation.",
+  },
+  "opt.openOffer": {
+    ru: "Открыть предложение",
+    kg: "Сунушту ачуу",
+    en: "Open offer",
+  },
+  "opt.postAnotherOffer": {
+    ru: "Разместить ещё одно оптовое предложение",
+    kg: "Дагы бир дүң сунуш жайгаштыруу",
+    en: "Post another wholesale offer",
+  },
+  "opt.emptyFilteredTitle": {
+    ru: "Оптовые предложения не найдены.",
+    kg: "Дүң сунуштар табылган жок.",
+    en: "No wholesale offers found.",
+  },
+  "opt.emptyFilteredDescription": {
+    ru: "Попробуйте изменить запрос, город или категорию.",
+    kg: "Сурамды, шаарды же категорияны өзгөртүп көрүңүз.",
+    en: "Try changing the query, city, or category.",
   },
   "opt.formSectionTitle": {
     ru: "Какое оптовое предложение?",

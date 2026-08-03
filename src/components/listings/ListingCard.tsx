@@ -183,6 +183,16 @@ export function ListingCard({
               </span>
             ) : null}
           </p>
+          {listing.vertical === "OPT" && listing.moq > 0 ? (
+            <p
+              className={cn(
+                "font-medium text-slate-500 dark:text-slate-400",
+                isCompact ? "text-[11px]" : "text-xs",
+              )}
+            >
+              {t("listing.minOrder")}: {listing.moq} {unitLabel.toLowerCase()}
+            </p>
+          ) : null}
 
           <h2
             className={cn(
@@ -235,7 +245,9 @@ export function ListingCard({
                       ? "bg-purple-50 text-purple-700 dark:bg-slate-800 dark:text-purple-300"
                       : listing.vertical === "SERVICES"
                         ? "bg-green-50 text-green-700 dark:bg-slate-800 dark:text-green-300"
-                        : "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300",
+                        : listing.vertical === "OPT"
+                          ? "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300"
+                          : "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300",
                   )}
                 >
                   {t("company.badge")}
