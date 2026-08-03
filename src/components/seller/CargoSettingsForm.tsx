@@ -428,6 +428,17 @@ export function CargoSettingsForm({ initialSettings }: CargoSettingsFormProps) {
                 >
                   {copyDone ? t("cargo.telegram.linkCopied") : t("cargo.telegram.copyLink")}
                 </Button>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {t("cargo.telegram.refreshHint")}
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.refresh()}
+                  className="h-10 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 sm:w-auto"
+                >
+                  {t("cargo.telegram.refreshStatus")}
+                </Button>
               </div>
             ) : null}
           </div>

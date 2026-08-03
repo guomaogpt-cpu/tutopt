@@ -850,6 +850,11 @@ export const DICTIONARY = {
     kg: "Менин сурамдарым",
     en: "My requests",
   },
+  "cargo.openCreatedRequest": {
+    ru: "Открыть заявку",
+    kg: "Сурамды ачуу",
+    en: "Open request",
+  },
   "cargo.requestTitle": {
     ru: "Оставить заявку на перевозку",
     kg: "Жеткирүүгө сурам калтыруу",
@@ -1507,9 +1512,19 @@ export const DICTIONARY = {
     en: "Enter Chat ID manually",
   },
   "cargo.telegram.connectInstruction": {
-    ru: "Откройте бота и нажмите Start.",
-    kg: "Ботту ачып, Start басыңыз.",
-    en: "Open the bot and press Start.",
+    ru: "Откройте бота, нажмите Start, затем обновите статус на этой странице.",
+    kg: "Ботту ачып, Start басыңыз, андан кийин бул баракта статусту жаңыртыңыз.",
+    en: "Open the bot, tap Start, then refresh the status on this page.",
+  },
+  "cargo.telegram.refreshStatus": {
+    ru: "Обновить статус",
+    kg: "Статусту жаңыртуу",
+    en: "Refresh status",
+  },
+  "cargo.telegram.refreshHint": {
+    ru: "Проверьте Telegram и нажмите «Обновить статус».",
+    kg: "Telegramди текшерип, «Статусту жаңыртуу» басыңыз.",
+    en: "Check Telegram, then tap Refresh status.",
   },
   "cargo.telegram.botUsernameMissing": {
     ru: "Telegram bot username не настроен на сервере.",
@@ -2017,6 +2032,7 @@ export const DICTIONARY = {
   "common.save": { ru: "Сохранить", kg: "Сактоо", en: "Save" },
   "common.cancel": { ru: "Отмена", kg: "Жокко чыгаруу", en: "Cancel" },
   "common.close": { ru: "Закрыть", kg: "Жабуу", en: "Close" },
+  "common.refresh": { ru: "Обновить", kg: "Жаңыртуу", en: "Refresh" },
   "common.back": { ru: "Назад", kg: "Артка", en: "Back" },
   "common.next": { ru: "Далее", kg: "Андан ары", en: "Next" },
 
@@ -4196,6 +4212,11 @@ export const DICTIONARY = {
     ru: "Добавить",
     kg: "Кошуу",
     en: "Add",
+  },
+  "createListing.photoUploaded": {
+    ru: "Фото загружено",
+    kg: "Сүрөт жүктөлдү",
+    en: "Photo uploaded",
   },
   "createListing.mainPhoto": {
     ru: "Главное",

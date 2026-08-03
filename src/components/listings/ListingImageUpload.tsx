@@ -35,6 +35,7 @@ export function ListingImageUpload({
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploadError, setUploadError] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [localPreviews, setLocalPreviews] = useState<LocalPreview[]>([]);
@@ -78,6 +79,7 @@ export function ListingImageUpload({
     }
 
     setUploadError("");
+    setUploadSuccess(false);
     setIsUploading(true);
 
     const previews: LocalPreview[] = files.map((file, index) => ({
@@ -101,12 +103,14 @@ export function ListingImageUpload({
 
       // Submit payload must receive only server URLs — never blob:
       onChange([...value, ...uploadedUrls]);
+      setUploadSuccess(true);
     } catch (uploadFailure) {
       setUploadError(
         uploadFailure instanceof Error
           ? uploadFailure.message
           : t("createListing.validation.waitUpload"),
       );
+      setUploadSuccess(false);
     } finally {
       clearLocalPreviews();
       setIsUploading(false);
@@ -126,6 +130,7 @@ export function ListingImageUpload({
   function handleRemove(index: number) {
     onChange(value.filter((_, itemIndex) => itemIndex !== index));
     setUploadError("");
+    setUploadSuccess(false);
   }
 
   function handleDragStart(index: number) {
@@ -189,6 +194,11 @@ export function ListingImageUpload({
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {t("createListing.mainPhotoHint")} · {t("createListing.photoCount")}
           </p>
+          {uploadSuccess && !displayError ? (
+            <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400" role="status">
+              {t("createListing.photoUploaded")}
+            </p>
+          ) : null}
         </div>
         <Badge
           variant="secondary"

@@ -47,10 +47,8 @@ https://tutopt-production.up.railway.app
 
 ## 6. Осталось на потом
 
-- Manual account: регистрация → создать listing → upload → success → `/account/listings`
-- Manual cargo: создать заявку → отклик → owner contacts
-- Manual Telegram: connect + test message с production webhook
-- Manual admin: moderation / companies / cargo-requests empty states live
+- Manual account flows → см. `docs/MANUAL_PRODUCTION_QA_PHASE_92.md`
+- Logged-in create listing / cargo / Telegram / admin: **requires owner manual run**
 
 ## 7. Production checklist
 
@@ -62,10 +60,10 @@ https://tutopt-production.up.railway.app
 - [x] Cargo detail privacy for guest
 - [x] Legacy soft redirects
 - [x] Invalid UUID → safe 404 / not-found (fix deployed with this phase)
-- [ ] Logged-in create listing (manual)
-- [ ] Logged-in cargo request + response (manual)
-- [ ] Telegram connect/test (manual)
-- [ ] Admin staff flows (manual)
+- [ ] Logged-in create listing (manual) — Phase 92 checklist
+- [ ] Logged-in cargo request + response (manual) — Phase 92 checklist
+- [ ] Telegram connect/test (manual) — Phase 92 checklist
+- [ ] Admin staff flows (manual) — Phase 92 checklist
 
 ## 8. Env/Deploy notes
 
@@ -90,3 +88,12 @@ Uploads: Railway volume + `/api/uploads/...` serve path (не локальный
 - Public/SEO/auth redirects/uploads: OK on live
 - P0 invalid-UUID 500s: fixed in code (this commit)
 - Logged-in / Telegram / admin: **requires manual account test**
+
+## Phase 92 manual production QA results
+
+Checklist + UX diagnostics: `docs/MANUAL_PRODUCTION_QA_PHASE_92.md`.
+
+- Added cargo success → open `/cargo/requests/[id]`
+- Telegram refresh status CTA
+- Photo uploaded hint
+- Full A–G scenarios documented; live login still owner-run

@@ -104,6 +104,7 @@ export function CargoRequestForm({
   const [isUploading, setIsUploading] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [createdRequestId, setCreatedRequestId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
 
@@ -152,7 +153,7 @@ export function CargoRequestForm({
     setIsPending(true);
 
     try {
-      await createCargoRequest({
+      const result = await createCargoRequest({
         name,
         phone,
         company: company || null,
@@ -169,6 +170,7 @@ export function CargoRequestForm({
         serviceType: serviceType || null,
         direction: direction || null,
       });
+      setCreatedRequestId(result.request.id);
       setIsSuccess(true);
     } catch (error) {
       if (error instanceof CargoRequestError) {
@@ -204,10 +206,26 @@ export function CargoRequestForm({
             : t("cargo.requestSuccessGuestDescription")}
         </p>
         <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-          {isAuthenticated ? (
+          {createdRequestId ? (
             <Button
               asChild
               className="h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
+            >
+              <Link href={`/cargo/requests/${createdRequestId}`}>
+                {t("cargo.openCreatedRequest")}
+              </Link>
+            </Button>
+          ) : null}
+          {isAuthenticated ? (
+            <Button
+              asChild
+              variant={createdRequestId ? "outline" : "default"}
+              className={cn(
+                "h-11 w-full rounded-xl sm:w-auto",
+                createdRequestId
+                  ? "border-slate-200 dark:border-slate-700"
+                  : "bg-orange-500 text-white hover:bg-orange-600",
+              )}
             >
               <Link href="/account/requests?tab=cargoRequests">
                 {t("cargo.viewMyRequests")}

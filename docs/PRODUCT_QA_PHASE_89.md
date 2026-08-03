@@ -170,3 +170,9 @@ Live Railway check: `docs/PRODUCTION_SMOKE_TEST_PHASE_91.md`.
 - P0: invalid UUID ids caused 500 on listing/cargo/company — fixed with `isUuid` guards
 - Logged-in create/cargo/Telegram/admin: requires manual account test
 
+## Phase 92 manual production QA results
+
+See `docs/MANUAL_PRODUCTION_QA_PHASE_92.md`.
+
+Checklist A–G prepared; UX: cargo open-detail CTA, Telegram refresh status, photo uploaded hint. Live login e2e remains owner-run.
+

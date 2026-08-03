@@ -91,3 +91,9 @@ See `docs/PRODUCTION_SMOKE_TEST_PHASE_91.md`.
 Production confirmed: public pages, uploads via `/api/uploads`, guest auth `next`, cargo guest privacy, sitemap/robots.
 
 P0 fixed: non-UUID path params no longer 500 on listing/cargo/company routes.
+
+## Phase 92 manual production QA results
+
+See `docs/MANUAL_PRODUCTION_QA_PHASE_92.md`.
+
+Manual checklist for listing/cargo/Telegram/admin; small success UX polish shipped with Phase 92.

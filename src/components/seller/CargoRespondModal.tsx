@@ -132,7 +132,7 @@ export function CargoRespondModal({
                   resetForm();
                 }}
               >
-                OK
+                {t("common.close")}
               </Button>
             </ModalFooter>
           </div>
