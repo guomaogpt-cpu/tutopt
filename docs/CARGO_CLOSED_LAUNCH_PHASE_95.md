@@ -199,3 +199,7 @@ Closed launch kit: onboarding, client/company copy, feedback CTA, operator + met
 ## Phase 96 closed launch results and fixes
 
 See `docs/CARGO_CLOSED_LAUNCH_RESULTS_PHASE_96.md`. Live metrics still empty; P96-01 account status labels fixed; decision: another closed cycle to collect real results.
+
+## Phase 97 second closed cycle preparation
+
+See `docs/CARGO_SECOND_CLOSED_CYCLE_PHASE_97.md`.

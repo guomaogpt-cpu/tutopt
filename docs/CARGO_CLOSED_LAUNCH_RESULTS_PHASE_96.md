@@ -97,3 +97,7 @@ Privacy: guest/non-owner без телефона клиента и чужих к
 ## Phase 96 closed launch results and fixes
 
 Results kit + P96-01 status label fix. Live metrics still operator-owned.
+
+## Phase 97 second closed cycle preparation
+
+See `docs/CARGO_SECOND_CLOSED_CYCLE_PHASE_97.md`. Second closed cycle invite kit: client/company copy, daily operator checklist, metrics + problem tables, success criteria.

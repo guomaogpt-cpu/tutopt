@@ -101,3 +101,7 @@ See `docs/CARGO_CLOSED_LAUNCH_PHASE_95.md`. Closed launch for 5–10 users: shor
 ## Phase 96 closed launch results and fixes
 
 See `docs/CARGO_CLOSED_LAUNCH_RESULTS_PHASE_96.md`.
+
+## Phase 97 second closed cycle preparation
+
+See `docs/CARGO_SECOND_CLOSED_CYCLE_PHASE_97.md`.
