@@ -3,6 +3,7 @@ import type {
   CargoResponseStatus,
 } from "@prisma/client";
 import { prisma } from "@/shared/lib/prisma";
+import { isUuid } from "@/shared/lib/is-uuid";
 
 export type PublicCargoRequestCard = {
   id: string;
@@ -299,6 +300,10 @@ export async function getCargoRequestDetailForViewer(options: {
   userRole: string | null;
   sellerProfileId: string | null;
 }): Promise<CargoRequestDetailData | null> {
+  if (!isUuid(options.requestId)) {
+    return null;
+  }
+
   const row = await prisma.cargoRequest.findUnique({
     where: { id: options.requestId },
     select: {

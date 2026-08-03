@@ -15,6 +15,7 @@ import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getEditListingRestrictionMessage } from "@/lib/security/user-restrictions";
+import { isUuid } from "@/shared/lib/is-uuid";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
@@ -29,6 +30,11 @@ export const metadata: Metadata = buildPrivatePageMetadata(
 
 export default async function EditListingPage({ params }: EditListingPageProps) {
   const { id } = await params;
+
+  if (!isUuid(id)) {
+    notFound();
+  }
+
   const editPath = `/listings/${id}/edit`;
   const user = await getCurrentUser();
 

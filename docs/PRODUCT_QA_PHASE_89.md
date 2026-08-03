@@ -162,3 +162,11 @@
 - Filter density (horizontal chips)
 - Admin empty-state polish
 
+## Phase 91 production smoke-test results
+
+Live Railway check: `docs/PRODUCTION_SMOKE_TEST_PHASE_91.md`.
+
+- Public/SEO/uploads/auth redirects OK
+- P0: invalid UUID ids caused 500 on listing/cargo/company — fixed with `isUuid` guards
+- Logged-in create/cargo/Telegram/admin: requires manual account test
+

@@ -104,3 +104,9 @@ See `docs/POST_QA_GAPS_PHASE_90.md`:
 - `/cargo/requests/[id]`
 - `/account/cargo-settings` primary + legacy redirects
 - Filter density + admin empty polish
+
+## Phase 91 production smoke-test results
+
+See `docs/PRODUCTION_SMOKE_TEST_PHASE_91.md`.
+
+Live Railway: public verticals OK, uploads OK, auth redirects OK. Fixed P0 invalid-UUID 500s on detail/company routes.

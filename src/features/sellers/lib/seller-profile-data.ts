@@ -6,6 +6,7 @@ import {
   serializeListingCards,
 } from "@/features/listings/lib/serialize-listing-card";
 import { prisma } from "@/shared/lib/prisma";
+import { isUuid } from "@/shared/lib/is-uuid";
 
 export const sellerProfileSelect = {
   id: true,
@@ -57,9 +58,9 @@ export function sanitizeSellerProfileForGuest(
 
 export async function getSellerProfileByParam(param: string) {
   return prisma.sellerProfile.findFirst({
-    where: {
-      OR: [{ id: param }, { slug: param }],
-    },
+    where: isUuid(param)
+      ? { OR: [{ id: param }, { slug: param }] }
+      : { slug: param },
     select: sellerProfileSelect,
   });
 }

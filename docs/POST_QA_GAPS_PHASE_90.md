@@ -83,3 +83,11 @@ Server-side: `getCargoRequestDetailForViewer` — контакты клиент�
 - Route map (primary account + soft legacy redirects)
 - Filter density polish (chips scroll)
 - Admin empty polish + docs
+
+## Phase 91 production smoke-test results
+
+See `docs/PRODUCTION_SMOKE_TEST_PHASE_91.md`.
+
+Production confirmed: public pages, uploads via `/api/uploads`, guest auth `next`, cargo guest privacy, sitemap/robots.
+
+P0 fixed: non-UUID path params no longer 500 on listing/cargo/company routes.

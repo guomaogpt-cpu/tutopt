@@ -4,6 +4,7 @@ import { CargoRequestNotFound } from "@/components/cargo/CargoRequestNotFound";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { getCargoRequestDetailForViewer } from "@/features/cargo/lib/cargo-requests-data";
 import { Container } from "@/components/ui/container";
+import { isUuid } from "@/shared/lib/is-uuid";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
@@ -15,6 +16,14 @@ export async function generateMetadata({
   params,
 }: CargoRequestDetailPageProps): Promise<Metadata> {
   const { id } = await params;
+
+  if (!isUuid(id)) {
+    return buildPrivatePageMetadata(
+      "Заявка не найдена",
+      "Карго-заявка не найдена на ВсеТут.",
+    );
+  }
+
   const request = await prisma.cargoRequest.findUnique({
     where: { id },
     select: { item_name: true, from_location: true, to_location: true },
@@ -39,6 +48,17 @@ export default async function CargoRequestDetailPage({
   params,
 }: CargoRequestDetailPageProps) {
   const { id } = await params;
+
+  if (!isUuid(id)) {
+    return (
+      <main className="min-w-0 bg-gradient-to-b from-orange-50/40 to-slate-50 py-8 dark:from-slate-950 dark:to-slate-950">
+        <Container size="md" className="max-w-2xl">
+          <CargoRequestNotFound />
+        </Container>
+      </main>
+    );
+  }
+
   const user = await getCurrentUser();
 
   const sellerProfile = user

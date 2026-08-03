@@ -59,6 +59,7 @@ import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { buildListingJsonLd } from "@/shared/seo/listing-json-ld";
 import { serializeJsonLd } from "@/shared/seo/serialize-json-ld";
+import { isUuid } from "@/shared/lib/is-uuid";
 import {
   SITE_NAME,
   buildPageMetadata,
@@ -74,6 +75,12 @@ export async function generateMetadata({
 }: ListingPageProps): Promise<Metadata> {
   try {
     const { id } = await params;
+    if (!isUuid(id)) {
+      return {
+        title: `Объявление не найдено | ${SITE_NAME}`,
+        robots: { index: false, follow: false },
+      };
+    }
     const listing = await getListingDetail(id);
 
     if (!listing || !canViewListing(listing, null)) {
@@ -111,6 +118,11 @@ export async function generateMetadata({
 
 export default async function ListingPage({ params }: ListingPageProps) {
   const { id } = await params;
+
+  if (!isUuid(id)) {
+    notFound();
+  }
+
   const user = await getCurrentUser();
 
   const listing = await getListingDetail(id);
