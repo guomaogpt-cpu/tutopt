@@ -338,7 +338,7 @@ export function CompanyProfileForm({
               {t("seller.viewCargoRequests")}
             </Link>
             <Link
-              href="/seller/cargo-settings"
+              href="/account/cargo-settings"
               className="text-blue-600 hover:underline dark:text-blue-400"
             >
               {t("cargo.settings.title")}

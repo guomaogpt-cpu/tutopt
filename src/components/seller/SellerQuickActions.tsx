@@ -100,7 +100,7 @@ export function SellerQuickActions({
         </Link>
 
         {(verticalCounts?.CARGO ?? 0) > 0 || sellerProfileId ? (
-          <Link href="/seller/cargo-settings" className={cardClassName}>
+          <Link href="/account/cargo-settings" className={cardClassName}>
             <div className={iconWrapClassName}>
               <Settings2 className="size-5" aria-hidden="true" />
             </div>

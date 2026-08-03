@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { CargoRequestStatus } from "@prisma/client";
@@ -55,8 +56,13 @@ export function AdminCargoRequestsPanel({ requests }: AdminCargoRequestsPanelPro
 
   if (requests.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("cargo.seller.noRequests")}</p>
+      <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center dark:border-slate-800 dark:bg-slate-900">
+        <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
+          {t("admin.empty.noCargoRequests")}
+        </p>
+        <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">
+          {t("admin.empty.noCargoRequestsDescription")}
+        </p>
       </div>
     );
   }
@@ -83,7 +89,12 @@ export function AdminCargoRequestsPanel({ requests }: AdminCargoRequestsPanelPro
                   {formatDateTime(request.created_at)}
                 </p>
                 <h3 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">
-                  {request.item_name}
+                  <Link
+                    href={`/cargo/requests/${request.id}`}
+                    className="transition hover:text-orange-700 dark:hover:text-orange-300"
+                  >
+                    {request.item_name}
+                  </Link>
                 </h3>
                 <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                   {request.from_location} → {request.to_location}

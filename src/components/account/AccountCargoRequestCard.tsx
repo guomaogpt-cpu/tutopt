@@ -24,7 +24,12 @@ export function AccountCargoRequestCard({ request }: AccountCargoRequestCardProp
             {t("accountRequests.createdAt")}: {formatListingDate(request.created_at)}
           </p>
           <h3 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">
-            {t("accountRequests.item")}: {request.item_name}
+            <Link
+              href={`/cargo/requests/${request.id}`}
+              className="transition hover:text-orange-700 dark:hover:text-orange-300"
+            >
+              {t("accountRequests.item")}: {request.item_name}
+            </Link>
           </h3>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
             {t("accountRequests.route")}: {request.from_location} → {request.to_location}
@@ -55,7 +60,7 @@ export function AccountCargoRequestCard({ request }: AccountCargoRequestCardProp
           variant="outline"
           className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
         >
-          <Link href={`/account/cargo-requests`}>
+          <Link href={`/cargo/requests/${request.id}`}>
             {t("accountRequests.viewResponses")}
           </Link>
         </Button>

@@ -12,6 +12,7 @@ import { getAbsoluteUrl } from "@/shared/seo/absolute-url";
 const ruDict = getDictionary("ru");
 
 export type CargoTelegramRequestPayload = {
+  requestId: string;
   actorId: string | null;
   itemName: string;
   fromLocation: string;
@@ -37,7 +38,7 @@ function labelOrDash(value: string | null, kind: "service" | "direction"): strin
 }
 
 export function buildCargoRequestTelegramText(input: CargoTelegramRequestPayload): string {
-  const boardUrl = getAbsoluteUrl("/seller/cargo-requests");
+  const detailUrl = getAbsoluteUrl(`/cargo/requests/${input.requestId}`);
   const lines = [
     ruDict["cargo.telegram.message.newRequestTitle"],
     "",
@@ -50,7 +51,7 @@ export function buildCargoRequestTelegramText(input: CargoTelegramRequestPayload
     `Количество мест: ${input.quantity?.trim() || "-"}`,
     "",
     `${ruDict["cargo.telegram.message.openRequests"]}`,
-    boardUrl,
+    detailUrl,
   ];
 
   return lines.join("\n");

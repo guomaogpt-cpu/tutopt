@@ -5,7 +5,6 @@ import { CargoRequestStatusBadge } from "@/components/seller/SellerCargoRequests
 import { Button } from "@/components/ui/button";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import type { PublicCargoRequestCard } from "@/features/cargo/lib/cargo-requests-data";
-import { VERTICALS } from "@/features/verticals/verticals";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type CargoActiveRequestsProps = {
@@ -61,9 +60,10 @@ export function CargoActiveRequests({
           {requests.length > 0 ? (
             <div className="mt-4 grid grid-cols-1 gap-2 text-left sm:grid-cols-2">
               {requests.slice(0, 2).map((request) => (
-                <article
+                <Link
                   key={request.id}
-                  className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-950"
+                  href={`/cargo/requests/${request.id}`}
+                  className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 transition hover:border-orange-200 hover:bg-orange-50/50 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-orange-900"
                 >
                   <p className="line-clamp-1 text-sm font-medium text-slate-800 dark:text-slate-100">
                     {request.item_name}
@@ -71,7 +71,7 @@ export function CargoActiveRequests({
                   <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                     {request.from_location} → {request.to_location}
                   </p>
-                </article>
+                </Link>
               ))}
             </div>
           ) : null}
@@ -94,7 +94,12 @@ export function CargoActiveRequests({
                     {formatRequestDate(request.created_at)}
                   </p>
                   <h3 className="mt-1 line-clamp-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-                    {request.item_name}
+                    <Link
+                      href={`/cargo/requests/${request.id}`}
+                      className="transition hover:text-orange-700 dark:hover:text-orange-300"
+                    >
+                      {request.item_name}
+                    </Link>
                   </h3>
                   <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-300">
                     {request.from_location}
@@ -119,7 +124,9 @@ export function CargoActiveRequests({
                     asChild
                     className="h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
                   >
-                    <Link href="/seller/cargo-requests">{t("cargo.respondToRequest")}</Link>
+                    <Link href={`/cargo/requests/${request.id}`}>
+                      {t("cargo.respondToRequest")}
+                    </Link>
                   </Button>
                 ) : (
                   <Button
@@ -127,8 +134,8 @@ export function CargoActiveRequests({
                     variant="outline"
                     className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
                   >
-                    <Link href={VERTICALS.CARGO.createListingHref}>
-                      {t("cargo.addCompanyButton")}
+                    <Link href={`/cargo/requests/${request.id}`}>
+                      {t("cargoRequest.openInAccount")}
                     </Link>
                   </Button>
                 )}

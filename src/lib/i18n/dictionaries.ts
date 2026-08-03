@@ -1181,6 +1181,86 @@ export const DICTIONARY = {
     kg: "Бул сурамга мурун жооп бергенсиз.",
     en: "You have already responded to this request.",
   },
+  "cargoRequest.detailTitle": {
+    ru: "Карго-заявка",
+    kg: "Карго сурам",
+    en: "Cargo request",
+  },
+  "cargoRequest.notFoundTitle": {
+    ru: "Заявка не найдена",
+    kg: "Сурам табылган жок",
+    en: "Request not found",
+  },
+  "cargoRequest.notFoundDescription": {
+    ru: "Возможно, заявка удалена или ссылка устарела.",
+    kg: "Сурам өчүрүлгөн же шилтеме эскирген болушу мүмкүн.",
+    en: "The request may have been deleted or the link is outdated.",
+  },
+  "cargoRequest.noAccessTitle": {
+    ru: "Нужен вход",
+    kg: "Кирүү керек",
+    en: "Sign in required",
+  },
+  "cargoRequest.noAccessDescription": {
+    ru: "Войдите, чтобы откликнуться или увидеть больше деталей. Контакты клиента скрыты.",
+    kg: "Жооп берүү же көбүрөөк маалымат көрүү үчүн кириңиз. Кардардын байланыштары жашыруун.",
+    en: "Sign in to respond or see more details. Client contacts stay private.",
+  },
+  "cargoRequest.ownerContacts": {
+    ru: "Контакты клиента",
+    kg: "Кардардын байланыштары",
+    en: "Client contacts",
+  },
+  "cargoRequest.responsesTitle": {
+    ru: "Отклики",
+    kg: "Жооптор",
+    en: "Responses",
+  },
+  "cargoRequest.noResponsesTitle": {
+    ru: "Пока нет откликов",
+    kg: "Азырынча жооп жок",
+    en: "No responses yet",
+  },
+  "cargoRequest.noResponsesDescription": {
+    ru: "Когда карго-компании откликнутся, они появятся здесь.",
+    kg: "Карго компаниялар жооп бергенде, алар бул жерде көрүнөт.",
+    en: "When cargo companies respond, they will appear here.",
+  },
+  "cargoRequest.respond": {
+    ru: "Откликнуться",
+    kg: "Жооп берүү",
+    en: "Respond",
+  },
+  "cargoRequest.alreadyResponded": {
+    ru: "Вы уже отправили отклик",
+    kg: "Сиз жооп жөнөткөнсүз",
+    en: "You already sent a response",
+  },
+  "cargoRequest.cannotRespondOwnRequest": {
+    ru: "Нельзя откликнуться на свою заявку",
+    kg: "Өз сурамыңызга жооп берүүгө болбойт",
+    en: "You cannot respond to your own request",
+  },
+  "cargoRequest.closedRequest": {
+    ru: "Заявка закрыта",
+    kg: "Сурам жабылган",
+    en: "This request is closed",
+  },
+  "cargoRequest.backToCargo": {
+    ru: "К разделу Карго",
+    kg: "Карго бөлүмүнө",
+    en: "Back to Cargo",
+  },
+  "cargoRequest.backToRequests": {
+    ru: "Мои заявки",
+    kg: "Менин сурамдарым",
+    en: "My requests",
+  },
+  "cargoRequest.openInAccount": {
+    ru: "Открыть заявку",
+    kg: "Сурамды ачуу",
+    en: "Open request",
+  },
   "cargo.requestClosed": {
     ru: "Заявка закрыта, отклик недоступен.",
     kg: "Сурам жабылган, жооп берүү мүмкүн эмес.",
@@ -2836,6 +2916,48 @@ export const DICTIONARY = {
     en: "in dashboard",
   },
 
+  // Admin empty states — Phase 90
+  "admin.empty.noModerationListings": {
+    ru: "Нет объявлений на модерации",
+    kg: "Модерацияда жарыя жок",
+    en: "No listings awaiting moderation",
+  },
+  "admin.empty.noModerationListingsDescription": {
+    ru: "Когда пользователи создадут новые публикации, они появятся здесь.",
+    kg: "Колдонуучулар жаңы жарыяларды түзгөндө, алар бул жерде көрүнөт.",
+    en: "When users create new publications, they will appear here.",
+  },
+  "admin.empty.noCompanies": {
+    ru: "Нет компаний на проверке",
+    kg: "Текшерүүдө компания жок",
+    en: "No companies awaiting review",
+  },
+  "admin.empty.noCompaniesDescription": {
+    ru: "Компании, отправленные на проверку, будут отображаться в этом разделе.",
+    kg: "Текшерүүгө жөнөтүлгөн компаниялар бул бөлүмдө көрсөтүлөт.",
+    en: "Companies submitted for verification will show up in this section.",
+  },
+  "admin.empty.noCargoRequests": {
+    ru: "Нет карго-заявок",
+    kg: "Карго сурамдар жок",
+    en: "No cargo requests",
+  },
+  "admin.empty.noCargoRequestsDescription": {
+    ru: "Новые заявки на перевозку появятся здесь.",
+    kg: "Жаңы ташуу сурамдары бул жерде көрүнөт.",
+    en: "New shipping requests will appear here.",
+  },
+  "admin.empty.noUsers": {
+    ru: "Пользователей пока нет",
+    kg: "Азырынча колдонуучу жок",
+    en: "No users yet",
+  },
+  "admin.empty.noUsersDescription": {
+    ru: "Когда появятся зарегистрированные пользователи, они отобразятся здесь.",
+    kg: "Катталган колдонуучулар пайда болгондо, алар бул жерде көрүнөт.",
+    en: "Registered users will appear here once they sign up.",
+  },
+
   // Admin nav — Phase 56
   "admin.navAriaLabel": {
     ru: "Админ-навигация",
@@ -3120,6 +3242,11 @@ export const DICTIONARY = {
     ru: "Карго-настройки",
     kg: "Карго жөндөөлөрү",
     en: "Cargo settings",
+  },
+  "account.cargoSettingsDescription": {
+    ru: "Направления, уведомления и Telegram для карго-заявок.",
+    kg: "Карго сурамдар үчүн багыттар, билдирмелер жана Telegram.",
+    en: "Routes, notifications, and Telegram for cargo requests.",
   },
   "account.cargoRequests": {
     ru: "Карго-заявки",

@@ -150,9 +150,15 @@
 
 ## Backlog (P2/P3)
 
-- `/cargo/requests/[id]` public/owner detail route (docs mentioned; app uses account pages)
-- Hard redirects legacy buyer/seller
-- `/account/cargo-settings` alias
-- Catalog mobile filter density
-- Admin empty-state polish
 - Field grouping on long `/listings/new`
+
+## Phase 90 follow-up fixes
+
+Закрыто в `docs/POST_QA_GAPS_PHASE_90.md`:
+
+- `/cargo/requests/[id]` detail + privacy
+- Soft redirects legacy buyer/seller dashboards
+- `/account/cargo-settings` primary alias
+- Filter density (horizontal chips)
+- Admin empty-state polish
+

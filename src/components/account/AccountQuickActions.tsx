@@ -29,7 +29,7 @@ const ACTIONS: QuickAction[] = [
   { href: "/favorites", labelKey: "account.favorites", icon: Heart },
   { href: "/notifications", labelKey: "account.notifications", icon: Bell },
   { href: "/account/company", labelKey: "account.company", icon: Building2 },
-  { href: "/seller/cargo-settings", labelKey: "account.cargoSettings", icon: Settings2 },
+  { href: "/account/cargo-settings", labelKey: "account.cargoSettings", icon: Settings2 },
 ];
 
 const cardClassName = cn(

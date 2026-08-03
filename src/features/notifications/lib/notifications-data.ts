@@ -112,6 +112,7 @@ export async function createNewLeadNotification(input: {
 
 export async function createNewCargoRequestNotifications(input: {
   actorId: string | null;
+  requestId: string;
   itemName: string;
   fromLocation: string;
   toLocation: string;
@@ -127,7 +128,7 @@ export async function createNewCargoRequestNotifications(input: {
   });
 
   for (const admin of admins) {
-    recipientLinks.set(admin.id, "/admin/cargo-requests");
+    recipientLinks.set(admin.id, `/cargo/requests/${input.requestId}`);
   }
 
   const matchedSellerIds = await findCargoNotificationRecipients({
@@ -139,7 +140,7 @@ export async function createNewCargoRequestNotifications(input: {
 
   for (const sellerId of matchedSellerIds) {
     if (!recipientLinks.has(sellerId)) {
-      recipientLinks.set(sellerId, "/seller/cargo-requests");
+      recipientLinks.set(sellerId, `/cargo/requests/${input.requestId}`);
     }
   }
 
@@ -168,11 +169,13 @@ export async function createNewCargoRequestNotifications(input: {
 
 export async function createNewCargoResponseNotifications(input: {
   actorId: string;
+  requestId: string;
   requestOwnerId: string | null;
   itemName: string;
   companyName: string;
 }): Promise<void> {
   const recipientLinks = new Map<string, string>();
+  const detailLink = `/cargo/requests/${input.requestId}`;
 
   const admins = await prisma.user.findMany({
     where: { role: "ADMIN", is_blocked: false },
@@ -180,12 +183,11 @@ export async function createNewCargoResponseNotifications(input: {
   });
 
   for (const admin of admins) {
-    recipientLinks.set(admin.id, "/admin/cargo-requests");
+    recipientLinks.set(admin.id, detailLink);
   }
 
   if (input.requestOwnerId) {
-    // Owner link wins if the owner is also an admin (one notification)
-    recipientLinks.set(input.requestOwnerId, "/account/requests");
+    recipientLinks.set(input.requestOwnerId, detailLink);
   }
 
   recipientLinks.delete(input.actorId);

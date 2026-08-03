@@ -71,9 +71,14 @@ export function AdminCompaniesTable({ companies }: AdminCompaniesTableProps) {
 
   if (companies.length === 0) {
     return (
-      <p className="rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
-        Нет компаний с заполненным профилем.
-      </p>
+      <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center dark:border-slate-800 dark:bg-slate-900">
+        <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
+          {t("admin.empty.noCompanies")}
+        </p>
+        <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">
+          {t("admin.empty.noCompaniesDescription")}
+        </p>
+      </div>
     );
   }
 

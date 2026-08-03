@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type AssignableRole = "BUYER" | "MODERATOR";
@@ -278,6 +279,7 @@ function UserActions({
 }
 
 export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -387,9 +389,11 @@ export function AdminUsersTable({ users, currentUserId }: AdminUsersTableProps) 
         <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
           <Users className="size-6" aria-hidden="true" />
         </div>
-        <p className="mt-5 text-base font-semibold text-[#0F172A]">Пользователей пока нет</p>
+        <p className="mt-5 text-base font-semibold text-[#0F172A]">
+          {t("admin.empty.noUsers")}
+        </p>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
-          Когда появятся зарегистрированные пользователи, они отобразятся здесь.
+          {t("admin.empty.noUsersDescription")}
         </p>
       </div>
     );

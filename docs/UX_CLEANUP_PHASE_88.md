@@ -74,11 +74,8 @@
 ## 8. Что осталось
 
 ### P2
-- Soft/hard redirects `/buyer/*` `/seller/dashboard|listings|leads` → `/account*`.
-- Alias `/account/cargo-settings`.
-- Catalog mobile filter density.
-- Admin empty-state CTA consistency.
 - Дальнейшая группировка полей `/listings/new`.
+- Catalog filters: optional full mobile drawer (toolbar chips уже компактнее после Phase 90).
 
 ### P3
 - Empty-state micro-animations.
@@ -86,7 +83,7 @@
 - Visual polish на legacy seller pages.
 
 ### Future UX backlog
-- Unified cargo ops under `/account/*`.
+- Unified cargo ops under `/account/*` (settings/detail done; board still `/seller/cargo-requests`).
 - Deprecate unused `RoleSelector`.
 - Full public copy pass remaining seller SEO strings if needed.
 
@@ -99,3 +96,11 @@ Verified end-to-end flows in `docs/PRODUCT_QA_PHASE_89.md`.
 Key finding: after Phase 88 hid client phones on the cargo board, company response contacts were never shown to the request owner — fixed in Phase 89.
 
 Also tightened mobile padding, cargo success CTAs, vertical form titles, and staff mobile post CTA.
+
+## Phase 90 follow-up fixes
+
+See `docs/POST_QA_GAPS_PHASE_90.md`:
+
+- `/cargo/requests/[id]`
+- `/account/cargo-settings` primary + legacy redirects
+- Filter density + admin empty polish

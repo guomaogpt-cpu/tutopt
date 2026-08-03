@@ -23,7 +23,7 @@ export async function POST(request: Request, context: RouteContext) {
   return withApiHandler(async () => {
     const user = await requireAuth();
 
-    if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN) {
+    if (user.role !== UserRole.SELLER && user.role !== UserRole.ADMIN && user.role !== UserRole.BUYER) {
       throw new ForbiddenError("Only sellers can respond to cargo requests");
     }
 
@@ -58,6 +58,10 @@ export async function POST(request: Request, context: RouteContext) {
 
     if (!cargoRequest) {
       throw new NotFoundError("Cargo request not found");
+    }
+
+    if (cargoRequest.user_id && cargoRequest.user_id === user.id) {
+      throw new ForbiddenError("CARGO_OWN_REQUEST");
     }
 
     if (cargoRequest.status === CargoRequestStatus.CLOSED) {
@@ -96,6 +100,7 @@ export async function POST(request: Request, context: RouteContext) {
       try {
         await createNewCargoResponseNotifications({
           actorId: user.id,
+          requestId: cargoRequest.id,
           requestOwnerId: cargoRequest.user_id,
           itemName: cargoRequest.item_name,
           companyName: sellerProfile.company_name,

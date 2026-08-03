@@ -57,9 +57,9 @@ export function AccountListingsFilters({ filters }: AccountListingsFiltersProps)
   }
 
   return (
-    <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900 sm:p-4">
+    <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-2.5 dark:border-slate-800 dark:bg-slate-900 sm:space-y-3 sm:p-4">
       <div>
-        <p className="mb-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+        <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400 sm:mb-2 sm:text-xs sm:normal-case sm:tracking-normal">
           {t("accountListings.status")}
         </p>
         <ChipRow>
@@ -71,7 +71,7 @@ export function AccountListingsFilters({ filters }: AccountListingsFiltersProps)
                 type="button"
                 onClick={() => push({ status: chip.value })}
                 className={cn(
-                  "shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                  "shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold transition sm:px-3 sm:py-1.5",
                   active
                     ? "bg-blue-600 text-white"
                     : "border border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300",
@@ -85,7 +85,7 @@ export function AccountListingsFilters({ filters }: AccountListingsFiltersProps)
       </div>
 
       <div>
-        <p className="mb-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+        <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400 sm:mb-2 sm:text-xs sm:normal-case sm:tracking-normal">
           {t("accountListings.type")}
         </p>
         <ChipRow>
@@ -104,7 +104,7 @@ export function AccountListingsFilters({ filters }: AccountListingsFiltersProps)
                   })
                 }
                 className={cn(
-                  "shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                  "shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold transition sm:px-3 sm:py-1.5",
                   active
                     ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
                     : "border border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300",

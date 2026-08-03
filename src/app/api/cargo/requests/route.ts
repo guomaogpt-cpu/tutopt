@@ -41,6 +41,7 @@ export async function POST(request: Request) {
     try {
       await createNewCargoRequestNotifications({
         actorId: user?.id ?? null,
+        requestId: cargoRequest.id,
         itemName: input.itemName,
         fromLocation: input.fromLocation,
         toLocation: input.toLocation,
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
 
     try {
       await sendCargoRequestTelegramNotifications({
+        requestId: cargoRequest.id,
         actorId: user?.id ?? null,
         itemName: input.itemName,
         fromLocation: input.fromLocation,

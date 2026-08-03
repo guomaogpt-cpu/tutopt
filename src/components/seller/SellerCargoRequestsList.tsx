@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import type { CargoRequestStatus } from "@prisma/client";
-import { CargoRespondModal } from "@/components/seller/CargoRespondModal";
 import {
   cargoRequestStatusBadgeClass,
   cargoRequestStatusI18nKey,
@@ -57,7 +55,6 @@ export function SellerCargoRequestsList({
   canRespond,
 }: SellerCargoRequestsListProps) {
   const { t } = useTranslation();
-  const [activeRequestId, setActiveRequestId] = useState<string | null>(null);
 
   if (requests.length === 0) {
     return (
@@ -69,7 +66,7 @@ export function SellerCargoRequestsList({
           {t("cargo.sellerEmptyDescription")}
         </p>
         <Button asChild className="mt-5 h-11 rounded-xl bg-orange-500 hover:bg-orange-600">
-          <Link href="/seller/cargo-settings">{t("cargo.settings.title")}</Link>
+          <Link href="/account/cargo-settings">{t("cargo.settings.title")}</Link>
         </Button>
       </div>
     );
@@ -97,7 +94,12 @@ export function SellerCargoRequestsList({
                   {formatDateTime(request.created_at)}
                 </p>
                 <h3 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">
-                  {request.item_name}
+                  <Link
+                    href={`/cargo/requests/${request.id}`}
+                    className="transition hover:text-orange-700 dark:hover:text-orange-300"
+                  >
+                    {request.item_name}
+                  </Link>
                 </h3>
               </div>
               <div className="flex flex-wrap items-center gap-2">
@@ -215,34 +217,30 @@ export function SellerCargoRequestsList({
 
             {canRespond && !hasOwnResponse && !isClosed ? (
               <Button
-                type="button"
+                asChild
                 className="mt-4 h-11 w-full rounded-xl bg-orange-500 text-white hover:bg-orange-600"
-                onClick={() => setActiveRequestId(request.id)}
               >
-                {t("cargo.seller.respondToRequest")}
+                <Link href={`/cargo/requests/${request.id}`}>
+                  {t("cargo.seller.respondToRequest")}
+                </Link>
               </Button>
             ) : null}
 
             {canRespond && hasOwnResponse ? (
-              <p className="mt-4 text-xs font-medium text-rose-700 dark:text-rose-300">
-                {t("cargo.alreadyResponded")}
-              </p>
+              <div className="mt-4 flex flex-col gap-2">
+                <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                  {t("cargo.alreadyResponded")}
+                </p>
+                <Button asChild variant="outline" className="h-11 w-full rounded-xl dark:border-slate-700">
+                  <Link href={`/cargo/requests/${request.id}`}>
+                    {t("cargoRequest.openInAccount")}
+                  </Link>
+                </Button>
+              </div>
             ) : null}
           </article>
         );
       })}
-
-      {activeRequestId ? (
-        <CargoRespondModal
-          requestId={activeRequestId}
-          open={Boolean(activeRequestId)}
-          onOpenChange={(open) => {
-            if (!open) {
-              setActiveRequestId(null);
-            }
-          }}
-        />
-      ) : null}
     </div>
   );
 }

@@ -63,7 +63,7 @@ export function SellerCargoBoardHeader({
         {t("cargo.seller.newRequestsDescription")}
       </p>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {filters.map((filter) => {
           const active = filter.value === activeFilter;
           return (
@@ -71,7 +71,7 @@ export function SellerCargoBoardHeader({
               key={filter.value}
               href={filter.href}
               className={cn(
-                "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition",
                 active
                   ? "border-rose-300 bg-rose-50 text-rose-800 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
                   : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800",
@@ -81,13 +81,10 @@ export function SellerCargoBoardHeader({
             </Link>
           );
         })}
-      </div>
-
-      <div className="mt-3">
         <Link
           href={matchingHref}
           className={cn(
-            "inline-flex max-w-full items-center rounded-xl border px-3 py-2 text-sm font-medium transition",
+            "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition",
             matchingOnly
               ? "border-rose-300 bg-rose-50 text-rose-800 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
               : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800",

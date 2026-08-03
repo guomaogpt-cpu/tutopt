@@ -260,3 +260,121 @@ export async function getBuyerCargoRequests(
     },
   });
 }
+
+export type CargoRequestDetailViewerRole = "guest" | "owner" | "company" | "admin";
+
+export type CargoRequestDetailData = {
+  id: string;
+  created_at: Date;
+  item_name: string;
+  description: string | null;
+  item_photo_url: string | null;
+  from_location: string;
+  to_location: string;
+  quantity: string | null;
+  weight: string | null;
+  dimensions: string | null;
+  urgency: string | null;
+  comment: string | null;
+  service_type: string | null;
+  direction: string | null;
+  status: CargoRequestStatus;
+  responseCount: number;
+  /** Client contacts — only for owner/admin. */
+  clientName: string | null;
+  clientPhone: string | null;
+  clientCompany: string | null;
+  viewerRole: CargoRequestDetailViewerRole;
+  isOwner: boolean;
+  isClosed: boolean;
+  canRespond: boolean;
+  ownResponse: CargoResponseItem | null;
+  /** Full response list for owner/admin; company sees own only via ownResponse. */
+  responses: CargoResponseItem[];
+};
+
+export async function getCargoRequestDetailForViewer(options: {
+  requestId: string;
+  userId: string | null;
+  userRole: string | null;
+  sellerProfileId: string | null;
+}): Promise<CargoRequestDetailData | null> {
+  const row = await prisma.cargoRequest.findUnique({
+    where: { id: options.requestId },
+    select: {
+      ...sellerRequestSelect,
+      user_id: true,
+      responses: {
+        orderBy: { created_at: "desc" },
+        select: responseSelect,
+      },
+    },
+  });
+
+  if (!row) {
+    return null;
+  }
+
+  const isAdmin = options.userRole === "ADMIN";
+  const isOwner = Boolean(options.userId && row.user_id === options.userId);
+  const ownResponse =
+    options.sellerProfileId
+      ? (row.responses.find((item) => item.sellerProfile.id === options.sellerProfileId) ??
+        null)
+      : null;
+  const hasCompanyProfile = Boolean(options.sellerProfileId);
+  const isClosed = row.status === "CLOSED";
+  const canRespond =
+    Boolean(options.userId) &&
+    hasCompanyProfile &&
+    !isOwner &&
+    !isClosed &&
+    !ownResponse &&
+    (options.userRole === "SELLER" ||
+      options.userRole === "ADMIN" ||
+      options.userRole === "BUYER");
+
+  let viewerRole: CargoRequestDetailViewerRole = "guest";
+  if (isAdmin) {
+    viewerRole = "admin";
+  } else if (isOwner) {
+    viewerRole = "owner";
+  } else if (options.userId) {
+    viewerRole = "company";
+  }
+
+  const showClientContacts = isOwner || isAdmin;
+  const showAllResponses = isOwner || isAdmin;
+
+  return {
+    id: row.id,
+    created_at: row.created_at,
+    item_name: row.item_name,
+    description: row.description,
+    item_photo_url: row.item_photo_url,
+    from_location: row.from_location,
+    to_location: row.to_location,
+    quantity: row.quantity,
+    weight: row.weight,
+    dimensions: row.dimensions,
+    urgency: row.urgency,
+    comment: row.comment,
+    service_type: row.service_type,
+    direction: row.direction,
+    status: row.status,
+    responseCount: row._count.responses,
+    clientName: showClientContacts ? row.name : null,
+    clientPhone: showClientContacts ? row.phone : null,
+    clientCompany: showClientContacts ? row.company : null,
+    viewerRole,
+    isOwner,
+    isClosed,
+    canRespond,
+    ownResponse,
+    responses: showAllResponses
+      ? row.responses
+      : ownResponse
+        ? [ownResponse]
+        : [],
+  };
+}

@@ -8,7 +8,7 @@ export function AccountMyCargoResponsesLink() {
 
   return (
     <Link
-      href="/seller/cargo-requests"
+      href="/account/requests?tab=cargoResponses"
       className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
     >
       {t("accountRequests.myCargoResponsesTitle")}

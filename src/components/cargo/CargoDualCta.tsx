@@ -64,7 +64,7 @@ export function CargoDualCta({ onCreateRequest }: CargoDualCtaProps) {
                 variant="outline"
                 className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
               >
-                <Link href="/seller/cargo-settings">{t("cargo.setupNotifications")}</Link>
+                <Link href="/account/cargo-settings">{t("cargo.setupNotifications")}</Link>
               </Button>
             </div>
           </div>

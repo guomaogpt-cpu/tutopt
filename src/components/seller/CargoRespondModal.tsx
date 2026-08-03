@@ -84,9 +84,11 @@ export function CargoRespondModal({
       if (error instanceof CargoRequestError) {
         const code = error.formErrors.messageCode ?? error.message;
         if (code === "CARGO_ALREADY_RESPONDED") {
-          setFormError(t("cargo.alreadyResponded"));
+          setFormError(t("cargoRequest.alreadyResponded"));
         } else if (code === "CARGO_REQUEST_CLOSED") {
-          setFormError(t("cargo.requestClosed"));
+          setFormError(t("cargoRequest.closedRequest"));
+        } else if (code === "CARGO_OWN_REQUEST") {
+          setFormError(t("cargoRequest.cannotRespondOwnRequest"));
         } else {
           setFormError(error.formErrors.form[0] ?? t("cargo.submitError"));
         }

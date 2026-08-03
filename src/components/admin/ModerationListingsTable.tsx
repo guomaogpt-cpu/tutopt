@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 export type ModerationListingRow = {
@@ -235,9 +236,11 @@ function ModerationListingCard({
 export function ModerationListingsTable({
   listings,
   activeVertical = null,
-  emptyMessage = "Нет объявлений на модерации.",
+  emptyMessage,
 }: ModerationListingsTableProps) {
+  const { t } = useTranslation();
   const router = useRouter();
+  const resolvedEmptyTitle = emptyMessage ?? t("admin.empty.noModerationListings");
   const [activeFilter, setActiveFilter] = useState<ModerationFilter>("pending");
   const [query, setQuery] = useState("");
   const [seller, setSeller] = useState("all");
@@ -311,11 +314,11 @@ export function ModerationListingsTable({
         <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
           <Package className="size-6" aria-hidden="true" />
         </div>
-        <p className="mt-5 text-base font-semibold text-[#0F172A]">{emptyMessage}</p>
+        <p className="mt-5 text-base font-semibold text-[#0F172A]">{resolvedEmptyTitle}</p>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">
           {activeVertical
             ? "Выберите другое направление или сбросьте фильтр."
-            : "Новые объявления продавцов появятся здесь."}
+            : t("admin.empty.noModerationListingsDescription")}
         </p>
         {activeVertical ? (
           <Button asChild className="mt-6 h-11 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]">
@@ -414,7 +417,7 @@ export function ModerationListingsTable({
               {tabListings.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-6 py-10 text-center">
                   <p className="text-sm text-[#64748B]">
-                    {activeVertical ? emptyMessage : "В этой категории объявлений нет."}
+                    {activeVertical ? resolvedEmptyTitle : "В этой категории объявлений нет."}
                   </p>
                 </div>
               ) : (

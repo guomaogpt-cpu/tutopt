@@ -52,5 +52,13 @@ Primary UX entry is `/account`.
 - `/account/listings` management page — **done in Phase 82** — see `docs/ACCOUNT_LISTINGS_PHASE_82.md`
 - `/account/requests` unified requests page — **done in Phase 83** — see `docs/ACCOUNT_REQUESTS_PHASE_83.md`
 - Cargo landing redesign (form in modal) — **done in Phase 84** — see `docs/CARGO_PAGE_REDESIGN_PHASE_84.md`
+- Soft redirects from buyer/seller dashboards to `/account` — **done in Phase 90** — see `docs/POST_QA_GAPS_PHASE_90.md`
 - Account security settings
-- Soft redirects from buyer/seller dashboards to `/account`
+
+## Phase 90 follow-up fixes
+
+- Primary account routes: `/account`, `/account/listings`, `/account/requests`, `/account/cargo-settings`
+- Legacy dashboards/settings soft-redirect to account
+- Cargo request detail: `/cargo/requests/[id]`
+- `/seller/cargo-requests` kept as operational board
+

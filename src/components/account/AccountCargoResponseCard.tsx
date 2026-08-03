@@ -156,7 +156,7 @@ export function AccountCargoResponseCard({ response, mode }: AccountCargoRespons
           variant="outline"
           className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
         >
-          <Link href={mode === "own" ? "/seller/cargo-requests" : "/account/cargo-requests"}>
+          <Link href={`/cargo/requests/${response.cargoRequestId}`}>
             {t("accountRequests.openCargoRequest")}
           </Link>
         </Button>

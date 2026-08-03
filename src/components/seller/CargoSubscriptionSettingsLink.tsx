@@ -28,7 +28,7 @@ export function CargoSubscriptionSettingsLink({
         </div>
 
         <Link
-          href="/seller/cargo-settings"
+          href="/account/cargo-settings"
           className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900 sm:w-auto"
         >
           <Settings2 className="mr-2 size-4" aria-hidden="true" />

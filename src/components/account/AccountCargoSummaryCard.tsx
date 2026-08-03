@@ -55,7 +55,7 @@ export function AccountCargoSummaryCard({ cargo }: AccountCargoSummaryCardProps)
               <Link href="/seller/cargo-requests">{t("account.cargoRequests")}</Link>
             </Button>
             <Button asChild variant="outline" className="h-11 rounded-xl dark:border-slate-700">
-              <Link href="/seller/cargo-settings">{t("account.cargoSettings")}</Link>
+              <Link href="/account/cargo-settings">{t("account.cargoSettings")}</Link>
             </Button>
             <Button asChild className="h-11 rounded-xl bg-rose-600 text-white hover:bg-rose-700">
               <Link href="/listings/new?vertical=cargo">{t("account.addCargoCompany")}</Link>
