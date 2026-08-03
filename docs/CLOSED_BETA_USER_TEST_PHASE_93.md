@@ -152,3 +152,7 @@ Webhook: `https://tutopt-production.up.railway.app/api/webhooks/telegram`
 - P0 guest orphan cargo fixed  
 - P1 company back-link + responses empty copy fixed  
 - Full authenticated live A–G: **requires tester accounts (owner)**
+
+## Phase 94 cargo demo readiness
+
+See `docs/CARGO_DEMO_READINESS_PHASE_94.md`. Cargo framed as MVP for presentation; demo checklist + copy/empty/status polish.

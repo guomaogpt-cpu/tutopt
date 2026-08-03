@@ -103,3 +103,7 @@ Checklist + UX diagnostics: `docs/MANUAL_PRODUCTION_QA_PHASE_92.md`.
 See `docs/CLOSED_BETA_USER_TEST_PHASE_93.md`.
 
 Guest cargo create now requires login (P0 orphan fix). Ready for closed tester group after three accounts + Telegram env.
+
+## Phase 94 cargo demo readiness
+
+See `docs/CARGO_DEMO_READINESS_PHASE_94.md`.

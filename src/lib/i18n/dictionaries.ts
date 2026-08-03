@@ -661,9 +661,9 @@ export const DICTIONARY = {
     en: "Cargo and delivery",
   },
   "cargo.heroSubtitle": {
-    ru: "Найдите карго-компанию или оставьте заявку на перевозку из Китая, Кыргызстана и других направлений.",
-    kg: "Карго компанияны табыңыз же Кытайдан, Кыргызстандан жана башка багыттардан жеткирүүгө сурам калтырыңыз.",
-    en: "Find a cargo company or submit a shipping request from China, Kyrgyzstan and other routes.",
+    ru: "Найдите карго-компанию или оставьте заявку на перевозку.",
+    kg: "Карго компанияны табыңыз же жеткирүүгө сурам калтырыңыз.",
+    en: "Find a cargo company or submit a shipping request.",
   },
   "cargo.createRequest": {
     ru: "Создать заявку",
@@ -776,9 +776,19 @@ export const DICTIONARY = {
     en: "Active shipping requests",
   },
   "cargo.activeRequestsDescription": {
-    ru: "Контакты скрыты. Полные детали доступны по правилам сервиса.",
-    kg: "Байланыштар жашыруун. Толук маалымат сервис эрежелери боюнча.",
-    en: "Contacts are hidden. Full details follow service rules.",
+    ru: "Контакты клиентов скрыты. Откройте заявку, чтобы откликнуться.",
+    kg: "Кардарлардын байланыштары жашыруун. Жооп берүү үчүн сурамды ачыңыз.",
+    en: "Client contacts stay private. Open a request to respond.",
+  },
+  "cargo.activeRequestsEmptyTitle": {
+    ru: "Пока нет актуальных заявок",
+    kg: "Азырынча учурдагы сурамдар жок",
+    en: "No active requests yet",
+  },
+  "cargo.activeRequestsEmptyDescription": {
+    ru: "Создайте заявку на перевозку — карго-компании смогут откликнуться.",
+    kg: "Жеткирүүгө сурам түзүңүз — карго компаниялар жооп бере алышат.",
+    en: "Create a shipping request so cargo companies can respond.",
   },
   "cargo.loginToViewRequests": {
     ru: "Войти, чтобы посмотреть",
@@ -1061,14 +1071,14 @@ export const DICTIONARY = {
     en: "No cargo requests yet",
   },
   "cargo.sellerEmptyDescription": {
-    ru: "Когда клиенты оставят заявку на /cargo, она появится здесь.",
-    kg: "Кардарлар /cargo бетинде сурам калтырганда, ал бул жерде көрүнөт.",
-    en: "When customers submit a request on /cargo, it will appear here.",
+    ru: "Когда клиенты оставят заявку на перевозку, она появится здесь.",
+    kg: "Кардарлар жеткирүүгө сурам калтырганда, ал бул жерде көрүнөт.",
+    en: "When customers submit a shipping request, it will appear here.",
   },
   "cargo.contactsRestricted": {
-    ru: "Телефон клиента скрыт. Сначала откликнитесь через систему — полный контакт видит администратор.",
-    kg: "Кардардын телефону жашырылган. Адегенде система аркылуу жооп бериңиз — толук байланышты администратор көрөт.",
-    en: "Client phone is hidden. Respond through the system first — full contact is visible to admins.",
+    ru: "Телефон клиента скрыт. Откликнитесь через систему — контакт увидит администратор при необходимости.",
+    kg: "Кардардын телефону жашырылган. Система аркылуу жооп бериңиз — байланышты керек болсо администратор көрөт.",
+    en: "Client phone is hidden. Respond in the app — admins can view contact if needed.",
   },
   "seller.viewCargoRequests": {
     ru: "Карго-заявки",
@@ -3600,14 +3610,14 @@ export const DICTIONARY = {
     en: "Status",
   },
   "accountRequests.responseStatus.new": {
-    ru: "Новый",
-    kg: "Жаңы",
-    en: "New",
+    ru: "Новый отклик",
+    kg: "Жаңы жооп",
+    en: "New response",
   },
   "accountRequests.responseStatus.accepted": {
-    ru: "Принят",
-    kg: "Кабыл алынды",
-    en: "Accepted",
+    ru: "Отклик принят",
+    kg: "Жооп кабыл алынды",
+    en: "Response accepted",
   },
   "accountRequests.responseStatus.rejected": {
     ru: "Отклонён",

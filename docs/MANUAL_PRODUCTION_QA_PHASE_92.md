@@ -153,3 +153,7 @@ See `docs/CLOSED_BETA_USER_TEST_PHASE_93.md`.
 - P0: guest cargo requests required auth (no more orphan `user_id=null`)
 - P1: company back link; responses empty copy for non-owners
 - Live Pass/Fail still filled by testers with three accounts
+
+## Phase 94 cargo demo readiness
+
+See `docs/CARGO_DEMO_READINESS_PHASE_94.md`.

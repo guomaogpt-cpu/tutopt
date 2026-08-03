@@ -44,6 +44,7 @@ export function CargoLandingPage({
           requests={recentRequests}
           isAuthenticated={isAuthenticated}
           canRespond={canRespond}
+          onCreateRequest={() => setRequestOpen(true)}
         />
         <CargoDualCta onCreateRequest={() => setRequestOpen(true)} />
       </Container>

@@ -11,6 +11,7 @@ type CargoActiveRequestsProps = {
   requests: PublicCargoRequestCard[];
   isAuthenticated: boolean;
   canRespond: boolean;
+  onCreateRequest?: () => void;
 };
 
 function formatRequestDate(date: Date): string {
@@ -25,6 +26,7 @@ export function CargoActiveRequests({
   requests,
   isAuthenticated,
   canRespond,
+  onCreateRequest,
 }: CargoActiveRequestsProps) {
   const { t } = useTranslation();
 
@@ -76,11 +78,31 @@ export function CargoActiveRequests({
             </div>
           ) : null}
           <Button asChild className="mt-4 h-11 rounded-xl bg-orange-500 text-white hover:bg-orange-600">
-            <Link href={buildLoginUrl("/cargo")}>{t("cargo.loginToViewRequests")}</Link>
+            <Link href={buildLoginUrl("/cargo")}>{t("auth.signIn")}</Link>
           </Button>
         </div>
       ) : requests.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">{t("account.noData")}</p>
+        <div className="mt-4 rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-center dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            {t("cargo.activeRequestsEmptyTitle")}
+          </p>
+          <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
+            {t("cargo.activeRequestsEmptyDescription")}
+          </p>
+          {onCreateRequest ? (
+            <Button
+              type="button"
+              onClick={onCreateRequest}
+              className="mt-4 h-11 rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto"
+            >
+              {t("cargo.createRequest")}
+            </Button>
+          ) : (
+            <Button asChild className="mt-4 h-11 rounded-xl bg-orange-500 text-white hover:bg-orange-600 sm:w-auto">
+              <Link href="/cargo">{t("cargo.createRequest")}</Link>
+            </Button>
+          )}
+        </div>
       ) : (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {requests.map((request) => (
