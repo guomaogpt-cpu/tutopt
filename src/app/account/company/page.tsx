@@ -56,14 +56,15 @@ export default async function AccountCompanyPage() {
   ]);
 
   const company = profile ? toCompanyProfileSummary(profile) : null;
+  const isConfigured = Boolean(company?.isConfigured);
   const publicHref =
-    company && company.isConfigured
+    company && isConfigured
       ? buildCompanyProfileHref(company.slug || company.id)
       : null;
 
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
-      <Container size="md" className="max-w-2xl min-w-0">
+      <Container size="md" className="max-w-2xl min-w-0 pb-24 sm:pb-8">
         <header className="mb-5 sm:mb-6">
           <p className="text-sm text-slate-500 dark:text-slate-400">
             <Link href="/account" className="hover:text-blue-600 dark:hover:text-blue-400">
@@ -71,11 +72,12 @@ export default async function AccountCompanyPage() {
             </Link>
           </p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
-            {company?.isConfigured ? "Профиль компании" : "Создать профиль компании"}
+            Профиль компании
           </h1>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-            Компания — отдельный публичный профиль поверх вашего аккаунта. Можно публиковать
-            объявления от личного аккаунта или от компании.
+          <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+            {isConfigured
+              ? "Редактируйте данные компании, откройте публичную страницу или отправьте профиль на проверку."
+              : "Создайте профиль компании, чтобы публиковать объявления от имени бизнеса и показывать клиентам информацию о компании."}
           </p>
         </header>
 

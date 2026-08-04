@@ -1,6 +1,6 @@
 "use client";
 
-import type { ListingVertical } from "@prisma/client";
+import type { CompanyType, ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { BadgeCheck, Building2 } from "lucide-react";
 import { SellerTrustCompactBlock } from "@/components/seller/SellerTrustBlock";
@@ -16,12 +16,14 @@ import type { SellerTrustLevel, SellerTrustSignal } from "@/lib/trust/seller-tru
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 type ListingSellerCardProps = {
   sellerName: string;
   companyName: string;
+  companyType?: CompanyType | null;
   avatarUrl: string | null;
   isVerified: boolean;
   verificationStatus?: CompanyVerificationStatus | null;
@@ -40,6 +42,14 @@ type ListingSellerCardProps = {
   isOwnListing?: boolean;
 };
 
+const COMPANY_TYPE_LABEL: Record<CompanyType, DictionaryKey> = {
+  STORE: "company.types.store",
+  SUPPLIER: "company.types.supplier",
+  SERVICE: "company.types.service",
+  CARGO: "company.types.cargo",
+  OTHER: "company.types.other",
+};
+
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) {
@@ -54,6 +64,7 @@ function getInitials(name: string): string {
 export function ListingSellerCard({
   sellerName,
   companyName,
+  companyType = null,
   avatarUrl,
   isVerified,
   verificationStatus = null,
@@ -87,8 +98,10 @@ export function ListingSellerCard({
     ? buildCompanyProfileHref(sellerSlug || sellerId, vertical)
     : buildSellerProfileHref(sellerSlug || sellerId, vertical);
   const profileLabel = postedAsCompany
-    ? t("company.publicProfile")
+    ? t("company.openCompany")
     : t("listing.sellerProfile");
+  const companyTypeLabel =
+    postedAsCompany && companyType ? t(COMPANY_TYPE_LABEL[companyType]) : null;
 
   return (
     <div
@@ -97,7 +110,7 @@ export function ListingSellerCard({
       )}
     >
       <div className="flex items-start gap-3">
-        <Avatar className="size-14 shrink-0">
+        <Avatar className="size-12 shrink-0 sm:size-14">
           {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
           <AvatarFallback className="bg-[#EFF6FF] text-sm font-semibold text-[#2563EB] dark:bg-slate-800 dark:text-blue-400">
             {getInitials(displayName)}
@@ -127,6 +140,13 @@ export function ListingSellerCard({
             {displayName}
           </h2>
 
+          {companyTypeLabel ? (
+            <p className="mt-1 text-sm text-[#64748B] dark:text-slate-400">
+              {companyTypeLabel}
+              {sellerCity ? ` · ${sellerCity}` : ""}
+            </p>
+          ) : null}
+
           {companyName.trim() && !postedAsCompany && companyName !== sellerName ? (
             <p className="mt-1 flex items-center gap-1.5 text-sm text-[#64748B] dark:text-slate-400">
               <Building2 className="size-3.5 shrink-0" aria-hidden="true" />
@@ -152,7 +172,7 @@ export function ListingSellerCard({
             {publishedListingCount}
           </dd>
         </div>
-        {sellerCity ? (
+        {sellerCity && !companyTypeLabel ? (
           <div className="flex justify-between gap-4">
             <dt className="text-[#64748B] dark:text-slate-400">{t("listing.city")}</dt>
             <dd className="font-medium text-[#0F172A] dark:text-slate-200">{sellerCity}</dd>

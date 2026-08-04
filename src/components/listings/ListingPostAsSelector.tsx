@@ -69,9 +69,13 @@ export function ListingPostAsSelector({
       </div>
 
       {!hasCompanyProfile ? (
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
-          {t("company.createProfileHint")}{" "}
-          <Link href="/account/company" className={cn("font-medium hover:underline", theme.softLink)}>
+        <p className="mt-3 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+          {t("company.createProfileHint")}
+          <br />
+          <Link
+            href="/account/company"
+            className={cn("mt-1 inline-block font-medium hover:underline", theme.softLink)}
+          >
             {t("company.createProfile")}
           </Link>
         </p>

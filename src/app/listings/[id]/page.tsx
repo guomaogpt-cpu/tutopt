@@ -344,6 +344,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
     <ListingSellerCard
       sellerName={sellerName}
       companyName={sellerProfile.company_name}
+      companyType={sellerProfile.company_type}
       avatarUrl={sellerAvatar}
       isVerified={sellerProfile.is_verified}
       verificationStatus={sellerProfile.verification_status}

@@ -64,3 +64,9 @@ Admin reviewed the company profile fields (name, type, contacts, description). I
 ## Migration
 
 `20260801150000_company_verification_status`
+
+## Phase 101 company profiles MVP
+
+See `docs/COMPANY_PROFILES_MVP_PHASE_101.md`.
+
+Public surfaces now highlight only VERIFIED companies. PENDING/REJECTED remain owner/admin-visible. Trust block on the public company page no longer exposes pending/rejected labels to guests.

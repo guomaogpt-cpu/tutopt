@@ -192,3 +192,7 @@ See `docs/SERVICES_MVP_PHASE_99.md`.
 
 See `docs/OPT_B2B_MVP_PHASE_100.md`.
 
+## Phase 101 company profiles MVP
+
+See `docs/COMPANY_PROFILES_MVP_PHASE_101.md`. Company profiles ready for closed test (account + public + listing surfaces).
+

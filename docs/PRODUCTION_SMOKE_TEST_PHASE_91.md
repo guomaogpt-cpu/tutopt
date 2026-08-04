@@ -123,3 +123,7 @@ See `docs/SERVICES_MVP_PHASE_99.md`.
 ## Phase 100 opt B2B MVP
 
 See `docs/OPT_B2B_MVP_PHASE_100.md`.
+
+## Phase 101 company profiles MVP
+
+See `docs/COMPANY_PROFILES_MVP_PHASE_101.md`. Smoke company flows: `/account/company`, `/companies/[id]`, post-as-company, verified badge, admin verify.

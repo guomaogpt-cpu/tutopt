@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { CompanyType } from "@prisma/client";
+import type { CompanyType, ListingVertical } from "@prisma/client";
 import { Building2, MapPin } from "lucide-react";
 import { ListingCard } from "@/components/listings/ListingCard";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { Container } from "@/components/layout/Container";
-import { getCompanyVerificationLabelKey } from "@/features/company/lib/company-verification";
+import { isCompanyVerified } from "@/features/company/lib/company-verification";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
@@ -17,11 +17,16 @@ import {
   getSellerPublishedListings,
   sanitizeSellerProfileForGuest,
 } from "@/features/sellers/lib/seller-profile-data";
+import {
+  countSellerVerticals,
+  getSellerVerticals,
+} from "@/features/sellers/lib/seller-vertical-profile";
 import { parseListingVerticalParam } from "@/features/verticals/verticals";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { translate } from "@/lib/i18n/dictionaries";
 import { Button } from "@/components/ui/button";
 import { buildPageMetadata, truncateSeoText } from "@/shared/seo/seo.config";
+import { cn } from "@/lib/utils";
 
 type CompanyPageProps = {
   params: Promise<{ id: string }>;
@@ -34,6 +39,20 @@ const TYPE_LABEL_KEY: Record<CompanyType, DictionaryKey> = {
   SERVICE: "company.types.service",
   CARGO: "company.types.cargo",
   OTHER: "company.types.other",
+};
+
+const VERTICAL_FILTER_LABEL: Record<ListingVertical, DictionaryKey> = {
+  MARKET: "vertical.market",
+  SERVICES: "vertical.services",
+  OPT: "vertical.opt",
+  CARGO: "vertical.cargo",
+};
+
+const VERTICAL_CHIP_ACTIVE: Record<ListingVertical, string> = {
+  MARKET: "bg-purple-600 text-white",
+  SERVICES: "bg-green-600 text-white",
+  OPT: "bg-blue-600 text-white",
+  CARGO: "bg-orange-600 text-white",
 };
 
 export async function generateMetadata({
@@ -78,15 +97,19 @@ export default async function CompanyPublicPage({
     notFound();
   }
 
+  const companyPath = profile.slug || profile.id;
   const [allListings, favoriteListingIds] = await Promise.all([
-    getSellerPublishedListings(profile.id),
+    getSellerPublishedListings(profile.id, { postedAsCompanyOnly: true }),
     user ? getUserFavoriteListingIds(user.id) : Promise.resolve([]),
   ]);
 
   const filterVertical = parseListingVerticalParam(verticalParam);
+  const sellerVerticals = getSellerVerticals(allListings);
+  const verticalCounts = countSellerVerticals(allListings);
   const listings = filterVertical
     ? allListings.filter((listing) => listing.vertical === filterVertical)
     : allListings;
+  const showVerticalChips = sellerVerticals.length > 1;
 
   const isAuthenticated = user !== null;
   const publicProfile = isAuthenticated
@@ -96,6 +119,7 @@ export default async function CompanyPublicPage({
   const typeLabel = translate("ru", TYPE_LABEL_KEY[profile.company_type]);
   const cityName = profile.city?.name ?? null;
   const logoUrl = publicProfile.logo_url;
+  const verified = isCompanyVerified(profile.verification_status);
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] py-6 dark:bg-slate-950 sm:py-8">
@@ -116,7 +140,7 @@ export default async function CompanyPublicPage({
 
         <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-            <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-950 sm:size-20">
+            <div className="relative size-14 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-950 sm:size-16">
               {logoUrl ? (
                 <Image
                   src={logoUrl}
@@ -127,24 +151,25 @@ export default async function CompanyPublicPage({
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-slate-400">
-                  <Building2 className="size-7" aria-hidden="true" />
+                  <Building2 className="size-6" aria-hidden="true" />
                 </div>
               )}
             </div>
 
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700 dark:bg-slate-800 dark:text-blue-300">
+                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                   {translate("ru", "company.badge")}
                 </span>
                 <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   {typeLabel}
                 </span>
-                <CompanyVerificationBadge
-                  status={profile.verification_status}
-                  isCargo={profile.company_type === "CARGO"}
-                  showOwnerStatus={profile.verification_status === "PENDING"}
-                />
+                {verified ? (
+                  <CompanyVerificationBadge
+                    status={profile.verification_status}
+                    isCargo={profile.company_type === "CARGO"}
+                  />
+                ) : null}
               </div>
               <h1 className="mt-2 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl">
                 {profile.company_name}
@@ -197,9 +222,9 @@ export default async function CompanyPublicPage({
               <dd className="mt-1 font-medium text-slate-900 dark:text-slate-100">
                 {translate(
                   "ru",
-                  profile.verification_status === "REJECTED"
-                    ? "company.verification.unverified"
-                    : getCompanyVerificationLabelKey(profile.verification_status),
+                  verified
+                    ? "company.verification.verified"
+                    : "company.verification.unverified",
                 )}
               </dd>
             </div>
@@ -216,7 +241,7 @@ export default async function CompanyPublicPage({
                 {translate("ru", "company.verification.activeListings")}
               </dt>
               <dd className="mt-1 font-medium text-slate-900 dark:text-slate-100">
-                {listings.length}
+                {allListings.length}
               </dd>
             </div>
             <div>
@@ -231,13 +256,62 @@ export default async function CompanyPublicPage({
           </dl>
         </section>
 
-        <section className="mt-8">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-            {translate("ru", "company.public.listingsTitle")}
-          </h2>
+        <section className="mt-8 pb-16 sm:pb-0">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+              {translate("ru", "company.public.listingsTitle")}
+            </h2>
+            {allListings.length > 0 ? (
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {filterVertical
+                  ? `${verticalCounts[filterVertical]} из ${allListings.length}`
+                  : allListings.length}
+              </p>
+            ) : null}
+          </div>
+
+          {showVerticalChips ? (
+            <div className="mt-4 -mx-1 overflow-x-auto px-1">
+              <div className="flex w-max min-w-full gap-2 sm:flex-wrap sm:w-auto">
+                <Link
+                  href={buildCompanyProfileHref(companyPath)}
+                  className={cn(
+                    "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
+                    filterVertical === null
+                      ? "bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900"
+                      : "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-slate-400 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700",
+                  )}
+                >
+                  {translate("ru", "company.public.filterAll")}
+                  <span className="ml-1.5 opacity-80">{allListings.length}</span>
+                </Link>
+                {sellerVerticals.map((vertical) => {
+                  const isActive = filterVertical === vertical;
+                  return (
+                    <Link
+                      key={vertical}
+                      href={buildCompanyProfileHref(companyPath, vertical)}
+                      className={cn(
+                        "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
+                        isActive
+                          ? VERTICAL_CHIP_ACTIVE[vertical]
+                          : "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-slate-400 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700",
+                      )}
+                    >
+                      {translate("ru", VERTICAL_FILTER_LABEL[vertical])}
+                      <span className="ml-1.5 opacity-80">{verticalCounts[vertical]}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
+
           {listings.length === 0 ? (
-            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
-              {translate("ru", "company.public.noListings")}
+            <p className="mt-4 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+              {allListings.length === 0
+                ? translate("ru", "company.public.noListings")
+                : translate("ru", "company.public.noListingsFiltered")}
             </p>
           ) : (
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

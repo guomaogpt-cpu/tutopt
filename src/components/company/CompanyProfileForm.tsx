@@ -312,7 +312,7 @@ export function CompanyProfileForm({
           className="h-12 w-full rounded-xl sm:h-11 sm:flex-1"
         >
           {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
-          {isEdit ? t("company.save") : t("company.create")}
+          {isEdit ? t("company.save") : t("company.createProfile")}
         </Button>
         {publicHref ? (
           <Button
@@ -320,7 +320,7 @@ export function CompanyProfileForm({
             variant="outline"
             className="h-12 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:h-11 sm:w-auto"
           >
-            <Link href={publicHref}>{t("company.publicProfile")}</Link>
+            <Link href={publicHref}>{t("company.openPublicPage")}</Link>
           </Button>
         ) : null}
       </div>

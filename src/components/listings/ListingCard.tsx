@@ -7,6 +7,7 @@ import { useState } from "react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
+import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
 import { getListingCardGlowClass } from "@/features/listings/lib/listing-card-glow";
 import type { CompanyVerificationStatus } from "@prisma/client";
 import {
@@ -231,7 +232,7 @@ export function ListingCard({
             <p
               className={cn(
                 "truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
-                "flex items-center gap-1.5",
+                "relative z-[2] flex items-center gap-1.5",
                 isCompact
                   ? "mt-1.5 pt-1.5 text-[11px]"
                   : "mt-2 pt-2 text-xs md:text-[13px]",
@@ -247,7 +248,7 @@ export function ListingCard({
                         ? "bg-green-50 text-green-700 dark:bg-slate-800 dark:text-green-300"
                         : listing.vertical === "OPT"
                           ? "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300"
-                          : "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300",
+                          : "bg-orange-50 text-orange-700 dark:bg-slate-800 dark:text-orange-300",
                   )}
                 >
                   {t("company.badge")}
@@ -263,11 +264,19 @@ export function ListingCard({
                   compact
                 />
               ) : null}
-              <span className="truncate">
-                {listing.posted_as_company && listing.sellerProfile.company_type
-                  ? listing.sellerProfile.company_name
-                  : listing.sellerProfile.user.name || listing.sellerProfile.company_name}
-              </span>
+              {listing.posted_as_company && listing.sellerProfile.company_type ? (
+                <Link
+                  href={buildCompanyProfileHref(listing.sellerProfile.slug)}
+                  className="relative z-[2] truncate hover:text-blue-600 hover:underline dark:hover:text-blue-400"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  {listing.sellerProfile.company_name}
+                </Link>
+              ) : (
+                <span className="truncate">
+                  {listing.sellerProfile.user.name || listing.sellerProfile.company_name}
+                </span>
+              )}
             </p>
           ) : null}
         </div>

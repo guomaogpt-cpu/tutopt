@@ -172,7 +172,7 @@ export function AdminCompaniesTable({ companies }: AdminCompaniesTableProps) {
               <th className="px-4 py-3">{t("admin.companies.owner")}</th>
               <th className="px-4 py-3">{t("admin.companies.verificationStatus")}</th>
               <th className="px-4 py-3">{t("admin.companies.note")}</th>
-              <th className="px-4 py-3">Actions</th>
+              <th className="px-4 py-3">{t("admin.companies.actions")}</th>
             </tr>
           </thead>
           <tbody>

@@ -71,3 +71,9 @@ Migration `20260801140000_company_profile_fields`:
 - `CompanyType` enum
 - `seller_profiles.company_type`
 - `listings.posted_as_company`
+
+## Phase 101 company profiles MVP
+
+See `docs/COMPANY_PROFILES_MVP_PHASE_101.md`.
+
+Polished account/public company UX, company-only listings on `/companies/[id]`, ListingCard company link, public verified-only badge policy, and safer empty/not-found states. Ready for company profile testing.

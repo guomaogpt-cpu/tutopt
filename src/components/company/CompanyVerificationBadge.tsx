@@ -51,22 +51,8 @@ export function CompanyVerificationBadge({
     );
   }
 
+  // Public surfaces: only the verified badge is bright; pending/rejected stay owner-only.
   if (!showOwnerStatus) {
-    if (status === "PENDING") {
-      return (
-        <span
-          className={cn(
-            "inline-flex items-center gap-1 rounded-full bg-amber-50 font-medium text-amber-700",
-            "dark:bg-amber-950/40 dark:text-amber-300",
-            compact ? "px-1.5 py-0.5 text-[10px]" : "px-2.5 py-1 text-[11px]",
-            className,
-          )}
-        >
-          <Clock3 className={cn(compact ? "size-3" : "size-3.5")} aria-hidden="true" />
-          {t("company.verification.pending")}
-        </span>
-      );
-    }
     return null;
   }
 

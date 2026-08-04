@@ -3925,9 +3925,29 @@ export const DICTIONARY = {
     en: "Company profile is not created yet",
   },
   "company.createProfileHint": {
-    ru: "Заполните профиль компании, чтобы публиковать от её имени.",
-    kg: "Компаниянын атынан жарыялоо үчүн профилди толтуруңуз.",
-    en: "Fill in your company profile to post on its behalf.",
+    ru: "Вы можете создать профиль компании позже и публиковать объявления от имени бизнеса.",
+    kg: "Кийинчерээк компаниянын профилин түзүп, бизнес атынан жарыялай аласыз.",
+    en: "You can create a company profile later and post listings on behalf of the business.",
+  },
+  "company.openPublicPage": {
+    ru: "Открыть публичную страницу",
+    kg: "Ачык баракчаны ачуу",
+    en: "Open public page",
+  },
+  "company.openCompany": {
+    ru: "Открыть компанию",
+    kg: "Компанияны ачуу",
+    en: "Open company",
+  },
+  "company.public.filterAll": {
+    ru: "Все",
+    kg: "Баары",
+    en: "All",
+  },
+  "company.public.noListingsFiltered": {
+    ru: "В этом направлении пока нет объявлений компании.",
+    kg: "Бул багытта компаниянын жарыялары азырынча жок.",
+    en: "This company has no listings in this category yet.",
   },
   "company.types.store": {
     ru: "Магазин",
@@ -3960,9 +3980,9 @@ export const DICTIONARY = {
     en: "Company listings",
   },
   "company.public.noListings": {
-    ru: "У компании пока нет активных объявлений",
-    kg: "Компанияда азырынча активдүү жарыялар жок",
-    en: "This company has no active listings yet",
+    ru: "Компания пока не разместила объявления. Когда появятся публикации, они будут показаны здесь.",
+    kg: "Компания азырынча жарыя жайгаштыра элек. Жарыялар чыкканда бул жерде көрсөтүлөт.",
+    en: "This company has not posted any listings yet. When they appear, they will show up here.",
   },
   "company.public.contact": {
     ru: "Связаться",
@@ -4108,6 +4128,11 @@ export const DICTIONARY = {
     ru: "Статус проверки",
     kg: "Текшерүү статусу",
     en: "Verification status",
+  },
+  "admin.companies.actions": {
+    ru: "Действия",
+    kg: "Аракеттер",
+    en: "Actions",
   },
   "post.chooseType": {
     ru: "Что хотите разместить?",

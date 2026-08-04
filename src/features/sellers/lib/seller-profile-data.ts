@@ -67,11 +67,13 @@ export async function getSellerProfileByParam(param: string) {
 
 export async function getSellerPublishedListings(
   sellerProfileId: string,
+  options?: { postedAsCompanyOnly?: boolean },
 ): Promise<ListingCardData[]> {
   const listings = await prisma.listing.findMany({
     where: {
       seller_profile_id: sellerProfileId,
       status: ListingStatus.PUBLISHED,
+      ...(options?.postedAsCompanyOnly ? { posted_as_company: true } : {}),
       AND: [buildNotExpiredListingFilter()],
     },
     orderBy: [{ published_at: "desc" }, { created_at: "desc" }],

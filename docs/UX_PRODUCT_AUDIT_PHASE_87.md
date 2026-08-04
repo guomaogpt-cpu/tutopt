@@ -235,3 +235,7 @@ See `docs/SERVICES_MVP_PHASE_99.md`. Services vertical polished separately from 
 
 See `docs/OPT_B2B_MVP_PHASE_100.md`. Wholesale vertical polished as B2B (supplier/MOQ/blue theme).
 
+## Phase 101 company profiles MVP
+
+See `docs/COMPANY_PROFILES_MVP_PHASE_101.md`. Company cabinet + public showcase polished for closed testing (verified-only public badge, company listings filter, card links).
+
