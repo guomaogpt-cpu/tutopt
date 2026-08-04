@@ -72,3 +72,7 @@ Opt landing + catalog + supplier contact + MOQ on cards.
 ## Phase 102 simplified listing creation with AI description
 
 See `docs/LISTING_CREATION_AI_PHASE_102.md`. Shared create form simplified; opt MOQ/unit remain, AI helps with offer description.
+
+## Phase 103 category-based listing characteristics
+
+See `docs/LISTING_CHARACTERISTICS_PHASE_103.md`. Opt presets: min lot, price unit, stock, food/equipment extras (warranty only if selected); structured values for AI.

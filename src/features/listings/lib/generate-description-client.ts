@@ -8,6 +8,7 @@ export type GenerateListingDescriptionClientInput = {
   currency?: string | null;
   city?: string | null;
   characteristics?: string | null;
+  characteristicItems?: Array<{ label: string; value: string }>;
   currentDescription?: string | null;
   unit?: string | null;
   moq?: string | number | null;

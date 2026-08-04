@@ -80,3 +80,7 @@ Root cause: Server Component `MarketLandingPage` passed `getMarketCategoryVisual
 ## Phase 102 simplified listing creation with AI description
 
 See `docs/LISTING_CREATION_AI_PHASE_102.md`. Create form simplified with characteristics + AI description helper (moderation unchanged).
+
+## Phase 103 category-based listing characteristics
+
+See `docs/LISTING_CHARACTERISTICS_PHASE_103.md`. Market create form shows category-specific chips/select/inputs instead of a free-text characteristics textarea; values feed AI + description merge (no Prisma migration).

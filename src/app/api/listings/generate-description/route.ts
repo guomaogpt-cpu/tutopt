@@ -15,9 +15,17 @@ export async function POST(request: Request) {
 
     const input = await parseJsonBody(request, generateListingDescriptionSchema);
 
+    const hasStructuredCharacteristics = Boolean(
+      input.characteristicItems?.some(
+        (item) => item.label.trim() && item.value.trim(),
+      ),
+    );
+
     const hasEnoughContext =
       Boolean(input.title.trim()) &&
-      (Boolean(input.category?.trim()) || Boolean(input.characteristics?.trim()));
+      (Boolean(input.category?.trim()) ||
+        Boolean(input.characteristics?.trim()) ||
+        hasStructuredCharacteristics);
 
     if (!hasEnoughContext) {
       throw new ValidationError(

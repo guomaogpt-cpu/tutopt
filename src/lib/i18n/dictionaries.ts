@@ -4776,6 +4776,57 @@ export const DICTIONARY = {
     en: "Add a description or characteristics (at least 20 characters).",
   },
 
+  "listingCharacteristics.title": {
+    ru: "Характеристики",
+    kg: "Мүнөздөмөлөр",
+    en: "Characteristics",
+  },
+  "listingCharacteristics.description": {
+    ru: "Выберите подходящие параметры — мы используем их для описания и поиска.",
+    kg: "Ылайыктуу параметрлерди тандаңыз — сүрөттөмө жана издөө үчүн колдонобуз.",
+    en: "Choose matching parameters — we use them for the description and search.",
+  },
+  "listingCharacteristics.main": {
+    ru: "Основные",
+    kg: "Негизги",
+    en: "Main",
+  },
+  "listingCharacteristics.additional": {
+    ru: "Дополнительные",
+    kg: "Кошумча",
+    en: "Additional",
+  },
+  "listingCharacteristics.showMore": {
+    ru: "Показать дополнительные",
+    kg: "Кошумчаларды көрсөтүү",
+    en: "Show additional",
+  },
+  "listingCharacteristics.showLess": {
+    ru: "Скрыть дополнительные",
+    kg: "Кошумчаларды жашыруу",
+    en: "Hide additional",
+  },
+  "listingCharacteristics.other": {
+    ru: "Другое",
+    kg: "Башка",
+    en: "Other",
+  },
+  "listingCharacteristics.otherPlaceholder": {
+    ru: "Укажите своё значение",
+    kg: "Өз мааниңизди жазыңыз",
+    en: "Enter your value",
+  },
+  "listingCharacteristics.previewTitle": {
+    ru: "Характеристики",
+    kg: "Мүнөздөмөлөр",
+    en: "Characteristics",
+  },
+  "listingCharacteristics.usedForAi": {
+    ru: "Эти параметры подставляются в AI-описание.",
+    kg: "Бул параметрлер AI сүрөттөмөсүнө кошулат.",
+    en: "These parameters are used in the AI description.",
+  },
+
   // Listing status — Phase 56
   "status.draft": { ru: "Черновик", kg: "Долбоор", en: "Draft" },
   "status.pendingModeration": {

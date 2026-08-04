@@ -74,3 +74,7 @@ See `docs/OPT_B2B_MVP_PHASE_100.md`.
 ## Phase 102 simplified listing creation with AI description
 
 See `docs/LISTING_CREATION_AI_PHASE_102.md`. Shared create form simplified; services vertical benefits from characteristics + AI description.
+
+## Phase 103 category-based listing characteristics
+
+See `docs/LISTING_CHARACTERISTICS_PHASE_103.md`. Services presets: format, experience, price type, repair/auto extras; structured values for AI description.

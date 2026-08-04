@@ -30,6 +30,11 @@
 
 UI-only textarea. При submit мержатся в `description` через `mergeListingDescriptionParts` (без Prisma refactor / ListingAttribute).
 
+### Phase 103 category-based listing characteristics
+
+Textarea заменена на умные поля по категории. См. `docs/LISTING_CHARACTERISTICS_PHASE_103.md`.
+Structured values идут в AI (`characteristicItems`) и мержатся в `description` при submit (без migration).
+
 ## 6. AI-генератор описания
 
 Кнопка рядом с описанием. Использует title, category, price, city, characteristics, current draft, unit/MOQ.

@@ -12,6 +12,11 @@ export const DEFAULT_LISTING_DESCRIPTION_MODEL = "gpt-5.6-luna";
 /** Fallback if Luna is unavailable on the account. */
 export const FALLBACK_LISTING_DESCRIPTION_MODEL = "gpt-4o-mini";
 
+const characteristicItemSchema = z.object({
+  label: z.string().trim().min(1).max(80),
+  value: z.string().trim().min(1).max(200),
+});
+
 export const generateListingDescriptionSchema = z.object({
   vertical: z.nativeEnum(ListingVertical),
   category: z.string().trim().max(150).optional().nullable(),
@@ -19,7 +24,10 @@ export const generateListingDescriptionSchema = z.object({
   price: z.union([z.string(), z.number()]).optional().nullable(),
   currency: z.string().trim().max(3).optional().nullable(),
   city: z.string().trim().max(100).optional().nullable(),
+  /** Legacy free-text characteristics (still accepted). */
   characteristics: z.string().trim().max(GENERATE_DESCRIPTION_CHARS_MAX).optional().nullable(),
+  /** Structured category-based characteristics (preferred). */
+  characteristicItems: z.array(characteristicItemSchema).max(30).optional(),
   currentDescription: z
     .string()
     .trim()
@@ -71,6 +79,29 @@ function formatField(label: string, value: string | number | null | undefined): 
   return `${label}: ${text}`;
 }
 
+function formatStructuredCharacteristics(
+  items: Array<{ label: string; value: string }> | undefined,
+  legacy: string | null | undefined,
+): string | null {
+  const structured = (items ?? [])
+    .map((item) => {
+      const label = item.label.trim();
+      const value = item.value.trim();
+      if (!label || !value) {
+        return null;
+      }
+      return `${label}: ${value}`;
+    })
+    .filter((line): line is string => Boolean(line));
+
+  if (structured.length > 0) {
+    return structured.join("\n");
+  }
+
+  const legacyText = legacy?.trim();
+  return legacyText ? legacyText : null;
+}
+
 function hasUsefulPrice(price: string | number | null | undefined): boolean {
   if (price === null || price === undefined) {
     return false;
@@ -86,6 +117,11 @@ function hasUsefulPrice(price: string | number | null | undefined): boolean {
 export function buildListingDescriptionUserPrompt(
   input: GenerateListingDescriptionInput,
 ): string {
+  const characteristicsBlock = formatStructuredCharacteristics(
+    input.characteristicItems,
+    input.characteristics,
+  );
+
   const lines = [
     formatField("Тип публикации", input.vertical),
     formatField("Категория", input.category),
@@ -96,11 +132,13 @@ export function buildListingDescriptionUserPrompt(
     formatField("Единица", input.unit),
     formatField("Минимальная партия / количество", input.moq),
     formatField("Состояние", input.condition),
-    formatField("Характеристики", input.characteristics),
+    characteristicsBlock
+      ? `Характеристики:\n${characteristicsBlock}`
+      : null,
     formatField("Текущее описание", input.currentDescription),
   ].filter((line): line is string => Boolean(line));
 
-  return `Составь описание объявления по данным пользователя.\n\n${lines.join("\n")}`;
+  return `Составь описание объявления по данным пользователя.\nИспользуй только указанные характеристики. Не добавляй гарантию, комплектацию или другие факты, если пользователь их не указал.\n\n${lines.join("\n")}`;
 }
 
 function sanitizeGeneratedDescription(raw: string): string {
@@ -145,8 +183,12 @@ export function buildMockListingDescription(
   parts.push(first);
 
   const details: string[] = [];
-  if (input.characteristics?.trim()) {
-    details.push(input.characteristics.trim());
+  const characteristicsBlock = formatStructuredCharacteristics(
+    input.characteristicItems,
+    input.characteristics,
+  );
+  if (characteristicsBlock) {
+    details.push(characteristicsBlock.replace(/\n/g, ". ") + ".");
   }
   if (input.condition?.trim()) {
     details.push(`Состояние: ${input.condition.trim()}.`);

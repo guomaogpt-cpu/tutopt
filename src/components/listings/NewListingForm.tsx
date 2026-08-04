@@ -9,6 +9,7 @@ import { CategoryPicker } from "@/components/listings/CategoryPicker";
 import { CreateListingSteps } from "@/components/listings/CreateListingSteps";
 import { CreateListingVerticalChooser } from "@/components/listings/CreateListingVerticalChooser";
 import { GenerateListingDescriptionButton } from "@/components/listings/GenerateListingDescriptionButton";
+import { ListingCharacteristicsFields } from "@/components/listings/ListingCharacteristicsFields";
 import { ListingPostAsSelector } from "@/components/listings/ListingPostAsSelector";
 import { FormSection } from "@/components/listings/FormSection";
 import type { ListingQualityInput } from "@/lib/moderation/listing-quality";
@@ -27,10 +28,17 @@ import {
   GenerateDescriptionRequestError,
   generateListingDescriptionRequest,
 } from "@/features/listings/lib/generate-description-client";
+import {
+  buildEmptyCharacteristicValues,
+  characteristicValuesToPairs,
+  characteristicValuesToText,
+  type CharacteristicValuesState,
+} from "@/features/listings/lib/listing-characteristics";
 import { mergeListingDescriptionParts } from "@/features/listings/lib/merge-listing-description";
 import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-config";
 import type { CategoryItem } from "@/features/listings/types/category";
 import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
+import { resolveListingCharacteristicFields } from "@/config/listing-characteristics";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import {
   trackCreateListingStart,
@@ -149,7 +157,8 @@ export function NewListingForm({
   const formConfig = getVerticalFormConfig(vertical ?? "MARKET");
   const [title, setTitle] = useState(initialValues?.title ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
-  const [characteristics, setCharacteristics] = useState("");
+  const [characteristicValues, setCharacteristicValues] =
+    useState<CharacteristicValuesState>({});
   const [priceNegotiable, setPriceNegotiable] = useState(
     Boolean(initialValues && Number(initialValues.price) === 0),
   );
@@ -194,6 +203,33 @@ export function NewListingForm({
     () => categories.find((category) => category.id === categoryId)?.name ?? "",
     [categories, categoryId],
   );
+
+  const categorySlug = useMemo(
+    () => categories.find((category) => category.id === categoryId)?.slug ?? "",
+    [categories, categoryId],
+  );
+
+  const characteristicFields = useMemo(
+    () =>
+      vertical && categoryId
+        ? resolveListingCharacteristicFields(vertical, categorySlug)
+        : [],
+    [vertical, categoryId, categorySlug],
+  );
+
+  const characteristicPairs = useMemo(
+    () => characteristicValuesToPairs(characteristicFields, characteristicValues),
+    [characteristicFields, characteristicValues],
+  );
+
+  const characteristicsText = useMemo(
+    () => characteristicValuesToText(characteristicFields, characteristicValues),
+    [characteristicFields, characteristicValues],
+  );
+
+  useEffect(() => {
+    setCharacteristicValues(buildEmptyCharacteristicValues(characteristicFields));
+  }, [characteristicFields]);
 
   const isDirty = useMemo(() => {
     if (mode === "edit") {
@@ -282,14 +318,14 @@ export function NewListingForm({
 
   const canGenerateDescription =
     title.trim().length >= 3 &&
-    (Boolean(categoryLabel.trim()) || Boolean(characteristics.trim()));
+    (Boolean(categoryLabel.trim()) || characteristicPairs.length > 0);
 
   const activeStep =
     !categoryId
       ? "category"
       : !title.trim() || !cityId || imageUrls.length === 0
         ? "details"
-        : !description.trim() && !characteristics.trim()
+        : !description.trim() && characteristicPairs.length === 0
           ? "description"
           : "preview";
 
@@ -309,7 +345,8 @@ export function NewListingForm({
         price: priceNegotiable ? null : price.trim() || null,
         currency: priceNegotiable ? null : currency,
         city: cityLabel || null,
-        characteristics: characteristics.trim() || null,
+        characteristics: characteristicsText || null,
+        characteristicItems: characteristicPairs,
         currentDescription: description.trim() || null,
         unit: formConfig.unitOptions.find((option) => option.value === unit)?.label ?? unit,
         moq: formConfig.showMoq ? moq : null,
@@ -330,7 +367,7 @@ export function NewListingForm({
 
   const qualityInput: ListingQualityInput = {
     title,
-    description: mergeListingDescriptionParts(description, characteristics),
+    description: mergeListingDescriptionParts(description, characteristicsText),
     price: priceNegotiable ? "0" : price,
     cityId: cityId || null,
     cityName: cityLabel || null,
@@ -420,7 +457,7 @@ export function NewListingForm({
       return;
     }
 
-    const finalDescription = mergeListingDescriptionParts(description, characteristics);
+    const finalDescription = mergeListingDescriptionParts(description, characteristicsText);
     if (finalDescription.trim().length < 20) {
       setClientError(t("listingForm.descriptionTooShort"));
       return;
@@ -925,26 +962,12 @@ export function NewListingForm({
             title={t("listingForm.description")}
             description={formConfig.descriptionSectionDescription}
           >
-            <div className="space-y-2">
-              <label
-                htmlFor="listing-characteristics"
-                className="text-sm font-medium text-slate-900 dark:text-slate-100"
-              >
-                {t("listingForm.characteristics")}
-              </label>
-              <Textarea
-                id="listing-characteristics"
-                name="characteristics"
-                value={characteristics}
-                onChange={(event) => setCharacteristics(event.target.value)}
-                placeholder={t("listingForm.characteristicsPlaceholder")}
-                className="min-h-[96px] w-full resize-y rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-                disabled={isSubmitting}
-              />
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {t("listingForm.characteristicsHint")}
-              </p>
-            </div>
+            <ListingCharacteristicsFields
+              fields={characteristicFields}
+              values={characteristicValues}
+              onChange={setCharacteristicValues}
+              disabled={isSubmitting}
+            />
 
             <GenerateListingDescriptionButton
               aiEnabled={aiEnabled}
@@ -1059,13 +1082,27 @@ export function NewListingForm({
                     {imageUrls.length} {t("createListing.summaryPhotos")}
                   </dd>
                 </div>
-                {description.trim() || characteristics.trim() ? (
+                {characteristicPairs.length > 0 ? (
+                  <div className="pt-1">
+                    <dt className="text-slate-500 dark:text-slate-400">
+                      {t("listingCharacteristics.previewTitle")}
+                    </dt>
+                    <dd className="mt-1 space-y-0.5 text-sm text-slate-700 dark:text-slate-200">
+                      {characteristicPairs.map((pair) => (
+                        <p key={`${pair.label}-${pair.value}`}>
+                          {pair.label}: {pair.value}
+                        </p>
+                      ))}
+                    </dd>
+                  </div>
+                ) : null}
+                {description.trim() ? (
                   <div className="pt-1">
                     <dt className="text-slate-500 dark:text-slate-400">
                       {t("listingForm.description")}
                     </dt>
                     <dd className="mt-1 line-clamp-3 text-sm text-slate-700 dark:text-slate-200">
-                      {mergeListingDescriptionParts(description, characteristics)}
+                      {description.trim()}
                     </dd>
                   </div>
                 ) : null}
