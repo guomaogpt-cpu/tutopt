@@ -1,4 +1,18 @@
-import type { GenerateListingDescriptionInput } from "@/lib/ai/generate-listing-description";
+import type { ListingVertical } from "@prisma/client";
+
+export type GenerateListingDescriptionClientInput = {
+  vertical: ListingVertical;
+  category?: string | null;
+  title: string;
+  price?: string | number | null;
+  currency?: string | null;
+  city?: string | null;
+  characteristics?: string | null;
+  currentDescription?: string | null;
+  unit?: string | null;
+  moq?: string | number | null;
+  condition?: string | null;
+};
 
 export class GenerateDescriptionRequestError extends Error {
   readonly status: number;
@@ -11,7 +25,7 @@ export class GenerateDescriptionRequestError extends Error {
 }
 
 export async function generateListingDescriptionRequest(
-  input: GenerateListingDescriptionInput,
+  input: GenerateListingDescriptionClientInput,
 ): Promise<string> {
   const response = await fetch("/api/listings/generate-description", {
     method: "POST",

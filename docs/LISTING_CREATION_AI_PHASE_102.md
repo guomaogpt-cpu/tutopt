@@ -36,6 +36,10 @@ UI-only textarea. При submit мержатся в `description` через `me
 
 Правила prompt: не выдумывать факты, без markdown/эмодзи, 1–2 абзаца, без контактов/ложной гарантии.
 
+Модель по умолчанию: **`gpt-5.6-luna`** (самый дешёвый GPT-5.6 text tier).
+Fallback model: `gpt-4o-mini`, если Luna недоступна.
+Mock template: если нет `OPENAI_API_KEY` или API вернул billing/quota — локальный шаблон без выдуманных фактов.
+
 ## 7. Backend route
 
 `POST /api/listings/generate-description`
@@ -43,17 +47,17 @@ UI-only textarea. При submit мержатся в `description` через `me
 - `requireAuth`
 - rate limit `assertListingDescriptionAiRateLimit` (20/час)
 - Zod validation + max lengths
-- OpenAI Chat Completions server-side (`gpt-4o-mini` by default)
+- OpenAI Chat Completions server-side (`gpt-5.6-luna` by default)
+- Always returns a description (`source: openai | mock`)
 
 ## 8. Env
 
 ```
 OPENAI_API_KEY=
-OPENAI_LISTING_MODEL=gpt-4o-mini
+OPENAI_LISTING_MODEL=gpt-5.6-luna
 ```
 
-Если ключ не задан: кнопка показывает «AI-генератор пока не подключён.» (`aiEnabled` с сервера).
-
+Кнопка AI всегда доступна: без ключа используется mock.
 ## 9. Ограничения
 
 - AI не публикует автоматически
@@ -72,4 +76,4 @@ OPENAI_LISTING_MODEL=gpt-4o-mini
 
 ## 11. Решение: готово к тесту
 
-**Готово** к тесту упрощённой формы и AI-описания (при наличии `OPENAI_API_KEY`).
+**Готово** к тесту упрощённой формы и AI-описания (OpenAI или mock fallback).

@@ -2,7 +2,6 @@ import { requireAuth } from "@/features/auth/lib/session";
 import {
   generateListingDescription,
   generateListingDescriptionSchema,
-  isOpenAiConfigured,
 } from "@/lib/ai/generate-listing-description";
 import { assertListingDescriptionAiRateLimit } from "@/lib/security/rate-limit";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
@@ -11,14 +10,6 @@ import { AppError, ValidationError } from "@/shared/lib/errors";
 export async function POST(request: Request) {
   return withApiHandler(async () => {
     const user = await requireAuth();
-
-    if (!isOpenAiConfigured()) {
-      throw new AppError(
-        "AI-генератор пока не подключён.",
-        "INTERNAL_ERROR",
-        503,
-      );
-    }
 
     assertListingDescriptionAiRateLimit(user.id);
 

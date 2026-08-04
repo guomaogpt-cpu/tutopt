@@ -112,7 +112,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
             initialVertical={initialVertical}
             initialCategoryId={categoryParam}
             companyProfile={companyProfile}
-            aiEnabled={Boolean(process.env.OPENAI_API_KEY?.trim())}
+            aiEnabled
           />
         )}
       </Container>
