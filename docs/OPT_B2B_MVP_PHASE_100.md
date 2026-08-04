@@ -68,3 +68,7 @@
 ## Phase 100 opt B2B MVP
 
 Opt landing + catalog + supplier contact + MOQ on cards.
+
+## Phase 102 simplified listing creation with AI description
+
+See `docs/LISTING_CREATION_AI_PHASE_102.md`. Shared create form simplified; opt MOQ/unit remain, AI helps with offer description.

@@ -70,3 +70,7 @@ Services landing + catalog + executor contact copy polish.
 ## Phase 100 opt B2B MVP
 
 See `docs/OPT_B2B_MVP_PHASE_100.md`.
+
+## Phase 102 simplified listing creation with AI description
+
+See `docs/LISTING_CREATION_AI_PHASE_102.md`. Shared create form simplified; services vertical benefits from characteristics + AI description.

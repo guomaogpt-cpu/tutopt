@@ -76,3 +76,7 @@ See `docs/OPT_B2B_MVP_PHASE_100.md`.
 See `docs/MARKET_PRODUCTION_P0_HOTFIX.md`.
 
 Root cause: Server Component `MarketLandingPage` passed `getMarketCategoryVisual` into a Client Component. Fixed via client boundary (`MarketCategoryHighlights` + `"use client"` on landing), plus data fallbacks.
+
+## Phase 102 simplified listing creation with AI description
+
+See `docs/LISTING_CREATION_AI_PHASE_102.md`. Create form simplified with characteristics + AI description helper (moderation unchanged).

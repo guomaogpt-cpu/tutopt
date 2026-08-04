@@ -239,3 +239,7 @@ See `docs/OPT_B2B_MVP_PHASE_100.md`. Wholesale vertical polished as B2B (supplie
 
 See `docs/COMPANY_PROFILES_MVP_PHASE_101.md`. Company cabinet + public showcase polished for closed testing (verified-only public badge, company listings filter, card links).
 
+## Phase 102 simplified listing creation with AI description
+
+See `docs/LISTING_CREATION_AI_PHASE_102.md`. Listing create UX simplified with step chips, characteristics, and optional OpenAI description helper.
+

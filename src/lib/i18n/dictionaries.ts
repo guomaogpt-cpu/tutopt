@@ -4635,6 +4635,147 @@ export const DICTIONARY = {
     en: "Wait until photo upload finishes",
   },
 
+  "listingForm.steps.type": {
+    ru: "Тип",
+    kg: "Түр",
+    en: "Type",
+  },
+  "listingForm.steps.category": {
+    ru: "Категория",
+    kg: "Категория",
+    en: "Category",
+  },
+  "listingForm.steps.details": {
+    ru: "Данные",
+    kg: "Маалымат",
+    en: "Details",
+  },
+  "listingForm.steps.description": {
+    ru: "Описание",
+    kg: "Сүрөттөмө",
+    en: "Description",
+  },
+  "listingForm.steps.preview": {
+    ru: "Проверка",
+    kg: "Текшерүү",
+    en: "Review",
+  },
+  "listingForm.chooseType": {
+    ru: "Что хотите разместить?",
+    kg: "Эмне жайгаштыргыңыз келет?",
+    en: "What do you want to post?",
+  },
+  "listingForm.chooseCategory": {
+    ru: "Выберите категорию",
+    kg: "Категорияны тандаңыз",
+    en: "Choose a category",
+  },
+  "listingForm.mainInfo": {
+    ru: "Основная информация",
+    kg: "Негизги маалымат",
+    en: "Main information",
+  },
+  "listingForm.characteristics": {
+    ru: "Характеристики",
+    kg: "Мүнөздөмөлөр",
+    en: "Characteristics",
+  },
+  "listingForm.characteristicsHint": {
+    ru: "Добавьте коротко важные данные. Например: модель, размер, цвет, состояние, материал, мощность.",
+    kg: "Маанилүү маалыматты кыскача жазыңыз. Мисалы: модель, өлчөм, түс, абал.",
+    en: "Add short key details. For example: model, size, color, condition, material.",
+  },
+  "listingForm.characteristicsPlaceholder": {
+    ru: "iPhone 13 Pro Max\n256 GB\nСостояние хорошее\nЦвет графитовый",
+    kg: "iPhone 13 Pro Max\n256 GB\nАбалы жакшы\nТүсү графит",
+    en: "iPhone 13 Pro Max\n256 GB\nGood condition\nGraphite color",
+  },
+  "listingForm.description": {
+    ru: "Описание",
+    kg: "Сүрөттөмө",
+    en: "Description",
+  },
+  "listingForm.generateDescription": {
+    ru: "Сгенерировать описание",
+    kg: "Сүрөттөмө түзүү",
+    en: "Generate description",
+  },
+  "listingForm.generatingDescription": {
+    ru: "Генерируется...",
+    kg: "Түзүлүүдө...",
+    en: "Generating...",
+  },
+  "listingForm.descriptionGenerated": {
+    ru: "Описание сгенерировано",
+    kg: "Сүрөттөмө түзүлдү",
+    en: "Description generated",
+  },
+  "listingForm.aiNotConnected": {
+    ru: "AI-генератор пока не подключён.",
+    kg: "AI генератор азырынча туташтырылган эмес.",
+    en: "AI generator is not connected yet.",
+  },
+  "listingForm.aiNeedMoreData": {
+    ru: "Укажите название и категорию, чтобы сгенерировать описание.",
+    kg: "Сүрөттөмө түзүү үчүн аталышты жана категорияны жазыңыз.",
+    en: "Enter a title and category to generate a description.",
+  },
+  "listingForm.aiGenerateError": {
+    ru: "Не удалось сгенерировать описание. Попробуйте позже.",
+    kg: "Сүрөттөмө түзүлгөн жок. Кийинчерээк аракет кылыңыз.",
+    en: "Could not generate description. Try again later.",
+  },
+  "listingForm.reviewDescriptionHint": {
+    ru: "Проверьте описание перед публикацией.",
+    kg: "Жарыялоодон мурун сүрөттөмөнү текшериңиз.",
+    en: "Review the description before publishing.",
+  },
+  "listingForm.publishPreview": {
+    ru: "Проверка и публикация",
+    kg: "Текшерүү жана жарыялоо",
+    en: "Review and publish",
+  },
+  "listingForm.submitForModeration": {
+    ru: "Отправить на модерацию",
+    kg: "Модерацияга жөнөтүү",
+    en: "Submit for moderation",
+  },
+  "listingForm.priceNegotiable": {
+    ru: "Договорная",
+    kg: "Макулдашуу боюнча",
+    en: "Negotiable",
+  },
+  "listingForm.postAs": {
+    ru: "Разместить от имени",
+    kg: "Кимдин атынан",
+    en: "Post as",
+  },
+  "listingForm.postAsPersonal": {
+    ru: "Личный аккаунт",
+    kg: "Жеке аккаунт",
+    en: "Personal account",
+  },
+  "listingForm.postAsCompany": {
+    ru: "Компания: {companyName}",
+    kg: "Компания: {companyName}",
+    en: "Company: {companyName}",
+  },
+  "listingForm.showExtra": {
+    ru: "Дополнительно",
+    kg: "Кошумча",
+    en: "Additional",
+  },
+  "listingForm.hideExtra": {
+    ru: "Скрыть дополнительно",
+    kg: "Кошумчаны жашыруу",
+    en: "Hide additional",
+  },
+  "listingForm.descriptionTooShort": {
+    ru: "Добавьте описание или характеристики (минимум 20 символов).",
+    kg: "Сүрөттөмө же мүнөздөмө кошуңуз (кеминде 20 белги).",
+    en: "Add a description or characteristics (at least 20 characters).",
+  },
+
   // Listing status — Phase 56
   "status.draft": { ru: "Черновик", kg: "Долбоор", en: "Draft" },
   "status.pendingModeration": {

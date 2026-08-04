@@ -375,6 +375,21 @@ export function assertListingUpdateRateLimit(userId: string): void {
   );
 }
 
+export const LISTING_DESCRIPTION_AI_RATE_LIMIT = {
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
+  message: "Слишком много запросов к AI. Попробуйте позже.",
+} as const;
+
+export function assertListingDescriptionAiRateLimit(userId: string): void {
+  assertRateLimit(
+    `listing:ai-description:${userId}`,
+    LISTING_DESCRIPTION_AI_RATE_LIMIT.limit,
+    LISTING_DESCRIPTION_AI_RATE_LIMIT.windowMs,
+    LISTING_DESCRIPTION_AI_RATE_LIMIT.message,
+  );
+}
+
 /** @internal Test helper — clears in-memory buckets. */
 export function resetRateLimitStoreForTests(): void {
   buckets.clear();

@@ -6,7 +6,9 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
+import { CreateListingSteps } from "@/components/listings/CreateListingSteps";
 import { CreateListingVerticalChooser } from "@/components/listings/CreateListingVerticalChooser";
+import { GenerateListingDescriptionButton } from "@/components/listings/GenerateListingDescriptionButton";
 import { ListingPostAsSelector } from "@/components/listings/ListingPostAsSelector";
 import { FormSection } from "@/components/listings/FormSection";
 import type { ListingQualityInput } from "@/lib/moderation/listing-quality";
@@ -21,6 +23,11 @@ import {
   type ListingFormErrors,
   updateListingRequest,
 } from "@/features/listings/lib/listings-client";
+import {
+  GenerateDescriptionRequestError,
+  generateListingDescriptionRequest,
+} from "@/features/listings/lib/generate-description-client";
+import { mergeListingDescriptionParts } from "@/features/listings/lib/merge-listing-description";
 import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-config";
 import type { CategoryItem } from "@/features/listings/types/category";
 import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
@@ -61,6 +68,7 @@ type NewListingFormProps = {
     isConfigured: boolean;
     companyName: string;
   } | null;
+  aiEnabled?: boolean;
 };
 
 export type ListingFormInitialValues = {
@@ -129,6 +137,7 @@ export function NewListingForm({
   initialValues,
   cancelHref = "/account/listings",
   companyProfile = null,
+  aiEnabled = false,
 }: NewListingFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -140,6 +149,14 @@ export function NewListingForm({
   const formConfig = getVerticalFormConfig(vertical ?? "MARKET");
   const [title, setTitle] = useState(initialValues?.title ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
+  const [characteristics, setCharacteristics] = useState("");
+  const [priceNegotiable, setPriceNegotiable] = useState(
+    Boolean(initialValues && Number(initialValues.price) === 0),
+  );
+  const [showExtraFields, setShowExtraFields] = useState(false);
+  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+  const [aiHint, setAiHint] = useState("");
+  const [aiError, setAiError] = useState("");
   const [categoryId, setCategoryId] = useState(() =>
     resolveInitialCategoryId(
       categories,
@@ -263,10 +280,58 @@ export function NewListingForm({
     [cities, cityId],
   );
 
+  const canGenerateDescription =
+    title.trim().length >= 3 &&
+    (Boolean(categoryLabel.trim()) || Boolean(characteristics.trim()));
+
+  const activeStep =
+    !categoryId
+      ? "category"
+      : !title.trim() || !cityId || imageUrls.length === 0
+        ? "details"
+        : !description.trim() && !characteristics.trim()
+          ? "description"
+          : "preview";
+
+  async function handleGenerateDescription() {
+    if (!vertical || isGeneratingDescription || !canGenerateDescription) {
+      return;
+    }
+
+    setAiError("");
+    setAiHint("");
+    setIsGeneratingDescription(true);
+    try {
+      const generated = await generateListingDescriptionRequest({
+        vertical,
+        category: categoryLabel || null,
+        title: title.trim(),
+        price: priceNegotiable ? null : price.trim() || null,
+        currency: priceNegotiable ? null : currency,
+        city: cityLabel || null,
+        characteristics: characteristics.trim() || null,
+        currentDescription: description.trim() || null,
+        unit: formConfig.unitOptions.find((option) => option.value === unit)?.label ?? unit,
+        moq: formConfig.showMoq ? moq : null,
+        condition: null,
+      });
+      setDescription(generated);
+      setAiHint(t("listingForm.reviewDescriptionHint"));
+    } catch (error) {
+      if (error instanceof GenerateDescriptionRequestError) {
+        setAiError(error.message);
+      } else {
+        setAiError(t("listingForm.aiGenerateError"));
+      }
+    } finally {
+      setIsGeneratingDescription(false);
+    }
+  }
+
   const qualityInput: ListingQualityInput = {
     title,
-    description,
-    price,
+    description: mergeListingDescriptionParts(description, characteristics),
+    price: priceNegotiable ? "0" : price,
     cityId: cityId || null,
     cityName: cityLabel || null,
     categoryId: categoryId || null,
@@ -340,8 +405,11 @@ export function NewListingForm({
       return;
     }
 
-    const priceValue = Number(price);
-    if (!Number.isFinite(priceValue) || priceValue < 0 || price.trim() === "") {
+    const priceValue = priceNegotiable ? 0 : Number(price);
+    if (
+      !priceNegotiable &&
+      (!Number.isFinite(priceValue) || priceValue < 0 || price.trim() === "")
+    ) {
       setClientError(t("createListing.validation.invalidPrice"));
       return;
     }
@@ -352,12 +420,18 @@ export function NewListingForm({
       return;
     }
 
+    const finalDescription = mergeListingDescriptionParts(description, characteristics);
+    if (finalDescription.trim().length < 20) {
+      setClientError(t("listingForm.descriptionTooShort"));
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const payload: CreateListingInput = {
         title: title.trim(),
-        description: description.trim(),
+        description: finalDescription,
         price: priceValue,
         currency,
         moq: resolvedMoq,
@@ -502,9 +576,7 @@ export function NewListingForm({
       : t("createListing.publishing")
     : mode === "edit"
       ? t("createListing.saveChanges")
-      : vertical === "OPT"
-        ? t("opt.postOffer")
-        : t("createListing.publish");
+      : t("listingForm.submitForModeration");
 
   const submitDisabled = isSubmitting || imageUrls.length === 0;
 
@@ -513,9 +585,7 @@ export function NewListingForm({
       onSubmit={(event) => void handleSubmit(event)}
       className="mt-4 pb-24 sm:mt-6 sm:pb-0 lg:mt-8"
     >
-      <p className="mb-3 overflow-x-auto whitespace-nowrap text-xs font-medium text-slate-500 sm:hidden dark:text-slate-400">
-        {t("createListing.progress")}
-      </p>
+      {mode === "create" ? <CreateListingSteps activeStep={activeStep} /> : null}
 
       <div className="grid gap-4 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
         <div className="min-w-0 space-y-4 sm:space-y-6">
@@ -638,21 +708,6 @@ export function NewListingForm({
               }
             />
 
-            {formConfig.showBrand ? (
-              <OptionPicker
-                pickerId="brand"
-                openPickerId={openPickerId}
-                onOpenPickerChange={setOpenPickerId}
-                label="Бренд"
-                value={brandId}
-                onChange={setBrandId}
-                options={brands}
-                placeholder="Без бренда"
-                searchable
-                optional
-                disabled={isSubmitting}
-              />
-            ) : null}
           </FormSection>
 
           <FormSection dense title={t("createListing.sections.photos")}>
@@ -690,14 +745,33 @@ export function NewListingForm({
                   type="number"
                   min="0"
                   step="0.01"
-                  required
+                  required={!priceNegotiable}
                   inputMode="decimal"
-                  value={price}
-                  onChange={(event) => setPrice(event.target.value)}
+                  value={priceNegotiable ? "" : price}
+                  onChange={(event) => {
+                    setPriceNegotiable(false);
+                    setPrice(event.target.value);
+                  }}
                   placeholder="250"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || priceNegotiable}
                   className={fieldInputClass(Boolean(priceError))}
                 />
+                <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={priceNegotiable}
+                    onChange={(event) => {
+                      const checked = event.target.checked;
+                      setPriceNegotiable(checked);
+                      if (checked) {
+                        setPrice("0");
+                      }
+                    }}
+                    disabled={isSubmitting}
+                    className="size-4 rounded border-slate-300"
+                  />
+                  {t("listingForm.priceNegotiable")}
+                </label>
                 <p className="text-xs text-slate-500 dark:text-slate-400">{formConfig.priceHint}</p>
                 <FieldError message={priceError} />
               </div>
@@ -706,7 +780,7 @@ export function NewListingForm({
                 label="Валюта"
                 value={currency}
                 onChange={setCurrency}
-                disabled={isSubmitting}
+                disabled={isSubmitting || priceNegotiable}
                 options={currencyOptions.map((option) => ({
                   id: option.value,
                   label: option.label,
@@ -758,27 +832,61 @@ export function NewListingForm({
               />
             </div>
 
-            {formConfig.showStock ? (
-              <div className="space-y-2">
-                <label
-                  htmlFor="listing-stock"
-                  className="text-sm font-medium text-slate-900 dark:text-slate-100"
+            {formConfig.showBrand || formConfig.showStock ? (
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setShowExtraFields((value) => !value)}
+                  className="text-sm font-medium text-slate-600 underline-offset-2 hover:underline dark:text-slate-300"
                 >
-                  {formConfig.stockLabel}
-                </label>
-                <Input
-                  id="listing-stock"
-                  name="stock_quantity"
-                  type="number"
-                  min="0"
-                  inputMode="numeric"
-                  value={stockQuantity}
-                  onChange={(event) => setStockQuantity(event.target.value)}
-                  placeholder={formConfig.stockPlaceholder}
-                  disabled={isSubmitting}
-                  className={fieldInputClass(false)}
-                />
-                <p className="text-xs text-slate-500 dark:text-slate-400">{formConfig.stockHint}</p>
+                  {showExtraFields
+                    ? t("listingForm.hideExtra")
+                    : t("listingForm.showExtra")}
+                </button>
+                {showExtraFields ? (
+                  <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950 sm:p-4">
+                    {formConfig.showBrand ? (
+                      <OptionPicker
+                        pickerId="brand"
+                        openPickerId={openPickerId}
+                        onOpenPickerChange={setOpenPickerId}
+                        label="Бренд"
+                        value={brandId}
+                        onChange={setBrandId}
+                        options={brands}
+                        placeholder="Без бренда"
+                        searchable
+                        optional
+                        disabled={isSubmitting}
+                      />
+                    ) : null}
+                    {formConfig.showStock ? (
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="listing-stock"
+                          className="text-sm font-medium text-slate-900 dark:text-slate-100"
+                        >
+                          {formConfig.stockLabel}
+                        </label>
+                        <Input
+                          id="listing-stock"
+                          name="stock_quantity"
+                          type="number"
+                          min="0"
+                          inputMode="numeric"
+                          value={stockQuantity}
+                          onChange={(event) => setStockQuantity(event.target.value)}
+                          placeholder={formConfig.stockPlaceholder}
+                          disabled={isSubmitting}
+                          className={fieldInputClass(false)}
+                        />
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          {formConfig.stockHint}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             ) : null}
           </FormSection>
@@ -814,31 +922,49 @@ export function NewListingForm({
 
           <FormSection
             dense
-            title={
-              vertical === "SERVICES"
-                ? t("services.formTitle")
-                : vertical === "CARGO"
-                  ? t("cargo.form.companyDescription")
-                  : t("createListing.sections.description")
-            }
-            description={
-              vertical === "SERVICES"
-                ? t("services.formDescriptionHint")
-                : vertical === "CARGO"
-                  ? t("cargo.form.companyDescription")
-                  : formConfig.descriptionSectionDescription
-            }
+            title={t("listingForm.description")}
+            description={formConfig.descriptionSectionDescription}
           >
+            <div className="space-y-2">
+              <label
+                htmlFor="listing-characteristics"
+                className="text-sm font-medium text-slate-900 dark:text-slate-100"
+              >
+                {t("listingForm.characteristics")}
+              </label>
+              <Textarea
+                id="listing-characteristics"
+                name="characteristics"
+                value={characteristics}
+                onChange={(event) => setCharacteristics(event.target.value)}
+                placeholder={t("listingForm.characteristicsPlaceholder")}
+                className="min-h-[96px] w-full resize-y rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                disabled={isSubmitting}
+              />
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t("listingForm.characteristicsHint")}
+              </p>
+            </div>
+
+            <GenerateListingDescriptionButton
+              aiEnabled={aiEnabled}
+              canGenerate={canGenerateDescription}
+              isGenerating={isGeneratingDescription}
+              onGenerate={() => void handleGenerateDescription()}
+            />
+            {aiError ? (
+              <p className="text-sm text-red-600 dark:text-red-400">{aiError}</p>
+            ) : null}
+            {aiHint ? (
+              <p className="text-xs text-emerald-700 dark:text-emerald-400">{aiHint}</p>
+            ) : null}
+
             <div className="space-y-2">
               <label
                 htmlFor="listing-description"
                 className="text-sm font-medium text-slate-900 dark:text-slate-100"
               >
-                {vertical === "SERVICES"
-                  ? t("services.formTitle")
-                  : vertical === "CARGO"
-                    ? t("cargo.form.companyDescription")
-                    : t("createListing.sections.description")}
+                {t("listingForm.description")}
               </label>
               <Textarea
                 id="listing-description"
@@ -846,39 +972,33 @@ export function NewListingForm({
                 required
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder={
-                  vertical === "CARGO"
-                    ? t("cargo.form.companyDescription")
-                    : formConfig.descriptionPlaceholder
-                }
+                placeholder={formConfig.descriptionPlaceholder}
                 className={cn(
                   "min-h-[140px] w-full resize-y rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:min-h-[160px]",
                   descriptionError && "border-red-200 focus-visible:ring-red-200",
                 )}
                 disabled={isSubmitting}
               />
-              {vertical === "SERVICES" || vertical === "CARGO" ? (
-                <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-                  {vertical === "CARGO"
-                    ? t("cargo.form.companyDescription")
-                    : t("services.formDescriptionHint")}
-                </p>
-              ) : (
-                <ul className="hidden text-xs leading-relaxed text-slate-500 sm:block dark:text-slate-400">
-                  {formConfig.descriptionTips.map((tip) => (
-                    <li key={tip}>{tip}</li>
-                  ))}
-                </ul>
-              )}
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t("listingForm.reviewDescriptionHint")}
+              </p>
               <FieldError message={descriptionError} />
             </div>
           </FormSection>
 
-          <FormSection dense title={t("createListing.sections.publish")}>
+          <FormSection dense title={t("listingForm.publishPreview")}>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-950 sm:p-4">
               <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                 {t("createListing.reviewBeforePublish")}
               </p>
+              {imageUrls[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={imageUrls[0]}
+                  alt=""
+                  className="mt-3 h-28 w-full rounded-xl object-cover"
+                />
+              ) : null}
               <dl className="mt-3 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
                 <div className="flex justify-between gap-3">
                   <dt className="text-slate-500 dark:text-slate-400">
@@ -903,7 +1023,11 @@ export function NewListingForm({
                     {t("createListing.sections.price")}
                   </dt>
                   <dd className="font-medium">
-                    {price.trim() ? `${price} ${currency}` : "—"}
+                    {priceNegotiable
+                      ? t("listingForm.priceNegotiable")
+                      : price.trim()
+                        ? `${price} ${currency}`
+                        : "—"}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-3">
@@ -916,12 +1040,35 @@ export function NewListingForm({
                 </div>
                 <div className="flex justify-between gap-3">
                   <dt className="text-slate-500 dark:text-slate-400">
+                    {t("listingForm.postAs")}
+                  </dt>
+                  <dd className="line-clamp-1 text-right font-medium">
+                    {postedAsCompany && companyProfile?.isConfigured
+                      ? t("listingForm.postAsCompany").replace(
+                          "{companyName}",
+                          companyProfile.companyName,
+                        )
+                      : t("listingForm.postAsPersonal")}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">
                     {t("createListing.sections.photos")}
                   </dt>
                   <dd className="font-medium">
                     {imageUrls.length} {t("createListing.summaryPhotos")}
                   </dd>
                 </div>
+                {description.trim() || characteristics.trim() ? (
+                  <div className="pt-1">
+                    <dt className="text-slate-500 dark:text-slate-400">
+                      {t("listingForm.description")}
+                    </dt>
+                    <dd className="mt-1 line-clamp-3 text-sm text-slate-700 dark:text-slate-200">
+                      {mergeListingDescriptionParts(description, characteristics)}
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
             </div>
 
