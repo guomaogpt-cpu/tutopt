@@ -20,7 +20,6 @@ export type MarketCategoryItem = {
 };
 
 type MarketCompactHeroProps = {
-  categories: MarketCategoryItem[];
   listingCount: number;
 };
 

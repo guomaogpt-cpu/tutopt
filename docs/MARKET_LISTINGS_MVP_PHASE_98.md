@@ -70,3 +70,9 @@ See `docs/SERVICES_MVP_PHASE_99.md`. Services treated as a separate vertical fro
 ## Phase 100 opt B2B MVP
 
 See `docs/OPT_B2B_MVP_PHASE_100.md`.
+
+## Production P0: /market 500
+
+See `docs/MARKET_PRODUCTION_P0_HOTFIX.md`.
+
+Root cause: Server Component `MarketLandingPage` passed `getMarketCategoryVisual` into a Client Component. Fixed via client boundary (`MarketCategoryHighlights` + `"use client"` on landing), plus data fallbacks.

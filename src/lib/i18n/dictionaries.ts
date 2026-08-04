@@ -543,9 +543,9 @@ export const DICTIONARY = {
     en: "All listings",
   },
   "vertical.emptyMarket": {
-    ru: "В Объявлениях пока нет объявлений",
-    kg: "Жарыяларда азырынча жарыялар жок",
-    en: "No listings in Classifieds yet",
+    ru: "Пока нет объявлений. Разместите первое объявление или вернитесь позже.",
+    kg: "Азырынча жарыялар жок. Биринчи жарыяны жайгаштырыңыз же кийинчерээк кайтыңыз.",
+    en: "No listings yet. Post the first one or check back later.",
   },
   "vertical.emptyOpt": {
     ru: "Пока нет оптовых предложений.",

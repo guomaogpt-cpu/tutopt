@@ -1,16 +1,15 @@
+"use client";
+
+import Link from "next/link";
 import { ListingCard } from "@/components/listings/ListingCard";
 import {
   MarketCompactHero,
   type MarketCategoryItem,
 } from "@/components/market/MarketCompactHero";
+import { MarketCategoryHighlights } from "@/components/market/MarketCategoryHighlights";
 import { Container } from "@/components/ui/container";
-import { VerticalCategoryHighlights } from "@/components/verticals/VerticalCategoryHighlights";
-import {
-  VerticalEmptyState,
-  VerticalLatestHeading,
-} from "@/components/verticals/VerticalLatestSectionLabels";
+import { VerticalLatestHeading } from "@/components/verticals/VerticalLatestSectionLabels";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
-import { getMarketCategoryVisual } from "@/features/market/market-category-visuals";
 import { VERTICAL_LATEST_LISTINGS_GRID_CLASS } from "@/features/verticals/vertical-landing-ui";
 import { VERTICALS } from "@/features/verticals/verticals";
 import { getVerticalTheme } from "@/lib/vertical-theme";
@@ -37,20 +36,10 @@ export function MarketLandingPage({
         theme.pageWash,
       )}
     >
-      <MarketCompactHero
-        categories={categories}
-        listingCount={publishedCount}
-      />
+      <MarketCompactHero listingCount={publishedCount} />
 
       <Container size="lg" className="space-y-8 py-6 sm:space-y-10 sm:py-10">
-        <VerticalCategoryHighlights
-          vertical="MARKET"
-          categories={categories}
-          accent="violet"
-          getVisual={getMarketCategoryVisual}
-          headingId="market-categories-heading"
-          drawerDescription="Выберите категорию объявлений"
-        />
+        <MarketCategoryHighlights categories={categories} />
 
         <section aria-labelledby="market-listings-heading">
           <VerticalLatestHeading
@@ -61,7 +50,22 @@ export function MarketLandingPage({
           />
 
           {listings.length === 0 ? (
-            <VerticalEmptyState emptyKey="vertical.emptyMarket" />
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-5 text-center dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Пока нет объявлений. Разместите первое объявление или вернитесь позже.
+              </p>
+              <div className="mt-5 flex justify-center">
+                <Link
+                  href={config.createListingHref}
+                  className={cn(
+                    "inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white",
+                    theme.primaryButton,
+                  )}
+                >
+                  Подать объявление
+                </Link>
+              </div>
+            </div>
           ) : (
             <div className={VERTICAL_LATEST_LISTINGS_GRID_CLASS}>
               {listings.map((listing) => (
