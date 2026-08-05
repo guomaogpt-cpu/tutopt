@@ -78,3 +78,7 @@ See `docs/LISTING_CREATION_AI_PHASE_102.md`. Shared create form simplified; serv
 ## Phase 103 category-based listing characteristics
 
 See `docs/LISTING_CHARACTERISTICS_PHASE_103.md`. Services presets: format, experience, price type, repair/auto extras; structured values for AI description.
+
+## Phase 105 listing attributes persistence
+
+See `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`. Service conditions persist on Listing and show on detail.

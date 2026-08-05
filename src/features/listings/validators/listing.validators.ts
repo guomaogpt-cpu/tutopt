@@ -1,5 +1,6 @@
 import { ListingUnit, ListingVertical } from "@prisma/client";
 import { z } from "zod";
+import { listingCharacteristicsSchema } from "@/features/listings/types/listing-characteristic";
 
 export const LISTING_TITLE_MIN = 5;
 export const LISTING_TITLE_MAX = 120;
@@ -43,6 +44,8 @@ export const createListingSchema = z.object({
   vertical: z.nativeEnum(ListingVertical).optional(),
   /** Publish under configured company profile (ownership checked server-side). */
   posted_as_company: z.boolean().optional(),
+  /** Structured characteristics from category fields (Phase 105). */
+  characteristics: listingCharacteristicsSchema.optional().nullable(),
   image_urls: z
     .array(
       z
@@ -62,3 +65,4 @@ export type CreateListingInput = z.infer<typeof createListingSchema>;
 // schema prevents create and update validation rules from drifting apart.
 export const updateListingSchema = createListingSchema;
 export type UpdateListingInput = z.infer<typeof updateListingSchema>;
+

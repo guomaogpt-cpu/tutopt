@@ -15,6 +15,9 @@ export type ListingCharacteristicItem = {
 
 type ListingCharacteristicsProps = {
   items: ListingCharacteristicItem[];
+  title?: string;
+  titleKey?: DictionaryKey;
+  headingId?: string;
   /** Collapse long lists on mobile by default. */
   collapsibleOnMobile?: boolean;
   mobileCollapseThreshold?: number;
@@ -22,6 +25,9 @@ type ListingCharacteristicsProps = {
 
 export function ListingCharacteristics({
   items,
+  title,
+  titleKey,
+  headingId = "listing-characteristics-title",
   collapsibleOnMobile = true,
   mobileCollapseThreshold = 4,
 }: ListingCharacteristicsProps) {
@@ -44,15 +50,17 @@ export function ListingCharacteristics({
     shouldCollapse && !expanded
       ? visibleItems.slice(0, mobileCollapseThreshold)
       : visibleItems;
+  const heading =
+    title?.trim() || (titleKey ? t(titleKey) : t("listingCharacteristics.detailTitle"));
 
   return (
-    <section aria-labelledby="listing-characteristics-title">
+    <section aria-labelledby={headingId}>
       <div className="mb-3 flex items-center justify-between gap-3 sm:mb-4">
         <h2
-          id="listing-characteristics-title"
+          id={headingId}
           className="text-lg font-bold text-[#0F172A] sm:text-xl dark:text-slate-100"
         >
-          {t("listing.characteristics")}
+          {heading}
         </h2>
 
         {shouldCollapse ? (

@@ -76,3 +76,7 @@ See `docs/LISTING_CREATION_AI_PHASE_102.md`. Shared create form simplified; opt 
 ## Phase 103 category-based listing characteristics
 
 See `docs/LISTING_CHARACTERISTICS_PHASE_103.md`. Opt presets: min lot, price unit, stock, food/equipment extras (warranty only if selected); structured values for AI.
+
+## Phase 105 listing attributes persistence
+
+See `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`. Wholesale conditions persist on Listing and show on detail.

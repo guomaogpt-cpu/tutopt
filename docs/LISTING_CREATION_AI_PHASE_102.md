@@ -39,6 +39,10 @@ Structured values идут в AI (`characteristicItems`) и мержатся в 
 
 По title предлагаются категория и очевидные характеристики (confirm/dismiss). См. `docs/LISTING_AUTOSUGGEST_PHASE_104.md`.
 
+### Phase 105 listing attributes persistence
+
+Характеристики сохраняются в `Listing.characteristics` (JSON) и показываются на detail. См. `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`.
+
 ## 6. AI-генератор описания
 
 Кнопка рядом с описанием. Использует title, category, price, city, characteristics, current draft, unit/MOQ.

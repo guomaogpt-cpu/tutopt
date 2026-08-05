@@ -27,6 +27,7 @@ export const listingDetailSelect = {
   created_at: true,
   category_id: true,
   city_id: true,
+  characteristics: true,
   category: { select: { name: true, slug: true } },
   city: { select: { name: true } },
   brand: { select: { name: true } },

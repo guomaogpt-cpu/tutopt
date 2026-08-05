@@ -15,6 +15,7 @@ import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getEditListingRestrictionMessage } from "@/lib/security/user-restrictions";
+import { parseListingCharacteristics } from "@/features/listings/types/listing-characteristic";
 import { isUuid } from "@/shared/lib/is-uuid";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
@@ -64,6 +65,7 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
       brand_id: true,
       stock_quantity: true,
       status: true,
+      characteristics: true,
       sellerProfile: { select: { user_id: true } },
       images: {
         orderBy: { sort_order: "asc" },
@@ -117,6 +119,7 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
     stockQuantity: listing.stock_quantity,
     imageUrls: listing.images.map((image) => image.url),
     status: listing.status,
+    characteristics: parseListingCharacteristics(listing.characteristics),
   };
 
   return (

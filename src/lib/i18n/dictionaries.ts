@@ -4826,6 +4826,51 @@ export const DICTIONARY = {
     kg: "Бул параметрлер AI сүрөттөмөсүнө кошулат.",
     en: "These parameters are used in the AI description.",
   },
+  "listingCharacteristics.detailTitle": {
+    ru: "Характеристики",
+    kg: "Мүнөздөмөлөр",
+    en: "Specifications",
+  },
+  "listingCharacteristics.empty": {
+    ru: "Характеристики не указаны",
+    kg: "Мүнөздөмөлөр көрсөтүлгөн эмес",
+    en: "No specifications",
+  },
+  "listingCharacteristics.saved": {
+    ru: "Характеристики сохранены",
+    kg: "Мүнөздөмөлөр сакталды",
+    en: "Specifications saved",
+  },
+  "listingCharacteristics.mainSpecs": {
+    ru: "Основные",
+    kg: "Негизги",
+    en: "Main",
+  },
+  "listingCharacteristics.additionalSpecs": {
+    ru: "Дополнительные",
+    kg: "Кошумча",
+    en: "Additional",
+  },
+  "listingCharacteristics.marketTitle": {
+    ru: "Характеристики",
+    kg: "Мүнөздөмөлөр",
+    en: "Specifications",
+  },
+  "listingCharacteristics.servicesTitle": {
+    ru: "Условия услуги",
+    kg: "Кызматтын шарттары",
+    en: "Service details",
+  },
+  "listingCharacteristics.optTitle": {
+    ru: "Условия опта",
+    kg: "Опт шарттары",
+    en: "Wholesale details",
+  },
+  "listingCharacteristics.cargoTitle": {
+    ru: "Направления и услуги",
+    kg: "Багыттар жана кызматтар",
+    en: "Routes and services",
+  },
 
   "listingAutosuggest.categoryHint": {
     ru: "Похоже, это категория «{category}». Выбрать?",

@@ -71,3 +71,7 @@ Suggested but not applied **не** уходят в AI и **не** показыв
 - фильтры по характеристикам
 - категорийные шаблоны описаний
 - улучшение confidence / обучение на модерации
+
+## Phase 105 listing attributes persistence
+
+См. `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`. Applied characteristics теперь сохраняются в `Listing.characteristics` JSON.

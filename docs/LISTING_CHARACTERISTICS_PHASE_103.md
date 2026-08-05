@@ -99,3 +99,7 @@ Labels полей пока на RU (основной рынок); структу
 
 Rule-based подсказки категории и характеристик по названию. См. `docs/LISTING_AUTOSUGGEST_PHASE_104.md`.
 Пользователь подтверждает Apply — suggested-but-not-applied не пишутся в description / AI.
+
+## Phase 105 listing attributes persistence
+
+См. `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`. Applied characteristics сохраняются в `Listing.characteristics` JSON и отображаются на `/listings/[id]`.

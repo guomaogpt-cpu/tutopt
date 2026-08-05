@@ -1,6 +1,7 @@
-import { ListingStatus, UserRole } from "@prisma/client";
+import { ListingStatus, Prisma, UserRole } from "@prisma/client";
 import { requireAuth } from "@/features/auth/lib/session";
 import { slugifyTitle } from "@/features/listings/lib/slug";
+import { parseListingCharacteristics } from "@/features/listings/types/listing-characteristic";
 import { updateListingSchema } from "@/features/listings/validators/listing.validators";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import { validateListingContent } from "@/lib/moderation/content-checks";
@@ -77,6 +78,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         stock_quantity: true,
         vertical: true,
         status: true,
+        characteristics: true,
         sellerProfile: { select: { user_id: true } },
         images: {
           orderBy: { sort_order: "asc" },
@@ -127,6 +129,15 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     const oldImages = listing.images.map((image) => image.url);
+    const nextCharacteristics = parseListingCharacteristics(input.characteristics ?? null);
+    const previousCharacteristics = parseListingCharacteristics(listing.characteristics);
+    const characteristicsChanged =
+      JSON.stringify(previousCharacteristics) !== JSON.stringify(nextCharacteristics);
+    const characteristicsJson: Prisma.InputJsonValue | typeof Prisma.DbNull =
+      nextCharacteristics.length > 0
+        ? (nextCharacteristics as Prisma.InputJsonValue)
+        : Prisma.DbNull;
+
     const changedFields: string[] = [];
     const comparisons: Array<[string, boolean]> = [
       ["title", listing.title !== input.title],
@@ -141,6 +152,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       ["brand", listing.brand_id !== (input.brand_id ?? null)],
       ["stock", listing.stock_quantity !== (input.stock_quantity ?? null)],
       ["images", !arraysEqual(oldImages, input.image_urls)],
+      ["characteristics", characteristicsChanged],
     ];
 
     for (const [field, changed] of comparisons) {
@@ -179,6 +191,7 @@ export async function PATCH(request: Request, context: RouteContext) {
           moq: input.moq,
           stock_quantity: input.stock_quantity ?? null,
           vertical,
+          characteristics: characteristicsJson,
           status: nextStatus,
           ...(requiresModeration ? { published_at: null, rejection_reason: null } : {}),
           ...(imagesChanged

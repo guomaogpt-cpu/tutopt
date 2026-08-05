@@ -353,6 +353,8 @@ model Listing {
   renewed_at         DateTime?       @map("renewed_at") @db.Timestamptz
   created_at         DateTime        @default(now()) @map("created_at") @db.Timestamptz
   updated_at         DateTime        @updatedAt @map("updated_at") @db.Timestamptz
+  /** Structured category-based specs from create form (Phase 105). */
+  characteristics    Json?           @db.JsonB
 
   sellerProfile  SellerProfile         @relation(fields: [seller_profile_id], references: [id], onDelete: Cascade)
   category       Category              @relation(fields: [category_id], references: [id], onDelete: Restrict)

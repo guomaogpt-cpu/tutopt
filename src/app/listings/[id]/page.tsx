@@ -43,6 +43,11 @@ import {
   getSellerPublishedVerticals,
   getSimilarListings,
 } from "@/features/listings/lib/listing-detail-data";
+import {
+  formatCharacteristicDisplayValue,
+  parseListingCharacteristics,
+} from "@/features/listings/types/listing-characteristic";
+import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import { listingStatusLabels } from "@/features/listings/lib/listing-status";
 import {
@@ -315,6 +320,22 @@ export default async function ListingPage({ params }: ListingPageProps) {
       : []),
   ];
 
+  const SPECS_TITLE_KEY: Record<
+    typeof listing.vertical,
+    DictionaryKey
+  > = {
+    MARKET: "listingCharacteristics.marketTitle",
+    SERVICES: "listingCharacteristics.servicesTitle",
+    OPT: "listingCharacteristics.optTitle",
+    CARGO: "listingCharacteristics.cargoTitle",
+  };
+
+  const storedCharacteristics = parseListingCharacteristics(listing.characteristics);
+  const storedCharacteristicItems = storedCharacteristics.map((item) => ({
+    label: item.label,
+    value: formatCharacteristicDisplayValue(item),
+  }));
+
   const contactCard = (
     <ListingContactCard
       listingId={listing.id}
@@ -504,15 +525,27 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
             <div className="order-3 lg:hidden">{sellerCard}</div>
 
-            <div className="order-5 lg:order-3">
+            <div className="order-5 lg:order-2">
+              <ListingCharacteristics
+                headingId="listing-stored-specs-title"
+                titleKey={SPECS_TITLE_KEY[listing.vertical]}
+                items={storedCharacteristicItems}
+              />
+            </div>
+
+            <div className="order-6 lg:order-3">
               <ListingDescription text={listing.description} />
             </div>
 
-            <div className="order-6 lg:order-2">
-              <ListingCharacteristics items={characteristicItems} />
+            <div className="order-7 lg:order-4">
+              <ListingCharacteristics
+                headingId="listing-main-info-specs-title"
+                titleKey="listing.characteristics"
+                items={characteristicItems}
+              />
             </div>
 
-            <div className="order-7 space-y-5 lg:order-4 lg:space-y-6">
+            <div className="order-8 space-y-5 lg:order-5 lg:space-y-6">
               {!isOwner ? <ListingVerticalHint vertical={listing.vertical} /> : null}
               {!isOwner ? <ListingRequestHint vertical={listing.vertical} /> : null}
               <ListingLeadForm

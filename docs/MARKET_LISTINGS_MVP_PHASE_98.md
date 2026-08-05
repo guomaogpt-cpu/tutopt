@@ -84,3 +84,7 @@ See `docs/LISTING_CREATION_AI_PHASE_102.md`. Create form simplified with charact
 ## Phase 103 category-based listing characteristics
 
 See `docs/LISTING_CHARACTERISTICS_PHASE_103.md`. Market create form shows category-specific chips/select/inputs instead of a free-text characteristics textarea; values feed AI + description merge (no Prisma migration).
+
+## Phase 105 listing attributes persistence
+
+See `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`. Structured characteristics saved on Listing JSON and shown on detail pages.

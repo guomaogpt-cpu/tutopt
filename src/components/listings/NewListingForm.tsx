@@ -32,12 +32,15 @@ import {
 import {
   buildEmptyCharacteristicValues,
   characteristicValuesToPairs,
+  characteristicValuesToPersisted,
   characteristicValuesToText,
+  hydrateCharacteristicValues,
   type CharacteristicValuesState,
 } from "@/features/listings/lib/listing-characteristics";
 import { mergeListingDescriptionParts } from "@/features/listings/lib/merge-listing-description";
 import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-config";
 import type { CategoryItem } from "@/features/listings/types/category";
+import type { ListingCharacteristic } from "@/features/listings/types/listing-characteristic";
 import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
 import { resolveListingCharacteristicFields } from "@/config/listing-characteristics";
 import {
@@ -101,6 +104,7 @@ export type ListingFormInitialValues = {
   stockQuantity: number | null;
   imageUrls: string[];
   status: ListingStatus;
+  characteristics?: ListingCharacteristic[];
 };
 
 const emptyErrors: ListingFormErrors = { form: [], fields: {} };
@@ -205,6 +209,7 @@ export function NewListingForm({
   const pendingCharacteristicSuggestionsRef = useRef<SuggestedCharacteristic[] | null>(
     null,
   );
+  const hasHydratedCharacteristicsRef = useRef(false);
   const deferredTitle = useDeferredValue(title);
 
   const categoriesForVertical = useMemo(
@@ -246,9 +251,25 @@ export function NewListingForm({
     if (pending && pending.length > 0) {
       next = applyCharacteristicSuggestions(next, pending);
       pendingCharacteristicSuggestionsRef.current = null;
+    } else if (
+      !hasHydratedCharacteristicsRef.current &&
+      mode === "edit" &&
+      characteristicFields.length > 0 &&
+      (initialValues?.characteristics?.length ?? 0) > 0
+    ) {
+      next = hydrateCharacteristicValues(
+        characteristicFields,
+        initialValues?.characteristics ?? [],
+      );
+      hasHydratedCharacteristicsRef.current = true;
     }
     setCharacteristicValues(next);
-  }, [characteristicFields]);
+  }, [characteristicFields, mode, initialValues?.characteristics]);
+
+  const persistedCharacteristics = useMemo(
+    () => characteristicValuesToPersisted(characteristicFields, characteristicValues),
+    [characteristicFields, characteristicValues],
+  );
 
   const listingSuggestions = useMemo(() => {
     if (!vertical || mode === "edit") {
@@ -583,8 +604,8 @@ export function NewListingForm({
       return;
     }
 
-    const finalDescription = mergeListingDescriptionParts(description, characteristicsText);
-    if (finalDescription.trim().length < 20) {
+    const finalDescription = description.trim();
+    if (finalDescription.length < 20) {
       setClientError(t("listingForm.descriptionTooShort"));
       return;
     }
@@ -607,6 +628,8 @@ export function NewListingForm({
         vertical,
         posted_as_company:
           mode === "create" ? Boolean(postedAsCompany && companyProfile?.isConfigured) : undefined,
+        characteristics:
+          persistedCharacteristics.length > 0 ? persistedCharacteristics : null,
         image_urls: serverImageUrls,
       };
       const result =
@@ -1224,15 +1247,24 @@ export function NewListingForm({
                     {imageUrls.length} {t("createListing.summaryPhotos")}
                   </dd>
                 </div>
-                {characteristicPairs.length > 0 ? (
+                {persistedCharacteristics.length > 0 ? (
                   <div className="pt-1">
                     <dt className="text-slate-500 dark:text-slate-400">
                       {t("listingCharacteristics.previewTitle")}
                     </dt>
                     <dd className="mt-1 space-y-0.5 text-sm text-slate-700 dark:text-slate-200">
-                      {characteristicPairs.map((pair) => (
-                        <p key={`${pair.label}-${pair.value}`}>
-                          {pair.label}: {pair.value}
+                      {persistedCharacteristics.map((item) => (
+                        <p key={item.id} className="break-words">
+                          {item.label}:{" "}
+                          {typeof item.value === "boolean"
+                            ? item.value
+                              ? "Да"
+                              : "Нет"
+                            : Array.isArray(item.value)
+                              ? item.value.join(", ")
+                              : item.unit && !String(item.value).includes(item.unit)
+                                ? `${item.value} ${item.unit}`
+                                : String(item.value)}
                         </p>
                       ))}
                     </dd>

@@ -1,8 +1,9 @@
-import { ListingStatus, UserRole } from "@prisma/client";
+import { ListingStatus, Prisma, UserRole } from "@prisma/client";
 import { requireAuth } from "@/features/auth/lib/session";
 import { findRecentDuplicateListing } from "@/features/listings/lib/listing-duplicate-check";
 import { ensureSellerProfile } from "@/features/listings/lib/seller-profile";
 import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
+import { parseListingCharacteristics } from "@/features/listings/types/listing-characteristic";
 import { createListingSchema } from "@/features/listings/validators/listing.validators";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import { validateListingContent } from "@/lib/moderation/content-checks";
@@ -120,6 +121,12 @@ export async function POST(request: Request) {
       throw new ConflictError("Похоже, такое объявление уже было создано недавно.");
     }
 
+    const characteristics = parseListingCharacteristics(input.characteristics ?? null);
+    const characteristicsJson: Prisma.InputJsonValue | typeof Prisma.DbNull =
+      characteristics.length > 0
+        ? (characteristics as Prisma.InputJsonValue)
+        : Prisma.DbNull;
+
     const listing = await prisma.listing.create({
       data: {
         seller_profile_id: sellerProfile.id,
@@ -139,6 +146,7 @@ export async function POST(request: Request) {
         status: ListingStatus.PENDING_MODERATION,
         vertical,
         posted_as_company: wantsCompany,
+        characteristics: characteristicsJson,
         images: {
           create: input.image_urls.map((url, index) => ({
             url,
