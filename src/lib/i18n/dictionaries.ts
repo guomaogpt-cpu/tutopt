@@ -4827,6 +4827,52 @@ export const DICTIONARY = {
     en: "These parameters are used in the AI description.",
   },
 
+  "listingAutosuggest.categoryHint": {
+    ru: "Похоже, это категория «{category}». Выбрать?",
+    kg: "Бул «{category}» категориясына окшойт. Тандайсызбы?",
+    en: "This looks like “{category}”. Select it?",
+  },
+  "listingAutosuggest.chooseCategory": {
+    ru: "Выбрать категорию",
+    kg: "Категорияны тандоо",
+    en: "Choose category",
+  },
+  "listingAutosuggest.characteristicsHint": {
+    ru: "Мы нашли возможные характеристики:",
+    kg: "Мүмкүн болгон мүнөздөмөлөрдү таптык:",
+    en: "We found possible characteristics:",
+  },
+  "listingAutosuggest.apply": {
+    ru: "Применить",
+    kg: "Колдонуу",
+    en: "Apply",
+  },
+  "listingAutosuggest.dismiss": {
+    ru: "Не сейчас",
+    kg: "Азыр эмес",
+    en: "Not now",
+  },
+  "listingAutosuggest.detected": {
+    ru: "Обнаружено",
+    kg: "Табылды",
+    en: "Detected",
+  },
+  "listingAutosuggest.suggestedCategory": {
+    ru: "Предложенная категория",
+    kg: "Сунушталган категория",
+    en: "Suggested category",
+  },
+  "listingAutosuggest.suggestedCharacteristics": {
+    ru: "Предложенные характеристики",
+    kg: "Сунушталган мүнөздөмөлөр",
+    en: "Suggested characteristics",
+  },
+  "listingAutosuggest.noSuggestions": {
+    ru: "Пока нет подсказок — продолжайте заполнение.",
+    kg: "Азырынча сунуш жок — толтурууну улантыңыз.",
+    en: "No suggestions yet — keep filling the form.",
+  },
+
   // Listing status — Phase 56
   "status.draft": { ru: "Черновик", kg: "Долбоор", en: "Draft" },
   "status.pendingModeration": {

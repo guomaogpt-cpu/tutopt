@@ -94,3 +94,8 @@ Labels полей пока на RU (основной рынок); структу
 ## 10. Gap для поиска
 
 Для полноценного поиска/фильтрации по характеристикам нужна отдельная JSON attributes / ListingAttribute фаза.
+
+## Phase 104 listing autosuggestions
+
+Rule-based подсказки категории и характеристик по названию. См. `docs/LISTING_AUTOSUGGEST_PHASE_104.md`.
+Пользователь подтверждает Apply — suggested-but-not-applied не пишутся в description / AI.

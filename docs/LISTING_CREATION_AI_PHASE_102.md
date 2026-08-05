@@ -35,6 +35,10 @@ UI-only textarea. При submit мержатся в `description` через `me
 Textarea заменена на умные поля по категории. См. `docs/LISTING_CHARACTERISTICS_PHASE_103.md`.
 Structured values идут в AI (`characteristicItems`) и мержатся в `description` при submit (без migration).
 
+### Phase 104 listing autosuggestions
+
+По title предлагаются категория и очевидные характеристики (confirm/dismiss). См. `docs/LISTING_AUTOSUGGEST_PHASE_104.md`.
+
 ## 6. AI-генератор описания
 
 Кнопка рядом с описанием. Использует title, category, price, city, characteristics, current draft, unit/MOQ.

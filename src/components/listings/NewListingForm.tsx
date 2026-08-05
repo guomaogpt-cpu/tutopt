@@ -4,11 +4,12 @@ import Link from "next/link";
 import type { ListingStatus, ListingUnit, ListingVertical } from "@prisma/client";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, useDeferredValue, type FormEvent } from "react";
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
 import { CreateListingSteps } from "@/components/listings/CreateListingSteps";
 import { CreateListingVerticalChooser } from "@/components/listings/CreateListingVerticalChooser";
 import { GenerateListingDescriptionButton } from "@/components/listings/GenerateListingDescriptionButton";
+import { ListingAutosuggestCard } from "@/components/listings/ListingAutosuggestCard";
 import { ListingCharacteristicsFields } from "@/components/listings/ListingCharacteristicsFields";
 import { ListingPostAsSelector } from "@/components/listings/ListingPostAsSelector";
 import { FormSection } from "@/components/listings/FormSection";
@@ -39,6 +40,13 @@ import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-con
 import type { CategoryItem } from "@/features/listings/types/category";
 import type { CreateListingInput } from "@/features/listings/validators/listing.validators";
 import { resolveListingCharacteristicFields } from "@/config/listing-characteristics";
+import {
+  applyCharacteristicSuggestions,
+  buildAutosuggestDismissKey,
+  getListingSuggestions,
+  type SuggestedCategory,
+  type SuggestedCharacteristic,
+} from "@/lib/listings/listing-autosuggest";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import {
   trackCreateListingStart,
@@ -193,6 +201,11 @@ export function NewListingForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openPickerId, setOpenPickerId] = useState<string | null>(null);
   const [createdListingId, setCreatedListingId] = useState<string | null>(null);
+  const [dismissedAutosuggestKeys, setDismissedAutosuggestKeys] = useState<string[]>([]);
+  const pendingCharacteristicSuggestionsRef = useRef<SuggestedCharacteristic[] | null>(
+    null,
+  );
+  const deferredTitle = useDeferredValue(title);
 
   const categoriesForVertical = useMemo(
     () => categories.filter((category) => category.vertical === vertical),
@@ -228,8 +241,121 @@ export function NewListingForm({
   );
 
   useEffect(() => {
-    setCharacteristicValues(buildEmptyCharacteristicValues(characteristicFields));
+    let next = buildEmptyCharacteristicValues(characteristicFields);
+    const pending = pendingCharacteristicSuggestionsRef.current;
+    if (pending && pending.length > 0) {
+      next = applyCharacteristicSuggestions(next, pending);
+      pendingCharacteristicSuggestionsRef.current = null;
+    }
+    setCharacteristicValues(next);
   }, [characteristicFields]);
+
+  const listingSuggestions = useMemo(() => {
+    if (!vertical || mode === "edit") {
+      return null;
+    }
+    return getListingSuggestions({
+      vertical,
+      title: deferredTitle,
+      categories,
+      currentCategoryId: categoryId || null,
+      currentCategorySlug: categorySlug || null,
+    });
+  }, [vertical, mode, deferredTitle, categories, categoryId, categorySlug]);
+
+  const primaryCategorySuggestion = listingSuggestions?.suggestedCategories[0] ?? null;
+
+  const categoryDismissKey = primaryCategorySuggestion
+    ? buildAutosuggestDismissKey({
+        title: deferredTitle,
+        categoryId: "",
+        kind: "category",
+        payload: primaryCategorySuggestion.categoryId,
+      })
+    : "";
+
+  const actionableCharacteristicSuggestions = useMemo(() => {
+    const items = listingSuggestions?.suggestedCharacteristics ?? [];
+    if (items.length === 0) {
+      return [];
+    }
+    if (!categoryId) {
+      return items;
+    }
+    return items.filter((item) => {
+      const current = characteristicValues[item.fieldId];
+      if (!current) {
+        return true;
+      }
+      if (current.kind === "text") {
+        return !current.text.trim();
+      }
+      if (current.kind === "single") {
+        return !current.optionId;
+      }
+      if (current.kind === "multi") {
+        return current.optionIds.length === 0;
+      }
+      return current.enabled === null;
+    });
+  }, [listingSuggestions, categoryId, characteristicValues]);
+
+  const characteristicsDismissKey =
+    actionableCharacteristicSuggestions.length > 0
+      ? buildAutosuggestDismissKey({
+          title: deferredTitle,
+          categoryId: categoryId || primaryCategorySuggestion?.categoryId || "",
+          kind: "characteristics",
+          payload: actionableCharacteristicSuggestions.map((item) => item.fieldId).join(","),
+        })
+      : "";
+
+  const showCategorySuggestion = Boolean(
+    primaryCategorySuggestion &&
+      categoryDismissKey &&
+      !dismissedAutosuggestKeys.includes(categoryDismissKey),
+  );
+
+  const showCharacteristicSuggestion = Boolean(
+    actionableCharacteristicSuggestions.length > 0 &&
+      characteristicsDismissKey &&
+      !dismissedAutosuggestKeys.includes(characteristicsDismissKey),
+  );
+
+  function dismissAutosuggest(key: string) {
+    if (!key) {
+      return;
+    }
+    setDismissedAutosuggestKeys((prev) =>
+      prev.includes(key) ? prev : [...prev, key].slice(-40),
+    );
+  }
+
+  function handleChooseSuggestedCategory(suggestion: SuggestedCategory) {
+    setCategoryId(suggestion.categoryId);
+    dismissAutosuggest(categoryDismissKey);
+  }
+
+  function handleApplySuggestedCharacteristics() {
+    if (actionableCharacteristicSuggestions.length === 0) {
+      return;
+    }
+
+    if (!categoryId && primaryCategorySuggestion) {
+      pendingCharacteristicSuggestionsRef.current = [
+        ...actionableCharacteristicSuggestions,
+      ];
+      setCategoryId(primaryCategorySuggestion.categoryId);
+      dismissAutosuggest(categoryDismissKey);
+      dismissAutosuggest(characteristicsDismissKey);
+      return;
+    }
+
+    setCharacteristicValues((prev) =>
+      applyCharacteristicSuggestions(prev, actionableCharacteristicSuggestions),
+    );
+    dismissAutosuggest(characteristicsDismissKey);
+  }
 
   const isDirty = useMemo(() => {
     if (mode === "edit") {
@@ -698,6 +824,22 @@ export function NewListingForm({
               </p>
               <FieldError message={titleError} />
             </div>
+
+            {mode === "create" ? (
+              <ListingAutosuggestCard
+                categorySuggestion={primaryCategorySuggestion}
+                characteristicSuggestions={actionableCharacteristicSuggestions}
+                showCategory={showCategorySuggestion}
+                showCharacteristics={showCharacteristicSuggestion}
+                onChooseCategory={handleChooseSuggestedCategory}
+                onApplyCharacteristics={handleApplySuggestedCharacteristics}
+                onDismissCategory={() => dismissAutosuggest(categoryDismissKey)}
+                onDismissCharacteristics={() =>
+                  dismissAutosuggest(characteristicsDismissKey)
+                }
+                disabled={isSubmitting}
+              />
+            ) : null}
 
             <div className="space-y-2">
               <label

@@ -216,6 +216,14 @@ const MARKET_CLOTHING_FIELDS: readonly CharacteristicFieldDef[] = [
     options: CONDITION_CLOTHING,
   },
   {
+    id: "brand",
+    label: "Бренд",
+    type: "text",
+    group: "additional",
+    placeholder: "Например: Nike",
+    maxLength: 40,
+  },
+  {
     id: "color",
     label: "Цвет",
     type: "text",
