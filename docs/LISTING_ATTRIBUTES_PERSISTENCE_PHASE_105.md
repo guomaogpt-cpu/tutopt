@@ -98,3 +98,7 @@ Vertical titles:
 - AI по фото / автозаполнение
 - i18n labels для field definitions
 - опциональная синхронизация с `ListingAttribute`
+
+## Phase 106 listing taxonomy equipment
+
+См. `docs/LISTING_TAXONOMY_EQUIPMENT_PHASE_106.md`. UI формы получил equipment taxonomy; subcategory пишется в `characteristics` + leaf `category_id`.

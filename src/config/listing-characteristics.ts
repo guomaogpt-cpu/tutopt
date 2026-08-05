@@ -1,33 +1,24 @@
 import type { ListingVertical } from "@prisma/client";
+import {
+  mergeEquipmentFields,
+  MARKET_EQUIPMENT_BASE_FIELDS,
+  MARKET_EQ_FOOD_EXTRA,
+  MARKET_EQ_HORECA_EXTRA,
+  MARKET_EQ_METAL_EXTRA,
+  MARKET_EQ_PACKAGING_EXTRA,
+  MARKET_EQ_PUMP_EXTRA,
+  MARKET_EQ_WAREHOUSE_EXTRA,
+} from "@/config/listing-characteristics-equipment";
+import type {
+  CharacteristicFieldDef,
+  CharacteristicOption,
+} from "@/config/listing-characteristics-types";
 
-export type CharacteristicFieldType =
-  | "text"
-  | "select"
-  | "chips"
-  | "number"
-  | "toggle";
-
-export type CharacteristicOption = {
-  id: string;
-  label: string;
-  /** When selected, show a free-text input for a custom value. */
-  isOther?: boolean;
-};
-
-export type CharacteristicFieldDef = {
-  id: string;
-  /** RU label for now; structure allows KG/EN later. */
-  label: string;
-  type: CharacteristicFieldType;
-  placeholder?: string;
-  options?: readonly CharacteristicOption[];
-  unit?: string;
-  required?: boolean;
-  group: "primary" | "additional";
-  /** Multi-select chips (default false = single). */
-  multiple?: boolean;
-  maxLength?: number;
-};
+export type {
+  CharacteristicFieldDef,
+  CharacteristicFieldType,
+  CharacteristicOption,
+} from "@/config/listing-characteristics-types";
 
 export type CharacteristicPreset = {
   id: string;
@@ -388,19 +379,27 @@ const MARKET_FALLBACK_FIELDS: readonly CharacteristicFieldDef[] = [
   },
   {
     id: "brand",
-    label: "Бренд/производитель",
+    label: "Производитель/бренд",
     type: "text",
     group: "primary",
-    placeholder: "Например: Samsung",
+    placeholder: "Например: производитель",
     maxLength: 60,
   },
   {
-    id: "size_model",
-    label: "Размер/модель",
+    id: "model",
+    label: "Модель",
     type: "text",
     group: "primary",
-    placeholder: "Модель или размер",
+    placeholder: "Модель или артикул",
     maxLength: 80,
+  },
+  {
+    id: "main_params",
+    label: "Основные параметры",
+    type: "text",
+    group: "primary",
+    placeholder: "Ключевые параметры товара",
+    maxLength: 120,
   },
   {
     id: "kit",
@@ -409,6 +408,16 @@ const MARKET_FALLBACK_FIELDS: readonly CharacteristicFieldDef[] = [
     group: "additional",
     placeholder: "Что входит в комплект",
     maxLength: 120,
+  },
+  {
+    id: "availability",
+    label: "Наличие",
+    type: "chips",
+    group: "additional",
+    options: [
+      { id: "in_stock", label: "В наличии" },
+      { id: "on_order", label: "Под заказ" },
+    ],
   },
 ];
 
@@ -734,8 +743,21 @@ export const LISTING_CHARACTERISTIC_PRESETS: readonly CharacteristicPreset[] = [
   {
     id: "market-electronics",
     vertical: "MARKET",
-    categorySlugExact: ["market-telefony-i-elektronika", "market-bytovaya-tehnika"],
+    categorySlugExact: [
+      "market-telefony-i-elektronika",
+      "market-telefony",
+      "market-noutbuki",
+      "market-televizory",
+      "market-elektronika-drugoe",
+    ],
+    categorySlugIncludes: ["market-telefony", "market-noutbuki"],
     fields: MARKET_ELECTRONICS_FIELDS,
+  },
+  {
+    id: "market-appliances",
+    vertical: "MARKET",
+    categorySlugExact: ["market-bytovaya-tehnika"],
+    fields: MARKET_FALLBACK_FIELDS,
   },
   {
     id: "market-clothing",
@@ -746,7 +768,12 @@ export const LISTING_CHARACTERISTIC_PRESETS: readonly CharacteristicPreset[] = [
   {
     id: "market-home",
     vertical: "MARKET",
-    categorySlugExact: ["market-dom-i-sad", "market-mebel"],
+    categorySlugExact: [
+      "market-dom-i-sad",
+      "market-mebel",
+      "market-sad-i-dacha",
+      "market-tovary-dlya-doma",
+    ],
     fields: MARKET_HOME_FIELDS,
   },
   {
@@ -761,6 +788,49 @@ export const LISTING_CHARACTERISTIC_PRESETS: readonly CharacteristicPreset[] = [
     categorySlugExact: ["market-nedvizhimost"],
     categorySlugIncludes: ["nedvizhimost"],
     fields: MARKET_REAL_ESTATE_FIELDS,
+  },
+  {
+    id: "market-eq-packaging",
+    vertical: "MARKET",
+    categorySlugExact: ["market-eq-upakovochnoe"],
+    fields: mergeEquipmentFields(MARKET_EQ_PACKAGING_EXTRA),
+  },
+  {
+    id: "market-eq-food",
+    vertical: "MARKET",
+    categorySlugExact: ["market-eq-pischevoe"],
+    fields: mergeEquipmentFields(MARKET_EQ_FOOD_EXTRA),
+  },
+  {
+    id: "market-eq-horeca",
+    vertical: "MARKET",
+    categorySlugExact: ["market-eq-horeca", "market-eq-holodilnoe"],
+    fields: mergeEquipmentFields(MARKET_EQ_HORECA_EXTRA),
+  },
+  {
+    id: "market-eq-metal",
+    vertical: "MARKET",
+    categorySlugExact: ["market-eq-metalloobrabotka", "market-eq-derevoobrabotka"],
+    fields: mergeEquipmentFields(MARKET_EQ_METAL_EXTRA),
+  },
+  {
+    id: "market-eq-warehouse",
+    vertical: "MARKET",
+    categorySlugExact: ["market-eq-skladskoe"],
+    fields: mergeEquipmentFields(MARKET_EQ_WAREHOUSE_EXTRA),
+  },
+  {
+    id: "market-eq-pumps",
+    vertical: "MARKET",
+    categorySlugExact: ["market-eq-nasosy"],
+    fields: mergeEquipmentFields(MARKET_EQ_PUMP_EXTRA),
+  },
+  {
+    id: "market-equipment",
+    vertical: "MARKET",
+    categorySlugExact: ["market-oborudovanie-i-stanki"],
+    categorySlugIncludes: ["market-eq-"],
+    fields: MARKET_EQUIPMENT_BASE_FIELDS,
   },
   {
     id: "market-fallback",

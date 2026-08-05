@@ -91,6 +91,7 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
         parent_id: true,
         icon: true,
         vertical: true,
+        sort_order: true,
       },
     }),
     prisma.city.findMany({

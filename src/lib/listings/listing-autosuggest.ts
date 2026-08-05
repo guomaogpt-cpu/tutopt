@@ -56,7 +56,7 @@ type CategoryRule = {
 
 const MARKET_CATEGORY_RULES: readonly CategoryRule[] = [
   {
-    slugs: ["market-telefony-i-elektronika", "market-bytovaya-tehnika"],
+    slugs: ["market-telefony-i-elektronika", "market-telefony"],
     keywords: [
       "телефон",
       "iphone",
@@ -128,16 +128,52 @@ const MARKET_CATEGORY_RULES: readonly CategoryRule[] = [
     weight: 9,
   },
   {
+    slugs: ["market-eq-upakovochnoe"],
+    keywords: ["фасовщик", "вакууматор", "упаковщик", "термоусадка", "упаковочное"],
+    confidence: "high",
+    weight: 14,
+  },
+  {
+    slugs: ["market-eq-metalloobrabotka"],
+    keywords: ["станок", "лазерный", "токарный", "фрезерный", "чпу", "металлообработка"],
+    confidence: "high",
+    weight: 14,
+  },
+  {
+    slugs: ["market-eq-pischevoe"],
+    keywords: ["пастеризатор", "пищевое оборудование", "тестомес"],
+    confidence: "high",
+    weight: 13,
+  },
+  {
+    slugs: ["market-eq-skladskoe"],
+    keywords: ["штабелер", "рохля", "погрузчик"],
+    confidence: "high",
+    weight: 13,
+  },
+  {
+    slugs: ["market-eq-nasosy"],
+    keywords: ["насос", "компрессор"],
+    confidence: "high",
+    weight: 12,
+  },
+  {
+    slugs: ["market-eq-horeca"],
+    keywords: ["кафе", "ресторан", "фритюрница", "кофемашина"],
+    confidence: "high",
+    weight: 12,
+  },
+  {
+    slugs: ["market-oborudovanie-i-stanki"],
+    keywords: ["оборудование", "аппарат", "линия"],
+    confidence: "medium",
+    weight: 9,
+  },
+  {
     slugs: ["market-nedvizhimost"],
     keywords: ["квартира", "дом", "участок", "офис", "аренда", "недвижимость", "комната"],
     confidence: "medium",
     weight: 8,
-  },
-  {
-    slugs: ["market-bytovaya-tehnika"],
-    keywords: ["станок", "оборудование", "аппарат", "компрессор", "насос"],
-    confidence: "low",
-    weight: 4,
   },
 ];
 

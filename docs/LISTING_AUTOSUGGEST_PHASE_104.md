@@ -75,3 +75,7 @@ Suggested but not applied **не** уходят в AI и **не** показыв
 ## Phase 105 listing attributes persistence
 
 См. `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`. Applied characteristics теперь сохраняются в `Listing.characteristics` JSON.
+
+## Phase 106 listing taxonomy equipment
+
+См. `docs/LISTING_TAXONOMY_EQUIPMENT_PHASE_106.md`. Autosuggest указывает на equipment subcategories.

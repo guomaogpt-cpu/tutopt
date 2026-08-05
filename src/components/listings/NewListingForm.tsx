@@ -222,6 +222,20 @@ export function NewListingForm({
     [categories, categoryId],
   );
 
+  const categoryPathLabel = useMemo(() => {
+    if (!categoryId) {
+      return "";
+    }
+    const path: string[] = [];
+    const byId = new Map(categories.map((item) => [item.id, item]));
+    let current = byId.get(categoryId);
+    while (current) {
+      path.unshift(current.name);
+      current = current.parent_id ? byId.get(current.parent_id) : undefined;
+    }
+    return path.join(" → ");
+  }, [categories, categoryId]);
+
   const categorySlug = useMemo(
     () => categories.find((category) => category.id === categoryId)?.slug ?? "",
     [categories, categoryId],
@@ -270,6 +284,26 @@ export function NewListingForm({
     () => characteristicValuesToPersisted(characteristicFields, characteristicValues),
     [characteristicFields, characteristicValues],
   );
+
+  const previewCharacteristics = useMemo(() => {
+    const items = [...persistedCharacteristics];
+    const pathParts = categoryPathLabel
+      .split(" → ")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (
+      pathParts.length >= 2 &&
+      !items.some((item) => item.id === "subcategory")
+    ) {
+      items.unshift({
+        id: "subcategory",
+        label: "Подкатегория",
+        value: pathParts[pathParts.length - 1] ?? "",
+        group: "main",
+      });
+    }
+    return items;
+  }, [persistedCharacteristics, categoryPathLabel]);
 
   const listingSuggestions = useMemo(() => {
     if (!vertical || mode === "edit") {
@@ -487,7 +521,7 @@ export function NewListingForm({
     try {
       const generated = await generateListingDescriptionRequest({
         vertical,
-        category: categoryLabel || null,
+        category: categoryPathLabel || categoryLabel || null,
         title: title.trim(),
         price: priceNegotiable ? null : price.trim() || null,
         currency: priceNegotiable ? null : currency,
@@ -610,6 +644,25 @@ export function NewListingForm({
       return;
     }
 
+    const characteristicsPayload = [...persistedCharacteristics];
+    const pathParts = categoryPathLabel
+      .split(" → ")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (pathParts.length >= 2) {
+      const alreadyHasSubcategory = characteristicsPayload.some(
+        (item) => item.id === "subcategory",
+      );
+      if (!alreadyHasSubcategory) {
+        characteristicsPayload.unshift({
+          id: "subcategory",
+          label: "Подкатегория",
+          value: pathParts[pathParts.length - 1] ?? "",
+          group: "main",
+        });
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -629,7 +682,7 @@ export function NewListingForm({
         posted_as_company:
           mode === "create" ? Boolean(postedAsCompany && companyProfile?.isConfigured) : undefined,
         characteristics:
-          persistedCharacteristics.length > 0 ? persistedCharacteristics : null,
+          characteristicsPayload.length > 0 ? characteristicsPayload : null,
         image_urls: serverImageUrls,
       };
       const result =
@@ -1203,7 +1256,7 @@ export function NewListingForm({
                   <dd className="line-clamp-1 text-right font-medium">
                     {t(VERTICAL_LABEL_KEY[vertical])}
                     {" · "}
-                    {categoryLabel || t("createListing.summaryNoCategory")}
+                    {categoryPathLabel || categoryLabel || t("createListing.summaryNoCategory")}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-3">
@@ -1247,13 +1300,13 @@ export function NewListingForm({
                     {imageUrls.length} {t("createListing.summaryPhotos")}
                   </dd>
                 </div>
-                {persistedCharacteristics.length > 0 ? (
+                {previewCharacteristics.length > 0 ? (
                   <div className="pt-1">
                     <dt className="text-slate-500 dark:text-slate-400">
                       {t("listingCharacteristics.previewTitle")}
                     </dt>
                     <dd className="mt-1 space-y-0.5 text-sm text-slate-700 dark:text-slate-200">
-                      {persistedCharacteristics.map((item) => (
+                      {previewCharacteristics.map((item) => (
                         <p key={item.id} className="break-words">
                           {item.label}:{" "}
                           {typeof item.value === "boolean"

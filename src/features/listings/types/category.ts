@@ -7,4 +7,5 @@ export type CategoryItem = {
   parent_id: string | null;
   icon?: string | null;
   vertical: ListingVertical;
+  sort_order?: number;
 };

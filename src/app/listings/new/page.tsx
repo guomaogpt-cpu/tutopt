@@ -66,6 +66,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
         parent_id: true,
         icon: true,
         vertical: true,
+        sort_order: true,
       },
     }),
     prisma.city.findMany({

@@ -1,17 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getCategoryPath, searchCategories } from "@/features/listings/lib/category-tree";
+import { getCategoryPath } from "@/features/listings/lib/category-tree";
 import {
   getCategoryEmoji,
+  getChildCategories,
   getDescendantIds,
   getRootCategories,
+  searchCategoriesWithSynonyms,
 } from "@/features/listings/lib/category-search";
 import type { CategoryItem } from "@/features/listings/types/category";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SearchInput } from "@/components/ui/search-input";
+import { cn } from "@/lib/utils";
 
 type CategoryPickerProps = {
   categories: CategoryItem[];
@@ -31,28 +34,41 @@ export function CategoryPicker({
   label = "Категория",
 }: CategoryPickerProps) {
   const roots = useMemo(() => getRootCategories(categories), [categories]);
-  const [selectedRootId, setSelectedRootId] = useState<string | null>(null);
+  const [selectedRootId, setSelectedRootId] = useState<string | null>(() => {
+    if (!value) {
+      return null;
+    }
+    const path = getCategoryPath(categories, value);
+    const root = categories.find(
+      (category) => category.parent_id === null && path[0] === category.name,
+    );
+    return root?.id ?? null;
+  });
   const [searchQuery, setSearchQuery] = useState("");
 
   const selectedPath = value ? getCategoryPath(categories, value).join(" → ") : "";
   const selectedRoot = roots.find((root) => root.id === selectedRootId);
+  const children = useMemo(
+    () => (selectedRootId ? getChildCategories(categories, selectedRootId) : []),
+    [categories, selectedRootId],
+  );
 
-  const searchResults = useMemo(() => {
+  const globalSearchResults = useMemo(() => {
     const normalized = searchQuery.trim();
     if (!normalized) {
       return [];
     }
+    return searchCategoriesWithSynonyms(categories, normalized);
+  }, [categories, searchQuery]);
 
-    const allResults = searchCategories(categories, normalized);
-
-    if (!selectedRootId) {
-      return allResults;
+  const scopedSearchResults = useMemo(() => {
+    if (!selectedRootId || !searchQuery.trim()) {
+      return [];
     }
-
     const scope = getDescendantIds(categories, selectedRootId);
-    const scoped = allResults.filter((result) => scope.has(result.id));
-    const rest = allResults.filter((result) => !scope.has(result.id));
-
+    const all = searchCategoriesWithSynonyms(categories, searchQuery);
+    const scoped = all.filter((result) => scope.has(result.id));
+    const rest = all.filter((result) => !scope.has(result.id));
     return [...scoped, ...rest].slice(0, 24);
   }, [categories, searchQuery, selectedRootId]);
 
@@ -71,6 +87,11 @@ export function CategoryPicker({
       return;
     }
     onChange("");
+  }
+
+  function selectCategory(categoryId: string) {
+    onChange(categoryId);
+    setSearchQuery("");
   }
 
   if (value) {
@@ -100,25 +121,72 @@ export function CategoryPicker({
       <p className="text-sm font-medium text-foreground">{label}</p>
 
       {!selectedRootId ? (
+        <SearchInput
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          onClear={() => setSearchQuery("")}
+          placeholder="Например: упаковочное оборудование, станок, холодильник, кафе, насос"
+          disabled={disabled}
+          containerClassName="w-full"
+          aria-label="Найти категорию"
+        />
+      ) : null}
+
+      {searchQuery.trim() && !selectedRootId ? (
+        <ul className="max-h-72 space-y-2 overflow-y-auto">
+          {globalSearchResults.length === 0 ? (
+            <li className="rounded-xl border bg-background px-4 py-6 text-center text-sm text-muted-foreground">
+              Категории не найдены. Попробуйте другой запрос.
+            </li>
+          ) : (
+            globalSearchResults.map((result) => (
+              <li key={result.id}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={disabled}
+                  onClick={() => selectCategory(result.id)}
+                  className="h-auto w-full justify-start px-4 py-3 text-left"
+                >
+                  <span>
+                    <span className="block font-medium">{result.label}</span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">{result.path}</span>
+                  </span>
+                </Button>
+              </li>
+            ))
+          )}
+        </ul>
+      ) : null}
+
+      {!selectedRootId && !searchQuery.trim() ? (
         <div className="animate-fade-in-up space-y-3">
-          <p className="text-sm text-muted-foreground">Шаг 1 — выберите основное направление</p>
+          <p className="text-sm text-muted-foreground">Выберите категорию</p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {roots.map((root) => (
-              <Button
-                key={root.id}
-                type="button"
-                variant="outline"
-                disabled={disabled}
-                onClick={() => handleRootSelect(root.id)}
-                className="h-auto min-w-0 flex-col gap-3 whitespace-normal px-3 py-4 text-center hover:border-primary/40 sm:px-4 sm:py-5"
-              >
-                <span className="text-3xl">{getCategoryEmoji(root)}</span>
-                <span className="break-words text-sm font-semibold leading-snug">{root.name}</span>
-              </Button>
-            ))}
+            {roots.map((root) => {
+              const isEquipment = root.slug.includes("oborudovanie");
+              return (
+                <Button
+                  key={root.id}
+                  type="button"
+                  variant="outline"
+                  disabled={disabled}
+                  onClick={() => handleRootSelect(root.id)}
+                  className={cn(
+                    "h-auto min-w-0 flex-col gap-3 whitespace-normal px-3 py-4 text-center hover:border-primary/40 sm:px-4 sm:py-5",
+                    isEquipment && "border-sky-300 bg-sky-50/80 dark:border-sky-800 dark:bg-sky-950/30",
+                  )}
+                >
+                  <span className="text-3xl">{getCategoryEmoji(root)}</span>
+                  <span className="break-words text-sm font-semibold leading-snug">{root.name}</span>
+                </Button>
+              );
+            })}
           </div>
         </div>
-      ) : (
+      ) : null}
+
+      {selectedRootId ? (
         <Card className="animate-fade-in-up bg-muted/20">
           <CardContent className="space-y-4 p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3">
@@ -126,7 +194,7 @@ export function CategoryPicker({
                 <span className="text-2xl">{getCategoryEmoji(selectedRoot ?? roots[0])}</span>
                 <div>
                   <Badge variant="secondary" className="mb-1">
-                    Шаг 2
+                    Подкатегория
                   </Badge>
                   <p className="font-semibold text-foreground">{selectedRoot?.name}</p>
                 </div>
@@ -149,33 +217,32 @@ export function CategoryPicker({
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               onClear={() => setSearchQuery("")}
-              placeholder="Начните вводить категорию..."
+              placeholder="Найти подкатегорию..."
               disabled={disabled}
               containerClassName="w-full"
             />
 
             {searchQuery.trim() ? (
               <ul className="max-h-72 space-y-2 overflow-y-auto">
-                {searchResults.length === 0 ? (
+                {scopedSearchResults.length === 0 ? (
                   <li className="rounded-xl border bg-background px-4 py-6 text-center text-sm text-muted-foreground">
-                    Категории не найдены. Попробуйте другой запрос.
+                    Подкатегории не найдены.
                   </li>
                 ) : (
-                  searchResults.map((result) => (
+                  scopedSearchResults.map((result) => (
                     <li key={result.id}>
                       <Button
                         type="button"
                         variant="outline"
                         disabled={disabled}
-                        onClick={() => {
-                          onChange(result.id);
-                          setSearchQuery("");
-                        }}
+                        onClick={() => selectCategory(result.id)}
                         className="h-auto w-full justify-start px-4 py-3 text-left"
                       >
                         <span>
                           <span className="block font-medium">{result.label}</span>
-                          <span className="mt-0.5 block text-xs text-muted-foreground">{result.path}</span>
+                          <span className="mt-0.5 block text-xs text-muted-foreground">
+                            {result.path}
+                          </span>
                         </span>
                       </Button>
                     </li>
@@ -183,14 +250,27 @@ export function CategoryPicker({
                 )}
               </ul>
             ) : (
-              <p className="rounded-xl border bg-background px-4 py-5 text-sm text-muted-foreground">
-                Введите название категории — например, «моющ», «цемент», «рис». Поиск работает по всей
-                базе категорий.
-              </p>
+              <div className="flex flex-wrap gap-2">
+                {children.map((child) => (
+                  <Button
+                    key={child.id}
+                    type="button"
+                    variant="outline"
+                    disabled={disabled}
+                    onClick={() => selectCategory(child.id)}
+                    className="h-11 rounded-xl px-3.5 text-sm font-medium"
+                  >
+                    {child.name}
+                  </Button>
+                ))}
+                {children.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Нет подкатегорий — выберите направление выше.</p>
+                ) : null}
+              </div>
             )}
           </CardContent>
         </Card>
-      )}
+      ) : null}
 
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </div>

@@ -103,3 +103,7 @@ Rule-based подсказки категории и характеристик �
 ## Phase 105 listing attributes persistence
 
 См. `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`. Applied characteristics сохраняются в `Listing.characteristics` JSON и отображаются на `/listings/[id]`.
+
+## Phase 106 listing taxonomy equipment
+
+См. `docs/LISTING_TAXONOMY_EQUIPMENT_PHASE_106.md`. Расширены market-категории и UI выбора подкатегорий оборудования.
