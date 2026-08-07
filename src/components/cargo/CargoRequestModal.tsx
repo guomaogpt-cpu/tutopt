@@ -41,7 +41,7 @@ export function CargoRequestModal({
           <DrawerTitle>{t("cargo.requestModalTitle")}</DrawerTitle>
           <DrawerDescription>{t("cargo.requestModalDescription")}</DrawerDescription>
         </DrawerHeader>
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-4 sm:px-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom)+var(--keyboard-inset,0px))] pt-4 sm:px-6">
           <CargoRequestForm
             key={formKey}
             variant="modal"

@@ -386,7 +386,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
   );
 
   return (
-    <main className="min-w-0 bg-[#F5F7FA] pb-[calc(4.25rem+env(safe-area-inset-bottom))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
+    <main className="min-w-0 bg-[#F5F7FA] pb-[calc(9rem+env(safe-area-inset-bottom)+var(--keyboard-inset,0px))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
       <ListingViewTracker listingId={listing.id} vertical={listing.vertical} />
       {listing.status === ListingStatus.PUBLISHED ? (
         <RecentlyViewedTracker

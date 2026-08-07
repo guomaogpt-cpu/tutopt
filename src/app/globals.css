@@ -50,6 +50,10 @@
 }
 
 @layer base {
+  :root {
+    --keyboard-inset: 0px;
+  }
+
   html {
     @apply overflow-x-clip;
   }
@@ -91,4 +95,12 @@
 
 .animate-scale-in {
   animation: scale-in 0.25s ease-out both;
+}
+
+@layer utilities {
+  @media (max-width: 767px) {
+    .mobile-scroll-target {
+      scroll-margin-bottom: calc(9rem + env(safe-area-inset-bottom) + var(--keyboard-inset, 0px));
+    }
+  }
 }

@@ -112,7 +112,7 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
 
   return (
     <AuthFormCard title={t("auth.loginTitle")} description={t("auth.loginDescription")}>
-      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-4 sm:space-y-5">
+      <form onSubmit={(event) => void handleSubmit(event)} autoComplete="on" className="min-w-0 space-y-4 sm:space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
         <AuthAlert variant="error" messages={errors.form} />
 
@@ -166,7 +166,7 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
           </Link>
         </div>
 
-        <button type="submit" disabled={isSubmitting} className={authButtonClassName}>
+        <button type="submit" disabled={isSubmitting} className={cn(authButtonClassName, "mobile-scroll-target")}>
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />

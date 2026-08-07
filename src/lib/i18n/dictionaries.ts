@@ -4795,6 +4795,11 @@ export const DICTIONARY = {
     kg: "Өчүрүү",
     en: "Delete",
   },
+  "listingForm.unsavedExitConfirm": {
+    ru: "Выйти без сохранения? Несохранённые данные будут потеряны.",
+    kg: "Сактабай чыгуу? Сакталбаган маалымат жоголот.",
+    en: "Leave without saving? Unsaved data will be lost.",
+  },
   "listingForm.publishPreview": {
     ru: "Проверка и публикация",
     kg: "Текшерүү жана жарыялоо",

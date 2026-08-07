@@ -105,3 +105,7 @@ Autosuggest по-прежнему **не применяет** suggestions авт
 - `src/components/listings/ListingFormDraftBanner.tsx`
 - `src/features/listings/lib/listing-characteristics.ts`
 - `src/features/listings/lib/listing-form-draft.ts`
+
+## Phase 111 Android manual QA polish
+
+См. `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md` — keyboard inset, sticky CTA offset, Capacitor back handler, unsaved form guard.

@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { MobileAppShell } from "@/components/mobile/MobileAppShell";
 import { PwaInstallPrompt } from "@/components/pwa/PwaInstallPrompt";
 import { PwaServiceWorkerRegister } from "@/components/pwa/PwaServiceWorkerRegister";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,7 @@ export function AppProviders({ children }: AppProvidersProps) {
       <LocaleProvider>
         <TooltipProvider delayDuration={300}>
           <PwaServiceWorkerRegister />
+          <MobileAppShell />
           {children}
           <PwaInstallPrompt />
         </TooltipProvider>

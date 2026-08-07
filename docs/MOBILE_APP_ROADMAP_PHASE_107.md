@@ -131,12 +131,14 @@ npx cap add ios
 | 107 ✅ | PWA manifest, icons, metadata, offline, install prompt, mobile polish |
 | 108 ✅ | Capacitor Android wrapper, production URL, icons/splash, docs |
 | 109 ✅ | Debug APK build scripts, install docs, manual test checklist |
-| 110 | Install APK on phone + pass manual checklist |
-| 111 | Release AAB + production signing |
-| 112 | Privacy Policy + Terms review/update |
-| 113 | Account deletion self-service |
-| 114 | Push notifications + Google Play submission |
-| 115 | Capacitor iOS wrapper |
+| 110 ✅ | Listing form stability: characteristics merge, draft autosave, AI guard |
+| 111 ✅ | Android manual QA polish: keyboard inset, back button, sticky CTA, form guard |
+| 112 | Real device QA pass + critical bug fixes from checklist |
+| 113 | Release AAB + production signing |
+| 114 | Privacy Policy + Terms review/update |
+| 115 | Account deletion self-service |
+| 116 | Push notifications + Google Play submission |
+| 117 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 
@@ -168,6 +170,7 @@ Next.js App Router с SSR потребует либо:
 
 ## Связанные документы
 
-- `docs/PWA_FOUNDATION_PHASE_107.md`
+- `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
+- `docs/ANDROID_FORM_STABILITY_PHASE_110.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

@@ -10,6 +10,7 @@ import { trackListingDetailAction } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { getVerticalTheme } from "@/lib/vertical-theme";
+import { mobileStickyBottomOffset } from "@/lib/mobile/mobile-viewport";
 import { cn } from "@/lib/utils";
 
 type ListingMobileStickyCtaProps = {
@@ -71,7 +72,7 @@ export function ListingMobileStickyCta({
         "dark:border-slate-800 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/90",
       )}
       style={{
-        bottom: "calc(5rem + env(safe-area-inset-bottom))",
+        bottom: mobileStickyBottomOffset(5),
       }}
     >
       <div className="mx-auto flex max-w-lg items-center gap-2">

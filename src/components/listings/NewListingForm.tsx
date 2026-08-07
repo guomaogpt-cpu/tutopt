@@ -60,6 +60,8 @@ import {
   type SuggestedCategory,
   type SuggestedCharacteristic,
 } from "@/lib/listings/listing-autosuggest";
+import { useMobileFormBackGuard } from "@/hooks/use-mobile-form-back-guard";
+import { mobileStickyBottomOffset } from "@/lib/mobile/mobile-viewport";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import {
   trackCreateListingStart,
@@ -619,6 +621,11 @@ export function NewListingForm({
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [isDirty, isSubmitting, createdListingId]);
+
+  useMobileFormBackGuard({
+    enabled: mode === "create" && isDirty && !isSubmitting && !createdListingId,
+    message: t("listingForm.unsavedExitConfirm"),
+  });
 
   function handleVerticalChange(nextVertical: ListingVertical) {
     const nextConfig = getVerticalFormConfig(nextVertical);
@@ -1555,7 +1562,7 @@ export function NewListingForm({
       {/* Sticky submit above bottom nav on mobile */}
       <div
         className="fixed inset-x-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 sm:hidden"
-        style={{ bottom: "calc(5rem + env(safe-area-inset-bottom))" }}
+        style={{ bottom: mobileStickyBottomOffset(5) }}
       >
         <Button
           type="submit"

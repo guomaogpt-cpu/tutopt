@@ -94,7 +94,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
 
   return (
     <AuthFormCard title={t("auth.createAccount")} description={t("auth.registerDescription")}>
-      <form onSubmit={(event) => void handleSubmit(event)} className="min-w-0 space-y-4 sm:space-y-5">
+      <form onSubmit={(event) => void handleSubmit(event)} autoComplete="on" className="min-w-0 space-y-4 sm:space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
         <AuthAlert variant="error" messages={errors.form} />
 
@@ -152,7 +152,7 @@ export function RegisterForm({ googleEnabled, isDev }: RegisterFormProps) {
         <button
           type="submit"
           disabled={isSubmitting || !phoneVerificationToken}
-          className={authButtonClassName}
+          className={cn(authButtonClassName, "mobile-scroll-target")}
         >
           {isSubmitting ? (
             <>

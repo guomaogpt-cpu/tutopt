@@ -105,7 +105,9 @@
 
 ## UX / ошибки
 
-- [ ] Input focus не ломает форму (keyboard не перекрывает submit)
+- [ ] **Phase 111:** sticky submit/CTA не перекрыты клавиатурой
+- [ ] **Phase 111:** Android Back закрывает modal/keyboard перед exit
+- [ ] **Phase 111:** confirm при выходе из формы с несохранёнными данными
 - [ ] Длинные списки категорий скроллятся нормально
 - [ ] Нет crash при rotation (portrait locked — expected)
 - [ ] External links (если есть) открываются в browser
@@ -142,5 +144,5 @@
 ## Связанные документы
 
 - `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md`
-- `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
-- `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
+- `docs/ANDROID_FORM_STABILITY_PHASE_110.md`
+- `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
