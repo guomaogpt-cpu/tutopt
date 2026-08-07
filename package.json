@@ -23,7 +23,8 @@
     "cap:open": "cap open android",
     "cap:copy": "cap copy android",
     "android:check": "bash scripts/check-android-prerequisites.sh",
-    "android:debug": "bash scripts/build-android-debug.sh"
+    "android:debug": "bash scripts/build-android-debug.sh",
+    "android:release": "bash scripts/build-android-release.sh"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

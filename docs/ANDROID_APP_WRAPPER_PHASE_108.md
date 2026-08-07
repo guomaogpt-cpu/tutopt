@@ -187,10 +187,24 @@ See `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md` and `docs/ANDROID_MANUAL_TEST_C
 
 **Android runtime manual test required** для: login, upload, AI button, Google OAuth, back button на modals.
 
+## Phase 113 Android release AAB preparation
+
+| Item | Value |
+|---|---|
+| versionName | `1.0.0` |
+| versionCode | `1` |
+| Release signing | `android/key.properties.example` + local keystore |
+| Release script | `npm run android:release` |
+| AAB output | `android/app/build/outputs/bundle/release/app-release.aab` |
+
+См. `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
+
 ## Связанные документы
 
 - `docs/PWA_FOUNDATION_PHASE_107.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
+- `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
 - `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md`
 - `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`

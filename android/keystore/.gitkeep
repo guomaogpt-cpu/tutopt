@@ -1,0 +1,7 @@
+# Release keystore directory
+#
+# Place your release keystore here locally, e.g.:
+#   vsetut-release.jks
+#
+# Do NOT commit *.jks or *.keystore files.
+# See docs/ANDROID_RELEASE_AAB_PHASE_113.md for keystore generation steps.

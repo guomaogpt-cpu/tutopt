@@ -134,11 +134,11 @@ npx cap add ios
 | 110 ✅ | Listing form stability: characteristics merge, draft autosave, AI guard |
 | 111 ✅ | Android manual QA polish: keyboard inset, back button, sticky CTA, form guard |
 | 112 ✅ | Real Android device QA prep: photo MIME fix, native Back guard; device retest pending |
-| 113 | Real device QA pass + critical bug fixes from checklist |
-| 114 | Release AAB + production signing |
-| 115 | Privacy Policy + Terms review/update |
-| 116 | Account deletion self-service |
-| 117 | Push notifications + Google Play submission |
+| 113 ✅ | Release AAB prep: signing docs, `android:release` script, Play blockers checklist |
+| 114 | Legal pages final + account deletion self-service |
+| 115 | Store assets + Play Console internal testing upload |
+| 116 | Production rollout (after QA + legal sign-off) |
+| 117 | Push notifications |
 | 118 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
@@ -172,6 +172,7 @@ Next.js App Router с SSR потребует либо:
 ## Связанные документы
 
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
-- `docs/ANDROID_FORM_STABILITY_PHASE_110.md`
+- `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
+- `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

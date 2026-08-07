@@ -139,19 +139,28 @@
 
 ## 11. Готовность к release AAB
 
-**Нет**
+**Partial** — process ready, signed artifact pending local keystore.
 
 Blockers:
-- [ ] Full manual pass on real Android device after Phase 112 deploy
+- [ ] Full manual pass on real Android device
 - [ ] Privacy Policy + Terms production-ready
 - [ ] Account deletion self-service
-- [ ] Signed release keystore + Play Console
+- [ ] Signed release keystore + signed AAB
+- [ ] Play Console (not in Phase 113)
+
+## Phase 113 Android release AAB preparation
+
+Release signing docs and `android:release` script added. See `docs/ANDROID_RELEASE_AAB_PHASE_113.md`.
+
+Unsigned AAB can be built locally via Gradle for size verification; Google Play requires signed AAB.
 
 ---
 
 ## Связанные документы
 
 - `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
+- `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
+- `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`
 - `docs/ANDROID_FORM_STABILITY_PHASE_110.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`

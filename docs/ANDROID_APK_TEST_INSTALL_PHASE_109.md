@@ -137,17 +137,27 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 ## 9. Что нужно для release build (позже)
 
-- Production keystore (`.jks`) — **не создавать в Phase 109**
-- `./gradlew bundleRelease` → AAB
-- Privacy Policy + Terms URLs
-- Account deletion flow
-- Google Play assets (icon 1024, screenshots, descriptions)
-- Data safety form
-- Manual test checklist passed
+См. **Phase 113** — `docs/ANDROID_RELEASE_AAB_PHASE_113.md`:
+
+- Production keystore (`.jks`) — создать **локально**, не коммитить
+- `npm run android:release` → signed AAB
+- Blockers: `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+
+## Phase 113 Android release AAB preparation
+
+| Item | Status |
+|---|---|
+| `android:release` script | ✅ |
+| `key.properties.example` | ✅ |
+| Keystore gitignore | ✅ |
+| Signed AAB (local) | ⏳ requires keystore |
+| Google Play upload | ❌ not in scope |
 
 ## Связанные документы
 
 - `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
+- `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
+- `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`
 - `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
