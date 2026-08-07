@@ -21,14 +21,29 @@ export const metadata: Metadata = {
     template: TITLE_TEMPLATE,
   },
   description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: [{ url: "/logos/vsetut-logo-new.png", type: "image/png" }],
-    apple: [{ url: "/logos/vsetut-logo-new.png" }],
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: SITE_NAME,
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
   },
   openGraph: {
     siteName: SITE_NAME,
     locale: "ru_KG",
     type: "website",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: "summary",
@@ -42,6 +57,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#2563eb" },
+    { media: "(prefers-color-scheme: dark)", color: "#1d4ed8" },
+  ],
 };
 
 export default function RootLayout({

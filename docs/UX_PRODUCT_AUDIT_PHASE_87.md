@@ -243,3 +243,14 @@ See `docs/COMPANY_PROFILES_MVP_PHASE_101.md`. Company cabinet + public showcase 
 
 See `docs/LISTING_CREATION_AI_PHASE_102.md`. Listing create UX simplified with step chips, characteristics, and optional OpenAI description helper.
 
+## Phase 107 PWA / mobile app foundation
+
+See `docs/PWA_FOUNDATION_PHASE_107.md` and `docs/MOBILE_APP_ROADMAP_PHASE_107.md`.
+
+- Web App Manifest, PWA icons, mobile metadata (`themeColor`, `appleWebApp`)
+- Minimal service worker + `/offline` fallback (no private API caching)
+- Install prompt: banner after interaction + card in `/account`
+- Bottom nav updated: Уведомления (`/notifications`) + Кабинет (`/account`)
+- Sticky CTA offset unified to 5rem; global `overflow-x-clip`
+- Capacitor / native wrapper deferred — roadmap documented
+

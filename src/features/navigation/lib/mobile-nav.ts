@@ -2,7 +2,7 @@ import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import { getAccountHomeHref } from "@/features/navigation/lib/account-home";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 
-export type MobileNavTabId = "home" | "search" | "post" | "favorites" | "profile";
+export type MobileNavTabId = "home" | "search" | "post" | "notifications" | "profile";
 
 export function getMobileProfileHref(user: HeaderUser | null): string {
   if (!user) {
@@ -17,8 +17,16 @@ export function getActiveMobileNavTab(pathname: string): MobileNavTabId | null {
     return "post";
   }
 
+  if (pathname === "/notifications" || pathname.startsWith("/notifications/")) {
+    return "notifications";
+  }
+
+  if (pathname === "/account/requests" || pathname.startsWith("/account/requests/")) {
+    return "notifications";
+  }
+
   if (pathname === "/favorites" || pathname.startsWith("/favorites/")) {
-    return "favorites";
+    return "profile";
   }
 
   if (
@@ -27,8 +35,7 @@ export function getActiveMobileNavTab(pathname: string): MobileNavTabId | null {
     pathname.startsWith("/seller") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/login") ||
-    pathname.startsWith("/register") ||
-    pathname.startsWith("/notifications")
+    pathname.startsWith("/register")
   ) {
     return "profile";
   }

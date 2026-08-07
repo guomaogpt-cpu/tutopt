@@ -71,7 +71,7 @@ export function ListingMobileStickyCta({
         "dark:border-slate-800 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/90",
       )}
       style={{
-        bottom: "calc(4rem + env(safe-area-inset-bottom))",
+        bottom: "calc(5rem + env(safe-area-inset-bottom))",
       }}
     >
       <div className="mx-auto flex max-w-lg items-center gap-2">

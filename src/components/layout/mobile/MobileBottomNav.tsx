@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, Home, PlusCircle, Search, User } from "lucide-react";
-import { getCreateListingHref, shouldShowCreateListingCTA } from "@/features/auth/lib/login-redirect";
+import { Bell, Home, PlusCircle, Search, User } from "lucide-react";
+import {
+  buildLoginUrl,
+  getCreateListingHref,
+  shouldShowCreateListingCTA,
+} from "@/features/auth/lib/login-redirect";
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import {
   getActiveMobileNavTab,
@@ -34,7 +38,7 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
   const { theme } = useRouteVerticalTheme();
   const activeTab = getActiveMobileNavTab(pathname);
   const unreadCount = useUnreadNotificationCount();
-  const showProfileBadge = Boolean(user) && unreadCount > 0;
+  const showNotificationsBadge = Boolean(user) && unreadCount > 0;
 
   const showPost = shouldShowCreateListingCTA(user);
 
@@ -63,10 +67,10 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
         ]
       : []),
     {
-      id: "favorites",
-      href: "/favorites",
-      labelKey: "mobileNav.favorites",
-      icon: Heart,
+      id: "notifications",
+      href: user ? "/notifications" : buildLoginUrl("/notifications"),
+      labelKey: "mobileNav.notifications",
+      icon: Bell,
     },
     {
       id: "profile",
@@ -138,7 +142,7 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
                     className={cn("size-5", isActive && "stroke-[2.25]")}
                     aria-hidden="true"
                   />
-                  {item.id === "profile" && showProfileBadge ? (
+                  {item.id === "notifications" && showNotificationsBadge ? (
                     <span
                       className={cn(
                         "absolute -right-1 -top-0.5 size-2 rounded-full ring-2 ring-white dark:ring-slate-950",

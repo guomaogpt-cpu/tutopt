@@ -5,6 +5,7 @@ import { AccountListingsSummary } from "@/components/account/AccountListingsSumm
 import { AccountMetaSummary } from "@/components/account/AccountMetaSummary";
 import { AccountPageHeader } from "@/components/account/AccountPageHeader";
 import { AccountQuickActions } from "@/components/account/AccountQuickActions";
+import { PwaInstallCard } from "@/components/pwa/PwaInstallCard";
 import { AccountRequestsSummary } from "@/components/account/AccountRequestsSummary";
 import { getAccountDashboardData } from "@/features/account/lib/account-dashboard-data";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
@@ -39,6 +40,7 @@ export default async function AccountPage() {
 
         <div className="space-y-4 sm:space-y-5">
           <AccountQuickActions />
+          <PwaInstallCard />
           <AccountMetaSummary
             favoritesCount={data.favoritesCount}
             unreadNotifications={data.unreadNotifications}

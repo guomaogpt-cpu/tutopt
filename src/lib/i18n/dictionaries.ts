@@ -19,16 +19,56 @@ export const DICTIONARY = {
   "mobileNav.home": { ru: "Главная", kg: "Башкы", en: "Home" },
   "mobileNav.search": { ru: "Поиск", kg: "Издөө", en: "Search" },
   "mobileNav.post": { ru: "Подать", kg: "Жарыя", en: "Post" },
+  "mobileNav.notifications": {
+    ru: "Уведомления",
+    kg: "Билдирүүлөр",
+    en: "Alerts",
+  },
   "mobileNav.favorites": {
     ru: "Избранное",
     kg: "Тандалгандар",
     en: "Favorites",
   },
-  "mobileNav.profile": { ru: "Профиль", kg: "Профиль", en: "Profile" },
+  "mobileNav.profile": { ru: "Кабинет", kg: "Кабинет", en: "Account" },
   "mobileSearch.placeholder": {
     ru: "Что ищем?",
     kg: "Эмне издейбиз?",
     en: "Search",
+  },
+
+  // PWA
+  "pwa.offline.title": {
+    ru: "Нет подключения",
+    kg: "Туташуу жок",
+    en: "No connection",
+  },
+  "pwa.offline.description": {
+    ru: "Проверьте интернет и попробуйте снова.",
+    kg: "Интернетти текшериңиз жана кайра аракет кылыңыз.",
+    en: "Check your internet connection and try again.",
+  },
+  "pwa.offline.retry": { ru: "Повторить", kg: "Кайра", en: "Retry" },
+  "pwa.install.title": {
+    ru: "Установить приложение",
+    kg: "Колдонмону орнотуу",
+    en: "Install app",
+  },
+  "pwa.install.description": {
+    ru: "Добавьте ВсеТут на главный экран для быстрого доступа.",
+    kg: "Тез жетүү үчүн ВсеТутту башкы экранга кошуңуз.",
+    en: "Add VseTut to your home screen for quick access.",
+  },
+  "pwa.install.action": { ru: "Установить", kg: "Орнотуу", en: "Install" },
+  "pwa.install.dismiss": { ru: "Закрыть", kg: "Жабуу", en: "Dismiss" },
+  "pwa.install.iosHint": {
+    ru: "На iPhone приложение можно добавить на главный экран.",
+    kg: "iPhone'до колдонмону башкы экранга кошсо болот.",
+    en: "On iPhone you can add the app to your home screen.",
+  },
+  "pwa.install.iosSteps": {
+    ru: "Нажмите «Поделиться» → «На экран Домой»",
+    kg: "«Бөлүшүү» → «Башкы экранга кошуу»",
+    en: "Tap Share → Add to Home Screen",
   },
 
   // Auth / header actions
