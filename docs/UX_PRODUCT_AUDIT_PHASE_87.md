@@ -263,3 +263,12 @@ See `docs/ANDROID_APP_WRAPPER_PHASE_108.md` and `docs/GOOGLE_PLAY_READINESS_CHEC
 - Launcher icons + splash from PWA assets
 - APK/AAB build and store submission — next phases
 
+## Phase 109 Android debug APK test
+
+See `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md` and `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`.
+
+- Build helper scripts + npm `android:check` / `android:debug`
+- Cap sync verified; config/secrets check ok
+- Debug APK build blocked in agent env (no JDK/Android SDK) — local build required
+- Manual phone test checklist ready
+

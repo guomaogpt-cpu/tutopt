@@ -159,6 +159,18 @@ package.json                 # cap:sync, cap:open scripts
 | `npm run cap:sync` | cap sync android |
 | `npm run cap:open` | open Android Studio |
 | `npm run cap:copy` | cap copy android |
+| `npm run android:check` | check JDK + Android SDK |
+| `npm run android:debug` | build debug APK |
+
+## Phase 109 — Debug APK test prep
+
+See `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md` and `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`.
+
+- Build scripts: `scripts/check-android-prerequisites.sh`, `scripts/build-android-debug.sh`
+- Expected APK: `android/app/build/outputs/apk/debug/app-debug.apk`
+- Debug build only — no release signing
+- Agent environment: JDK + Android SDK not available → **manual local build required**
+- After build: install on phone + pass manual checklist
 
 ## Web routes — logical check
 
@@ -180,3 +192,5 @@ package.json                 # cap:sync, cap:open scripts
 - `docs/PWA_FOUNDATION_PHASE_107.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
+- `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md`
+- `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`

@@ -130,12 +130,13 @@ npx cap add ios
 |---|---|
 | 107 ✅ | PWA manifest, icons, metadata, offline, install prompt, mobile polish |
 | 108 ✅ | Capacitor Android wrapper, production URL, icons/splash, docs |
-| 109 | Signed AAB + Android manual test |
-| 110 | Privacy Policy + Terms review/update |
-| 111 | Account deletion self-service |
-| 112 | Push notifications |
-| 113 | Google Play submission |
-| 114 | Capacitor iOS wrapper |
+| 109 ✅ | Debug APK build scripts, install docs, manual test checklist |
+| 110 | Install APK on phone + pass manual checklist |
+| 111 | Release AAB + production signing |
+| 112 | Privacy Policy + Terms review/update |
+| 113 | Account deletion self-service |
+| 114 | Push notifications + Google Play submission |
+| 115 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 

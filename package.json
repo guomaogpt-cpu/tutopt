@@ -21,7 +21,9 @@
     "smoke": "node scripts/smoke-urls.mjs",
     "cap:sync": "cap sync android",
     "cap:open": "cap open android",
-    "cap:copy": "cap copy android"
+    "cap:copy": "cap copy android",
+    "android:check": "bash scripts/check-android-prerequisites.sh",
+    "android:debug": "bash scripts/build-android-debug.sh"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
