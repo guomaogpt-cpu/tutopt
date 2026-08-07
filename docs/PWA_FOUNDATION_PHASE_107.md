@@ -121,18 +121,25 @@ Active state: `/account/requests` → tab «Уведомления».
 - SW не кэширует динамические listing pages агрессивно
 - iOS install только через manual «Add to Home Screen»
 - Maskable icon — техническая, не финальный бренд
-- Capacitor не установлен
+- Capacitor Android wrapper добавлен в Phase 108 (remote URL mode)
 - Push notifications не реализованы
 
 ## 11. Что осталось для native app
 
 См. `docs/MOBILE_APP_ROADMAP_PHASE_107.md`:
 
-- Android wrapper (Capacitor)
+- ~~Android wrapper (Capacitor)~~ ✅ Phase 108 foundation
+- Signed AAB + Android manual test
 - iOS wrapper
 - Push notifications
 - Store assets (privacy, terms, account deletion, screenshots)
-- Final brand icons / splash screens
+- Final brand icons / splash screens for Google Play
+
+## Phase 108 Android wrapper
+
+Capacitor Android project added in Phase 108. See `docs/ANDROID_APP_WRAPPER_PHASE_108.md`.
+
+PWA layer (manifest, SW, install prompt) remains compatible — Android wrapper loads the same production URL where PWA features are served.
 
 ## Связанные файлы
 

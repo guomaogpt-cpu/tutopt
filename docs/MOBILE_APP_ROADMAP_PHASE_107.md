@@ -14,18 +14,26 @@
 - React Native потребовал бы полный rewrite UI + API layer
 - PWA + Capacitor даёт 80% native feel при 20% effort
 
-## 3. Android через Capacitor позже
+## 3. Android через Capacitor
 
-**Этап 2 (после стабилизации PWA):**
+**Этап 2 — ✅ Phase 108 foundation:**
 
-```text
-npm install @capacitor/core @capacitor/cli @capacitor/android
-npx cap init
-npx cap add android
-npx cap sync
-```
+- Capacitor Android project в `android/`
+- Remote production URL: `https://tutopt-production.up.railway.app`
+- App id: `kg.vsetut.app`, name: ВсеТут
+- Permissions: INTERNET only
+- Icons/splash из Phase 107 PWA assets
+- См. `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
 
-**Рекомендуемые параметры:**
+**Следующий шаг (Phase 109+):**
+
+- Signed AAB build
+- Android manual test on device
+- Google Play assets + submission prep
+
+**TWA alternative:** для Google Play review можно позже рассмотреть Trusted Web Activity + Digital Asset Links, если Capacitor wrapper вызовет вопросы.
+
+**Рекомендуемые параметры (historical):**
 
 | Параметр | Значение |
 |---|---|
@@ -121,12 +129,13 @@ npx cap add ios
 | Phase | Scope |
 |---|---|
 | 107 ✅ | PWA manifest, icons, metadata, offline, install prompt, mobile polish |
-| 108 | Privacy Policy + Terms pages |
-| 109 | Account deletion self-service |
-| 110 | Capacitor Android wrapper + internal testing |
-| 111 | Push notifications |
-| 112 | Capacitor iOS wrapper |
-| 113 | Store assets + submission |
+| 108 ✅ | Capacitor Android wrapper, production URL, icons/splash, docs |
+| 109 | Signed AAB + Android manual test |
+| 110 | Privacy Policy + Terms review/update |
+| 111 | Account deletion self-service |
+| 112 | Push notifications |
+| 113 | Google Play submission |
+| 114 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 

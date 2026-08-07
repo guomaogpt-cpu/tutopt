@@ -254,3 +254,12 @@ See `docs/PWA_FOUNDATION_PHASE_107.md` and `docs/MOBILE_APP_ROADMAP_PHASE_107.md
 - Sticky CTA offset unified to 5rem; global `overflow-x-clip`
 - Capacitor / native wrapper deferred — roadmap documented
 
+## Phase 108 Android wrapper foundation
+
+See `docs/ANDROID_APP_WRAPPER_PHASE_108.md` and `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`.
+
+- Capacitor Android wrapper with production URL
+- App id `kg.vsetut.app`, portrait, INTERNET-only permissions
+- Launcher icons + splash from PWA assets
+- APK/AAB build and store submission — next phases
+
