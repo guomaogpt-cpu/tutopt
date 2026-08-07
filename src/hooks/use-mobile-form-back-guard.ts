@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Capacitor } from "@capacitor/core";
+import { setMobileBackGuard } from "@/lib/mobile/mobile-back-guard";
 
 type UseMobileFormBackGuardOptions = {
   enabled: boolean;
@@ -16,7 +18,15 @@ export function useMobileFormBackGuard({
   useEffect(() => {
     if (!enabled || typeof window === "undefined") {
       armedRef.current = false;
+      setMobileBackGuard(null);
       return;
+    }
+
+    if (Capacitor.isNativePlatform()) {
+      setMobileBackGuard({ message });
+      return () => {
+        setMobileBackGuard(null);
+      };
     }
 
     if (!armedRef.current) {

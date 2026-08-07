@@ -3,10 +3,12 @@ import path from "path";
 import { randomBytes } from "crypto";
 import { buildCargoRequestImagePublicUrl } from "@/features/cargo/lib/cargo-request-image-url";
 import type { UploadFileLike } from "@/features/listings/lib/upload-file-like";
+import { getUploadOriginalName } from "@/features/listings/lib/upload-file-like";
 import {
   detectListingImageMime,
   validateListingImageFile,
 } from "@/features/listings/lib/save-upload";
+import { normalizeClientImageMime } from "@/lib/uploads/image-file-validation";
 import { getUploadRootDir } from "@/features/listings/lib/upload-paths";
 
 const ALLOWED_MIME_TYPES = new Map<string, string>([
@@ -35,7 +37,8 @@ export async function saveCargoRequestImageFile(file: UploadFileLike): Promise<{
     throw new Error("Only JPG, PNG and WEBP images are allowed");
   }
 
-  if (detectedMime !== file.type) {
+  const clientMime = normalizeClientImageMime(file.type, getUploadOriginalName(file));
+  if (clientMime && detectedMime !== clientMime) {
     throw new Error("File content does not match the declared image type");
   }
 

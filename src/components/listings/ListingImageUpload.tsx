@@ -9,9 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import {
+  IMAGE_PICKER_ACCEPT,
+  isAllowedImagePickerFile,
+} from "@/lib/uploads/image-file-validation";
 
 const MAX_IMAGES = 10;
-const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 type ListingImageUploadProps = {
   value: string[];
@@ -93,7 +96,7 @@ export function ListingImageUpload({
 
     try {
       for (const file of files) {
-        if (!ACCEPTED_TYPES.includes(file.type)) {
+        if (!isAllowedImagePickerFile(file)) {
           throw new Error("JPG, PNG, WEBP");
         }
 
@@ -164,7 +167,7 @@ export function ListingImageUpload({
     setIsDragOver(false);
 
     const files = Array.from(event.dataTransfer.files).filter((file) =>
-      ACCEPTED_TYPES.includes(file.type),
+      isAllowedImagePickerFile(file),
     );
 
     await uploadFiles(files);
@@ -344,7 +347,7 @@ export function ListingImageUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept={IMAGE_PICKER_ACCEPT}
         multiple
         className="hidden"
         onChange={(event) => void handleFilesSelected(event.target.files)}

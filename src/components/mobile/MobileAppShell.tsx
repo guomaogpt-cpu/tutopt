@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { App } from "@capacitor/app";
+import { confirmMobileBackGuard } from "@/lib/mobile/mobile-back-guard";
 import {
   blurActiveField,
   closeTopmostOverlay,
@@ -23,6 +24,10 @@ export function MobileAppShell() {
       }
 
       if (blurActiveField()) {
+        return;
+      }
+
+      if (!confirmMobileBackGuard()) {
         return;
       }
 

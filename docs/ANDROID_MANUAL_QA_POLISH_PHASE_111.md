@@ -42,7 +42,15 @@ Phase 111 polish (keyboard/back/sticky) попадёт в Android app после
 | Unsaved form guard | Code review: `useMobileFormBackGuard` | ✅ fixed in Phase 111 |
 | Listing detail sticky CTA | Code review: extra bottom padding | ✅ fixed in Phase 111 |
 | Cargo modal keyboard | Code review: drawer bottom padding | ✅ fixed in Phase 111 |
-| Real device APK flows | — | ⏳ requires manual retest |
+| Real device APK flows | Phase 112 — photo MIME + native Back guard fixes | ⏳ requires manual retest on phone |
+
+## Phase 112 real Android device QA
+
+См. `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`:
+- Phase 111 deploy verified (`a01c315`, `keyboard-inset` in production)
+- Fixed Android gallery empty MIME upload rejection (client + server)
+- Fixed Capacitor hardware Back + unsaved form confirm (native guard registry)
+- Full APK manual pass still required on physical device
 
 ---
 

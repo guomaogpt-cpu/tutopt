@@ -31,6 +31,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
+import { IMAGE_PICKER_ACCEPT } from "@/lib/uploads/image-file-validation";
 
 const fieldClassName =
   "h-11 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
@@ -499,7 +500,7 @@ export function CargoRequestForm({
             id="cargo-photo"
             name="itemPhoto"
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept={IMAGE_PICKER_ACCEPT}
             onChange={handlePhotoChange}
             disabled={isUploading || isPending}
             className={cn(fieldClassName, "h-auto py-2 file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-orange-700 dark:file:bg-slate-800 dark:file:text-orange-300")}

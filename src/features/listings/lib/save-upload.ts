@@ -2,6 +2,8 @@ import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { randomBytes } from "crypto";
 import type { UploadFileLike } from "@/features/listings/lib/upload-file-like";
+import { getUploadOriginalName } from "@/features/listings/lib/upload-file-like";
+import { normalizeClientImageMime } from "@/lib/uploads/image-file-validation";
 import { buildListingImagePublicUrl } from "@/features/listings/lib/listing-image-url";
 import { getListingUploadDir } from "@/features/listings/lib/upload-paths";
 
@@ -14,7 +16,8 @@ const ALLOWED_MIME_TYPES = new Map<string, string>([
 ]);
 
 export function validateListingImageFile(file: UploadFileLike): void {
-  if (!ALLOWED_MIME_TYPES.has(file.type)) {
+  const normalizedType = normalizeClientImageMime(file.type, getUploadOriginalName(file));
+  if (normalizedType && !ALLOWED_MIME_TYPES.has(normalizedType)) {
     throw new Error("Only JPG, PNG and WEBP images are allowed");
   }
 
@@ -75,7 +78,8 @@ export async function saveListingImageFile(file: UploadFileLike): Promise<{
     throw new Error("Only JPG, PNG and WEBP images are allowed");
   }
 
-  if (detectedMime !== file.type) {
+  const clientMime = normalizeClientImageMime(file.type, getUploadOriginalName(file));
+  if (clientMime && detectedMime !== clientMime) {
     throw new Error("File content does not match the declared image type");
   }
 

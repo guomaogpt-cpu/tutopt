@@ -107,7 +107,8 @@
 
 - [ ] **Phase 111:** sticky submit/CTA не перекрыты клавиатурой
 - [ ] **Phase 111:** Android Back закрывает modal/keyboard перед exit
-- [ ] **Phase 111:** confirm при выходе из формы с несохранёнными данными
+- [ ] **Phase 112:** gallery photo upload works (empty MIME from Android)
+- [ ] **Phase 112:** hardware Back shows single confirm on unsaved listing form
 - [ ] Длинные списки категорий скроллятся нормально
 - [ ] Нет crash при rotation (portrait locked — expected)
 - [ ] External links (если есть) открываются в browser
@@ -145,4 +146,4 @@
 
 - `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md`
 - `docs/ANDROID_FORM_STABILITY_PHASE_110.md`
-- `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
+- `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
