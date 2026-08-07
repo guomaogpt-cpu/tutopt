@@ -95,6 +95,41 @@ export function buildEmptyCharacteristicValues(
   return next;
 }
 
+export function isCharacteristicValueEmpty(
+  value: CharacteristicFieldValue | undefined,
+): boolean {
+  if (!value) {
+    return true;
+  }
+  if (value.kind === "text") {
+    return !value.text.trim();
+  }
+  if (value.kind === "single") {
+    return !value.optionId;
+  }
+  if (value.kind === "multi") {
+    return value.optionIds.length === 0;
+  }
+  return value.enabled === null;
+}
+
+/** Keep filled characteristic values when the field preset changes (e.g. subcategory). */
+export function mergeCharacteristicValuesForFields(
+  fields: readonly CharacteristicFieldDef[],
+  previous: CharacteristicValuesState,
+): CharacteristicValuesState {
+  const next: CharacteristicValuesState = {};
+  for (const field of fields) {
+    const prev = previous[field.id];
+    if (prev && !isCharacteristicValueEmpty(prev)) {
+      next[field.id] = prev;
+    } else {
+      next[field.id] = emptyCharacteristicValue(field);
+    }
+  }
+  return next;
+}
+
 /**
  * Convert structured form values into label/value pairs for AI + description.
  * Skips empty values. Does not invent data.

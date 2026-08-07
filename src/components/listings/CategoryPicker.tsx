@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getCategoryPath } from "@/features/listings/lib/category-tree";
 import {
   getCategoryEmoji,
@@ -45,6 +45,19 @@ export function CategoryPicker({
     return root?.id ?? null;
   });
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    if (!value) {
+      setSelectedRootId(null);
+      return;
+    }
+
+    const path = getCategoryPath(categories, value);
+    const root = categories.find(
+      (category) => category.parent_id === null && path[0] === category.name,
+    );
+    setSelectedRootId(root?.id ?? null);
+  }, [categories, value]);
 
   const selectedPath = value ? getCategoryPath(categories, value).join(" → ") : "";
   const selectedRoot = roots.find((root) => root.id === selectedRootId);

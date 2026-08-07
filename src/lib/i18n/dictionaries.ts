@@ -4770,6 +4770,31 @@ export const DICTIONARY = {
     kg: "Жарыялоодон мурун сүрөттөмөнү текшериңиз.",
     en: "Review the description before publishing.",
   },
+  "listingForm.aiKeptExistingDescription": {
+    ru: "Описание уже заполнено — AI не перезаписал текст.",
+    kg: "Сүрөттөмө толук — AI текстти алмаштырган жок.",
+    en: "Description already filled — AI did not overwrite your text.",
+  },
+  "listingForm.draft.found": {
+    ru: "Найден черновик объявления",
+    kg: "Жарыя черновиги табылды",
+    en: "Listing draft found",
+  },
+  "listingForm.draft.description": {
+    ru: "Можно восстановить ранее введённые данные.",
+    kg: "Мурунтуу киргизилген маалыматты калыбына келтирсе болот.",
+    en: "You can restore previously entered data.",
+  },
+  "listingForm.draft.restore": {
+    ru: "Восстановить",
+    kg: "Калыбына келтирүү",
+    en: "Restore",
+  },
+  "listingForm.draft.dismiss": {
+    ru: "Удалить",
+    kg: "Өчүрүү",
+    en: "Delete",
+  },
   "listingForm.publishPreview": {
     ru: "Проверка и публикация",
     kg: "Текшерүү жана жарыялоо",

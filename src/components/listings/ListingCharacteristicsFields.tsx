@@ -5,7 +5,6 @@ import {
   type CharacteristicFieldDef,
 } from "@/config/listing-characteristics";
 import {
-  emptyCharacteristicValue,
   fieldShowsOtherInput,
   type CharacteristicFieldValue,
   type CharacteristicValuesState,
@@ -26,7 +25,11 @@ import { cn } from "@/lib/utils";
 type ListingCharacteristicsFieldsProps = {
   fields: readonly CharacteristicFieldDef[];
   values: CharacteristicValuesState;
-  onChange: (values: CharacteristicValuesState) => void;
+  onChange: (
+    updater:
+      | CharacteristicValuesState
+      | ((previous: CharacteristicValuesState) => CharacteristicValuesState),
+  ) => void;
   disabled?: boolean;
 };
 
@@ -427,9 +430,7 @@ export function ListingCharacteristicsFields({
   const otherPlaceholder = t("listingCharacteristics.otherPlaceholder");
 
   function handleFieldChange(field: CharacteristicFieldDef, next: CharacteristicFieldValue) {
-    const ensured = values[field.id] ?? emptyCharacteristicValue(field);
-    void ensured;
-    onChange(updateField(values, field.id, next));
+    onChange((previous) => updateField(previous, field.id, next));
   }
 
   return (

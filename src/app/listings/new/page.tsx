@@ -114,6 +114,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
             initialCategoryId={categoryParam}
             companyProfile={companyProfile}
             aiEnabled
+            draftUserId={user.id}
           />
         )}
       </Container>

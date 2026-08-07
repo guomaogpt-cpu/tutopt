@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState, useDeferredValue, type FormEvent 
 import { CategoryPicker } from "@/components/listings/CategoryPicker";
 import { CreateListingSteps } from "@/components/listings/CreateListingSteps";
 import { CreateListingVerticalChooser } from "@/components/listings/CreateListingVerticalChooser";
+import { ListingFormDraftBanner } from "@/components/listings/ListingFormDraftBanner";
 import { GenerateListingDescriptionButton } from "@/components/listings/GenerateListingDescriptionButton";
 import { ListingAutosuggestCard } from "@/components/listings/ListingAutosuggestCard";
 import { ListingCharacteristicsFields } from "@/components/listings/ListingCharacteristicsFields";
@@ -30,13 +31,22 @@ import {
   generateListingDescriptionRequest,
 } from "@/features/listings/lib/generate-description-client";
 import {
-  buildEmptyCharacteristicValues,
   characteristicValuesToPairs,
   characteristicValuesToPersisted,
   characteristicValuesToText,
   hydrateCharacteristicValues,
+  mergeCharacteristicValuesForFields,
   type CharacteristicValuesState,
 } from "@/features/listings/lib/listing-characteristics";
+import {
+  clearListingFormDraft,
+  LISTING_FORM_DRAFT_DEBOUNCE_MS,
+  LISTING_FORM_DRAFT_VERSION,
+  listingFormDraftHasContent,
+  readListingFormDraft,
+  writeListingFormDraft,
+  type ListingFormDraft,
+} from "@/features/listings/lib/listing-form-draft";
 import { mergeListingDescriptionParts } from "@/features/listings/lib/merge-listing-description";
 import { getVerticalFormConfig } from "@/features/listings/lib/vertical-form-config";
 import type { CategoryItem } from "@/features/listings/types/category";
@@ -88,6 +98,7 @@ type NewListingFormProps = {
     companyName: string;
   } | null;
   aiEnabled?: boolean;
+  draftUserId?: string;
 };
 
 export type ListingFormInitialValues = {
@@ -158,6 +169,7 @@ export function NewListingForm({
   cancelHref = "/account/listings",
   companyProfile = null,
   aiEnabled = false,
+  draftUserId,
 }: NewListingFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -206,6 +218,9 @@ export function NewListingForm({
   const [openPickerId, setOpenPickerId] = useState<string | null>(null);
   const [createdListingId, setCreatedListingId] = useState<string | null>(null);
   const [dismissedAutosuggestKeys, setDismissedAutosuggestKeys] = useState<string[]>([]);
+  const [storedDraft, setStoredDraft] = useState<ListingFormDraft | null>(null);
+  const [showDraftBanner, setShowDraftBanner] = useState(false);
+  const draftLoadedRef = useRef(false);
   const pendingCharacteristicSuggestionsRef = useRef<SuggestedCharacteristic[] | null>(
     null,
   );
@@ -249,6 +264,11 @@ export function NewListingForm({
     [vertical, categoryId, categorySlug],
   );
 
+  const characteristicFieldsSignature = useMemo(
+    () => characteristicFields.map((field) => `${field.id}:${field.group}`).join("|"),
+    [characteristicFields],
+  );
+
   const characteristicPairs = useMemo(
     () => characteristicValuesToPairs(characteristicFields, characteristicValues),
     [characteristicFields, characteristicValues],
@@ -260,25 +280,152 @@ export function NewListingForm({
   );
 
   useEffect(() => {
-    let next = buildEmptyCharacteristicValues(characteristicFields);
-    const pending = pendingCharacteristicSuggestionsRef.current;
-    if (pending && pending.length > 0) {
-      next = applyCharacteristicSuggestions(next, pending);
-      pendingCharacteristicSuggestionsRef.current = null;
-    } else if (
-      !hasHydratedCharacteristicsRef.current &&
-      mode === "edit" &&
-      characteristicFields.length > 0 &&
-      (initialValues?.characteristics?.length ?? 0) > 0
-    ) {
-      next = hydrateCharacteristicValues(
-        characteristicFields,
-        initialValues?.characteristics ?? [],
-      );
-      hasHydratedCharacteristicsRef.current = true;
+    setCharacteristicValues((previous) => {
+      let next = mergeCharacteristicValuesForFields(characteristicFields, previous);
+
+      const pending = pendingCharacteristicSuggestionsRef.current;
+      if (pending && pending.length > 0) {
+        next = applyCharacteristicSuggestions(next, pending);
+        pendingCharacteristicSuggestionsRef.current = null;
+      } else if (
+        !hasHydratedCharacteristicsRef.current &&
+        mode === "edit" &&
+        characteristicFields.length > 0 &&
+        (initialValues?.characteristics?.length ?? 0) > 0
+      ) {
+        next = hydrateCharacteristicValues(
+          characteristicFields,
+          initialValues?.characteristics ?? [],
+        );
+        hasHydratedCharacteristicsRef.current = true;
+      }
+
+      return next;
+    });
+  }, [characteristicFieldsSignature, characteristicFields, mode, initialValues?.characteristics]);
+
+  useEffect(() => {
+    if (mode !== "create" || !draftUserId || draftLoadedRef.current) {
+      return;
     }
-    setCharacteristicValues(next);
-  }, [characteristicFields, mode, initialValues?.characteristics]);
+
+    draftLoadedRef.current = true;
+    const draft = readListingFormDraft(draftUserId);
+    if (draft && listingFormDraftHasContent(draft)) {
+      setStoredDraft(draft);
+      setShowDraftBanner(true);
+    }
+  }, [draftUserId, mode]);
+
+  useEffect(() => {
+    if (
+      mode !== "create" ||
+      !draftUserId ||
+      !vertical ||
+      showDraftBanner ||
+      isSubmitting ||
+      createdListingId
+    ) {
+      return;
+    }
+
+    const hasDraftContent = Boolean(
+      title.trim() ||
+        description.trim() ||
+        categoryId ||
+        cityId ||
+        price.trim() ||
+        imageUrls.length > 0,
+    );
+
+    if (!hasDraftContent) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      writeListingFormDraft(draftUserId, {
+        version: LISTING_FORM_DRAFT_VERSION,
+        savedAt: new Date().toISOString(),
+        vertical,
+        categoryId,
+        title,
+        description,
+        price,
+        currency,
+        moq,
+        unit,
+        cityId,
+        brandId,
+        stockQuantity,
+        priceNegotiable,
+        postedAsCompany,
+        imageUrls: imageUrls.filter(
+          (url) =>
+            url.startsWith("/api/uploads/listings/") || url.startsWith("/uploads/listings/"),
+        ),
+        characteristicValues,
+        dismissedAutosuggestKeys,
+      });
+    }, LISTING_FORM_DRAFT_DEBOUNCE_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [
+    mode,
+    draftUserId,
+    vertical,
+    showDraftBanner,
+    isSubmitting,
+    createdListingId,
+    categoryId,
+    title,
+    description,
+    price,
+    currency,
+    moq,
+    unit,
+    cityId,
+    brandId,
+    stockQuantity,
+    priceNegotiable,
+    postedAsCompany,
+    imageUrls,
+    characteristicValues,
+    dismissedAutosuggestKeys,
+  ]);
+
+  function restoreListingDraft() {
+    if (!storedDraft) {
+      return;
+    }
+
+    setVertical(storedDraft.vertical);
+    setCategoryId(storedDraft.categoryId);
+    setTitle(storedDraft.title);
+    setDescription(storedDraft.description);
+    setPrice(storedDraft.price);
+    setCurrency(storedDraft.currency);
+    setMoq(storedDraft.moq);
+    setUnit(storedDraft.unit);
+    setCityId(storedDraft.cityId);
+    setBrandId(storedDraft.brandId);
+    setStockQuantity(storedDraft.stockQuantity);
+    setPriceNegotiable(storedDraft.priceNegotiable);
+    setPostedAsCompany(storedDraft.postedAsCompany);
+    setImageUrls(storedDraft.imageUrls);
+    setCharacteristicValues(storedDraft.characteristicValues);
+    setDismissedAutosuggestKeys(storedDraft.dismissedAutosuggestKeys);
+    setShowDraftBanner(false);
+    setStoredDraft(null);
+    setChooserDone(true);
+  }
+
+  function dismissListingDraft() {
+    if (draftUserId) {
+      clearListingFormDraft(draftUserId);
+    }
+    setShowDraftBanner(false);
+    setStoredDraft(null);
+  }
 
   const persistedCharacteristics = useMemo(
     () => characteristicValuesToPersisted(characteristicFields, characteristicValues),
@@ -533,8 +680,12 @@ export function NewListingForm({
         moq: formConfig.showMoq ? moq : null,
         condition: null,
       });
-      setDescription(generated);
-      setAiHint(t("listingForm.reviewDescriptionHint"));
+      if (!description.trim()) {
+        setDescription(generated);
+        setAiHint(t("listingForm.reviewDescriptionHint"));
+      } else {
+        setAiHint(t("listingForm.aiKeptExistingDescription"));
+      }
     } catch (error) {
       if (error instanceof GenerateDescriptionRequestError) {
         setAiError(error.message);
@@ -703,6 +854,9 @@ export function NewListingForm({
 
       trackCreateListingSubmit(vertical);
       setCreatedListingId(result.listing.id);
+      if (draftUserId) {
+        clearListingFormDraft(draftUserId);
+      }
       setIsSubmitting(false);
       router.refresh();
     } catch (error) {
@@ -822,12 +976,19 @@ export function NewListingForm({
   return (
     <form
       onSubmit={(event) => void handleSubmit(event)}
+      autoComplete="off"
       className="mt-4 pb-24 sm:mt-6 sm:pb-0 lg:mt-8"
     >
       {mode === "create" ? <CreateListingSteps activeStep={activeStep} /> : null}
 
       <div className="grid gap-4 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
         <div className="min-w-0 space-y-4 sm:space-y-6">
+          {mode === "create" && showDraftBanner && storedDraft ? (
+            <ListingFormDraftBanner
+              onRestore={restoreListingDraft}
+              onDismiss={dismissListingDraft}
+            />
+          ) : null}
           {mode === "create" ? (
             <ListingPostAsSelector
               hasCompanyProfile={Boolean(companyProfile?.isConfigured)}
@@ -1183,7 +1344,11 @@ export function NewListingForm({
             <ListingCharacteristicsFields
               fields={characteristicFields}
               values={characteristicValues}
-              onChange={setCharacteristicValues}
+              onChange={(updater) =>
+                setCharacteristicValues((previous) =>
+                  typeof updater === "function" ? updater(previous) : updater,
+                )
+              }
               disabled={isSubmitting}
             />
 

@@ -272,3 +272,12 @@ See `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md` and `docs/ANDROID_MANUAL_TEST_C
 - Debug APK build blocked in agent env (no JDK/Android SDK) — local build required
 - Manual phone test checklist ready
 
+## Phase 110 Android form stability
+
+See `docs/ANDROID_FORM_STABILITY_PHASE_110.md`.
+
+- Fixed characteristics reset on category/subcategory change
+- Functional updates for characteristics fields (WebView stale closure)
+- Draft autosave + restore banner on `/listings/new`
+- AI no longer overwrites non-empty description
+
