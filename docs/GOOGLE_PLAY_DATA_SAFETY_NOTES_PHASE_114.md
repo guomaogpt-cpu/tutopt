@@ -74,7 +74,7 @@
 
 | Purpose | Applies to |
 |---|---|
-| App functionality | Auth, listings, favorites, cargo, notifications |
+| App functionality | Auth, listings, favorites, cargo, notifications, listing moderation status |
 | Notification delivery | Push tokens → Firebase Cloud Messaging (Android) |
 | Account management | Profile, login, deletion requests |
 | User-generated content | Listings, photos, descriptions |

@@ -4484,6 +4484,11 @@ export const DICTIONARY = {
     kg: "Жарыяны ачуу",
     en: "Open listing",
   },
+  "notifications.actionOpenMyListings": {
+    ru: "Открыть мои объявления",
+    kg: "Менин жарыяларымды ачуу",
+    en: "Open my listings",
+  },
   "push.settings.title": {
     ru: "Уведомления",
     kg: "Билдирмелер",
@@ -4595,9 +4600,9 @@ export const DICTIONARY = {
     en: "Could not update notifications",
   },
   "notifications.emptyListingsCategory": {
-    ru: "Уведомлений по объявлениям пока нет.",
-    kg: "Жарыялар боюнча билдирмелер азырынча жок.",
-    en: "No listing notifications yet.",
+    ru: "Пока нет уведомлений по объявлениям. Здесь появятся статусы модерации и публикации ваших объявлений.",
+    kg: "Жарыялар боюнча билдирмелер азырынча жок. Модерация жана жарыялоо статустары бул жерде көрүнөт.",
+    en: "No listing notifications yet. Moderation and publication status updates will appear here.",
   },
   "notifications.emptyTitle": {
     ru: "Пока нет уведомлений",

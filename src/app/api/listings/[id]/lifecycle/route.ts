@@ -1,6 +1,7 @@
 import { ListingStatus, UserRole } from "@prisma/client";
 import { z } from "zod";
 import { requireAuth } from "@/features/auth/lib/session";
+import { notifyListingSubmittedIfNeeded } from "@/features/notifications/lib/notifications-data";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import { isUserBlocked, getEditListingRestrictionMessage } from "@/lib/security/user-restrictions";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
@@ -48,6 +49,7 @@ export async function POST(request: Request, context: RouteContext) {
       where: { id },
       select: {
         id: true,
+        title: true,
         status: true,
         vertical: true,
         sellerProfile: { select: { user_id: true } },
@@ -101,6 +103,13 @@ export async function POST(request: Request, context: RouteContext) {
       sellerId: user.id,
       action: input.action,
       status: nextStatus,
+    });
+
+    await notifyListingSubmittedIfNeeded({
+      recipientId: user.id,
+      listingTitle: listing.title,
+      previousStatus: listing.status,
+      nextStatus,
     });
 
     return jsonData({

@@ -1,5 +1,6 @@
 import { ListingStatus, UserRole } from "@prisma/client";
 import { requireAuth } from "@/features/auth/lib/session";
+import { notifyListingSubmittedIfNeeded } from "@/features/notifications/lib/notifications-data";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import {
   canOwnerRenewListing,
@@ -36,6 +37,7 @@ export async function POST(_request: Request, context: RouteContext) {
       where: { id },
       select: {
         id: true,
+        title: true,
         status: true,
         vertical: true,
         expires_at: true,
@@ -104,6 +106,13 @@ export async function POST(_request: Request, context: RouteContext) {
       sellerId: user.id,
       wasExpired,
       status: nextStatus,
+    });
+
+    await notifyListingSubmittedIfNeeded({
+      recipientId: user.id,
+      listingTitle: listing.title,
+      previousStatus: listing.status,
+      nextStatus,
     });
 
     return jsonData({

@@ -3,6 +3,7 @@ import { requireAuth } from "@/features/auth/lib/session";
 import { slugifyTitle } from "@/features/listings/lib/slug";
 import { parseListingCharacteristics } from "@/features/listings/types/listing-characteristic";
 import { updateListingSchema } from "@/features/listings/validators/listing.validators";
+import { notifyListingSubmittedIfNeeded } from "@/features/notifications/lib/notifications-data";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import { validateListingContent } from "@/lib/moderation/content-checks";
 import { assertListingUpdateRateLimit } from "@/lib/security/rate-limit";
@@ -207,6 +208,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         },
         select: {
           id: true,
+          title: true,
           status: true,
           vertical: true,
           updated_at: true,
@@ -233,6 +235,13 @@ export async function PATCH(request: Request, context: RouteContext) {
       sellerId: user.id,
       changedFields,
       status: updatedListing.status,
+    });
+
+    await notifyListingSubmittedIfNeeded({
+      recipientId: user.id,
+      listingTitle: updatedListing.title ?? listing.title,
+      previousStatus: listing.status,
+      nextStatus: updatedListing.status,
     });
 
     return jsonData({ listing: updatedListing });

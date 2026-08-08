@@ -1,4 +1,4 @@
-import { NotificationType, type ListingVertical } from "@prisma/client";
+import { ListingStatus, NotificationType, type ListingVertical } from "@prisma/client";
 import { findCargoNotificationRecipients } from "@/features/cargo/lib/cargo-subscription-data";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { dispatchUserPush } from "@/lib/push/dispatch-user-push";
@@ -249,26 +249,71 @@ export async function createNewCargoResponseNotifications(input: {
   );
 }
 
+export async function createListingSubmittedNotification(input: {
+  recipientId: string;
+  listingTitle: string;
+}): Promise<void> {
+  const title = "Объявление отправлено на модерацию";
+  const message = `Мы проверим объявление «${input.listingTitle}» и опубликуем его после одобрения.`;
+  const link = "/account/listings";
+
+  await prisma.notification.create({
+    data: {
+      recipient_id: input.recipientId,
+      type: NotificationType.LISTING_SUBMITTED,
+      title,
+      message,
+      link,
+    },
+  });
+}
+
+export async function notifyListingSubmittedIfNeeded(input: {
+  recipientId: string;
+  listingTitle: string;
+  previousStatus: ListingStatus;
+  nextStatus: ListingStatus;
+}): Promise<void> {
+  if (
+    input.nextStatus !== ListingStatus.PENDING_MODERATION ||
+    input.previousStatus === ListingStatus.PENDING_MODERATION
+  ) {
+    return;
+  }
+
+  await createListingSubmittedNotification({
+    recipientId: input.recipientId,
+    listingTitle: input.listingTitle,
+  });
+}
+
 export async function createListingModerationNotification(input: {
   recipientId: string;
   actorId: string;
   listingId: string;
   listingTitle: string;
   approved: boolean;
+  rejectionReason?: string | null;
 }): Promise<void> {
-  const link = `/listings/${input.listingId}`;
+  const link = input.approved ? `/listings/${input.listingId}` : "/account/listings";
   const title = input.approved ? "Объявление опубликовано" : "Объявление отклонено";
-  const message = input.approved
-    ? `«${input.listingTitle}» прошло модерацию и опубликовано.`
-    : `«${input.listingTitle}» не прошло модерацию.`;
+  const baseMessage = input.approved
+    ? `Ваше объявление «${input.listingTitle}» одобрено и теперь видно пользователям.`
+    : `Объявление «${input.listingTitle}» не прошло модерацию. Проверьте описание и фото.`;
+  const trimmedReason = input.rejectionReason?.trim();
+  const message =
+    !input.approved && trimmedReason
+      ? `${baseMessage} Причина: ${trimmedReason}`
+      : baseMessage;
+  const type = input.approved
+    ? NotificationType.LISTING_APPROVED
+    : NotificationType.LISTING_REJECTED;
 
   const notification = await prisma.notification.create({
     data: {
       recipient_id: input.recipientId,
       actor_id: input.actorId,
-      type: input.approved
-        ? NotificationType.LISTING_APPROVED
-        : NotificationType.LISTING_REJECTED,
+      type,
       title,
       message,
       link,
@@ -282,8 +327,6 @@ export async function createListingModerationNotification(input: {
     body: message,
     url: link,
     notificationId: notification.id,
-    type: input.approved
-      ? NotificationType.LISTING_APPROVED
-      : NotificationType.LISTING_REJECTED,
+    type,
   });
 }

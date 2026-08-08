@@ -123,35 +123,33 @@ UI: optimistic update + unread store sync + toast on mark-all
 
 ---
 
-## 9. Почему native push не включали
+## 9. Почему native push не включали (Phase 116)
 
-Phase 116 = **in-app only**.
-
-Native push requires separate phase:
-- Firebase project + FCM
-- Capacitor `@capacitor/push-notifications`
-- Android notification channels
-- Server token storage
-- Permission UX
-- Privacy / Data safety update
+Phase 116 = **in-app only**. Native push добавлен в **Phase 117**.
 
 ---
 
-## 10. Future: Firebase Push
+## 10. Phase 118 — Listing moderation notifications ✅
 
-| Step | Notes |
-|---|---|
-| FCM setup | Firebase console, `google-services.json` |
-| Capacitor plugin | iOS + Android (iOS later) |
-| Token API | Store device tokens per user |
-| Send on events | lead, cargo, moderation |
-| Unsubscribe | Account settings |
-| Play Data safety | Declare push data |
+Закрыт gap по объявлениям:
 
-Also future:
-- `NotificationType` for listing moderation (Prisma migration)
+| Type | In-app | Push |
+|---|---|---|
+| `LISTING_SUBMITTED` | ✅ | — |
+| `LISTING_APPROVED` | ✅ | ✅ |
+| `LISTING_REJECTED` | ✅ | ✅ |
+
+Фильтр «Объявления» в `/notifications` показывает все три типа.
+
+См. `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
+
+---
+
+## 11. Future
+
 - Buyer «cargo request created» notification
 - Lead deep link with ID
+- Notification preferences by type
 
 ---
 
@@ -159,4 +157,6 @@ Also future:
 
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
+- `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
+- `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md`
 - `product/FEATURES/NOTIFICATIONS.md`

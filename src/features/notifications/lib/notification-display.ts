@@ -22,6 +22,7 @@ export function getNotificationCategory(type: NotificationType): Exclude<Notific
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
       return "cargo";
+    case NotificationType.LISTING_SUBMITTED:
     case NotificationType.LISTING_APPROVED:
     case NotificationType.LISTING_REJECTED:
       return "listings";
@@ -63,9 +64,12 @@ export function resolveNotificationLink(notification: NotificationItem): string 
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
       return "/account/requests";
+    case NotificationType.LISTING_SUBMITTED:
+      return "/account/listings";
     case NotificationType.LISTING_APPROVED:
-    case NotificationType.LISTING_REJECTED:
       return notification.link ?? "/account/listings";
+    case NotificationType.LISTING_REJECTED:
+      return "/account/listings";
     case NotificationType.COMPANY_VERIFIED:
     case NotificationType.COMPANY_VERIFICATION_REJECTED:
       return "/account/company";
@@ -81,6 +85,8 @@ export function getNotificationActionLabelKey(type: NotificationType): Dictionar
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
       return "notifications.actionOpenCargo";
+    case NotificationType.LISTING_SUBMITTED:
+      return "notifications.actionOpenMyListings";
     case NotificationType.LISTING_APPROVED:
     case NotificationType.LISTING_REJECTED:
       return "notifications.actionOpenListing";

@@ -5,6 +5,7 @@ import { ensureSellerProfile } from "@/features/listings/lib/seller-profile";
 import { generateShortId, slugifyTitle } from "@/features/listings/lib/slug";
 import { parseListingCharacteristics } from "@/features/listings/types/listing-characteristic";
 import { createListingSchema } from "@/features/listings/validators/listing.validators";
+import { createListingSubmittedNotification } from "@/features/notifications/lib/notifications-data";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import { validateListingContent } from "@/lib/moderation/content-checks";
 import { assertListingCreateRateLimit } from "@/lib/security/rate-limit";
@@ -179,6 +180,11 @@ export async function POST(request: Request) {
         vertical: listing.vertical,
         status: listing.status,
       },
+    });
+
+    await createListingSubmittedNotification({
+      recipientId: user.id,
+      listingTitle: listing.title,
     });
 
     return jsonData({ listing }, 201);

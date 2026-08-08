@@ -99,13 +99,17 @@ export async function PATCH(request: Request, context: RouteContext) {
       });
     }
 
-    await createListingModerationNotification({
-      recipientId: listing.sellerProfile.user_id,
-      actorId: staff.id,
-      listingId: listing.id,
-      listingTitle: updatedListing.title,
-      approved: input.action === "approve",
-    });
+    try {
+      await createListingModerationNotification({
+        recipientId: listing.sellerProfile.user_id,
+        actorId: staff.id,
+        listingId: listing.id,
+        listingTitle: updatedListing.title,
+        approved: input.action === "approve",
+      });
+    } catch {
+      // Push/in-app notification must not block moderation.
+    }
 
     return jsonData({ listing: updatedListing });
   });

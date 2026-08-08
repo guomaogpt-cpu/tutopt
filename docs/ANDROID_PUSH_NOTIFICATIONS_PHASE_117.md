@@ -108,13 +108,14 @@ Rate limits: `src/lib/security/rate-limit.ts`
 | Event | In-app | Push |
 |---|---|---|
 | New lead on listing | ✅ | ✅ owner |
+| Listing submitted (moderation) | ✅ | — |
 | Listing approved/rejected | ✅ | ✅ author |
 | New cargo request | ✅ | ✅ recipients |
 | New cargo response | ✅ | ✅ owner/admins |
 | Company verification | ✅ | ✅ (via existing notify) |
 | Test push | — | ✅ self only |
 
-**Future:** more granular preferences by type; remaining edge events without refactor.
+**Phase 118:** полный цикл listing moderation notifications — см. `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
 
 ---
 
