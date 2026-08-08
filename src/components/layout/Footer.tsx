@@ -42,6 +42,15 @@ const footerColumns: FooterColumn[] = [
       { labelKey: "footer.register", href: "/register" },
     ],
   },
+  {
+    titleKey: "footer.legalTitle",
+    links: [
+      { labelKey: "footer.privacy", href: "/privacy" },
+      { labelKey: "footer.terms", href: "/terms" },
+      { labelKey: "footer.support", href: "/support" },
+      { labelKey: "footer.deleteAccount", href: "/delete-account" },
+    ],
+  },
 ];
 
 export function Footer() {
@@ -50,7 +59,7 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
       <Container>
-        <div className="grid grid-cols-1 gap-6 py-10 sm:gap-8 lg:grid-cols-4 lg:gap-10 lg:py-14">
+        <div className="grid grid-cols-1 gap-6 py-10 sm:gap-8 lg:grid-cols-5 lg:gap-10 lg:py-14">
           <div className="min-w-0">
             <BrandLogo variant="footer" />
             <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">

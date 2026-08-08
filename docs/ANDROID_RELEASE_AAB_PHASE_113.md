@@ -203,23 +203,28 @@ Typical size: ~3–5 MB (remote URL wrapper, minimal native code).
 | Blocker | Status |
 |---|---|
 | Signed release keystore (local) | ⏳ owner must create |
-| Privacy Policy final text | ⏳ draft page exists |
-| Terms final text | ⏳ draft page exists |
-| Account deletion self-service | ❌ not implemented |
+| Privacy Policy final text | ⚠️ draft expanded Phase 114 — legal review |
+| Terms final text | ⚠️ draft expanded Phase 114 — legal review |
+| Account deletion self-service | ✅ request-based MVP (Phase 114) |
 | Real Android device QA pass | ⏳ pending |
 | Store screenshots / descriptions | ⏳ not prepared |
 | Google Play test account | ⏳ not prepared |
+| Data safety form in Console | ⏳ notes only — see Phase 114 doc |
 
 См. `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 
 ---
 
-## 15. Next phase: Google Play Console preparation
+## 15. Phase 114 (completed)
 
-**Phase 114 (proposed):**
-- Final legal pages (Privacy, Terms) with lawyer review
-- Account deletion flow (`/account/delete` or self-service)
-- Support contact page
+- Legal pages expanded (draft): `/privacy`, `/terms`
+- Support: `/support`
+- Account deletion: `/delete-account`, `/account/delete`, API request flow
+- Data safety notes: `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
+- Blockers doc updated
+
+**Phase 115 (next):**
+- Lawyer review for Privacy + Terms
 - Store listing assets (screenshots, 1024 icon, descriptions)
 - Play Console app creation + internal testing track
 - Upload signed AAB to **internal testing** (not production)
@@ -231,5 +236,6 @@ Typical size: ~3–5 MB (remote URL wrapper, minimal native code).
 - `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
 - `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md`
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
-- `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/ACCOUNT_DELETION_PHASE_114.md`
+- `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
 - `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`

@@ -90,9 +90,9 @@ npx cap add ios
 - [x] Кабинет / account
 - [x] Карго-заявки
 - [ ] Push notifications (later)
-- [ ] Account deletion self-service (later)
-- [ ] Privacy Policy page (later)
-- [ ] Terms of Service page (later)
+- [x] Account deletion request flow (Phase 114 — manual processing)
+- [x] Privacy Policy page (Phase 114 — draft, needs legal review)
+- [x] Terms of Service page (Phase 114 — draft, needs legal review)
 
 ## 6. Push notifications later
 
@@ -109,10 +109,10 @@ npx cap add ios
 
 | Asset | Статус |
 |---|---|
-| Privacy Policy | TODO — `/privacy` |
-| Terms of Service | TODO — `/terms` |
-| Account deletion | TODO — self-service в `/account/settings` |
-| Support contact | TODO — email/форма |
+| Privacy Policy | ⚠️ `/privacy` — draft, legal review pending |
+| Terms of Service | ⚠️ `/terms` — draft, legal review pending |
+| Account deletion | ✅ request-based `/account/delete`, public `/delete-account` |
+| Support contact | ⚠️ `/support` — placeholder email |
 | Cookie/tracking disclosure | TODO — если analytics расширятся |
 
 ## 8. Риски отклонения в App Store / Google Play
@@ -135,7 +135,7 @@ npx cap add ios
 | 111 ✅ | Android manual QA polish: keyboard inset, back button, sticky CTA, form guard |
 | 112 ✅ | Real Android device QA prep: photo MIME fix, native Back guard; device retest pending |
 | 113 ✅ | Release AAB prep: signing docs, `android:release` script, Play blockers checklist |
-| 114 | Legal pages final + account deletion self-service |
+| 114 ✅ | Legal pages (draft), account deletion request, support, data safety notes |
 | 115 | Store assets + Play Console internal testing upload |
 | 116 | Production rollout (after QA + legal sign-off) |
 | 117 | Push notifications |
@@ -173,6 +173,7 @@ Next.js App Router с SSR потребует либо:
 
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
 - `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
-- `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
+- `docs/ACCOUNT_DELETION_PHASE_114.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

@@ -9,6 +9,7 @@ import {
   ListChecks,
   PlusCircle,
   Settings2,
+  Trash2,
   Truck,
 } from "lucide-react";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
@@ -30,6 +31,7 @@ const ACTIONS: QuickAction[] = [
   { href: "/notifications", labelKey: "account.notifications", icon: Bell },
   { href: "/account/company", labelKey: "account.company", icon: Building2 },
   { href: "/account/cargo-settings", labelKey: "account.cargoSettings", icon: Settings2 },
+  { href: "/account/delete", labelKey: "account.deleteAccount", icon: Trash2 },
 ];
 
 const cardClassName = cn(

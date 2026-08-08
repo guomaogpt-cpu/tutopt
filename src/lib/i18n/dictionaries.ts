@@ -2213,6 +2213,23 @@ export const DICTIONARY = {
   "footer.notifications": { ru: "Уведомления", kg: "Билдирмелер", en: "Notifications" },
   "footer.signIn": { ru: "Войти", kg: "Кирүү", en: "Sign in" },
   "footer.register": { ru: "Регистрация", kg: "Катталуу", en: "Register" },
+  "footer.legalTitle": { ru: "Правовая информация", kg: "Юридикалык маалымат", en: "Legal" },
+  "footer.privacy": {
+    ru: "Конфиденциальность",
+    kg: "Купуялык",
+    en: "Privacy Policy",
+  },
+  "footer.terms": {
+    ru: "Пользовательское соглашение",
+    kg: "Колдонуучу макулдашуусу",
+    en: "Terms of Service",
+  },
+  "footer.support": { ru: "Поддержка", kg: "Колдоо", en: "Support" },
+  "footer.deleteAccount": {
+    ru: "Удаление аккаунта",
+    kg: "Аккаунтту өчүрүү",
+    en: "Delete account",
+  },
   "footer.brandTagline": {
     ru: "Платформа объявлений, услуг, опта и карго в Кыргызстане",
     kg: "Кыргызстандагы жарыялар, кызматтар, дүң жана карго платформасы",
@@ -3458,6 +3475,11 @@ export const DICTIONARY = {
     ru: "Карго-настройки",
     kg: "Карго жөндөөлөрү",
     en: "Cargo settings",
+  },
+  "account.deleteAccount": {
+    ru: "Удалить аккаунт",
+    kg: "Аккаунтту өчүрүү",
+    en: "Delete account",
   },
   "account.cargoSettingsDescription": {
     ru: "Направления, уведомления и Telegram для карго-заявок.",

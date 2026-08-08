@@ -1,7 +1,8 @@
-# Google Play Release Blockers — Phase 113
+# Google Play Release Blockers — Phase 113 / 114
 
 > **Статус:** blockers checklist перед Google Play submission.  
-> **Phase 113 не публикует** в Play Console.
+> **Phase 114** добавила legal pages (draft), account deletion request flow, data safety notes.  
+> **Не публикуем** в Play Console в этих фазах.
 
 ---
 
@@ -11,51 +12,55 @@ Google Play publish **нельзя** делать, пока не закрыты 
 
 | # | Blocker | Status | Notes |
 |---|---|---|---|
-| 1 | **Privacy Policy URL** | ⚠️ partial | `/privacy` exists — draft text, not final legal review |
-| 2 | **Terms of Service URL** | ⚠️ partial | `/terms` exists — draft text, not final legal review |
-| 3 | **Account deletion page / flow** | ❌ missing | No `/account/delete`, no self-service API |
-| 4 | **Support email / contact** | ❌ missing | No `/support` page; no public support email in app |
+| 1 | **Privacy Policy URL** | ⚠️ draft | `/privacy` — expanded draft, **needs legal review** |
+| 2 | **Terms of Service URL** | ⚠️ draft | `/terms` — expanded draft, **needs legal review** |
+| 3 | **Account deletion page / flow** | ✅ MVP | `/delete-account` (public), `/account/delete` (auth), request API |
+| 4 | **Support email / contact** | ⚠️ partial | `/support` added; email placeholder `hello@tutopt.kg` |
 | 5 | **App screenshots** | ❌ missing | Phone screenshots for store listing not prepared |
 | 6 | **App icon 1024×1024** | ⚠️ partial | PWA icons exist; store marketing asset not finalized |
 | 7 | **Short description** | ❌ missing | Play Console listing text not written |
 | 8 | **Full description** | ❌ missing | Play Console listing text not written |
 | 9 | **Test account for reviewers** | ❌ missing | Phone/password credentials for Google review |
-| 10 | **Data safety form** | ❌ missing | Play Console questionnaire not filled |
-| 11 | **User generated content policy** | ⚠️ partial | Moderation exists in product; not documented for store |
-| 12 | **Report listing flow** | ⚠️ verify | Check listing detail report UI/API exists |
+| 10 | **Data safety form** | ⚠️ notes | Draft notes in `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md` — not filled in Console |
+| 11 | **User generated content policy** | ⚠️ partial | Terms draft + moderation; report flow exists |
+| 12 | **Report listing flow** | ✅ exists | `ReportDialog` on listing detail |
 | 13 | **Moderation explanation** | ⚠️ partial | Admin moderation queue exists; review notes not written |
-| 14 | **Contact / support flow** | ❌ missing | No dedicated support channel in app |
+| 14 | **Contact / support flow** | ⚠️ partial | `/support` page; final email TBD |
 | 15 | **Signed release AAB** | ⏳ pending | Process documented; keystore must be created locally |
 | 16 | **Real Android device QA passed** | ⏳ pending | See `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md` |
 
 ---
 
-## Legal pages (current state)
+## Legal pages (Phase 114)
 
 | Route | Exists | Store-ready |
 |---|---|---|
-| `/privacy` | ✅ | ❌ draft — «полный юридический текст будет опубликован» |
-| `/terms` | ✅ | ❌ draft — same disclaimer |
-| `/support` | ❌ | — |
-| `/account/delete` | ❌ | — |
+| `/privacy` | ✅ | ❌ draft — требует юридической проверки |
+| `/terms` | ✅ | ❌ draft — требует юридической проверки |
+| `/support` | ✅ | ⚠️ placeholder support email |
+| `/delete-account` | ✅ | ✅ public Google Play web link |
+| `/account/delete` | ✅ | ✅ authenticated request form |
 
-**Rule:** Do not publish to Google Play until Privacy Policy and Terms are final and account deletion is available.
+**Rule:** Do not publish to Google Play until Privacy Policy and Terms are **final** (lawyer-approved) and ops process for deletion requests is defined.
 
 ---
 
-## Account deletion (required by Google / Apple)
+## Account deletion (Phase 114)
 
-**Current:** no self-service account deletion.
+**Implemented (MVP):**
+- Public page: `/delete-account`
+- Authenticated page: `/account/delete`
+- API: `POST /api/account/deletion-request` → AuditLog `account_deletion_requested`, status `PENDING`
+- Footer + account quick actions links
+- No Prisma migration (uses existing AuditLog)
 
-**Minimum for Play Store:**
-- In-app path or web page explaining how to request deletion
-- Deletion within reasonable timeframe (Google: 30 days max for request handling)
-- Data removed from active systems
+**Not implemented:**
+- Automatic user/data deletion
+- Admin queue UI
+- Email confirmations
+- 30-day SLA automation
 
-**Proposed Phase 114:**
-- `/account/settings` → «Удалить аккаунт»
-- Server route: soft-delete or anonymize user + listings
-- Confirmation email / phone OTP
+See `docs/ACCOUNT_DELETION_PHASE_114.md`
 
 ---
 
@@ -64,28 +69,31 @@ Google Play publish **нельзя** делать, пока не закрыты 
 Product already has:
 - Listing moderation workflow (submit → pending → published/rejected)
 - Admin moderation queue
+- Report listing UI on listing detail
 
 Need for Play:
 - Document in review notes how UGC is moderated
-- Report/abuse flow visible to users
-- Support contact for abuse reports
+- Final Terms with prohibited content list (legal review)
+- Support contact for abuse reports (`/support`)
 
 ---
 
 ## Data safety (Google Play Console)
 
-Declare approximately:
+Draft mapping: `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
 
 | Data type | Collected | Purpose |
 |---|---|---|
 | Name, phone | ✅ | Account, listings |
+| Email | ✅ optional | Google OAuth |
 | Photos | ✅ | Listing images, cargo requests |
-| User content | ✅ | Listings, messages, cargo requests |
-| Device IDs | ❌ | Not collected intentionally |
-| Location | ❌ | City text field only, no GPS |
+| User content | ✅ | Listings, leads, cargo requests |
+| Device IDs | ❌ intentional | Not collected intentionally |
+| Location | ❌ GPS | City text field only |
+| AI input | ✅ optional | Description generation on user action |
 
 Encryption in transit: ✅ HTTPS  
-Data deletion: ❌ until account deletion ships
+Data deletion: ⚠️ request-based; manual processing
 
 ---
 
@@ -131,7 +139,7 @@ Prepare before submission:
 | Phase | Scope |
 |---|---|
 | 113 ✅ | Release AAB prep, signing docs, blockers checklist |
-| 114 | Legal pages final + account deletion |
+| 114 ✅ | Legal pages (draft), account deletion request, data safety notes |
 | 115 | Store assets + Play Console internal testing upload |
 | 116 | Production rollout (after QA + legal sign-off) |
 
@@ -139,6 +147,8 @@ Prepare before submission:
 
 ## Связанные документы
 
+- `docs/ACCOUNT_DELETION_PHASE_114.md`
+- `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
 - `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
 - `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`

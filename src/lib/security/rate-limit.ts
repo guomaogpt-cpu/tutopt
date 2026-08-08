@@ -390,6 +390,21 @@ export function assertListingDescriptionAiRateLimit(userId: string): void {
   );
 }
 
+export const ACCOUNT_DELETION_REQUEST_RATE_LIMIT = {
+  limit: 3,
+  windowMs: 24 * 60 * 60 * 1000,
+  message: "Можно отправить не более 3 запросов на удаление аккаунта в сутки.",
+} as const;
+
+export function assertAccountDeletionRequestRateLimit(userId: string): void {
+  assertRateLimit(
+    `account:deletion-request:${userId}`,
+    ACCOUNT_DELETION_REQUEST_RATE_LIMIT.limit,
+    ACCOUNT_DELETION_REQUEST_RATE_LIMIT.windowMs,
+    ACCOUNT_DELETION_REQUEST_RATE_LIMIT.message,
+  );
+}
+
 /** @internal Test helper — clears in-memory buckets. */
 export function resetRateLimitStoreForTests(): void {
   buckets.clear();
