@@ -6,6 +6,7 @@ import { AccountListingsSummary } from "@/components/account/AccountListingsSumm
 import { AccountMetaSummary } from "@/components/account/AccountMetaSummary";
 import { AccountProfileCard } from "@/components/account/AccountProfileCard";
 import { AccountQuickActions } from "@/components/account/AccountQuickActions";
+import { PushNotificationsSettings } from "@/components/account/PushNotificationsSettings";
 import { AccountRequestsSummary } from "@/components/account/AccountRequestsSummary";
 import { AccountServiceLinks } from "@/components/account/AccountServiceLinks";
 import { MobileOnboardingHints } from "@/components/mobile/MobileOnboardingHints";
@@ -55,6 +56,7 @@ export default async function AccountPage() {
             }}
           />
           <AccountQuickActions />
+          <PushNotificationsSettings />
           <AccountMetaSummary
             favoritesCount={data.favoritesCount}
             unreadNotifications={data.unreadNotifications}

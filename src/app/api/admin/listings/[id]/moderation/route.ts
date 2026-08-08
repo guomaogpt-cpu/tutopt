@@ -1,6 +1,7 @@
 import { ListingStatus } from "@prisma/client";
 import { requireStaff } from "@/features/admin/lib/require-admin";
 import { listingModerationSchema } from "@/features/admin/validators/listing-moderation.validators";
+import { createListingModerationNotification } from "@/features/notifications/lib/notifications-data";
 import { createAuditLog } from "@/lib/audit/audit-log";
 import {
   getDefaultListingExpirationDate,
@@ -22,7 +23,16 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const listing = await prisma.listing.findUnique({
       where: { id },
-      select: { id: true, status: true, vertical: true, expires_at: true },
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        vertical: true,
+        expires_at: true,
+        sellerProfile: {
+          select: { user_id: true },
+        },
+      },
     });
 
     if (!listing) {
@@ -88,6 +98,14 @@ export async function PATCH(request: Request, context: RouteContext) {
         },
       });
     }
+
+    await createListingModerationNotification({
+      recipientId: listing.sellerProfile.user_id,
+      actorId: staff.id,
+      listingId: listing.id,
+      listingTitle: updatedListing.title,
+      approved: input.action === "approve",
+    });
 
     return jsonData({ listing: updatedListing });
   });

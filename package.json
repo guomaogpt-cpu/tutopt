@@ -34,6 +34,7 @@
     "@capacitor/app": "^8.1.1",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0",
+    "@capacitor/push-notifications": "^8.1.2",
     "@capacitor/splash-screen": "^8.0.2",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-alert-dialog": "^1.1.18",

@@ -78,7 +78,32 @@ export default function PrivacyPage() {
             </ul>
           </LegalSection>
 
-          <LegalSection title="4. Искусственный интеллект (AI)">
+          <LegalSection title="4. Push-уведомления">
+            <p>
+              Мобильное приложение Android может использовать push-token устройства для доставки
+              уведомлений о событиях в аккаунте.
+            </p>
+            <ul className="list-disc space-y-2 pl-5">
+              <li>
+                уведомления используются для заявок по объявлениям, статусов модерации, карго-заявок
+                и системных событий;
+              </li>
+              <li>
+                push-token хранится на сервере для доставки уведомлений и может быть отключён
+                пользователем в настройках приложения или Android;
+              </li>
+              <li>push-token не используется для продажи данных или рекламных рассылок.</li>
+            </ul>
+            <p>
+              Доставка push осуществляется через Firebase Cloud Messaging (Google). Подробнее см.{" "}
+              <Link href="/support" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+                страницу поддержки
+              </Link>
+              .
+            </p>
+          </LegalSection>
+
+          <LegalSection title="5. Искусственный интеллект (AI)">
             <p>
               Если вы нажимаете кнопку генерации описания объявления, введённые вами данные объявления
               (например, название, категория, характеристики, город) могут отправляться
@@ -94,7 +119,7 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="5. Хостинг и передача данных">
+          <LegalSection title="6. Хостинг и передача данных">
             <p>
               Сервис размещён на облачной инфраструктуре (в том числе Railway и связанные
               провайдеры). Данные могут обрабатываться на серверах за пределами вашего устройства для
@@ -107,14 +132,14 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="6. Хранение данных">
+          <LegalSection title="7. Хранение данных">
             <p>
               Данные хранятся, пока аккаунт активен и пока это необходимо для работы Сервиса, защиты
               прав пользователей, выполнения требований закона или разрешения споров.
             </p>
           </LegalSection>
 
-          <LegalSection title="7. Удаление аккаунта">
+          <LegalSection title="8. Удаление аккаунта">
             <p>
               Вы можете запросить удаление аккаунта через{" "}
               <Link href="/account/delete" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
@@ -129,7 +154,7 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="8. Безопасность">
+          <LegalSection title="9. Безопасность">
             <p>
               Мы используем HTTPS, ограничение доступа и другие технические меры для защиты данных.
               Абсолютная безопасность в интернете не гарантируется — сообщайте о подозрительной
@@ -137,7 +162,7 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="9. Контакты">
+          <LegalSection title="10. Контакты">
             <p>
               Вопросы по политике конфиденциальности:{" "}
               <a

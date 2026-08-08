@@ -1,6 +1,7 @@
 import { CompanyVerificationStatus, NotificationType } from "@prisma/client";
-import { prisma } from "@/shared/lib/prisma";
 import { translate } from "@/lib/i18n/dictionaries";
+import { dispatchUserPush } from "@/lib/push/dispatch-user-push";
+import { prisma } from "@/shared/lib/prisma";
 
 export async function notifyCompanyVerificationResult(input: {
   recipientId: string;
@@ -23,16 +24,29 @@ export async function notifyCompanyVerificationResult(input: {
     ? `${input.companyName}: ${translate("ru", "company.verification.verifiedBadge")}`
     : `${input.companyName}: ${translate("ru", "company.verification.rejected")}`;
 
-  await prisma.notification.create({
+  const link = "/account/company";
+  const type = verified
+    ? NotificationType.COMPANY_VERIFIED
+    : NotificationType.COMPANY_VERIFICATION_REJECTED;
+
+  const notification = await prisma.notification.create({
     data: {
       recipient_id: input.recipientId,
       actor_id: input.actorId,
-      type: verified
-        ? NotificationType.COMPANY_VERIFIED
-        : NotificationType.COMPANY_VERIFICATION_REJECTED,
+      type,
       title,
       message,
-      link: "/account/company",
+      link,
     },
+    select: { id: true },
+  });
+
+  await dispatchUserPush({
+    userId: input.recipientId,
+    title,
+    body: message,
+    url: link,
+    notificationId: notification.id,
+    type,
   });
 }

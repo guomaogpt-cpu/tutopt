@@ -405,6 +405,51 @@ export function assertAccountDeletionRequestRateLimit(userId: string): void {
   );
 }
 
+export const PUSH_REGISTER_RATE_LIMIT = {
+  limit: 30,
+  windowMs: 60 * 60 * 1000,
+  message: "Слишком много попыток регистрации push. Попробуйте позже.",
+} as const;
+
+export const PUSH_UNREGISTER_RATE_LIMIT = {
+  limit: 30,
+  windowMs: 60 * 60 * 1000,
+  message: "Слишком много попыток отключения push. Попробуйте позже.",
+} as const;
+
+export const PUSH_TEST_RATE_LIMIT = {
+  limit: 5,
+  windowMs: 60 * 60 * 1000,
+  message: "Можно отправить не более 5 тестовых push в час.",
+} as const;
+
+export function assertPushRegisterRateLimit(userId: string): void {
+  assertRateLimit(
+    `push:register:${userId}`,
+    PUSH_REGISTER_RATE_LIMIT.limit,
+    PUSH_REGISTER_RATE_LIMIT.windowMs,
+    PUSH_REGISTER_RATE_LIMIT.message,
+  );
+}
+
+export function assertPushUnregisterRateLimit(userId: string): void {
+  assertRateLimit(
+    `push:unregister:${userId}`,
+    PUSH_UNREGISTER_RATE_LIMIT.limit,
+    PUSH_UNREGISTER_RATE_LIMIT.windowMs,
+    PUSH_UNREGISTER_RATE_LIMIT.message,
+  );
+}
+
+export function assertPushTestRateLimit(userId: string): void {
+  assertRateLimit(
+    `push:test:${userId}`,
+    PUSH_TEST_RATE_LIMIT.limit,
+    PUSH_TEST_RATE_LIMIT.windowMs,
+    PUSH_TEST_RATE_LIMIT.message,
+  );
+}
+
 /** @internal Test helper — clears in-memory buckets. */
 export function resetRateLimitStoreForTests(): void {
   buckets.clear();

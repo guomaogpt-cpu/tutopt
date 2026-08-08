@@ -22,6 +22,9 @@ export function getNotificationCategory(type: NotificationType): Exclude<Notific
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
       return "cargo";
+    case NotificationType.LISTING_APPROVED:
+    case NotificationType.LISTING_REJECTED:
+      return "listings";
     case NotificationType.COMPANY_VERIFIED:
     case NotificationType.COMPANY_VERIFICATION_REJECTED:
       return "system";
@@ -39,7 +42,9 @@ export function filterNotificationsByCategory(
   }
 
   if (category === "listings") {
-    return [];
+    return notifications.filter(
+      (notification) => getNotificationCategory(notification.type) === "listings",
+    );
   }
 
   return notifications.filter(
@@ -58,6 +63,9 @@ export function resolveNotificationLink(notification: NotificationItem): string 
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
       return "/account/requests";
+    case NotificationType.LISTING_APPROVED:
+    case NotificationType.LISTING_REJECTED:
+      return notification.link ?? "/account/listings";
     case NotificationType.COMPANY_VERIFIED:
     case NotificationType.COMPANY_VERIFICATION_REJECTED:
       return "/account/company";
@@ -73,6 +81,9 @@ export function getNotificationActionLabelKey(type: NotificationType): Dictionar
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
       return "notifications.actionOpenCargo";
+    case NotificationType.LISTING_APPROVED:
+    case NotificationType.LISTING_REJECTED:
+      return "notifications.actionOpenListing";
     case NotificationType.COMPANY_VERIFIED:
     case NotificationType.COMPANY_VERIFICATION_REJECTED:
       return "notifications.actionOpenCompany";

@@ -119,6 +119,14 @@ enum NotificationType {
   NEW_CARGO_RESPONSE
   COMPANY_VERIFIED
   COMPANY_VERIFICATION_REJECTED
+  LISTING_APPROVED
+  LISTING_REJECTED
+}
+
+enum PushPlatform {
+  ANDROID
+  PWA
+  IOS
 }
 
 enum CargoResponseStatus {
@@ -222,6 +230,7 @@ model User {
   listingContactEvents     ListingContactEvent[]
   notificationsReceived    Notification[]            @relation("NotificationRecipient")
   notificationsSent        Notification[]            @relation("NotificationActor")
+  pushTokens               PushToken[]
   cargoRequests            CargoRequest[]
   cargoRequestSubscriptions CargoSubscription[]
 
@@ -723,4 +732,22 @@ model Notification {
   @@index([recipient_id, read_at])
   @@index([recipient_id, created_at(sort: Desc)])
   @@map("notifications")
+}
+
+model PushToken {
+  id           String       @id @default(uuid()) @db.Uuid
+  user_id      String       @map("user_id") @db.Uuid
+  token        String       @unique @db.VarChar(512)
+  platform     PushPlatform @default(ANDROID)
+  device_id    String?      @map("device_id") @db.VarChar(200)
+  app_version  String?      @map("app_version") @db.VarChar(50)
+  enabled      Boolean      @default(true)
+  last_seen_at DateTime     @default(now()) @map("last_seen_at") @db.Timestamptz
+  created_at   DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updated_at   DateTime     @updatedAt @map("updated_at") @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, enabled])
+  @@map("push_tokens")
 }

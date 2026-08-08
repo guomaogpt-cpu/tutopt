@@ -10,7 +10,9 @@
 - документацию по keystore
 - checklist blockers перед Play Console
 
-**Не в scope:** Google Play upload, push notifications, iOS, native camera.
+**Не в scope (Phase 113):** Google Play upload, iOS, native camera.
+
+**Phase 117:** Android push foundation added — FCM requires `google-services.json` locally and `FIREBASE_*` on server for delivery. AAB builds without `google-services.json` still succeed; push disabled until configured.
 
 ---
 

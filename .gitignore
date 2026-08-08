@@ -34,6 +34,7 @@ pnpm-debug.log*
 android/key.properties
 android/signing.properties
 android/release-signing.properties
+android/app/google-services.json
 key.properties
 signing.properties
 release-signing.properties

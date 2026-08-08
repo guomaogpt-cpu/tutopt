@@ -1,6 +1,7 @@
 import { NotificationType, type ListingVertical } from "@prisma/client";
 import { findCargoNotificationRecipients } from "@/features/cargo/lib/cargo-subscription-data";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
+import { dispatchUserPush } from "@/lib/push/dispatch-user-push";
 import { prisma } from "@/shared/lib/prisma";
 
 export const NOTIFICATIONS_LIMIT = 20;
@@ -98,15 +99,29 @@ export async function createNewLeadNotification(input: {
     ? getLeadFormConfig(input.vertical)
     : getLeadFormConfig("OPT");
 
-  await prisma.notification.create({
+  const title = config.notificationTitle;
+  const message = config.notificationMessage(input.listingTitle);
+  const link = "/account/requests";
+
+  const notification = await prisma.notification.create({
     data: {
       recipient_id: input.recipientId,
       actor_id: input.actorId,
       type: NotificationType.NEW_LEAD,
-      title: config.notificationTitle,
-      message: config.notificationMessage(input.listingTitle),
-      link: "/account/requests",
+      title,
+      message,
+      link,
     },
+    select: { id: true },
+  });
+
+  await dispatchUserPush({
+    userId: input.recipientId,
+    title,
+    body: message,
+    url: link,
+    notificationId: notification.id,
+    type: NotificationType.NEW_LEAD,
   });
 }
 
@@ -119,7 +134,6 @@ export async function createNewCargoRequestNotifications(input: {
   serviceType?: string | null;
   direction?: string | null;
 }): Promise<void> {
-  // recipientId -> notification link (admins win over sellers for dedupe)
   const recipientLinks = new Map<string, string>();
 
   const admins = await prisma.user.findMany({
@@ -165,6 +179,18 @@ export async function createNewCargoRequestNotifications(input: {
       link,
     })),
   });
+
+  await Promise.all(
+    [...recipientLinks.entries()].map(([recipientId, link]) =>
+      dispatchUserPush({
+        userId: recipientId,
+        title,
+        body: message,
+        url: link,
+        type: NotificationType.NEW_CARGO_REQUEST,
+      }),
+    ),
+  );
 }
 
 export async function createNewCargoResponseNotifications(input: {
@@ -208,5 +234,56 @@ export async function createNewCargoResponseNotifications(input: {
       message,
       link,
     })),
+  });
+
+  await Promise.all(
+    [...recipientLinks.entries()].map(([recipientId, link]) =>
+      dispatchUserPush({
+        userId: recipientId,
+        title,
+        body: message,
+        url: link,
+        type: NotificationType.NEW_CARGO_RESPONSE,
+      }),
+    ),
+  );
+}
+
+export async function createListingModerationNotification(input: {
+  recipientId: string;
+  actorId: string;
+  listingId: string;
+  listingTitle: string;
+  approved: boolean;
+}): Promise<void> {
+  const link = `/listings/${input.listingId}`;
+  const title = input.approved ? "Объявление опубликовано" : "Объявление отклонено";
+  const message = input.approved
+    ? `«${input.listingTitle}» прошло модерацию и опубликовано.`
+    : `«${input.listingTitle}» не прошло модерацию.`;
+
+  const notification = await prisma.notification.create({
+    data: {
+      recipient_id: input.recipientId,
+      actor_id: input.actorId,
+      type: input.approved
+        ? NotificationType.LISTING_APPROVED
+        : NotificationType.LISTING_REJECTED,
+      title,
+      message,
+      link,
+    },
+    select: { id: true },
+  });
+
+  await dispatchUserPush({
+    userId: input.recipientId,
+    title,
+    body: message,
+    url: link,
+    notificationId: notification.id,
+    type: input.approved
+      ? NotificationType.LISTING_APPROVED
+      : NotificationType.LISTING_REJECTED,
   });
 }

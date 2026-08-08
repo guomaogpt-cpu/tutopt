@@ -58,6 +58,7 @@
 |---|---|---|
 | Advertising ID | No | Not intentionally collected |
 | Device ID | Partial | Standard HTTP logs, session cookies |
+| Push token (FCM) | Yes (opt-in) | Android app only; stored for notification delivery |
 | Precise GPS location | No | City is user-entered text field |
 
 ### App info and performance
@@ -74,6 +75,7 @@
 | Purpose | Applies to |
 |---|---|
 | App functionality | Auth, listings, favorites, cargo, notifications |
+| Notification delivery | Push tokens → Firebase Cloud Messaging (Android) |
 | Account management | Profile, login, deletion requests |
 | User-generated content | Listings, photos, descriptions |
 | Security / fraud prevention | Rate limits, moderation, audit logs |
@@ -103,8 +105,11 @@ When user explicitly requests AI-generated listing description:
 | Cloud hosting (Railway) | All server-processed data | Infrastructure |
 | AI provider (OpenAI) | Listing draft fields | Only on user-initiated generation |
 | Google (OAuth) | Email, name | If user chooses Google sign-in |
+| Google (Firebase Cloud Messaging) | Push token, notification payload | Android push delivery only; user opt-in |
 
-**Data sale:** declare «No» if personal data is not sold to third parties (verify with legal).
+**Data sale:** declare «No» — push tokens are not sold to third parties (verify with legal).
+
+**Push opt-out:** user can disable in `/account` or Android system settings; server marks token `enabled=false`.
 
 **Encryption in transit:** Yes (HTTPS to production URL).
 
@@ -156,6 +161,9 @@ App contains UGC:
 | Verify OpenAI usage in production | ⏳ confirm env |
 | Automated deletion vs manual | ⏳ declare accurately |
 | Analytics / crash SDK audit | ⏳ confirm no undeclared SDKs |
+| Firebase credentials for push | ⏳ set on Railway before production push |
+| Notification permission UX copy | ✅ opt-in in `/account` (Phase 117) |
+| Privacy Policy push section | ⚠️ draft on `/privacy` — legal review |
 
 ---
 

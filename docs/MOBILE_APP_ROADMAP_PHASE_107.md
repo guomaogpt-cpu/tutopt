@@ -89,19 +89,18 @@ npx cap add ios
 - [x] Избранное
 - [x] Кабинет / account
 - [x] Карго-заявки
-- [ ] Push notifications (later)
+- [x] Push notifications (Android foundation — Phase 117)
 - [x] Account deletion request flow (Phase 114 — manual processing)
 - [x] Privacy Policy page (Phase 114 — draft, needs legal review)
 - [x] Terms of Service page (Phase 114 — draft, needs legal review)
 
-## 6. Push notifications later
-
-**Этап 3:**
+## 6. Push notifications — Phase 117 ✅ foundation
 
 - Capacitor `@capacitor/push-notifications`
-- Backend: Firebase Cloud Messaging (Android) + APNs (iOS)
-- Связать с существующим `/notifications` и unread count
-- Opt-in UX, не запрашивать permission при первом входе
+- Backend: Firebase Cloud Messaging (Android only)
+- Связано с `/notifications` и in-app events
+- Opt-in UX в `/account`, permission по действию пользователя
+- См. `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md`
 
 ## 7. Privacy / terms / account deletion
 
@@ -138,9 +137,9 @@ npx cap add ios
 | 114 ✅ | Legal pages (draft), account deletion request, support, data safety notes |
 | 115 ✅ | Mobile app UX upgrade: home, nav, listing flow, account, empty states |
 | 116 ✅ | In-app notifications, activity block, status labels, badges |
-| 117 | Store assets + Play Console internal testing upload |
-| 118 | Production rollout (after QA + legal sign-off) |
-| 119 | Push notifications (Firebase FCM) |
+| 117 ✅ | Android push foundation (FCM, token APIs, account opt-in) |
+| 118 | Store assets + Play Console internal testing upload |
+| 119 | Production rollout (after QA + legal sign-off) |
 | 120 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
@@ -178,5 +177,7 @@ Next.js App Router с SSR потребует либо:
 - `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`
+- `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md`
+- `docs/FIREBASE_PUSH_SETUP_PHASE_117.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

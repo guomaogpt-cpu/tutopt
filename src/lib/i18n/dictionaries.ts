@@ -4479,6 +4479,111 @@ export const DICTIONARY = {
     kg: "Компанияны ачуу",
     en: "Open company",
   },
+  "notifications.actionOpenListing": {
+    ru: "Открыть объявление",
+    kg: "Жарыяны ачуу",
+    en: "Open listing",
+  },
+  "push.settings.title": {
+    ru: "Уведомления",
+    kg: "Билдирмелер",
+    en: "Notifications",
+  },
+  "push.settings.description": {
+    ru: "Получайте уведомления о заявках и статусах объявлений.",
+    kg: "Сурамдар жана жарыялар статусу боюнча билдирмелерди алыңыз.",
+    en: "Get notified about requests and listing status updates.",
+  },
+  "push.settings.statusEnabled": {
+    ru: "Push-уведомления включены",
+    kg: "Push билдирмелер күйүк",
+    en: "Push notifications enabled",
+  },
+  "push.settings.statusDisabled": {
+    ru: "Push-уведомления выключены",
+    kg: "Push билдирмелер өчүк",
+    en: "Push notifications disabled",
+  },
+  "push.settings.statusPermissionRequired": {
+    ru: "Требуется разрешение Android",
+    kg: "Android уруксаты керек",
+    en: "Android permission required",
+  },
+  "push.settings.statusBrowser": {
+    ru: "Доступно в приложении Android",
+    kg: "Android колдонмосунда гана",
+    en: "Available in the Android app",
+  },
+  "push.settings.enable": {
+    ru: "Включить уведомления",
+    kg: "Билдирмелерди күйгүзүү",
+    en: "Enable notifications",
+  },
+  "push.settings.disable": {
+    ru: "Отключить уведомления",
+    kg: "Билдирмелерди өчүрүү",
+    en: "Disable notifications",
+  },
+  "push.settings.test": {
+    ru: "Отправить тестовое уведомление",
+    kg: "Сынак билдирме жөнөтүү",
+    en: "Send test notification",
+  },
+  "push.settings.enabledSuccess": {
+    ru: "Уведомления включены",
+    kg: "Билдирмелер күйгүзүлдү",
+    en: "Notifications enabled",
+  },
+  "push.settings.disabledSuccess": {
+    ru: "Уведомления отключены",
+    kg: "Билдирмелер өчүрүлдү",
+    en: "Notifications disabled",
+  },
+  "push.settings.permissionDenied": {
+    ru: "Разрешение на уведомления отклонено",
+    kg: "Билдирме уруксаты четке какты",
+    en: "Notification permission denied",
+  },
+  "push.settings.permissionDeniedHint": {
+    ru: "Разрешение отключено. Его можно включить в настройках Android.",
+    kg: "Уруксат четке какты. Android жөндөөлөрүнөн күйгүзсө болот.",
+    en: "Permission denied. You can enable it in Android settings.",
+  },
+  "push.settings.unavailableBrowser": {
+    ru: "Push недоступен в браузере. Используйте приложение Android.",
+    kg: "Push браузерде жок. Android колдонмосун колдонуңуз.",
+    en: "Push is not available in the browser. Use the Android app.",
+  },
+  "push.settings.enableFailed": {
+    ru: "Не удалось включить уведомления",
+    kg: "Билдирмелерди күйгүзүү мүмкүн болгон жок",
+    en: "Could not enable notifications",
+  },
+  "push.settings.disableFailed": {
+    ru: "Не удалось отключить уведомления",
+    kg: "Билдирмелерди өчүрүү мүмкүн болгон жок",
+    en: "Could not disable notifications",
+  },
+  "push.settings.testSent": {
+    ru: "Тестовое уведомление отправлено",
+    kg: "Сынак билдирме жөнөтүлдү",
+    en: "Test notification sent",
+  },
+  "push.settings.testFailed": {
+    ru: "Не удалось отправить тестовое уведомление",
+    kg: "Сынак билдирме жөнөтүлбөдү",
+    en: "Could not send test notification",
+  },
+  "push.settings.noTokens": {
+    ru: "Сначала включите push-уведомления",
+    kg: "Алдыда push билдирмелерди күйгүзүңүз",
+    en: "Enable push notifications first",
+  },
+  "push.settings.firebaseMissing": {
+    ru: "Push на сервере не настроен (Firebase credentials)",
+    kg: "Push серверде орнотулган эмес (Firebase)",
+    en: "Push not configured on server (Firebase credentials)",
+  },
   "notifications.markAllReadSuccess": {
     ru: "Все уведомления отмечены прочитанными",
     kg: "Бардык билдирмелер окуулган",
@@ -4490,9 +4595,9 @@ export const DICTIONARY = {
     en: "Could not update notifications",
   },
   "notifications.emptyListingsCategory": {
-    ru: "Уведомлений по объявлениям пока нет. Статусы модерации — в «Мои объявления».",
+    ru: "Уведомлений по объявлениям пока нет.",
     kg: "Жарыялар боюнча билдирмелер азырынча жок.",
-    en: "No listing notifications yet. See My listings for moderation status.",
+    en: "No listing notifications yet.",
   },
   "notifications.emptyTitle": {
     ru: "Пока нет уведомлений",

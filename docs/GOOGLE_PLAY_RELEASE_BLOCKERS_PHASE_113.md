@@ -28,6 +28,8 @@ Google Play publish **нельзя** делать, пока не закрыты 
 | 14 | **Contact / support flow** | ⚠️ partial | `/support` page; final email TBD |
 | 15 | **Signed release AAB** | ⏳ pending | Process documented; keystore must be created locally |
 | 16 | **Real Android device QA passed** | ⏳ pending | See `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md` |
+| 17 | **Firebase push credentials** | ⏳ pending | `FIREBASE_*` env + local `google-services.json` — see Phase 117 docs |
+| 18 | **Notification permission / privacy copy** | ⚠️ draft | Opt-in UX in `/account`; `/privacy` push section — legal review |
 
 ---
 
