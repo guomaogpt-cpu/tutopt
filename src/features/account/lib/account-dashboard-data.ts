@@ -1,5 +1,6 @@
 import {
   ListingStatus,
+  LeadStatus,
   type CargoRequestStatus,
   type CompanyType,
   type CompanyVerificationStatus,
@@ -11,7 +12,7 @@ import {
 } from "@/features/company/lib/company-profile";
 import { getBuyerCargoRequests } from "@/features/cargo/lib/cargo-requests-data";
 import { getUnreadNotificationCount } from "@/features/notifications/lib/notifications-data";
-import { getBuyerLeads } from "@/features/leads/lib/leads-data";
+import { getBuyerLeads, getSellerLeads } from "@/features/leads/lib/leads-data";
 import { prisma } from "@/shared/lib/prisma";
 
 export type AccountListingStats = {
@@ -66,6 +67,7 @@ export type AccountDashboardData = {
   cargo: AccountCargoSummary;
   favoritesCount: number;
   unreadNotifications: number;
+  receivedLeadsCount: number;
 };
 
 export async function getAccountDashboardData(
@@ -99,6 +101,7 @@ export async function getAccountDashboardData(
     listingGroups,
     recentListings,
     leads,
+    sellerLeads,
     cargoRequests,
     favoritesCount,
     unreadNotifications,
@@ -125,6 +128,7 @@ export async function getAccountDashboardData(
         })
       : Promise.resolve([]),
     getBuyerLeads(user.id),
+    sellerProfile ? getSellerLeads(sellerProfile.id) : Promise.resolve([]),
     getBuyerCargoRequests(user.id),
     prisma.favorite.count({ where: { user_id: user.id } }),
     getUnreadNotificationCount(user.id),
@@ -219,5 +223,6 @@ export async function getAccountDashboardData(
     },
     favoritesCount,
     unreadNotifications,
+    receivedLeadsCount: sellerLeads.filter((lead) => lead.status === LeadStatus.NEW).length,
   };
 }

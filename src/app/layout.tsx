@@ -3,6 +3,7 @@ import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { NotificationsUnreadRoot } from "@/components/notifications/NotificationsUnreadRoot";
 import { AppProviders } from "@/components/providers";
 import { getSiteBaseUrl } from "@/shared/seo/absolute-url";
 import { getSiteVerificationMetadata } from "@/shared/seo/site-verification";
@@ -73,6 +74,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col bg-background text-foreground antialiased">
         <AnalyticsScripts />
         <AppProviders>
+          <NotificationsUnreadRoot />
           <Header />
           <div className="flex min-h-0 flex-1 flex-col pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
             {children}

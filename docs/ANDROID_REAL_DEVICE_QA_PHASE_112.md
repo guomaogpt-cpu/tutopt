@@ -171,6 +171,21 @@ Status: **retest pending** on real device after deploy.
 
 ---
 
+## Phase 116 — App Notifications & Activity
+
+In-app notifications polish — см. `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`.
+
+**Device retest focus:**
+- Bottom nav numeric badge (9+)
+- `/notifications` filters and mark-all-read
+- Account activity block
+- Status labels and hints
+- Toast on mark-all-read
+
+Status: **retest pending** after deploy.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
@@ -179,3 +194,5 @@ Status: **retest pending** on real device after deploy.
 - `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`
 - `docs/ANDROID_FORM_STABILITY_PHASE_110.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
+- `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
+- `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`

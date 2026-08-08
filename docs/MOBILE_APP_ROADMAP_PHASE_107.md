@@ -137,10 +137,11 @@ npx cap add ios
 | 113 ✅ | Release AAB prep: signing docs, `android:release` script, Play blockers checklist |
 | 114 ✅ | Legal pages (draft), account deletion request, support, data safety notes |
 | 115 ✅ | Mobile app UX upgrade: home, nav, listing flow, account, empty states |
-| 116 | Store assets + Play Console internal testing upload |
-| 117 | Production rollout (after QA + legal sign-off) |
-| 118 | Push notifications |
-| 119 | Capacitor iOS wrapper |
+| 116 ✅ | In-app notifications, activity block, status labels, badges |
+| 117 | Store assets + Play Console internal testing upload |
+| 118 | Production rollout (after QA + legal sign-off) |
+| 119 | Push notifications (Firebase FCM) |
+| 120 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 
@@ -176,5 +177,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
 - `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
+- `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

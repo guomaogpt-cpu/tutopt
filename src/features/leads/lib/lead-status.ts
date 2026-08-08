@@ -3,7 +3,7 @@ import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 
 export const leadStatusLabels: Record<LeadStatus, string> = {
   NEW: "Новая",
-  VIEWED: "В обработке",
+  VIEWED: "В работе",
   CLOSED: "Закрыта",
 };
 

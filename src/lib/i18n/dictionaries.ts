@@ -4459,15 +4459,50 @@ export const DICTIONARY = {
     en: "Unread",
   },
   "notifications.leads": { ru: "Заявки", kg: "Тапшырмалар", en: "Leads" },
+  "notifications.filterAll": { ru: "Все", kg: "Баары", en: "All" },
+  "notifications.filterLeads": { ru: "Заявки", kg: "Сурамдар", en: "Requests" },
+  "notifications.filterListings": { ru: "Объявления", kg: "Жарыялар", en: "Listings" },
+  "notifications.filterCargo": { ru: "Карго", kg: "Карго", en: "Cargo" },
+  "notifications.filterSystem": { ru: "Система", kg: "Система", en: "System" },
+  "notifications.actionOpenRequest": {
+    ru: "Открыть заявку",
+    kg: "Сурамды ачуу",
+    en: "Open request",
+  },
+  "notifications.actionOpenCargo": {
+    ru: "Открыть карго",
+    kg: "Карго ачуу",
+    en: "Open cargo",
+  },
+  "notifications.actionOpenCompany": {
+    ru: "Открыть компанию",
+    kg: "Компанияны ачуу",
+    en: "Open company",
+  },
+  "notifications.markAllReadSuccess": {
+    ru: "Все уведомления отмечены прочитанными",
+    kg: "Бардык билдирмелер окуулган",
+    en: "All notifications marked as read",
+  },
+  "notifications.markAllReadError": {
+    ru: "Не удалось обновить уведомления",
+    kg: "Билдирмелерди жаңыртуу мүмкүн болгон жок",
+    en: "Could not update notifications",
+  },
+  "notifications.emptyListingsCategory": {
+    ru: "Уведомлений по объявлениям пока нет. Статусы модерации — в «Мои объявления».",
+    kg: "Жарыялар боюнча билдирмелер азырынча жок.",
+    en: "No listing notifications yet. See My listings for moderation status.",
+  },
   "notifications.emptyTitle": {
     ru: "Пока нет уведомлений",
     kg: "Азырынча билдирме жок",
     en: "No notifications yet",
   },
   "notifications.emptyDescription": {
-    ru: "Здесь появятся заявки, статусы модерации и важные события.",
-    kg: "Бул жерде тапшырмалар, модерация статустары жана окуялар көрүнөт.",
-    en: "Leads, moderation updates and important events will appear here.",
+    ru: "Когда появятся заявки, статусы объявлений или ответы по карго, они будут здесь.",
+    kg: "Сурамдар, жарыя статустары же карго жооптору бул жерде көрүнөт.",
+    en: "Requests, listing updates and cargo replies will appear here.",
   },
   "notifications.goToSellerDashboard": {
     ru: "Перейти в личный кабинет",
@@ -5179,9 +5214,124 @@ export const DICTIONARY = {
     kg: "Модерацияда",
     en: "Pending moderation",
   },
-  "status.published": { ru: "Опубликовано", kg: "Жарыяланды", en: "Published" },
+  "status.published": { ru: "Активно", kg: "Активдүү", en: "Active" },
   "status.rejected": { ru: "Отклонено", kg: "Четке кагылды", en: "Rejected" },
   "status.archived": { ru: "В архиве", kg: "Архивде", en: "Archived" },
+  "status.hint.pendingModeration": {
+    ru: "Объявление проверяется. После одобрения оно появится в поиске.",
+    kg: "Жарыя текшерилүүдө. Макулданганда издөөдө көрүнөт.",
+    en: "Listing is being reviewed. It will appear in search after approval.",
+  },
+  "status.hint.rejected": {
+    ru: "Объявление не прошло проверку. Проверьте описание и фото.",
+    kg: "Жарыя текшерүүдөн өткөн жок. Сүрөттөмө жана сүрөттү текшериңиз.",
+    en: "Listing was not approved. Check description and photos.",
+  },
+  "status.hint.published": {
+    ru: "Объявление опубликовано и видно пользователям.",
+    kg: "Жарыя жарыяланды жана колдонуучуларга көрүнөт.",
+    en: "Listing is published and visible to users.",
+  },
+  "status.hint.draft": {
+    ru: "Черновик не виден другим пользователям.",
+    kg: "Долбоор башка колдонуучулarga көрүнбөйт.",
+    en: "Draft is not visible to other users.",
+  },
+  "status.hint.archived": {
+    ru: "Объявление снято с публикации.",
+    kg: "Жарыя жарыядан алынган.",
+    en: "Listing has been archived.",
+  },
+  "leadStatus.hint.new": {
+    ru: "Новая заявка — ответьте покупателю как можно скорее.",
+    kg: "Жаңы сурам — сатып алуучуга тез жооп бериңиз.",
+    en: "New request — reply to the buyer soon.",
+  },
+  "leadStatus.hint.inProgress": {
+    ru: "Заявка в работе.",
+    kg: "Сурам иштетилүүдө.",
+    en: "Request is in progress.",
+  },
+  "leadStatus.hint.closed": {
+    ru: "Заявка закрыта.",
+    kg: "Сурам жабылды.",
+    en: "Request is closed.",
+  },
+  "cargoStatus.hint.new": {
+    ru: "Новая карго-заявка ожидает обработки.",
+    kg: "Жаңы карго сурамы иштетилүүдө.",
+    en: "New cargo request awaiting processing.",
+  },
+  "cargoStatus.hint.inReview": {
+    ru: "Заявка на рассмотрении.",
+    kg: "Сурам каралууда.",
+    en: "Request is under review.",
+  },
+  "cargoStatus.hint.contacted": {
+    ru: "С вами связались по заявке.",
+    kg: "Сурам боюнча байланышты.",
+    en: "You have been contacted about this request.",
+  },
+  "cargoStatus.hint.closed": {
+    ru: "Карго-заявка закрыта.",
+    kg: "Карго сурамы жабылды.",
+    en: "Cargo request is closed.",
+  },
+  "accountActivity.title": {
+    ru: "Активность",
+    kg: "Активдүүлүк",
+    en: "Activity",
+  },
+  "accountActivity.unreadNotifications": {
+    ru: "{count} новых уведомлений",
+    kg: "{count} жаңы билдирме",
+    en: "{count} new notifications",
+  },
+  "accountActivity.newLeads": {
+    ru: "{count} новых заявок",
+    kg: "{count} жаңы сурам",
+    en: "{count} new requests",
+  },
+  "accountActivity.pendingListings": {
+    ru: "{count} объявлений на модерации",
+    kg: "{count} жарыя модерацияда",
+    en: "{count} listings pending moderation",
+  },
+  "accountActivity.activeListings": {
+    ru: "{count} активных объявлений",
+    kg: "{count} активдүү жарыя",
+    en: "{count} active listings",
+  },
+  "accountActivity.cargoRequests": {
+    ru: "{count} карго-заявок",
+    kg: "{count} карго сурам",
+    en: "{count} cargo requests",
+  },
+  "accountActivity.quietTitle": {
+    ru: "Пока всё спокойно",
+    kg: "Азырынча тынч",
+    en: "All quiet for now",
+  },
+  "accountActivity.quietDescription": {
+    ru: "Создайте объявление или заявку, чтобы начать работу.",
+    kg: "Иштей баштоо үчүн жарыя же сурам түзүңүз.",
+    en: "Post a listing or submit a request to get started.",
+  },
+  "accountActivity.openNotifications": {
+    ru: "Открыть уведомления",
+    kg: "Билдирмелерди ачуу",
+    en: "Open notifications",
+  },
+  "accountActivity.openListings": {
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "accountActivity.openRequests": {
+    ru: "Мои заявки",
+    kg: "Менин сурамдарым",
+    en: "My requests",
+  },
 } as const;
 
 export type DictionaryKey = keyof typeof DICTIONARY;

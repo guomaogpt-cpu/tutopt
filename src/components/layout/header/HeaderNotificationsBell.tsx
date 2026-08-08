@@ -2,74 +2,40 @@
 
 import Link from "next/link";
 import { Bell } from "lucide-react";
-import { useEffect } from "react";
-import { fetchUnreadNotificationCount } from "@/features/notifications/lib/notifications-client";
-import {
-  applyPolledUnreadNotificationCount,
-  getUnreadMutationGeneration,
-} from "@/features/notifications/lib/notifications-unread-store";
 import { useUnreadNotificationCount } from "@/features/notifications/lib/use-unread-notification-count";
-import { Badge } from "@/components/ui/badge";
+import { formatNotificationBadgeCount } from "@/features/notifications/lib/notification-display";
 import { Button } from "@/components/ui/button";
-
-const POLL_INTERVAL_MS = 30_000;
+import { cn } from "@/lib/utils";
 
 export function HeaderNotificationsBell() {
   const unreadCount = useUnreadNotificationCount();
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadUnreadCount() {
-      const pollStartGeneration = getUnreadMutationGeneration();
-
-      try {
-        const { count } = await fetchUnreadNotificationCount();
-        if (!isMounted) {
-          return;
-        }
-
-        applyPolledUnreadNotificationCount(count, pollStartGeneration);
-      } catch {
-        if (!isMounted) {
-          return;
-        }
-      }
-    }
-
-    void loadUnreadCount();
-    const intervalId = window.setInterval(() => {
-      void loadUnreadCount();
-    }, POLL_INTERVAL_MS);
-
-    return () => {
-      isMounted = false;
-      window.clearInterval(intervalId);
-    };
-  }, []);
-
-  const badgeLabel = unreadCount > 99 ? "99+" : String(unreadCount);
+  const badgeLabel = formatNotificationBadgeCount(unreadCount);
 
   return (
     <Button
       variant="outline"
       size="icon"
-      className="relative h-10 w-10 shrink-0 border-[#E5E7EB]"
+      className="relative h-10 w-10 shrink-0 border-[#E5E7EB] dark:border-slate-700"
       asChild
     >
       <Link
         href="/notifications"
-        aria-label={unreadCount > 0 ? `Уведомления: ${badgeLabel} непрочитанных` : "Уведомления"}
+        aria-label={
+          badgeLabel ? `Уведомления: ${badgeLabel} непрочитанных` : "Уведомления"
+        }
         title="Уведомления"
       >
         <Bell className="size-4" aria-hidden="true" />
-        {unreadCount > 0 ? (
-          <Badge
-            variant="default"
-            className="absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full p-0 text-[10px]"
+        {badgeLabel ? (
+          <span
+            className={cn(
+              "absolute -right-1 -top-1 flex min-w-[1.125rem] items-center justify-center rounded-full",
+              "bg-[#2563EB] px-1 py-0.5 text-[10px] font-bold leading-none text-white ring-2 ring-white",
+              "dark:ring-slate-950",
+            )}
           >
             {badgeLabel}
-          </Badge>
+          </span>
         ) : null}
       </Link>
     </Button>

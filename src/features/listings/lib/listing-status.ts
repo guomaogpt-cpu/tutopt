@@ -8,7 +8,7 @@ import { translate, type DictionaryKey, type Locale } from "@/lib/i18n/dictionar
 export const listingStatusLabels: Record<ListingStatus, string> = {
   DRAFT: "Черновик",
   PENDING_MODERATION: "На модерации",
-  PUBLISHED: "Опубликовано",
+  PUBLISHED: "Активно",
   REJECTED: "Отклонено",
   ARCHIVED: "В архиве",
 };

@@ -15,6 +15,7 @@ import {
   type MobileNavTabId,
 } from "@/features/navigation/lib/mobile-nav";
 import { useUnreadNotificationCount } from "@/features/notifications/lib/use-unread-notification-count";
+import { formatNotificationBadgeCount } from "@/features/notifications/lib/notification-display";
 import { useHideNavOnFormFocus } from "@/hooks/use-hide-nav-on-form-focus";
 import { useRouteVerticalTheme } from "@/lib/use-route-vertical-theme";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
@@ -41,7 +42,8 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
   const { theme } = useRouteVerticalTheme();
   const activeTab = getActiveMobileNavTab(pathname);
   const unreadCount = useUnreadNotificationCount();
-  const showNotificationsBadge = Boolean(user) && unreadCount > 0;
+  const badgeLabel = formatNotificationBadgeCount(unreadCount);
+  const showNotificationsBadge = Boolean(user) && badgeLabel !== null;
   const hideOnFormFocus = useHideNavOnFormFocus(
     FORM_ROUTES.some((route) => pathname.startsWith(route)),
   );
@@ -159,11 +161,13 @@ export function MobileBottomNav({ user }: MobileBottomNavProps) {
                   {item.id === "notifications" && showNotificationsBadge ? (
                     <span
                       className={cn(
-                        "absolute -right-0.5 -top-0.5 size-2 rounded-full ring-2 ring-white dark:ring-slate-950",
+                        "absolute -right-1.5 -top-1 flex min-w-[1rem] items-center justify-center rounded-full px-0.5",
+                        "text-[9px] font-bold leading-none text-white ring-2 ring-white dark:ring-slate-950",
                         theme.primaryBg,
                       )}
-                      aria-hidden="true"
-                    />
+                    >
+                      {badgeLabel}
+                    </span>
                   ) : null}
                 </span>
                 <span className="text-[10px] font-semibold leading-none">{t(item.labelKey)}</span>

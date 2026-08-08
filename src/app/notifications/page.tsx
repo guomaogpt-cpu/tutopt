@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { NotificationsList } from "@/components/notifications/NotificationsList";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
-import { getUserNotifications } from "@/features/notifications/lib/notifications-data";
+import { getUserNotifications, getUnreadNotificationCount } from "@/features/notifications/lib/notifications-data";
 import { Container } from "@/components/ui/container";
 import { PageHeader, PageHeaderContent } from "@/components/ui/page-header";
 import { PageSubtitle, PageTitle } from "@/components/ui/page-title";
@@ -23,6 +23,7 @@ export default async function NotificationsPage() {
   }
 
   const notifications = await getUserNotifications(user.id);
+  const unreadCount = await getUnreadNotificationCount(user.id);
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] pt-6 dark:bg-slate-950 sm:py-8">
@@ -37,7 +38,11 @@ export default async function NotificationsPage() {
         </PageHeader>
 
         <div className="mt-6 lg:mt-8">
-          <NotificationsList initialNotifications={notifications} userRole={user.role} />
+          <NotificationsList
+            initialNotifications={notifications}
+            userRole={user.role}
+            initialUnreadCount={unreadCount}
+          />
         </div>
       </Container>
     </main>

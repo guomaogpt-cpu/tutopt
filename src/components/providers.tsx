@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { MobileAppShell } from "@/components/mobile/MobileAppShell";
 import { PwaInstallPrompt } from "@/components/pwa/PwaInstallPrompt";
 import { PwaServiceWorkerRegister } from "@/components/pwa/PwaServiceWorkerRegister";
+import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 type AppProvidersProps = {
@@ -21,6 +22,7 @@ export function AppProviders({ children }: AppProvidersProps) {
           <MobileAppShell />
           {children}
           <PwaInstallPrompt />
+          <Toaster />
         </TooltipProvider>
       </LocaleProvider>
     </ThemeProvider>

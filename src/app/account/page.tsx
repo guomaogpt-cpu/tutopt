@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AccountActivitySummary } from "@/components/account/AccountActivitySummary";
 import { AccountCargoSummaryCard } from "@/components/account/AccountCargoSummaryCard";
 import { AccountCompanySummaryCard } from "@/components/account/AccountCompanySummaryCard";
 import { AccountListingsSummary } from "@/components/account/AccountListingsSummary";
@@ -45,6 +46,14 @@ export default async function AccountPage() {
             hasCompany={Boolean(data.company)}
           />
           <MobileOnboardingHints className="sm:hidden" />
+          <AccountActivitySummary
+            data={{
+              unreadNotifications: data.unreadNotifications,
+              listingStats: data.listingStats,
+              receivedLeadsCount: data.receivedLeadsCount,
+              cargoRequestsCount: data.cargoRequestsCount,
+            }}
+          />
           <AccountQuickActions />
           <AccountMetaSummary
             favoritesCount={data.favoritesCount}
