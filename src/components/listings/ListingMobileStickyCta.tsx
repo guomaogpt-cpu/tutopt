@@ -1,6 +1,7 @@
 "use client";
 
-import { MessageSquare, Phone } from "lucide-react";
+import Link from "next/link";
+import { MessageSquare, Pencil, Phone } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { ListingVertical } from "@prisma/client";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
@@ -39,7 +40,27 @@ export function ListingMobileStickyCta({
   const theme = getVerticalTheme(vertical);
 
   if (isOwnListing) {
-    return null;
+    return (
+      <div
+        className={cn(
+          "fixed inset-x-0 z-30 border-t border-slate-200 bg-white/95 px-3 py-2.5 backdrop-blur md:hidden",
+          "supports-[backdrop-filter]:bg-white/90 dark:border-slate-800 dark:bg-slate-950/95",
+        )}
+        style={{ bottom: mobileStickyBottomOffset(5) }}
+      >
+        <div className="mx-auto max-w-lg">
+          <Button
+            asChild
+            className={cn("h-12 w-full gap-2 rounded-xl text-sm font-semibold", theme.primaryButton)}
+          >
+            <Link href={`/listings/${listingId}/edit`}>
+              <Pencil className="size-4 shrink-0" aria-hidden="true" />
+              {t("listing.editListing")}
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   const ctaLabel = getLeadFormConfig(vertical).contactCtaLabel;

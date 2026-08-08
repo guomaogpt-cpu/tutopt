@@ -59,7 +59,6 @@ export function CategoryPicker({
     setSelectedRootId(root?.id ?? null);
   }, [categories, value]);
 
-  const selectedPath = value ? getCategoryPath(categories, value).join(" → ") : "";
   const selectedRoot = roots.find((root) => root.id === selectedRootId);
   const children = useMemo(
     () => (selectedRootId ? getChildCategories(categories, selectedRootId) : []),
@@ -85,6 +84,14 @@ export function CategoryPicker({
     return [...scoped, ...rest].slice(0, 24);
   }, [categories, searchQuery, selectedRootId]);
 
+  function findFallbackCategoryId(): string | null {
+    const fallback =
+      categories.find((c) => c.slug === "market-drugoe") ??
+      categories.find((c) => c.slug === "services-drugoe") ??
+      categories.find((c) => /drugoe/i.test(c.slug) && c.parent_id !== null);
+    return fallback?.id ?? null;
+  }
+
   function handleReset() {
     onChange("");
     setSelectedRootId(null);
@@ -108,16 +115,20 @@ export function CategoryPicker({
   }
 
   if (value) {
+    const pathParts = getCategoryPath(categories, value);
     return (
       <div className="space-y-2">
         <p className="text-sm font-medium text-foreground">{label}</p>
+        <nav aria-label="Выбранная категория" className="text-xs text-muted-foreground">
+          {pathParts.join(" → ")}
+        </nav>
         <Card className="border-primary/20 bg-primary/5">
           <CardContent className="flex items-start justify-between gap-4 p-4">
             <div className="min-w-0">
               <Badge variant="secondary" className="mb-2">
                 Выбрано
               </Badge>
-              <p className="text-base font-semibold text-foreground">{selectedPath}</p>
+              <p className="text-base font-semibold text-foreground">{pathParts[pathParts.length - 1]}</p>
             </div>
             <Button type="button" variant="outline" size="sm" onClick={handleReset} disabled={disabled}>
               Изменить
@@ -148,8 +159,25 @@ export function CategoryPicker({
       {searchQuery.trim() && !selectedRootId ? (
         <ul className="max-h-72 space-y-2 overflow-y-auto">
           {globalSearchResults.length === 0 ? (
-            <li className="rounded-xl border bg-background px-4 py-6 text-center text-sm text-muted-foreground">
-              Категории не найдены. Попробуйте другой запрос.
+            <li className="rounded-xl border bg-background px-4 py-5 text-center">
+              <p className="text-sm text-muted-foreground">Не нашли категорию?</p>
+              {findFallbackCategoryId() ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-3 h-10 rounded-xl"
+                  disabled={disabled}
+                  onClick={() => {
+                    const id = findFallbackCategoryId();
+                    if (id) {
+                      selectCategory(id);
+                    }
+                  }}
+                >
+                  Выбрать «Другое»
+                </Button>
+              ) : null}
             </li>
           ) : (
             globalSearchResults.map((result) => (
@@ -202,6 +230,12 @@ export function CategoryPicker({
       {selectedRootId ? (
         <Card className="animate-fade-in-up bg-muted/20">
           <CardContent className="space-y-4 p-4 sm:p-5">
+            <nav
+              aria-label="Путь категории"
+              className="text-xs font-medium text-muted-foreground"
+            >
+              {selectedRoot?.name}
+            </nav>
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{getCategoryEmoji(selectedRoot ?? roots[0])}</span>

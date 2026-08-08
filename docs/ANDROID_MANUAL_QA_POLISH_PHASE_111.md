@@ -127,6 +127,20 @@ Blockers before AAB:
 
 ---
 
+## Phase 115 — Mobile App UX Upgrade
+
+См. `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
+
+**Retest на device после Phase 115:**
+1. Mobile home — search + quick actions на первом экране
+2. Bottom nav — FAB «Подать», hide при keyboard на `/listings/new`
+3. Listing creation — vertical chooser, шаги, «Составить описание»
+4. Category search — «Другое» fallback
+5. Account — profile card, onboarding hints, service links
+6. Own listing detail — sticky «Редактировать»
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_FORM_STABILITY_PHASE_110.md`

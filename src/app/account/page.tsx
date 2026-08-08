@@ -3,10 +3,12 @@ import { AccountCargoSummaryCard } from "@/components/account/AccountCargoSummar
 import { AccountCompanySummaryCard } from "@/components/account/AccountCompanySummaryCard";
 import { AccountListingsSummary } from "@/components/account/AccountListingsSummary";
 import { AccountMetaSummary } from "@/components/account/AccountMetaSummary";
-import { AccountPageHeader } from "@/components/account/AccountPageHeader";
+import { AccountProfileCard } from "@/components/account/AccountProfileCard";
 import { AccountQuickActions } from "@/components/account/AccountQuickActions";
-import { PwaInstallCard } from "@/components/pwa/PwaInstallCard";
 import { AccountRequestsSummary } from "@/components/account/AccountRequestsSummary";
+import { AccountServiceLinks } from "@/components/account/AccountServiceLinks";
+import { MobileOnboardingHints } from "@/components/mobile/MobileOnboardingHints";
+import { PwaInstallCard } from "@/components/pwa/PwaInstallCard";
 import { getAccountDashboardData } from "@/features/account/lib/account-dashboard-data";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -36,11 +38,14 @@ export default async function AccountPage() {
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
       <Container size="lg" className="max-w-[1100px] min-w-0">
-        <AccountPageHeader userName={data.userName} />
-
         <div className="space-y-4 sm:space-y-5">
+          <AccountProfileCard
+            userName={data.userName}
+            phone={user.phone}
+            hasCompany={Boolean(data.company)}
+          />
+          <MobileOnboardingHints className="sm:hidden" />
           <AccountQuickActions />
-          <PwaInstallCard />
           <AccountMetaSummary
             favoritesCount={data.favoritesCount}
             unreadNotifications={data.unreadNotifications}
@@ -60,6 +65,9 @@ export default async function AccountPage() {
             <AccountCompanySummaryCard company={data.company} />
             <AccountCargoSummaryCard cargo={data.cargo} />
           </div>
+
+          <PwaInstallCard />
+          <AccountServiceLinks />
         </div>
       </Container>
     </main>

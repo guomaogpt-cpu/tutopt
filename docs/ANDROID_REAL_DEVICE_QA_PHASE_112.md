@@ -156,6 +156,21 @@ Unsigned AAB can be built locally via Gradle for size verification; Google Play 
 
 ---
 
+## Phase 115 — Mobile App UX Upgrade
+
+UX polish для mobile/PWA/WebView — см. `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`.
+
+**Device retest focus:**
+- Compact mobile home (search, quick actions)
+- Bottom nav FAB + keyboard hide on forms
+- Listing creation user-friendly labels
+- Account profile + service links
+- Sticky edit CTA on own listings
+
+Status: **retest pending** on real device after deploy.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`

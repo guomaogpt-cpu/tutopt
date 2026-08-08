@@ -5,7 +5,6 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
 const STEPS: Array<{ id: string; labelKey: DictionaryKey }> = [
-  { id: "type", labelKey: "listingForm.steps.type" },
   { id: "category", labelKey: "listingForm.steps.category" },
   { id: "details", labelKey: "listingForm.steps.details" },
   { id: "description", labelKey: "listingForm.steps.description" },
@@ -18,17 +17,22 @@ type CreateListingStepsProps = {
 
 export function CreateListingSteps({ activeStep }: CreateListingStepsProps) {
   const { t } = useTranslation();
-  const activeIndex = STEPS.findIndex((step) => step.id === activeStep);
+  const normalizedStep = activeStep === "type" ? "category" : activeStep;
+  const activeIndex = STEPS.findIndex((step) => step.id === normalizedStep);
+  const safeIndex = activeIndex >= 0 ? activeIndex : 0;
 
   return (
-    <nav
-      aria-label={t("listingForm.steps.type")}
-      className="mb-4 overflow-x-auto pb-1 sm:mb-5"
-    >
-      <ol className="flex w-max min-w-full gap-2 sm:flex-wrap sm:w-auto">
+    <nav aria-label={t("listingForm.stepsProgress")} className="mb-4 sm:mb-5">
+      <p className="mb-2 text-xs font-semibold text-slate-500 sm:hidden dark:text-slate-400">
+        {t("listingForm.stepProgress")
+          .replace("{n}", String(safeIndex + 1))
+          .replace("{total}", String(STEPS.length))}
+      </p>
+
+      <ol className="flex gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:gap-2 sm:overflow-visible">
         {STEPS.map((step, index) => {
-          const isActive = step.id === activeStep;
-          const isDone = index < activeIndex;
+          const isActive = step.id === normalizedStep;
+          const isDone = index < safeIndex;
           return (
             <li
               key={step.id}
@@ -42,7 +46,7 @@ export function CreateListingSteps({ activeStep }: CreateListingStepsProps) {
               )}
             >
               <span className="mr-1.5 opacity-70">{index + 1}</span>
-              {t(step.labelKey)}
+              <span className="hidden sm:inline">{t(step.labelKey)}</span>
             </li>
           );
         })}

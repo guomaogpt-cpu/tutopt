@@ -47,7 +47,7 @@ export const CATEGORY_SEARCH_SYNONYMS: ReadonlyArray<{
   nameIncludes: readonly string[];
 }> = [
   {
-    keywords: ["фасовщик", "вакууматор", "упаковщик", "термоусадка", "плёнка", "пленка"],
+    keywords: ["фасовщик", "вакууматор", "упаковщик", "упаковка", "термоусадка", "плёнка", "пленка"],
     nameIncludes: ["Упаковочное"],
   },
   {

@@ -95,8 +95,10 @@ export default async function HomePage() {
         tone="white"
       />
 
-      <HomeWhyVsetutSection />
-      <SellerCtaSection createListingHref={createListingHref} />
+      <div className="hidden sm:block">
+        <HomeWhyVsetutSection />
+        <SellerCtaSection createListingHref={createListingHref} />
+      </div>
     </main>
   );
 }

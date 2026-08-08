@@ -290,6 +290,46 @@ export const DICTIONARY = {
     kg: "Товарларды, адистерди, жеткирүүчүлөрдү жана доставканы бир жерден табыңыз.",
     en: "Find goods, specialists, suppliers and delivery in one place.",
   },
+  "home.appTitle": {
+    ru: "ВсеТут",
+    kg: "ВсеТут",
+    en: "VseTut",
+  },
+  "home.appSubtitle": {
+    ru: "Объявления, услуги, опт и карго",
+    kg: "Жарыялар, кызматтар, дүң жана карго",
+    en: "Listings, services, wholesale and cargo",
+  },
+  "home.quickActions": {
+    ru: "Быстрые действия",
+    kg: "Тез аракеттер",
+    en: "Quick actions",
+  },
+  "home.quickPostListing": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post listing",
+  },
+  "home.quickFindGoods": {
+    ru: "Найти товар",
+    kg: "Товар табуу",
+    en: "Find goods",
+  },
+  "home.quickFindService": {
+    ru: "Найти услугу",
+    kg: "Кызмат табуу",
+    en: "Find service",
+  },
+  "home.quickCargoRequest": {
+    ru: "Карго-заявка",
+    kg: "Карго сурам",
+    en: "Cargo request",
+  },
+  "home.sectionsTitle": {
+    ru: "Разделы",
+    kg: "Бөлүмдөр",
+    en: "Sections",
+  },
   "home.searchPlaceholder": {
     ru: "Что ищете?",
     kg: "Эмне издейсиз?",
@@ -2573,6 +2613,11 @@ export const DICTIONARY = {
     kg: "Сурам жөнөтүү үчүн кириңиз.",
     en: "Sign in to send a request.",
   },
+  "listing.editListing": {
+    ru: "Редактировать",
+    kg: "Өзгөртүү",
+    en: "Edit",
+  },
   "listing.galleryAriaLabel": {
     ru: "Галерея товара",
     kg: "Товар галереясы",
@@ -3381,6 +3426,31 @@ export const DICTIONARY = {
     kg: "Тез аракеттер",
     en: "Quick actions",
   },
+  "account.addCompanyHint": {
+    ru: "Добавить компанию",
+    kg: "Компания кошуу",
+    en: "Add company",
+  },
+  "account.serviceSection": {
+    ru: "Сервис",
+    kg: "Кызмат",
+    en: "Service",
+  },
+  "account.serviceSupport": {
+    ru: "Поддержка",
+    kg: "Колдоо",
+    en: "Support",
+  },
+  "account.servicePrivacy": {
+    ru: "Политика конфиденциальности",
+    kg: "Купуялык саясаты",
+    en: "Privacy Policy",
+  },
+  "account.serviceTerms": {
+    ru: "Пользовательское соглашение",
+    kg: "Колдонуучу макулдашуусу",
+    en: "Terms of Service",
+  },
   "account.postListing": {
     ru: "Подать объявление",
     kg: "Жарыя берүү",
@@ -3582,9 +3652,9 @@ export const DICTIONARY = {
     en: "You do not have any listings yet.",
   },
   "accountListings.emptyDescription": {
-    ru: "Разместите товар, услугу, оптовое предложение или карточку карго-компании.",
-    kg: "Товар, кызмат, дүң сунуш же карго компания карточкасын жайгаштырыңыз.",
-    en: "Post an item, service, wholesale offer or cargo company card.",
+    ru: "Разместите первое объявление — это займёт пару минут.",
+    kg: "Алгачкы жарыяны жайгаштырыңыз — бир нече мүнөт.",
+    en: "Post your first listing — it only takes a few minutes.",
   },
   "accountListings.emptyServicesTitle": {
     ru: "У вас пока нет услуг.",
@@ -3782,9 +3852,9 @@ export const DICTIONARY = {
     en: "You do not have any requests yet.",
   },
   "accountRequests.emptyDescription": {
-    ru: "Когда вы отправите запрос по объявлению или оставите карго-заявку, они появятся здесь.",
-    kg: "Жарыя боюнча сурам жөнөткөндө же карго сурам калтырганда, алар ушул жерде көрүнөт.",
-    en: "When you send a listing request or submit a cargo request, it will appear here.",
+    ru: "Когда покупатели откликнутся, заявки появятся здесь.",
+    kg: "Сатып алуучулар жооп бергенде, сурамдар ушул жерде көрүнөт.",
+    en: "When buyers respond, requests will appear here.",
   },
   "accountRequests.browseListings": {
     ru: "Смотреть объявления",
@@ -4201,6 +4271,41 @@ export const DICTIONARY = {
     kg: "Эмне жайгаштыргыңыз келет?",
     en: "What do you want to post?",
   },
+  "post.chooseTypeHint": {
+    ru: "Выберите тип — дальше укажете категорию и детали.",
+    kg: "Түрүн тандаңыз — андан кийин категория жана маалыматтар.",
+    en: "Pick a type — then add category and details.",
+  },
+  "post.sellGoods": {
+    ru: "Продать товар",
+    kg: "Товар сатуу",
+    en: "Sell a product",
+  },
+  "post.sellGoodsDescription": {
+    ru: "Частное или розничное объявление",
+    kg: "Жеке же чекене жарыя",
+    en: "Private or retail listing",
+  },
+  "post.offerService": {
+    ru: "Предложить услугу",
+    kg: "Кызмат сунуштоо",
+    en: "Offer a service",
+  },
+  "post.offerServiceDescription": {
+    ru: "Мастер, специалист или компания",
+    kg: "Уsta, адис же компания",
+    en: "Specialist or company",
+  },
+  "post.wholesaleGoods": {
+    ru: "Оптовый товар",
+    kg: "Дүң товар",
+    en: "Wholesale goods",
+  },
+  "post.wholesaleGoodsDescription": {
+    ru: "Поставка оптом для бизнеса",
+    kg: "Бизнес үчүн дүң жеткирүү",
+    en: "Wholesale supply for business",
+  },
   "post.market": {
     ru: "Объявление",
     kg: "Жарыя",
@@ -4321,14 +4426,14 @@ export const DICTIONARY = {
 
   // Favorites — Phase 56
   "favorites.emptyTitle": {
-    ru: "В избранном пока пусто",
-    kg: "Тандалмалар азырынча бош",
-    en: "Your favorites are empty",
+    ru: "Пока нет избранного",
+    kg: "Тандалмалар азырынча жок",
+    en: "No favorites yet",
   },
   "favorites.emptyDescription": {
-    ru: "Сохраняйте интересные объявления, чтобы быстро вернуться к ним позже.",
-    kg: "Кызыктуу жарыяларды сактап коюңуз, кийин тезинен кайтып келүү үчүн.",
-    en: "Save listings you like to quickly come back to them later.",
+    ru: "Сохраняйте интересные объявления, чтобы быстро вернуться к ним.",
+    kg: "Кызыктуу жарыяларды сактап коюңуз, тез кайтуу үчүн.",
+    en: "Save listings to quickly come back to them.",
   },
   "favorites.total": { ru: "Всего в избранном", kg: "Тандалмаларда бардыгы", en: "Total favorites" },
   "favorites.lastAdded": {
@@ -4355,14 +4460,14 @@ export const DICTIONARY = {
   },
   "notifications.leads": { ru: "Заявки", kg: "Тапшырмалар", en: "Leads" },
   "notifications.emptyTitle": {
-    ru: "Уведомлений пока нет",
+    ru: "Пока нет уведомлений",
     kg: "Азырынча билдирме жок",
     en: "No notifications yet",
   },
   "notifications.emptyDescription": {
-    ru: "Здесь будут появляться заявки, статусы модерации и важные события.",
-    kg: "Бул жерде тапшырмалар, модерация статустары жана маанилүү окуялар көрүнөт.",
-    en: "Leads, moderation statuses, and important events will appear here.",
+    ru: "Здесь появятся заявки, статусы модерации и важные события.",
+    kg: "Бул жерде тапшырмалар, модерация статустары жана окуялар көрүнөт.",
+    en: "Leads, moderation updates and important events will appear here.",
   },
   "notifications.goToSellerDashboard": {
     ru: "Перейти в личный кабинет",
@@ -4722,6 +4827,36 @@ export const DICTIONARY = {
     kg: "Текшерүү",
     en: "Review",
   },
+  "listingForm.stepsProgress": {
+    ru: "Шаги создания объявления",
+    kg: "Жарыя түзүү кадамдары",
+    en: "Listing creation steps",
+  },
+  "listingForm.stepProgress": {
+    ru: "Шаг {n} из {total}",
+    kg: "{n}/{total} кadam",
+    en: "Step {n} of {total}",
+  },
+  "listingForm.composeDescription": {
+    ru: "Составить описание",
+    kg: "Сүрөттөмө түзүү",
+    en: "Compose description",
+  },
+  "listingForm.composingDescription": {
+    ru: "Составляем...",
+    kg: "Түзүлүүдө...",
+    en: "Composing...",
+  },
+  "listingForm.composeDescriptionHint": {
+    ru: "Мы соберём описание из выбранных данных. Проверьте текст перед публикацией.",
+    kg: "Тандалган маалыматтардан сүрөттөмө түзөбүз. Жарыялоодон мурун текшериңиз.",
+    en: "We will compose a description from your data. Review it before publishing.",
+  },
+  "listingForm.composeDescriptionNeedData": {
+    ru: "Укажите название и категорию, чтобы составить описание.",
+    kg: "Сүрөттөмө түзүү үчүн аталышты жана категорияны жазыңыз.",
+    en: "Enter a title and category to compose a description.",
+  },
   "listingForm.chooseType": {
     ru: "Что хотите разместить?",
     kg: "Эмне жайгаштыргыңыз келет?",
@@ -4791,6 +4926,33 @@ export const DICTIONARY = {
     ru: "Проверьте описание перед публикацией.",
     kg: "Жарыялоодон мурун сүрөттөмөнү текшериңиз.",
     en: "Review the description before publishing.",
+  },
+
+  // Onboarding hints — Phase 115
+  "onboarding.title": {
+    ru: "Как быстро подать объявление",
+    kg: "Жарыяны тез кантип берүү",
+    en: "How to post quickly",
+  },
+  "onboarding.hintPost": {
+    ru: "Подайте объявление за пару минут",
+    kg: "Жарыяны бир нече мүнөттө бериңиз",
+    en: "Post a listing in a few minutes",
+  },
+  "onboarding.hintPhotos": {
+    ru: "Фото и описание можно добавить сразу",
+    kg: "Сүрөт жана сүрөттөмөнү дароо кошсо болот",
+    en: "Add photos and description right away",
+  },
+  "onboarding.hintDescription": {
+    ru: "Описание можно составить автоматически",
+    kg: "Сүрөттөмөнү автоматтык түзсө болот",
+    en: "Description can be composed automatically",
+  },
+  "onboarding.dismiss": {
+    ru: "Закрыть подсказки",
+    kg: "Кеңештерди жабуу",
+    en: "Dismiss hints",
   },
   "listingForm.aiKeptExistingDescription": {
     ru: "Описание уже заполнено — AI не перезаписал текст.",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
@@ -23,11 +23,7 @@ export function GenerateListingDescriptionButton({
   const { t } = useTranslation();
 
   if (!aiEnabled) {
-    return (
-      <p className="text-xs text-slate-500 dark:text-slate-400">
-        {t("listingForm.aiNotConnected")}
-      </p>
-    );
+    return null;
   }
 
   return (
@@ -37,25 +33,25 @@ export function GenerateListingDescriptionButton({
         variant="outline"
         disabled={isGenerating || !canGenerate}
         onClick={onGenerate}
-        className="h-11 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+        className="h-12 w-full rounded-xl border-slate-200 text-sm font-semibold dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
       >
         {isGenerating ? (
           <>
             <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-            {t("listingForm.generatingDescription")}
+            {t("listingForm.composingDescription")}
           </>
         ) : (
           <>
-            <Sparkles className="size-4" aria-hidden="true" />
-            {t("listingForm.generateDescription")}
+            <PenLine className="size-4" aria-hidden="true" />
+            {t("listingForm.composeDescription")}
           </>
         )}
       </Button>
-      {!canGenerate ? (
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          {t("listingForm.aiNeedMoreData")}
-        </p>
-      ) : null}
+      <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+        {canGenerate
+          ? t("listingForm.composeDescriptionHint")
+          : t("listingForm.composeDescriptionNeedData")}
+      </p>
     </div>
   );
 }
