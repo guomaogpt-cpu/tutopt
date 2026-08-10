@@ -30,6 +30,7 @@ export const createLeadSchema = z.object({
     .refine((value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
       message: "Некорректный email",
     }),
+  force_resend: z.boolean().optional().default(false),
 });
 
 export type CreateLeadInput = z.infer<typeof createLeadSchema>;

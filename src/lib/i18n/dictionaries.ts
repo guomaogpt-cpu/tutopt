@@ -2836,9 +2836,14 @@ export const DICTIONARY = {
     en: "Sending...",
   },
   "lead.successTitle": {
-    ru: "Запрос отправлен.",
-    kg: "Сурам жөнөтүлдү.",
-    en: "Request sent.",
+    ru: "Заявка отправлена",
+    kg: "Сурам жөнөтүлдү",
+    en: "Request sent",
+  },
+  "lead.successDescriptionSellerContact": {
+    ru: "Продавец увидит ваше сообщение и свяжется с вами.",
+    kg: "Сатууучу билдирүүңүздү көрүп, сиз менен байланышат.",
+    en: "The seller will see your message and contact you.",
   },
   "lead.successDescription": {
     ru: "Автор объявления получит ваши контакты и сообщение.",
@@ -2856,9 +2861,34 @@ export const DICTIONARY = {
     en: "The supplier will receive your contacts and message.",
   },
   "lead.alreadySent": {
-    ru: "Вы уже отправляли запрос по этому объявлению.",
+    ru: "Вы уже отправили заявку по этому объявлению.",
     kg: "Бул жарыя боюнча сурам мурун жөнөтүлгөн.",
     en: "You have already sent a request for this listing.",
+  },
+  "lead.nameLabel": {
+    ru: "Имя",
+    kg: "Аты",
+    en: "Name",
+  },
+  "lead.submitRequest": {
+    ru: "Отправить заявку",
+    kg: "Сурам жөнөтүү",
+    en: "Send request",
+  },
+  "lead.openMyRequests": {
+    ru: "Открыть мои заявки",
+    kg: "Менин сурамдарымды ачуу",
+    en: "Open my requests",
+  },
+  "lead.sendAgain": {
+    ru: "Отправить повторно",
+    kg: "Кайра жөнөтүү",
+    en: "Send again",
+  },
+  "lead.openListing": {
+    ru: "Открыть объявление",
+    kg: "Жарыяны ачуу",
+    en: "Open listing",
   },
   "lead.loginRequiredTitle": {
     ru: "Запрос по объявлению",
@@ -2891,6 +2921,11 @@ export const DICTIONARY = {
     ru: "Укажите корректное количество.",
     kg: "Туура санды көрсөтүңүз.",
     en: "Enter a valid quantity.",
+  },
+  "lead.validation.phoneRequired": {
+    ru: "Укажите телефон для связи",
+    kg: "Байланыш телефонун көрсөтүңүз",
+    en: "Phone number is required",
   },
   "lead.error.generic": {
     ru: "Не удалось отправить запрос. Попробуйте ещё раз.",
@@ -3827,9 +3862,14 @@ export const DICTIONARY = {
     en: "My listing requests",
   },
   "accountRequests.receivedTitle": {
-    ru: "Запросы на мои объявления",
-    kg: "Менин жарыяларыма сурамдар",
-    en: "Requests to my listings",
+    ru: "Заявки по вашим объявлениям",
+    kg: "Сиздин жарыяларыңыз боюнча сурамдар",
+    en: "Requests on your listings",
+  },
+  "accountRequests.receivedSubtitle": {
+    ru: "Заявки покупателей по опубликованным объявлениям.",
+    kg: "Жарыялаган жарыяларыңыз боюнча сатып алуучулардын сурамдары.",
+    en: "Buyer requests on your published listings.",
   },
   "accountRequests.cargoRequestsTitle": {
     ru: "Мои карго-заявки",
@@ -3847,14 +3887,39 @@ export const DICTIONARY = {
     en: "My cargo company responses",
   },
   "accountRequests.emptyTitle": {
-    ru: "У вас пока нет заявок.",
-    kg: "Азырынча сурамдарыңыз жок.",
-    en: "You do not have any requests yet.",
+    ru: "Пока нет заявок",
+    kg: "Азырынча сурамдар жок",
+    en: "No requests yet",
   },
   "accountRequests.emptyDescription": {
-    ru: "Когда покупатели откликнутся, заявки появятся здесь.",
-    kg: "Сатып алуучулар жооп бергенде, сурамдар ушул жерде көрүнөт.",
-    en: "When buyers respond, requests will appear here.",
+    ru: "Когда покупатели заинтересуются вашими объявлениями, заявки появятся здесь.",
+    kg: "Сатып алуучулар жарыяларыңызга кызыкканда, сурамдар ушул жерде көрүнөт.",
+    en: "When buyers are interested in your listings, requests will appear here.",
+  },
+  "accountRequests.myListings": {
+    ru: "Мои объявления",
+    kg: "Менин жарыяларым",
+    en: "My listings",
+  },
+  "accountRequests.callBuyer": {
+    ru: "Позвонить",
+    kg: "Чалуу",
+    en: "Call",
+  },
+  "accountRequests.markInProgress": {
+    ru: "В работе",
+    kg: "Иште",
+    en: "In progress",
+  },
+  "accountRequests.closeLead": {
+    ru: "Закрыть",
+    kg: "Жабуу",
+    en: "Close",
+  },
+  "accountRequests.leadActionFailed": {
+    ru: "Не удалось обновить статус заявки",
+    kg: "Сурам статусун жаңыртуу мүмкүн болгон жок",
+    en: "Could not update request status",
   },
   "accountRequests.browseListings": {
     ru: "Смотреть объявления",
@@ -5401,6 +5466,11 @@ export const DICTIONARY = {
     ru: "{count} новых заявок",
     kg: "{count} жаңы сурам",
     en: "{count} new requests",
+  },
+  "accountActivity.leadsInProgress": {
+    ru: "{count} заявок в работе",
+    kg: "{count} сурам иште",
+    en: "{count} requests in progress",
   },
   "accountActivity.pendingListings": {
     ru: "{count} объявлений на модерации",

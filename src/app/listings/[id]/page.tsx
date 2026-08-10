@@ -12,6 +12,7 @@ import { ListingRequestHint } from "@/components/listings/ListingRequestHint";
 import { ListingSellerCard } from "@/components/listings/ListingSellerCard";
 import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { ListingLeadForm } from "@/components/listings/ListingLeadForm";
+import { ListingLeadContactShell } from "@/components/listings/ListingLeadContactShell";
 import { SellerOtherListings } from "@/components/listings/SellerOtherListings";
 import { SimilarListings } from "@/components/listings/SimilarListings";
 import { ListingViewTracker } from "@/components/analytics/ListingViewTracker";
@@ -386,6 +387,20 @@ export default async function ListingPage({ params }: ListingPageProps) {
   );
 
   return (
+    <ListingLeadContactShell
+      listingId={listing.id}
+      listingTitle={listing.title}
+      sellerName={sellerName}
+      moq={listing.moq}
+      unitLabel={unitLabel}
+      vertical={listing.vertical}
+      isAuthenticated={user !== null}
+      isOwner={isOwner}
+      restrictionMessage={leadRestrictedMessage}
+      defaultName={user?.name}
+      defaultPhone={user?.phone}
+      defaultEmail={user?.email}
+    >
     <main className="min-w-0 bg-[#F5F7FA] pb-[calc(9rem+env(safe-area-inset-bottom)+var(--keyboard-inset,0px))] pt-4 dark:bg-slate-950 sm:py-8 md:pb-8">
       <ListingViewTracker listingId={listing.id} vertical={listing.vertical} />
       {listing.status === ListingStatus.PUBLISHED ? (
@@ -559,6 +574,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 isAuthenticated={user !== null}
                 isOwner={isOwner}
                 restrictionMessage={leadRestrictedMessage}
+                defaultName={user?.name}
                 defaultPhone={user?.phone}
                 defaultEmail={user?.email}
               />
@@ -601,5 +617,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
         contactPhone={user ? sellerProfile.contact_phone : null}
       />
     </main>
+    </ListingLeadContactShell>
   );
 }

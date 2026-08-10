@@ -139,9 +139,10 @@ npx cap add ios
 | 116 ✅ | In-app notifications, activity block, status labels, badges |
 | 117 ✅ | Android push foundation (FCM, token APIs, account opt-in) |
 | 118 ✅ | Listing moderation notifications (submitted/approved/rejected) |
-| 119 | Store assets + Play Console internal testing upload |
-| 120 | Production rollout (after QA + legal sign-off) |
-| 121 | Capacitor iOS wrapper |
+| 119 ✅ | Listing leads & contact flow (drawer, statuses, seller actions) |
+| 120 | Store assets + Play Console internal testing upload |
+| 121 | Production rollout (after QA + legal sign-off) |
+| 122 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 
@@ -181,5 +182,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md`
 - `docs/FIREBASE_PUSH_SETUP_PHASE_117.md`
 - `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
+- `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

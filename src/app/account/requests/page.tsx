@@ -4,6 +4,7 @@ import { AccountCargoRequestCard } from "@/components/account/AccountCargoReques
 import { AccountCargoResponseCard } from "@/components/account/AccountCargoResponseCard";
 import { AccountMyCargoResponsesLink } from "@/components/account/AccountMyCargoResponsesLink";
 import { AccountReceivedLeadCard } from "@/components/account/AccountReceivedLeadCard";
+import { AccountReceivedRequestsSectionHeader } from "@/components/account/AccountReceivedRequestsSectionHeader";
 import { AccountRequestsEmptyState } from "@/components/account/AccountRequestsEmptyState";
 import { AccountRequestsPageHeader } from "@/components/account/AccountRequestsPageHeader";
 import { AccountRequestsSectionTitle } from "@/components/account/AccountRequestsSectionTitle";
@@ -126,7 +127,15 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
           />
 
           {!tabHasItems ? (
-            <AccountRequestsEmptyState variant={totalCount === 0 ? "global" : "section"} />
+            <AccountRequestsEmptyState
+              variant={
+                activeTab === "received"
+                  ? "received"
+                  : totalCount === 0
+                    ? "global"
+                    : "section"
+              }
+            />
           ) : (
             <div className="space-y-8">
               {showSent && sentLeads.length > 0 ? (
@@ -142,8 +151,12 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
 
               {showReceived && receivedLeads.length > 0 ? (
                 <section className="space-y-3">
-                  {activeTab === "all" ? (
-                    <AccountRequestsSectionTitle titleKey="accountRequests.receivedTitle" />
+                  {activeTab === "all" || activeTab === "received" ? (
+                    activeTab === "received" ? (
+                      <AccountReceivedRequestsSectionHeader />
+                    ) : (
+                      <AccountRequestsSectionTitle titleKey="accountRequests.receivedTitle" />
+                    )
                   ) : null}
                   {receivedLeads.map((lead) => (
                     <AccountReceivedLeadCard key={lead.id} lead={lead} />

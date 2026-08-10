@@ -41,9 +41,9 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
         loginPrompt: (sellerName) =>
           `Войдите, чтобы связаться с автором ${sellerName}.`,
         sellerLeadTypeLabel: "Сообщение по товару",
-        notificationTitle: "Новое сообщение по товару",
+        notificationTitle: "Новая заявка по объявлению",
         notificationMessage: (listingTitle) =>
-          `Покупатель написал по объявлению «${listingTitle}»`,
+          `Покупатель заинтересовался объявлением «${listingTitle}».`,
         listingLabel: "Товар",
         recipientLabel: "Продавец",
         showQuantity: false,
@@ -72,9 +72,9 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
         loginPrompt: (sellerName) =>
           `Войдите, чтобы связаться с исполнителем ${sellerName}.`,
         sellerLeadTypeLabel: "Заявка на услугу",
-        notificationTitle: "Новая заявка на услугу",
+        notificationTitle: "Новая заявка по объявлению",
         notificationMessage: (listingTitle) =>
-          `Клиент оставил заявку по услуге «${listingTitle}»`,
+          `Покупатель заинтересовался объявлением «${listingTitle}».`,
         listingLabel: "Услуга",
         recipientLabel: "Исполнитель",
         showQuantity: false,
@@ -99,9 +99,9 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
         loginPrompt: (sellerName) =>
           `Войдите, чтобы запросить перевозку у ${sellerName}.`,
         sellerLeadTypeLabel: "Запрос перевозки",
-        notificationTitle: "Новый запрос перевозки",
+        notificationTitle: "Новая заявка по объявлению",
         notificationMessage: (listingTitle) =>
-          `Клиент запросил перевозку по объявлению «${listingTitle}»`,
+          `Покупатель заинтересовался объявлением «${listingTitle}».`,
         listingLabel: "Предложение",
         recipientLabel: "Перевозчик",
         showQuantity: true,
@@ -132,9 +132,9 @@ export function getLeadFormConfig(vertical: ListingVertical): LeadFormConfig {
         loginPrompt: (sellerName) =>
           `Войдите, чтобы связаться с поставщиком ${sellerName}.`,
         sellerLeadTypeLabel: "Оптовый запрос",
-        notificationTitle: "Новый оптовый запрос",
+        notificationTitle: "Новая заявка по объявлению",
         notificationMessage: (listingTitle) =>
-          `Покупатель отправил оптовый запрос по предложению «${listingTitle}»`,
+          `Покупатель заинтересовался объявлением «${listingTitle}».`,
         listingLabel: "Товар",
         recipientLabel: "Поставщик",
         showQuantity: true,

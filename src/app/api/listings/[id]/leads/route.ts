@@ -89,14 +89,25 @@ export async function POST(request: Request, context: LeadRouteContext) {
 
     const message = buildLeadMessage(input);
 
-    const duplicateLead = await findRecentDuplicateLead({
-      buyerId: user.id,
-      listingId: listing.id,
-      message,
-    });
+    const duplicateLead = input.force_resend
+      ? null
+      : await findRecentDuplicateLead({
+          buyerId: user.id,
+          listingId: listing.id,
+          message,
+        });
 
     if (duplicateLead) {
       throw new ConflictError("LEAD_ALREADY_SENT");
+    }
+
+    const hasContactPhone = Boolean(input.contact_phone?.trim() || user.phone?.trim());
+    if (!hasContactPhone) {
+      throw new ValidationError("LEAD_PHONE_REQUIRED", {
+        fieldErrors: {
+          contact_phone: ["LEAD_PHONE_REQUIRED"],
+        },
+      });
     }
 
     const lead = await prisma.lead.create({
@@ -110,12 +121,16 @@ export async function POST(request: Request, context: LeadRouteContext) {
       select: { id: true },
     });
 
-    await createNewLeadNotification({
-      recipientId: listing.sellerProfile.user_id,
-      actorId: user.id,
-      listingTitle: listing.title,
-      vertical: listing.vertical,
-    });
+    try {
+      await createNewLeadNotification({
+        recipientId: listing.sellerProfile.user_id,
+        actorId: user.id,
+        listingTitle: listing.title,
+        vertical: listing.vertical,
+      });
+    } catch {
+      // Notification/push must not block lead creation.
+    }
 
     return jsonData({ lead }, 201);
   });

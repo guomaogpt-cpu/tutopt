@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { MessageSquare, Pencil, Phone } from "lucide-react";
+import { MessageSquare, Pencil, Phone, Inbox } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { ListingVertical } from "@prisma/client";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
+import { useListingLeadContactOptional } from "@/components/listings/ListingLeadContactProvider";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { trackListingDetailAction } from "@/lib/analytics/events";
@@ -38,6 +39,7 @@ export function ListingMobileStickyCta({
   const router = useRouter();
   const { t } = useTranslation();
   const theme = getVerticalTheme(vertical);
+  const leadContact = useListingLeadContactOptional();
 
   if (isOwnListing) {
     return (
@@ -48,14 +50,24 @@ export function ListingMobileStickyCta({
         )}
         style={{ bottom: mobileStickyBottomOffset(5) }}
       >
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto flex max-w-lg gap-2">
           <Button
             asChild
-            className={cn("h-12 w-full gap-2 rounded-xl text-sm font-semibold", theme.primaryButton)}
+            className={cn("h-12 min-w-0 flex-1 gap-2 rounded-xl text-sm font-semibold", theme.primaryButton)}
           >
             <Link href={`/listings/${listingId}/edit`}>
               <Pencil className="size-4 shrink-0" aria-hidden="true" />
               {t("listing.editListing")}
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="h-12 min-w-0 flex-1 gap-2 rounded-xl text-sm font-semibold dark:border-slate-700"
+          >
+            <Link href="/account/requests?tab=received">
+              <Inbox className="size-4 shrink-0" aria-hidden="true" />
+              {t("form.goToLeads")}
             </Link>
           </Button>
         </div>
@@ -77,12 +89,13 @@ export function ListingMobileStickyCta({
       return;
     }
 
+    if (leadContact) {
+      leadContact.openLeadDrawer();
+      return;
+    }
+
     const section = document.getElementById(messageSectionId);
     section?.scrollIntoView({ behavior: "smooth", block: "start" });
-    const textarea = section?.querySelector("textarea");
-    if (textarea instanceof HTMLTextAreaElement) {
-      textarea.focus();
-    }
   }
 
   return (

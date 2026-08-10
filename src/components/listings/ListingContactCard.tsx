@@ -5,6 +5,7 @@ import { MessageSquare, Phone, Send } from "lucide-react";
 import { ListingStatus, type ListingStatus as ListingStatusType, type ListingVertical } from "@prisma/client";
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
+import { useListingLeadContactOptional } from "@/components/listings/ListingLeadContactProvider";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
 import { getListingStatusLabel } from "@/features/listings/lib/listing-status";
@@ -97,6 +98,7 @@ export function ListingContactCard({
   const router = useRouter();
   const { t, locale } = useTranslation();
   const theme = getVerticalTheme(vertical);
+  const leadContact = useListingLeadContactOptional();
 
   function handleLoginToViewContacts() {
     router.push(buildLoginUrl(getCurrentPathFromWindow()));
@@ -108,12 +110,19 @@ export function ListingContactCard({
       hasPrice,
       isOwnListing,
     });
+
+    if (!isAuthenticated) {
+      router.push(buildLoginUrl(getCurrentPathFromWindow()));
+      return;
+    }
+
+    if (leadContact) {
+      leadContact.openLeadDrawer();
+      return;
+    }
+
     const section = document.getElementById(messageSectionId);
     section?.scrollIntoView({ behavior: "smooth", block: "start" });
-    const textarea = section?.querySelector("textarea");
-    if (textarea instanceof HTMLTextAreaElement) {
-      textarea.focus();
-    }
   }
 
   const hasContacts = Boolean(contactPhone || whatsapp || telegram);

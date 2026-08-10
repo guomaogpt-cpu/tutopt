@@ -117,6 +117,8 @@ Rate limits: `src/lib/security/rate-limit.ts`
 
 **Phase 118:** полный цикл listing moderation notifications — см. `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
 
+**Phase 119:** lead contact flow — `NEW_LEAD` push при заявке покупателя — см. `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
+
 ---
 
 ## 9. Deep links

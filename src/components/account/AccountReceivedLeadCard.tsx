@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Package } from "lucide-react";
+import { AccountReceivedLeadActions } from "@/components/account/AccountReceivedLeadActions";
 import { ExpandableText } from "@/components/account/ExpandableText";
 import { LeadStatusBadge } from "@/components/seller/LeadStatusBadge";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
@@ -79,11 +80,16 @@ export function AccountReceivedLeadCard({ lead }: AccountReceivedLeadCardProps) 
         </div>
       </div>
 
-      <div className="border-t border-slate-100 p-4 dark:border-slate-800 sm:px-5">
+      <div className="space-y-3 border-t border-slate-100 p-4 dark:border-slate-800 sm:px-5">
+        <AccountReceivedLeadActions
+          leadId={lead.id}
+          status={lead.status}
+          buyerPhone={buyerPhone}
+        />
         <Button
           asChild
-          variant="outline"
-          className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
+          variant="ghost"
+          className="h-11 w-full rounded-xl sm:w-auto"
         >
           <Link href={`/listings/${lead.listing.id}`}>{t("accountRequests.openListing")}</Link>
         </Button>

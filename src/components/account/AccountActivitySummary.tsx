@@ -13,6 +13,7 @@ type AccountActivitySummaryProps = {
     | "unreadNotifications"
     | "listingStats"
     | "receivedLeadsCount"
+    | "inProgressLeadsCount"
     | "cargoRequestsCount"
   >;
 };
@@ -36,6 +37,16 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
     lines.push({
       key: "leads",
       label: t("accountActivity.newLeads").replace("{count}", String(data.receivedLeadsCount)),
+    });
+  }
+
+  if (data.inProgressLeadsCount > 0) {
+    lines.push({
+      key: "leads-progress",
+      label: t("accountActivity.leadsInProgress").replace(
+        "{count}",
+        String(data.inProgressLeadsCount),
+      ),
     });
   }
 

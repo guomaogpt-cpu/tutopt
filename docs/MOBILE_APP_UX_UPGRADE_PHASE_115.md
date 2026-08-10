@@ -125,7 +125,7 @@ Future: characteristic chips на card (нужны данные в `ListingCardD
 | True step-by-step wizard (one section per screen) | Future |
 | Listing card characteristic chips | Future (needs card data) |
 | Pull-to-refresh | Future |
-| Push notifications | Phase 119 (Firebase FCM) |
+| Listing lead contact drawer | Phase 119 ✅ |
 | Google Play store assets + publish | Phase 115 legal was 114; Play upload separate |
 | Full real device QA retest | Pending |
 
@@ -137,3 +137,4 @@ Future: characteristic chips на card (нужны данные в `ListingCardD
 - `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
 - `docs/PWA_FOUNDATION_PHASE_107.md`
+- `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`

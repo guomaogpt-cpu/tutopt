@@ -1,6 +1,6 @@
 import { prisma } from "@/shared/lib/prisma";
 
-const DUPLICATE_LEAD_WINDOW_MS = 10 * 60 * 1000;
+const DUPLICATE_LEAD_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 /**
  * Soft duplicate guard: same buyer + listing within a short window.

@@ -52,6 +52,7 @@ export default async function AccountPage() {
               unreadNotifications: data.unreadNotifications,
               listingStats: data.listingStats,
               receivedLeadsCount: data.receivedLeadsCount,
+              inProgressLeadsCount: data.inProgressLeadsCount,
               cargoRequestsCount: data.cargoRequestsCount,
             }}
           />

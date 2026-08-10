@@ -6,7 +6,7 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Button } from "@/components/ui/button";
 
 type AccountRequestsEmptyStateProps = {
-  variant?: "global" | "section";
+  variant?: "global" | "section" | "received";
 };
 
 export function AccountRequestsEmptyState({
@@ -20,24 +20,36 @@ export function AccountRequestsEmptyState({
         <Inbox className="size-6" aria-hidden="true" />
       </div>
       <p className="mt-5 text-base font-semibold text-slate-900 dark:text-slate-100">
-        {variant === "global" ? t("accountRequests.emptyTitle") : t("account.noData")}
+        {variant === "received"
+          ? t("accountRequests.emptyTitle")
+          : variant === "global"
+            ? t("accountRequests.emptyTitle")
+            : t("account.noData")}
       </p>
-      {variant === "global" ? (
+      {variant === "global" || variant === "received" ? (
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500 dark:text-slate-400">
           {t("accountRequests.emptyDescription")}
         </p>
       ) : null}
       <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
-        <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
-          <Link href="/listings">{t("accountRequests.browseListings")}</Link>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
-        >
-          <Link href="/cargo">{t("accountRequests.submitCargoRequest")}</Link>
-        </Button>
+        {variant === "received" ? (
+          <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
+            <Link href="/account/listings">{t("accountRequests.myListings")}</Link>
+          </Button>
+        ) : (
+          <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
+            <Link href="/listings">{t("accountRequests.browseListings")}</Link>
+          </Button>
+        )}
+        {variant !== "received" ? (
+          <Button
+            asChild
+            variant="outline"
+            className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
+          >
+            <Link href="/cargo">{t("accountRequests.submitCargoRequest")}</Link>
+          </Button>
+        ) : null}
       </div>
     </div>
   );

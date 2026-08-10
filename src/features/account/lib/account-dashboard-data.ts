@@ -68,6 +68,7 @@ export type AccountDashboardData = {
   favoritesCount: number;
   unreadNotifications: number;
   receivedLeadsCount: number;
+  inProgressLeadsCount: number;
 };
 
 export async function getAccountDashboardData(
@@ -224,5 +225,6 @@ export async function getAccountDashboardData(
     favoritesCount,
     unreadNotifications,
     receivedLeadsCount: sellerLeads.filter((lead) => lead.status === LeadStatus.NEW).length,
+    inProgressLeadsCount: sellerLeads.filter((lead) => lead.status === LeadStatus.VIEWED).length,
   };
 }
