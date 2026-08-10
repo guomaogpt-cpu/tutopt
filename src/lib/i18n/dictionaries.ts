@@ -2427,6 +2427,7 @@ export const DICTIONARY = {
   },
   "filters.section": { ru: "Раздел", kg: "Бөлүм", en: "Section" },
   "filters.category": { ru: "Категория", kg: "Категория", en: "Category" },
+  "filters.subcategory": { ru: "Подкатегория", kg: "Подкатегория", en: "Subcategory" },
   "filters.city": { ru: "Город", kg: "Шаар", en: "City" },
   "filters.price": { ru: "Цена", kg: "Баасы", en: "Price" },
   "filters.priceFrom": { ru: "Цена от", kg: "Баасы баштап", en: "Price from" },
@@ -2483,9 +2484,14 @@ export const DICTIONARY = {
     en: "Nothing found",
   },
   "listings.emptyFilteredDescription": {
-    ru: "Попробуйте изменить запрос или выбрать другую категорию.",
-    kg: "Сурамды өзгөртүп же башка категорияны тандап көрүңүз.",
-    en: "Try changing the query or choosing another category.",
+    ru: "Попробуйте изменить запрос, убрать фильтры или выбрать другую категорию.",
+    kg: "Сурамды өзгөртүп, фильтрлерди алдырып же башка категорияны тандап көрүңүз.",
+    en: "Try changing the query, clearing filters, or choosing another category.",
+  },
+  "listings.browseEquipment": {
+    ru: "Посмотреть оборудование и станки",
+    kg: "Жабдуу жана станокторду көрүү",
+    en: "Browse equipment and machinery",
   },
   "listings.allListings": {
     ru: "Все объявления",

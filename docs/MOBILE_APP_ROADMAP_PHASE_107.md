@@ -110,6 +110,14 @@ npx cap add ios
 - Статусы NEW / VIEWED / CLOSED, seller actions
 - См. `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
 
+## 6.2 Phase 120 — Listings search and filters ✅
+
+- Unified search params + slug resolution
+- Equipment keyword aliases, subtree category filter
+- Mobile filter drawer + chips, listing card highlights
+- `/market` catalog shortcuts → `/listings`
+- См. `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -148,9 +156,10 @@ npx cap add ios
 | 117 ✅ | Android push foundation (FCM, token APIs, account opt-in) |
 | 118 ✅ | Listing moderation notifications (submitted/approved/rejected) |
 | 119 ✅ | Listing leads & contact flow (drawer, in-app notify, seller actions; push deferred) |
-| 120 | Store assets + Play Console internal testing upload |
-| 121 | Production rollout (after QA + legal sign-off) |
-| 122 | Capacitor iOS wrapper |
+| 120 ✅ | Listings search & filters (aliases, subcategory, mobile drawer, card chips) |
+| 121 | Store assets + Play Console internal testing upload |
+| 122 | Production rollout (after QA + legal sign-off) |
+| 123 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 
@@ -191,5 +200,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/FIREBASE_PUSH_SETUP_PHASE_117.md`
 - `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
 - `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
+- `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

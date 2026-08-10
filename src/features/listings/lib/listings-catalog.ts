@@ -9,6 +9,7 @@ export type ListingSort = "newest" | "oldest" | "price_asc" | "price_desc";
 export type ListingsCatalogFilters = {
   q: string;
   categoryId: string;
+  subcategoryId: string;
   cityId: string;
   brandId: string;
   priceMin: string;
@@ -25,6 +26,11 @@ export type ListingsCatalogFilters = {
   page: number;
 };
 
+export type CatalogQueryContext = {
+  categoryIds?: string[];
+  textSearch?: Prisma.ListingWhereInput;
+};
+
 export type ListingCardData = {
   id: string;
   title: string;
@@ -38,7 +44,7 @@ export type ListingCardData = {
   stock_quantity: number | null;
   created_at: string;
   published_at: string | null;
-  category: { name: string };
+  category: { name: string; parent_id: string | null; parentName: string | null };
   city: { name: string } | null;
   brand: { name: string } | null;
   sellerProfile: {
@@ -49,6 +55,8 @@ export type ListingCardData = {
     user: { name: string };
   };
   images: { url: string }[];
+  characteristics: unknown;
+  highlightChips: Array<{ label: string; value: string }>;
 };
 
 const SORT_VALUES: ListingSort[] = ["newest", "oldest", "price_asc", "price_desc"];
@@ -72,6 +80,7 @@ export function parseListingsCatalogParams(
   return {
     q: get("q"),
     categoryId: get("category"),
+    subcategoryId: get("subcategory"),
     cityId: get("city"),
     brandId: get("brand"),
     priceMin: get("priceFrom") || get("priceMin"),
@@ -88,6 +97,7 @@ export function hasActiveCatalogFilters(filters: ListingsCatalogFilters): boolea
   return Boolean(
     filters.q ||
       filters.categoryId ||
+      filters.subcategoryId ||
       filters.cityId ||
       filters.brandId ||
       filters.priceMin ||
@@ -98,17 +108,25 @@ export function hasActiveCatalogFilters(filters: ListingsCatalogFilters): boolea
 
 export function buildListingsCatalogWhere(
   filters: ListingsCatalogFilters,
+  context: CatalogQueryContext = {},
 ): Prisma.ListingWhereInput {
   const where: Prisma.ListingWhereInput = {
     status: ListingStatus.PUBLISHED,
     AND: [buildNotExpiredListingFilter()],
   };
 
-  if (filters.q) {
+  if (context.textSearch && Object.keys(context.textSearch).length > 0) {
+    const existingAnd = Array.isArray(where.AND) ? where.AND : where.AND ? [where.AND] : [];
+    where.AND = [...existingAnd, context.textSearch];
+  } else if (filters.q) {
     where.title = { contains: filters.q, mode: "insensitive" };
   }
 
-  if (filters.categoryId) {
+  if (context.categoryIds?.length) {
+    where.category_id = { in: context.categoryIds };
+  } else if (filters.subcategoryId) {
+    where.category_id = filters.subcategoryId;
+  } else if (filters.categoryId) {
     where.category_id = filters.categoryId;
   }
 
@@ -179,6 +197,9 @@ export function buildListingsCatalogQueryString(
   }
   if (next.categoryId) {
     params.set("category", next.categoryId);
+  }
+  if (next.subcategoryId) {
+    params.set("subcategory", next.subcategoryId);
   }
   if (next.cityId) {
     params.set("city", next.cityId);

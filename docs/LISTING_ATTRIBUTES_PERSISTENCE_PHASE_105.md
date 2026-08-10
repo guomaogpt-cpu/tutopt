@@ -64,7 +64,8 @@ Limits: max 30 items, label ≤ 80, string value ≤ 300, array ≤ 20.
 |---|---|
 | Preview `/listings/new` | только applied |
 | Detail `/listings/[id]` | structured block + vertical title |
-| Account / ListingCard | не показываем в этой фазе (future) |
+| Catalog `/listings` ListingCard | 1–2 highlight chips (Phase 120) |
+| Account / seller cards | без specs chips |
 | AI generate-description | `characteristicItems` из form state |
 
 Vertical titles:
@@ -86,18 +87,22 @@ Vertical titles:
 
 ## 9. Ограничения
 
-- фильтров по характеристикам нет
+- faceted фильтры по характеристикам — future (Phase 120: chips на карточке + text search title/description)
 - labels характеристик пока RU
-- ListingCard / account chips не показывают specs
 - `ListingAttribute` table по-прежнему не используется create API
 
 ## 10. Future
 
-- фильтры по характеристикам
-- 1–2 specs на ListingCard
+- faceted filters по характеристикам / denormalized search_text
 - AI по фото / автозаполнение
 - i18n labels для field definitions
 - опциональная синхронизация с `ListingAttribute`
+
+## Phase 120 listings search ✅
+
+Characteristics отображаются на catalog cards (`listing-card-highlights.ts`). Full JSON search в WHERE — future.
+
+См. `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`
 
 ## Phase 106 listing taxonomy equipment
 

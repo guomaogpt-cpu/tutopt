@@ -34,7 +34,7 @@ export async function getVerticalPageData(
       }
     : {};
 
-  const [categories, listings, publishedCount] = await Promise.all([
+  const [rootCategories, listings, publishedCount] = await Promise.all([
     prisma.category.findMany({
       where: {
         is_active: true,
@@ -65,6 +65,26 @@ export async function getVerticalPageData(
       },
     }),
   ]);
+
+  let categories = rootCategories;
+
+  if (verticalId === "MARKET") {
+    const equipmentRoot = rootCategories.find(
+      (category) => category.slug === "market-oborudovanie-i-stanki",
+    );
+    if (equipmentRoot) {
+      const equipmentChildren = await prisma.category.findMany({
+        where: {
+          is_active: true,
+          vertical: verticalId,
+          parent_id: equipmentRoot.id,
+        },
+        orderBy: [{ sort_order: "asc" }, { name: "asc" }],
+        select: { id: true, name: true, slug: true, vertical: true },
+      });
+      categories = [...rootCategories, ...equipmentChildren];
+    }
+  }
 
   return { categories, listings: serializeListingCards(listings), publishedCount };
 }

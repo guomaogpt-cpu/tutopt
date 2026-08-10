@@ -29,7 +29,12 @@ function buildSearchTitle(
     parts.push(VERTICALS[filters.vertical].label);
   }
 
-  if (filters.categoryId) {
+  if (filters.subcategoryId) {
+    const subcategoryName = lookups.categories[filters.subcategoryId];
+    if (subcategoryName) {
+      parts.push(subcategoryName);
+    }
+  } else if (filters.categoryId) {
     const categoryName = lookups.categories[filters.categoryId];
     if (categoryName) {
       parts.push(`Категория: ${categoryName}`);
@@ -74,7 +79,7 @@ export function SaveSearchButton({ filters, lookups }: SaveSearchButtonProps) {
       trackSavedSearch("create", {
         vertical: filters.vertical,
         hasQuery: Boolean(filters.q),
-        hasCategory: Boolean(filters.categoryId),
+        hasCategory: Boolean(filters.categoryId || filters.subcategoryId),
       });
     }
   }

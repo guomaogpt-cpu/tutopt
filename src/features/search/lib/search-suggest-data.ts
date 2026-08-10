@@ -1,5 +1,6 @@
 import { ListingStatus, type ListingVertical } from "@prisma/client";
 import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
+import { searchCategoriesWithSynonyms } from "@/features/listings/lib/category-search";
 import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
 import {
   EMPTY_SEARCH_SUGGEST_RESPONSE,
@@ -26,6 +27,24 @@ export async function getSearchSuggestions(
   const contains = buildContainsFilter(trimmed);
   const verticalFilter = vertical ? { vertical } : {};
   const notExpired = buildNotExpiredListingFilter();
+
+  const activeCategories = await prisma.category.findMany({
+    where: {
+      is_active: true,
+      ...verticalFilter,
+    },
+    orderBy: [{ sort_order: "asc" }, { name: "asc" }],
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      parent_id: true,
+      vertical: true,
+      sort_order: true,
+    },
+  });
+
+  const synonymCategoryHits = searchCategoriesWithSynonyms(activeCategories, trimmed);
 
   const [listings, categories, brands, sellers] = await Promise.all([
     prisma.listing.findMany({
@@ -100,6 +119,21 @@ export async function getSearchSuggestions(
     }),
   ]);
 
+  const mergedCategories = new Map<string, { id: string; name: string }>();
+  for (const category of categories) {
+    mergedCategories.set(category.id, category);
+  }
+  for (const hit of synonymCategoryHits) {
+    if (!mergedCategories.has(hit.id)) {
+      mergedCategories.set(hit.id, { id: hit.id, name: hit.label });
+    }
+  }
+
+  const categoryResults = Array.from(mergedCategories.values()).slice(
+    0,
+    SEARCH_SUGGEST_LIMITS.categories,
+  );
+
   return {
     listings: listings.map((listing) => ({
       id: listing.id,
@@ -107,7 +141,7 @@ export async function getSearchSuggestions(
       imageUrl: listing.images[0]?.url ?? null,
       priceLabel: formatListingPrice(listing.price, listing.currency),
     })),
-    categories: categories.map((category) => ({
+    categories: categoryResults.map((category) => ({
       id: category.id,
       name: category.name,
     })),

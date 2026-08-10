@@ -18,4 +18,6 @@ export type SelectOption = {
   id: string;
   label: string;
   vertical?: ListingVertical;
+  parentId?: string | null;
+  slug?: string;
 };

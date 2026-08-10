@@ -41,25 +41,36 @@ const NAME_KEYWORDS: { match: RegExp; emoji: string }[] = [
   { match: /услуг/i, emoji: "🛠️" },
 ];
 
-/** Synonyms → category name tokens for search (Phase 106). */
+/** Synonyms → category name tokens for search (Phase 106 / Phase 120). */
 export const CATEGORY_SEARCH_SYNONYMS: ReadonlyArray<{
   keywords: readonly string[];
   nameIncludes: readonly string[];
 }> = [
   {
-    keywords: ["фасовщик", "вакууматор", "упаковщик", "упаковка", "термоусадка", "плёнка", "пленка"],
+    keywords: [
+      "фасовщик",
+      "фасовочный",
+      "вакууматор",
+      "упаковщик",
+      "упаковка",
+      "упаковочное",
+      "термоусадка",
+      "запайщик",
+      "плёнка",
+      "пленка",
+    ],
     nameIncludes: ["Упаковочное"],
   },
   {
-    keywords: ["пастеризатор", "мясорубка", "тестомес", "пищевое"],
+    keywords: ["пастеризатор", "мясорубка", "тестомес", "миксер", "пищевое"],
     nameIncludes: ["Пищевое"],
   },
   {
-    keywords: ["станок", "лазерный", "токарный", "фрезерный", "чпу", "металлообработка"],
+    keywords: ["станок", "лазерный", "токарный", "фрезерный", "чпу", "cnc", "металлообработка"],
     nameIncludes: ["металлообработка", "Станки"],
   },
   {
-    keywords: ["штабелер", "рохля", "погрузчик", "стеллаж"],
+    keywords: ["штабелер", "рохля", "погрузчик", "стеллаж", "склад"],
     nameIncludes: ["Складское"],
   },
   {
@@ -75,7 +86,15 @@ export const CATEGORY_SEARCH_SYNONYMS: ReadonlyArray<{
     nameIncludes: ["Холодильное", "холодильник"],
   },
   {
-    keywords: ["iphone", "samsung", "телефон", "смартфон"],
+    keywords: ["конвейер", "транспортер", "линия", "производствен"],
+    nameIncludes: ["линии", "Производствен"],
+  },
+  {
+    keywords: ["электрик", "электрооборудование", "380v", "220v"],
+    nameIncludes: ["Электро", "электрик"],
+  },
+  {
+    keywords: ["iphone", "samsung", "телефон", "смартфон", "электрон"],
     nameIncludes: ["Телефоны", "Электроника"],
   },
 ];

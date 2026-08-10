@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
+import { getListingCardHighlights } from "@/features/listings/lib/listing-card-highlights";
 
 export const listingCardSelect = {
   id: true,
@@ -14,7 +15,14 @@ export const listingCardSelect = {
   stock_quantity: true,
   created_at: true,
   published_at: true,
-  category: { select: { name: true } },
+  characteristics: true,
+  category: {
+    select: {
+      name: true,
+      parent_id: true,
+      parent: { select: { name: true } },
+    },
+  },
   city: { select: { name: true } },
   brand: { select: { name: true } },
   sellerProfile: {
@@ -59,11 +67,17 @@ export function serializeListingCard(row: ListingCardRow): ListingCardData {
     stock_quantity: row.stock_quantity,
     created_at: serializeDate(row.created_at),
     published_at: row.published_at ? serializeDate(row.published_at) : null,
-    category: row.category,
+    category: {
+      name: row.category.name,
+      parent_id: row.category.parent_id,
+      parentName: row.category.parent?.name ?? null,
+    },
     city: row.city,
     brand: row.brand,
     sellerProfile: row.sellerProfile,
     images: row.images,
+    characteristics: row.characteristics,
+    highlightChips: getListingCardHighlights(row.vertical, row.characteristics),
   };
 }
 

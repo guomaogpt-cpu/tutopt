@@ -178,6 +178,7 @@ export function ListingsCatalogToolbar({
       {
         vertical: draft.vertical,
         categoryId: draft.categoryId,
+        subcategoryId: draft.subcategoryId,
         cityId: draft.cityId,
         brandId: catalogShowsBrandFilter(draft.vertical) ? draft.brandId : "",
         priceMin: draft.priceMin,
@@ -195,6 +196,7 @@ export function ListingsCatalogToolbar({
         {
           vertical: null,
           categoryId: "",
+          subcategoryId: "",
           cityId: "",
           brandId: "",
           priceMin: "",
@@ -210,6 +212,7 @@ export function ListingsCatalogToolbar({
     pushFilters(
       {
         categoryId: "",
+        subcategoryId: "",
         cityId: "",
         brandId: "",
         priceMin: "",
@@ -231,6 +234,7 @@ export function ListingsCatalogToolbar({
       {
         vertical: nextVertical,
         categoryId: "",
+        subcategoryId: "",
         brandId: "",
       },
       "vertical",

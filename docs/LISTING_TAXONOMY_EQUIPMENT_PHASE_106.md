@@ -46,6 +46,11 @@ Phase 105 сохраняла `Listing.characteristics` JSON, но:
 
 ## 7. Future
 
-- SEO landing pages per equipment subcategory
-- filters by equipment specs
+- ~~filters by equipment specs~~ → Phase 120 catalog search aliases + card chips (faceted filters — future)
 - deactivate orphan flat categories if any remain unused
+
+## Phase 120 — Search integration ✅
+
+Equipment taxonomy synonyms используются в `/listings` search, suggest API и `/market` catalog shortcuts.
+
+См. `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`

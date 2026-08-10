@@ -69,10 +69,13 @@ export function ListingCard({
   const showSeller = variant === "catalog" || variant === "default" || variant === "showcase";
   const dateLabel = formatCardDate(listing.published_at ?? listing.created_at, locale);
   const cityName = listing.city?.name ?? null;
+  const categoryLabel = listing.category.parentName
+    ? `${listing.category.parentName} · ${listing.category.name}`
+    : listing.category.name;
   const compactMetaLabel =
     listing.vertical === "SERVICES"
-      ? (cityName ?? listing.category.name)
-      : (cityName ?? listing.category.name);
+      ? (cityName ?? categoryLabel)
+      : (cityName ?? categoryLabel);
   const showUnitSuffix =
     ((listing.vertical === "OPT" || listing.vertical === "MARKET") &&
       Number(listing.price) > 0) ||
@@ -206,6 +209,26 @@ export function ListingCard({
             {listing.title}
           </h2>
 
+          {listing.highlightChips.length > 0 ? (
+            <div
+              className={cn(
+                "flex flex-wrap gap-1.5",
+                isCompact ? "pt-1" : "pt-1.5",
+              )}
+            >
+              {listing.highlightChips.map((chip) => (
+                <span
+                  key={`${chip.label}-${chip.value}`}
+                  className="inline-flex max-w-full items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300 sm:text-[11px]"
+                >
+                  <span className="truncate">
+                    {chip.label}: {chip.value}
+                  </span>
+                </span>
+              ))}
+            </div>
+          ) : null}
+
           <div
             className={cn(
               "mt-auto flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[#94A3B8] dark:text-slate-400",
@@ -217,6 +240,11 @@ export function ListingCard({
               <span className="truncate">{compactMetaLabel}</span>
             </span>
             {listing.vertical === "SERVICES" && cityName ? (
+              <>
+                <span aria-hidden="true">·</span>
+                <span className="truncate">{categoryLabel}</span>
+              </>
+            ) : listing.vertical !== "SERVICES" && cityName ? (
               <>
                 <span aria-hidden="true">·</span>
                 <span className="truncate">{listing.category.name}</span>

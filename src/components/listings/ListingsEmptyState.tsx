@@ -18,6 +18,7 @@ type ListingsEmptyStateProps = {
   showCreateListingCTA?: boolean;
   vertical?: ListingVertical | null;
   photoSearch?: boolean;
+  equipmentShortcutHref?: string;
 };
 
 export function ListingsEmptyState({
@@ -26,6 +27,7 @@ export function ListingsEmptyState({
   showCreateListingCTA = true,
   vertical = null,
   photoSearch = false,
+  equipmentShortcutHref,
 }: ListingsEmptyStateProps) {
   const { t } = useTranslation();
   const copy = getCatalogVerticalCopy(vertical);
@@ -102,6 +104,15 @@ export function ListingsEmptyState({
                   {t("filters.reset")}
                 </Link>
               </Button>
+              {equipmentShortcutHref ? (
+                <Button
+                  variant="outline"
+                  className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700"
+                  asChild
+                >
+                  <Link href={equipmentShortcutHref}>{t("listings.browseEquipment")}</Link>
+                </Button>
+              ) : null}
               <Button
                 className={cn("h-11 rounded-xl", theme.primaryButton)}
                 asChild
@@ -113,7 +124,7 @@ export function ListingsEmptyState({
                       ? t("vertical.postListing")
                       : vertical === "OPT"
                         ? t("opt.postOffer")
-                        : t("listings.allListings")}
+                        : t("catalog.addListing")}
                 </Link>
               </Button>
             </>

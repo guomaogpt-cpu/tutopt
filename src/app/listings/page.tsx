@@ -13,6 +13,12 @@ import {
   parseListingsCatalogParams,
 } from "@/features/listings/lib/listings-catalog";
 import {
+  buildCatalogTextSearchWhere,
+  isEquipmentLikeQuery,
+  matchSynonymCategoryIds,
+} from "@/features/listings/lib/catalog-search";
+import { resolveCatalogCategoryFilter } from "@/features/listings/lib/resolve-catalog-filters";
+import {
   listingCardSelect,
   serializeListingCards,
 } from "@/features/listings/lib/serialize-listing-card";
@@ -98,15 +104,60 @@ export async function generateMetadata({
 
 export default async function ListingsPage({ searchParams }: ListingsPageProps) {
   const rawParams = await searchParams;
-  const filters = parseListingsCatalogParams(rawParams);
-  const where = buildListingsCatalogWhere(filters);
+  const parsedFilters = parseListingsCatalogParams(rawParams);
+
+  const categoriesRaw = await prisma.category.findMany({
+    where: { is_active: true },
+    orderBy: [{ sort_order: "asc" }, { name: "asc" }],
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      parent_id: true,
+      vertical: true,
+      sort_order: true,
+    },
+  });
+
+  const categoryItems = categoriesRaw.map((item) => ({
+    id: item.id,
+    name: item.name,
+    slug: item.slug,
+    parent_id: item.parent_id,
+    vertical: item.vertical,
+    sort_order: item.sort_order ?? undefined,
+  }));
+
+  const rawCategory =
+    typeof rawParams.category === "string" ? rawParams.category.trim() : "";
+  const rawSubcategory =
+    typeof rawParams.subcategory === "string" ? rawParams.subcategory.trim() : "";
+
+  const { filters, categoryIds } = resolveCatalogCategoryFilter(
+    parsedFilters,
+    categoryItems,
+    rawCategory,
+    rawSubcategory,
+  );
+
+  const synonymCategoryIds = filters.q
+    ? matchSynonymCategoryIds(filters.q, categoryItems)
+    : [];
+  const textSearch = filters.q
+    ? buildCatalogTextSearchWhere(filters.q, synonymCategoryIds)
+    : undefined;
+
+  const where = buildListingsCatalogWhere(filters, {
+    categoryIds: categoryIds ?? undefined,
+    textSearch,
+  });
   const orderBy = buildListingsCatalogOrderBy(filters.sort);
   const skip = (filters.page - 1) * LISTINGS_PER_PAGE;
   const user = await getCurrentUser();
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const favoriteIds = new Set(favoriteListingIds);
 
-  const [rawListings, totalCount, categories, cities, brands] = await Promise.all([
+  const [rawListings, totalCount, cities, brands] = await Promise.all([
     prisma.listing.findMany({
       where,
       orderBy,
@@ -115,13 +166,6 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
       select: listingCardSelect,
     }),
     prisma.listing.count({ where }),
-    prisma.category.findMany({
-      where: {
-        is_active: true,
-      },
-      orderBy: [{ sort_order: "asc" }, { name: "asc" }],
-      select: { id: true, name: true, vertical: true },
-    }),
     prisma.city.findMany({
       where: { is_active: true },
       orderBy: [{ sort_order: "asc" }, { name: "asc" }],
@@ -136,10 +180,12 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
   const listings = serializeListingCards(rawListings);
 
-  const categoryOptions = categories.map((item) => ({
+  const categoryOptions = categoriesRaw.map((item) => ({
     id: item.id,
     label: item.name,
     vertical: item.vertical,
+    parentId: item.parent_id,
+    slug: item.slug,
   }));
   const cityOptions = cities.map((item) => ({ id: item.id, label: item.name }));
   const brandOptions = brands.map((item) => ({ id: item.id, label: item.name }));
@@ -168,6 +214,14 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         { label: "Главная", href: "/" },
         { label: "Каталог" },
       ];
+
+  const equipmentRootCategory = categoryItems.find(
+    (item) => item.slug === "market-oborudovanie-i-stanki",
+  );
+  const equipmentShortcutHref =
+    filters.q && isEquipmentLikeQuery(filters.q) && equipmentRootCategory
+      ? `/listings?vertical=MARKET&category=${equipmentRootCategory.slug}`
+      : undefined;
 
   return (
     <main
@@ -216,10 +270,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
             showCreateListingCTA={showCreateListingCTA}
             vertical={filters.vertical}
             photoSearch={filters.photoSearch}
+            equipmentShortcutHref={equipmentShortcutHref}
           />
         ) : (
           <>
-            <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3.5 pb-24 max-[339px]:grid-cols-1 md:grid-cols-3 md:gap-4 md:pb-8 lg:grid-cols-4 xl:grid-cols-5">
               {listings.map((listing) => (
                 <div key={listing.id} className="min-w-0 w-full">
                   <ListingCard

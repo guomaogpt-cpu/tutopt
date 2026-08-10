@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils";
 export type FilterDraft = {
   vertical: ListingVertical | null;
   categoryId: string;
+  subcategoryId: string;
   cityId: string;
   brandId: string;
   priceMin: string;
@@ -58,6 +59,7 @@ function filtersToDraft(filters: ListingsCatalogFilters): FilterDraft {
   return {
     vertical: filters.vertical,
     categoryId: filters.categoryId,
+    subcategoryId: filters.subcategoryId,
     cityId: filters.cityId,
     brandId: filters.brandId,
     priceMin: filters.priceMin,
@@ -70,6 +72,7 @@ function filtersToDraft(filters: ListingsCatalogFilters): FilterDraft {
 const emptyDraft: FilterDraft = {
   vertical: null,
   categoryId: "",
+  subcategoryId: "",
   cityId: "",
   brandId: "",
   priceMin: "",
@@ -126,12 +129,21 @@ function FilterFields({
 
   const visibleCategories = useMemo(() => {
     if (!draft.vertical) {
-      return categories;
+      return categories.filter((category) => !category.parentId);
     }
     return categories.filter(
-      (category) => !category.vertical || category.vertical === draft.vertical,
+      (category) =>
+        !category.parentId &&
+        (!category.vertical || category.vertical === draft.vertical),
     );
   }, [categories, draft.vertical]);
+
+  const visibleSubcategories = useMemo(() => {
+    if (!draft.categoryId) {
+      return [];
+    }
+    return categories.filter((category) => category.parentId === draft.categoryId);
+  }, [categories, draft.categoryId]);
 
   return (
     <div className="space-y-4">
@@ -148,6 +160,7 @@ function FilterFields({
                   value === "all" ? null : (value as ListingVertical);
                 onUpdate("vertical", nextVertical);
                 onUpdate("categoryId", "");
+                onUpdate("subcategoryId", "");
                 onUpdate("brandId", "");
               }}
             >
@@ -210,7 +223,10 @@ function FilterFields({
         </label>
         <Select
           value={draft.categoryId || "all"}
-          onValueChange={(value) => onUpdate("categoryId", value === "all" ? "" : value)}
+          onValueChange={(value) => {
+            onUpdate("categoryId", value === "all" ? "" : value);
+            onUpdate("subcategoryId", "");
+          }}
         >
           <SelectTrigger
             id="filter-category"
@@ -228,6 +244,33 @@ function FilterFields({
           </SelectContent>
         </Select>
       </div>
+
+      {visibleSubcategories.length > 0 ? (
+        <div className="space-y-2">
+          <label htmlFor="filter-subcategory" className="text-sm font-medium text-foreground">
+            {t("filters.subcategory")}
+          </label>
+          <Select
+            value={draft.subcategoryId || "all"}
+            onValueChange={(value) => onUpdate("subcategoryId", value === "all" ? "" : value)}
+          >
+            <SelectTrigger
+              id="filter-subcategory"
+              className="h-11 rounded-xl dark:border-slate-700 dark:bg-slate-950"
+            >
+              <SelectValue placeholder={t("catalog.allCategories")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("catalog.allCategories")}</SelectItem>
+              {visibleSubcategories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : null}
 
       <div className="space-y-2">
         <label htmlFor="filter-city" className="text-sm font-medium text-foreground">
@@ -430,6 +473,7 @@ export function CatalogFiltersPanel({
     setDraft({
       ...filtersToDraft(filters),
       categoryId: "",
+      subcategoryId: "",
       cityId: "",
       brandId: "",
       priceMin: "",

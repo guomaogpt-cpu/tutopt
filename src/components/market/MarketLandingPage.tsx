@@ -6,6 +6,7 @@ import {
   MarketCompactHero,
   type MarketCategoryItem,
 } from "@/components/market/MarketCompactHero";
+import { MarketCatalogShortcuts } from "@/components/market/MarketCatalogShortcuts";
 import { MarketCategoryHighlights } from "@/components/market/MarketCategoryHighlights";
 import { Container } from "@/components/ui/container";
 import { VerticalLatestHeading } from "@/components/verticals/VerticalLatestSectionLabels";
@@ -39,6 +40,7 @@ export function MarketLandingPage({
       <MarketCompactHero listingCount={publishedCount} />
 
       <Container size="lg" className="space-y-8 py-6 sm:space-y-10 sm:py-10">
+        <MarketCatalogShortcuts categories={categories} />
         <MarketCategoryHighlights categories={categories} />
 
         <section aria-labelledby="market-listings-heading">

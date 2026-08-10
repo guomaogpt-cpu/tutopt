@@ -61,16 +61,23 @@ export function getActiveFilterChips(
     chips.push({
       id: "vertical",
       label: verticalLabel(filters.vertical, t),
-      clearPatch: { vertical: null, categoryId: "", brandId: "" },
+      clearPatch: { vertical: null, categoryId: "", subcategoryId: "", brandId: "" },
       clearAriaLabelKey: "filters.clearOne",
     });
   }
 
-  if (filters.categoryId) {
+  if (filters.subcategoryId) {
+    chips.push({
+      id: "subcategory",
+      label: lookups.categories[filters.subcategoryId] ?? t("filters.subcategory"),
+      clearPatch: { subcategoryId: "" },
+      clearAriaLabelKey: "filters.clearOne",
+    });
+  } else if (filters.categoryId) {
     chips.push({
       id: "category",
-      label: `${t("filters.category")}: ${lookups.categories[filters.categoryId] ?? "—"}`,
-      clearPatch: { categoryId: "" },
+      label: lookups.categories[filters.categoryId] ?? t("filters.category"),
+      clearPatch: { categoryId: "", subcategoryId: "" },
       clearAriaLabelKey: "filters.clearOne",
     });
   }
@@ -136,7 +143,7 @@ export function getCatalogAnalyticsContext(filters: ListingsCatalogFilters) {
   return {
     vertical: filters.vertical,
     hasQuery: Boolean(filters.q),
-    hasCategory: Boolean(filters.categoryId),
+    hasCategory: Boolean(filters.categoryId || filters.subcategoryId),
     hasCity: Boolean(filters.cityId),
     hasPrice: Boolean(filters.priceMin || filters.priceMax),
     sort: filters.sort,
