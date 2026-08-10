@@ -128,6 +128,17 @@ Guard: `previousStatus !== PENDING_MODERATION && nextStatus === PENDING_MODERATI
 
 ---
 
+## 12. Phase 119 — Listing leads/contact flow (related)
+
+Phase 119 улучшает **заявки по объявлениям** (`NEW_LEAD`) — отдельно от moderation notifications Phase 118.
+
+- In-app only для новых заявок; push для leads **не включён**
+- Moderation push (`LISTING_APPROVED` / `LISTING_REJECTED`) без изменений
+
+См. `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
+
+---
+
 ## Связанные документы
 
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`

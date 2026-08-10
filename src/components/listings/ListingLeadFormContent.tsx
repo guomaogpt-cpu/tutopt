@@ -217,7 +217,7 @@ export function ListingLeadFormContent({
             className="h-11 w-full rounded-xl"
             asChild
           >
-            <Link href={`/listings/${listingId}`}>{t("lead.openListing")}</Link>
+            <Link href={`/listings/${listingId}`}>{t("lead.backToListing")}</Link>
           </Button>
           <Button type="button" className={cn("h-11 w-full rounded-xl", theme.primaryButton)} asChild>
             <Link href="/listings">{t("lead.continueBrowsing")}</Link>
@@ -239,10 +239,9 @@ export function ListingLeadFormContent({
             type="button"
             variant="outline"
             className="h-11 w-full rounded-xl"
-            disabled={isPending}
-            onClick={() => void submitLead(true)}
+            asChild
           >
-            {t("lead.sendAgain")}
+            <Link href={`/listings/${listingId}`}>{t("lead.backToListing")}</Link>
           </Button>
         </div>
       </div>

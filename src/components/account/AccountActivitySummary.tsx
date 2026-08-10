@@ -73,6 +73,7 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
   }
 
   const isQuiet = lines.length === 0;
+  const hasLeadActivity = data.receivedLeadsCount > 0 || data.inProgressLeadsCount > 0;
 
   return (
     <section
@@ -116,6 +117,15 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
               </li>
             ))}
           </ul>
+
+          {hasLeadActivity ? (
+            <Button asChild className="mt-4 h-11 w-full rounded-xl">
+              <Link href="/account/requests?tab=received">
+                {t("accountActivity.openRequests")}
+                <ArrowRight className="ml-1.5 size-3.5" aria-hidden="true" />
+              </Link>
+            </Button>
+          ) : null}
 
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <Link

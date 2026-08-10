@@ -125,7 +125,7 @@ Future: characteristic chips на card (нужны данные в `ListingCardD
 | True step-by-step wizard (one section per screen) | Future |
 | Listing card characteristic chips | Future (needs card data) |
 | Pull-to-refresh | Future |
-| Listing lead contact drawer | Phase 119 ✅ |
+| Listing lead contact drawer | Phase 119 ✅ (in-app notify; push deferred) |
 | Google Play store assets + publish | Phase 115 legal was 114; Play upload separate |
 | Full real device QA retest | Pending |
 

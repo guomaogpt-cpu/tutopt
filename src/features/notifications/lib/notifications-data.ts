@@ -103,7 +103,7 @@ export async function createNewLeadNotification(input: {
   const message = config.notificationMessage(input.listingTitle);
   const link = "/account/requests";
 
-  const notification = await prisma.notification.create({
+  await prisma.notification.create({
     data: {
       recipient_id: input.recipientId,
       actor_id: input.actorId,
@@ -112,16 +112,6 @@ export async function createNewLeadNotification(input: {
       message,
       link,
     },
-    select: { id: true },
-  });
-
-  await dispatchUserPush({
-    userId: input.recipientId,
-    title,
-    body: message,
-    url: link,
-    notificationId: notification.id,
-    type: NotificationType.NEW_LEAD,
   });
 }
 

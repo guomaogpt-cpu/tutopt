@@ -102,6 +102,14 @@ npx cap add ios
 - Opt-in UX в `/account`, permission по действию пользователя
 - См. `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md`
 
+## 6.1 Phase 119 — Listing leads/contact flow without native push ✅
+
+- CTA «Связаться» + bottom drawer на `/listings/[id]`
+- Duplicate guard 24h, success/duplicate feedback
+- Seller in-app `NEW_LEAD` → `/account/requests` (**без push**)
+- Статусы NEW / VIEWED / CLOSED, seller actions
+- См. `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -139,7 +147,7 @@ npx cap add ios
 | 116 ✅ | In-app notifications, activity block, status labels, badges |
 | 117 ✅ | Android push foundation (FCM, token APIs, account opt-in) |
 | 118 ✅ | Listing moderation notifications (submitted/approved/rejected) |
-| 119 ✅ | Listing leads & contact flow (drawer, statuses, seller actions) |
+| 119 ✅ | Listing leads & contact flow (drawer, in-app notify, seller actions; push deferred) |
 | 120 | Store assets + Play Console internal testing upload |
 | 121 | Production rollout (after QA + legal sign-off) |
 | 122 | Capacitor iOS wrapper |

@@ -64,6 +64,12 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
     select: { id: true },
   });
 
+  const sellerListingCount = sellerProfile
+    ? await prisma.listing.count({
+        where: { seller_profile_id: sellerProfile.id },
+      })
+    : 0;
+
   const [sentLeads, receivedLeads, cargoRequests, ownCargoResponses] = await Promise.all([
     getBuyerLeads(user.id),
     sellerProfile ? getSellerLeads(sellerProfile.id) : Promise.resolve([]),
@@ -130,7 +136,9 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
             <AccountRequestsEmptyState
               variant={
                 activeTab === "received"
-                  ? "received"
+                  ? sellerListingCount === 0
+                    ? "noListings"
+                    : "received"
                   : totalCount === 0
                     ? "global"
                     : "section"

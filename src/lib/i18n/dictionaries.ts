@@ -2890,6 +2890,11 @@ export const DICTIONARY = {
     kg: "Жарыяны ачуу",
     en: "Open listing",
   },
+  "lead.backToListing": {
+    ru: "Вернуться к объявлению",
+    kg: "Жарыяга кайтуу",
+    en: "Back to listing",
+  },
   "lead.loginRequiredTitle": {
     ru: "Запрос по объявлению",
     kg: "Жарыя боюнча сурам",
@@ -3895,6 +3900,16 @@ export const DICTIONARY = {
     ru: "Когда покупатели заинтересуются вашими объявлениями, заявки появятся здесь.",
     kg: "Сатып алуучулар жарыяларыңызга кызыкканда, сурамдар ушул жерде көрүнөт.",
     en: "When buyers are interested in your listings, requests will appear here.",
+  },
+  "accountRequests.noListingsTitle": {
+    ru: "У вас пока нет объявлений",
+    kg: "Сизде азырынча жарыялар жок",
+    en: "You have no listings yet",
+  },
+  "accountRequests.noListingsDescription": {
+    ru: "Создайте объявление, чтобы получать заявки.",
+    kg: "Сурам алуу үчүн жарыя түзүңүз.",
+    en: "Create a listing to start receiving requests.",
   },
   "accountRequests.myListings": {
     ru: "Мои объявления",

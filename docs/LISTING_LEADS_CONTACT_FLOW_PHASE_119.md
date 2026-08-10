@@ -1,57 +1,111 @@
 # Listing Leads & Contact Flow — Phase 119
 
-> **Цель:** улучшить marketplace flow «покупатель → заявка → продавец» без чата, CRM и native calls API.
+> **Цель:** улучшить marketplace flow «покупатель → заявка → продавец» **без native push**, чата, CRM и платежей.
 
 ---
 
 ## 1. Цель
 
-Покупатель нашёл объявление → оставил заявку → продавец получил уведомление (in-app + push) → видит заявку в `/account/requests`.
+Покупатель нашёл объявление → оставил заявку → продавец увидел **in-app** уведомление → обработал заявку в `/account/requests`.
 
 ---
 
-## 2. Что было до фазы
+## 2. Почему push отложили
 
-- Lead model (`NEW`, `VIEWED`, `CLOSED`) и API `POST /api/listings/[id]/leads`
-- Inline форма на `/listings/[id]`, scroll-to-form CTA
-- Duplicate guard 10 минут
-- Уведомление `NEW_LEAD` + push (Phase 117)
-- `/account/requests` с tabs (sent/received/cargo)
+- Firebase / native push foundation (Phase 117) готов, но **в Phase 119 не подключаем** доставку push по заявкам.
+- Фокус — UX формы, CTA, дубли, статусы, seller dashboard и in-app notifications.
+- Push для `NEW_LEAD` можно включить отдельной фазой после QA и Play internal testing.
 
 ---
 
 ## 3. CTA на объявлении
 
-- **Mobile sticky:** «Связаться» + избранное + tel (если есть)
-- **Desktop sidebar:** `ListingContactCard` — связаться + избранное + контакты
-- **Своё объявление:** «Редактировать» + «Посмотреть заявки»
-- CTA открывает **bottom drawer** (не scroll)
+`/listings/[id]`:
+
+| Контекст | Primary | Secondary |
+|---|---|---|
+| Чужое объявление | **Связаться** | В избранное (+ tel если есть) |
+| Своё объявление | **Редактировать** | Посмотреть заявки |
+
+**Mobile:**
+
+- Sticky CTA снизу (`ListingMobileStickyCta`) — offset над bottom nav
+- Открывает bottom drawer, не scroll к форме
+- Back закрывает drawer (`closeTopmostOverlay`)
+
+**Desktop:**
+
+- Inline форма + sidebar `ListingContactCard`
 
 ---
 
 ## 4. Форма заявки
 
-Bottom sheet (`ListingLeadContactDrawer`):
+Bottom sheet (`ListingLeadContactDrawer` + `ListingLeadFormContent`):
 
 | Поле | Поведение |
 |---|---|
 | Имя | из профиля, read-only |
-| Телефон | из профиля, editable; обязателен если нет в профиле |
+| Телефон | из профиля; обязателен если нет в профиле |
 | Сообщение | prefill: «Здравствуйте, интересует объявление «{title}». Актуально?» |
 
-Desktop (lg+): inline форма на странице. Mobile: compact card + drawer.
+**Auth:** заявку может отправить только авторизованный пользователь (login prompt для гостя).
+
+**Success:**
+
+- «Заявка отправлена»
+- «Продавец увидит ваше сообщение и свяжется с вами»
+- Кнопки: «Открыть объявление» / «Смотреть другие объявления»
 
 ---
 
 ## 5. Защита от дублей
 
-- Soft guard: `userId + listingId` в **24 часа**
-- `force_resend: true` — повторная отправка по кнопке
-- UI duplicate state: «Открыть мои заявки» / «Отправить повторно»
+- Soft guard: `userId + listingId` (или `phone + listingId`) за **24 часа**
+- При дубле: не создавать lead, показать «Вы уже отправили заявку по этому объявлению»
+- Кнопки: **Открыть мои заявки** / **Вернуться к объявлению**
+- API `force_resend` остаётся для edge cases, в UI не показывается
 
 ---
 
-## 6. Статусы заявок
+## 6. In-app notification продавцу
+
+При `POST /api/listings/[id]/leads`:
+
+| Поле | Значение |
+|---|---|
+| Type | `NEW_LEAD` (существующий) |
+| Title | Новая заявка по объявлению |
+| Text | Покупатель заинтересовался объявлением «{title}». |
+| Link | `/account/requests` |
+
+**Push не отправляется** в Phase 119. Ошибка notification не блокирует создание lead (try/catch).
+
+---
+
+## 7. /account/requests
+
+**Received tab** — «Заявки по моим объявлениям»:
+
+Карточка (`AccountReceivedLeadCard`):
+
+- статус (human label)
+- название объявления + ссылка
+- имя покупателя, телефон, сообщение, дата
+- **Позвонить** / **В работе** / **Закрыть**
+
+**Empty states:**
+
+| Ситуация | Текст | CTA |
+|---|---|---|
+| Есть объявления, нет заявок | Пока нет заявок… | Мои объявления |
+| Нет своих объявлений | У вас пока нет объявлений… | Подать объявление |
+
+**Buyer tab (sent):** «Мои обращения» — уже есть в tabs, без большого refactor.
+
+---
+
+## 8. Статусы заявок
 
 | Enum | Label |
 |---|---|
@@ -59,65 +113,57 @@ Desktop (lg+): inline форма на странице. Mobile: compact card + d
 | `VIEWED` | В работе |
 | `CLOSED` | Закрыта |
 
-Продавец: позвонить, «В работе», «Закрыть» в карточке заявки.
+«Неактуальна» — future (отдельный enum без schema change не добавляли; `CLOSED` покрывает закрытие продавцом).
 
 ---
 
-## 7. Уведомления продавцу
-
-При создании lead:
-
-- In-app: `NEW_LEAD` — «Новая заявка по объявлению»
-- Link: `/account/requests`
-- Push через Phase 117 helper (failure не блокирует lead)
-
----
-
-## 8. Push integration
-
-Reuse `dispatchUserPush` after `createNewLeadNotification`. Wrapped in try/catch on lead API.
-
----
-
-## 9. /account/requests
-
-- Received tab: «Заявки по вашим объявлениям»
-- Карточка: статус, объявление, покупатель, сообщение, действия
-- Empty state → «Мои объявления»
-
----
-
-## 10. Android/WebView considerations
+## 9. Android/WebView considerations
 
 - Drawer: `max-height` + keyboard inset CSS var
-- `role="dialog"` — Back закрывает overlay (`closeTopmostOverlay`)
-- Sticky CTA offset above bottom nav
 - `inputMode="tel"` на телефоне
+- `role="dialog"` — Back закрывает overlay
+- Sticky CTA не перекрывает bottom nav
+- Success / duplicate states видны без пустой формы
 
 ---
 
-## 11. Security
+## 10. Security
 
-- `sellerId` из listing owner на server
-- Auth required для submit
+- `sellerId` из listing owner на server, не из client
+- Нельзя отправить заявку на своё объявление
+- Auth required; нельзя подставить чужой `userId`
 - Phone/message length limits (Zod)
-- Contact data visible только продавцу заявки
-- No secrets in push payload
+- `link` только relative (`/account/requests`)
+- Contact data видит только владелец объявления / admin
+- No raw stack traces, no `any`
+
+---
+
+## 11. Account activity
+
+`/account` activity block:
+
+- счётчики новых заявок и заявок в работе
+- primary кнопка **Открыть заявки** при наличии lead activity
+- quick links: notifications, listings, requests
 
 ---
 
 ## 12. Future
 
+- Native push для `NEW_LEAD` (reuse Phase 117 `dispatchUserPush`)
 - Полноценный чат
 - Buyer request history dashboard
 - Anti-spam / rate limits по IP
-- Lead analytics
 - WhatsApp deep link
+- Статус «Неактуальна» при необходимости
 
 ---
 
 ## Связанные документы
 
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`
-- `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md`
+- `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
+- `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
+- `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md` (infrastructure only; lead push deferred)

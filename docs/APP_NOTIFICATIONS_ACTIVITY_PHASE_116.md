@@ -155,7 +155,7 @@ Phase 116 = **in-app only**. Native push добавлен в **Phase 117**.
 
 ## 12. Phase 119 — Listing leads contact flow ✅
 
-Lead notifications (`NEW_LEAD`) используются при отправке заявки покупателем. Push + in-app → `/account/requests`.
+Lead notifications (`NEW_LEAD`) при отправке заявки покупателем — **только in-app** → `/account/requests`. Native push для leads отложен (Phase 117 infrastructure остаётся для moderation/cargo).
 
 См. `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
 
