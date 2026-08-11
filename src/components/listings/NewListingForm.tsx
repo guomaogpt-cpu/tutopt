@@ -9,6 +9,7 @@ import { CategoryPicker } from "@/components/listings/CategoryPicker";
 import { CreateListingSteps } from "@/components/listings/CreateListingSteps";
 import { CreateListingVerticalChooser } from "@/components/listings/CreateListingVerticalChooser";
 import { ListingFormDraftBanner } from "@/components/listings/ListingFormDraftBanner";
+import { ListingFormFirstHint } from "@/components/listings/ListingFormFirstHint";
 import { GenerateListingDescriptionButton } from "@/components/listings/GenerateListingDescriptionButton";
 import { ListingAutosuggestCard } from "@/components/listings/ListingAutosuggestCard";
 import { ListingCharacteristicsFields } from "@/components/listings/ListingCharacteristicsFields";
@@ -101,6 +102,7 @@ type NewListingFormProps = {
   } | null;
   aiEnabled?: boolean;
   draftUserId?: string;
+  hasExistingListings?: boolean;
 };
 
 export type ListingFormInitialValues = {
@@ -172,6 +174,7 @@ export function NewListingForm({
   companyProfile = null,
   aiEnabled = false,
   draftUserId,
+  hasExistingListings = true,
 }: NewListingFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -996,6 +999,7 @@ export function NewListingForm({
               onDismiss={dismissListingDraft}
             />
           ) : null}
+          {mode === "create" && !hasExistingListings ? <ListingFormFirstHint /> : null}
           {mode === "create" ? (
             <ListingPostAsSelector
               hasCompanyProfile={Boolean(companyProfile?.isConfigured)}

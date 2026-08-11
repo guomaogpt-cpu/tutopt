@@ -3328,6 +3328,16 @@ export const DICTIONARY = {
     kg: "Жарыя берүү үчүн кириңиз",
     en: "Sign in to post a listing",
   },
+  "auth.continueLoginTitle": {
+    ru: "Войдите, чтобы продолжить",
+    kg: "Улантуу үчүн кириңиз",
+    en: "Sign in to continue",
+  },
+  "auth.continueLoginDescription": {
+    ru: "Это нужно, чтобы сохранить объявление в вашем кабинете.",
+    kg: "Жарыяны кабинетиңизде сактоо үчүн кирүү керек.",
+    en: "This lets us save the listing in your account.",
+  },
   "auth.returnToPost": {
     ru: "После входа вернёмся к публикации",
     kg: "Киргенден кийин жарыяга кайтабыз",
@@ -3800,7 +3810,7 @@ export const DICTIONARY = {
   "accountListings.leadsCount": {
     ru: "Заявки",
     kg: "Өтүнмөлөр",
-    en: "Leads",
+    en: "Requests",
   },
   "accountListings.filters.all": {
     ru: "Все",
@@ -3928,9 +3938,9 @@ export const DICTIONARY = {
     en: "No requests yet",
   },
   "accountRequests.emptyDescription": {
-    ru: "Когда покупатели заинтересуются вашими объявлениями, заявки появятся здесь.",
-    kg: "Сатып алуучулар жарыяларыңызга кызыкканда, сурамдар ушул жерде көрүнөт.",
-    en: "When buyers are interested in your listings, requests will appear here.",
+    ru: "Когда покупатель заинтересуется вашим объявлением, заявка появится здесь.",
+    kg: "Сатып алуучу жарыяңызга кызыкканда, сурам ушул жерде көрүнөт.",
+    en: "When a buyer is interested in your listing, a request will appear here.",
   },
   "accountRequests.noListingsTitle": {
     ru: "У вас пока нет объявлений",
@@ -3938,7 +3948,7 @@ export const DICTIONARY = {
     en: "You have no listings yet",
   },
   "accountRequests.noListingsDescription": {
-    ru: "Создайте объявление, чтобы получать заявки.",
+    ru: "Создайте объявление, чтобы начать получать заявки.",
     kg: "Сурам алуу үчүн жарыя түзүңүз.",
     en: "Create a listing to start receiving requests.",
   },
@@ -4546,6 +4556,11 @@ export const DICTIONARY = {
     kg: "Кызыктуу жарыяларды сактап коюңуз, тез кайтуу үчүн.",
     en: "Save listings to quickly come back to them.",
   },
+  "favorites.findListings": {
+    ru: "Найти объявления",
+    kg: "Жарыяларды табуу",
+    en: "Find listings",
+  },
   "favorites.total": { ru: "Всего в избранном", kg: "Тандалмаларда бардыгы", en: "Total favorites" },
   "favorites.lastAdded": {
     ru: "Последнее добавление:",
@@ -4721,9 +4736,14 @@ export const DICTIONARY = {
     en: "No notifications yet",
   },
   "notifications.emptyDescription": {
-    ru: "Когда появятся заявки, статусы объявлений или ответы по карго, они будут здесь.",
-    kg: "Сурамдар, жарыя статустары же карго жооптору бул жерде көрүнөт.",
-    en: "Requests, listing updates and cargo replies will appear here.",
+    ru: "Здесь будут заявки, статусы объявлений и важные события.",
+    kg: "Сурамдар, жарыя статустары жана маанилүү окуялар бул жерде көрүнөт.",
+    en: "Requests, listing updates and important events will appear here.",
+  },
+  "notifications.goToAccount": {
+    ru: "Перейти в кабинет",
+    kg: "Кабинетке өтүү",
+    en: "Go to account",
   },
   "notifications.goToSellerDashboard": {
     ru: "Перейти в личный кабинет",
@@ -5149,34 +5169,34 @@ export const DICTIONARY = {
     en: "Description",
   },
   "listingForm.generateDescription": {
-    ru: "Сгенерировать описание",
+    ru: "Составить описание",
     kg: "Сүрөттөмө түзүү",
-    en: "Generate description",
+    en: "Compose description",
   },
   "listingForm.generatingDescription": {
-    ru: "Генерируется...",
+    ru: "Составляем...",
     kg: "Түзүлүүдө...",
-    en: "Generating...",
+    en: "Composing...",
   },
   "listingForm.descriptionGenerated": {
-    ru: "Описание сгенерировано",
+    ru: "Описание составлено",
     kg: "Сүрөттөмө түзүлдү",
-    en: "Description generated",
+    en: "Description composed",
   },
   "listingForm.aiNotConnected": {
-    ru: "AI-генератор пока не подключён.",
-    kg: "AI генератор азырынча туташтырылган эмес.",
-    en: "AI generator is not connected yet.",
+    ru: "Составление описания пока недоступно.",
+    kg: "Сүрөттөмө түзүү азырынча жеткиликтүү эмес.",
+    en: "Description compose is not available yet.",
   },
   "listingForm.aiNeedMoreData": {
-    ru: "Укажите название и категорию, чтобы сгенерировать описание.",
+    ru: "Укажите название и категорию, чтобы составить описание.",
     kg: "Сүрөттөмө түзүү үчүн аталышты жана категорияны жазыңыз.",
-    en: "Enter a title and category to generate a description.",
+    en: "Enter a title and category to compose a description.",
   },
   "listingForm.aiGenerateError": {
-    ru: "Не удалось сгенерировать описание. Попробуйте позже.",
+    ru: "Не удалось составить описание. Попробуйте позже.",
     kg: "Сүрөттөмө түзүлгөн жок. Кийинчерээк аракет кылыңыз.",
-    en: "Could not generate description. Try again later.",
+    en: "Could not compose description. Try again later.",
   },
   "listingForm.reviewDescriptionHint": {
     ru: "Проверьте описание перед публикацией.",
@@ -5210,10 +5230,115 @@ export const DICTIONARY = {
     kg: "Кеңештерди жабуу",
     en: "Dismiss hints",
   },
+  "onboarding.hide": {
+    ru: "Скрыть",
+    kg: "Жашыруу",
+    en: "Hide",
+  },
+  "onboarding.homeWelcomeTitle": {
+    ru: "ВсеТут — объявления, услуги, опт и карго.",
+    kg: "ВсеТут — жарыялар, кызматтар, дүң жана карго.",
+    en: "VseTut — listings, services, wholesale and cargo.",
+  },
+  "onboarding.homeWelcomeDescription": {
+    ru: "Подайте объявление, найдите товар или создайте карго-заявку.",
+    kg: "Жарыя бериңиз, товар табыңыз же карго-сурам түзүңүз.",
+    en: "Post a listing, find products or create a cargo request.",
+  },
+  "onboarding.postListing": {
+    ru: "Подать объявление",
+    kg: "Жарыя берүү",
+    en: "Post listing",
+  },
+  "onboarding.findProduct": {
+    ru: "Найти товар",
+    kg: "Товар табуу",
+    en: "Find products",
+  },
+  "onboarding.quickStart": {
+    ru: "Быстрый старт",
+    kg: "Тез баштоо",
+    en: "Quick start",
+  },
+  "onboarding.postFirstListing": {
+    ru: "Подать первое объявление",
+    kg: "Алгачкы жарыя берүү",
+    en: "Post your first listing",
+  },
+  "onboarding.setupCompany": {
+    ru: "Настроить компанию",
+    kg: "Компанияны орнотуу",
+    en: "Set up company",
+  },
+  "onboarding.addCompany": {
+    ru: "Добавить компанию",
+    kg: "Компания кошуу",
+    en: "Add company",
+  },
+  "onboarding.listingFormHintIntro": {
+    ru: "Заполните основные данные. Описание можно составить автоматически.",
+    kg: "Негизги маалыматтарды толтуруңуз. Сүрөттөмөнү автоматтык түзсө болот.",
+    en: "Fill in the basics. You can compose the description automatically.",
+  },
+  "onboarding.listingFormHintCategory": {
+    ru: "выберите категорию",
+    kg: "категорияны тандаңыз",
+    en: "choose a category",
+  },
+  "onboarding.listingFormHintPhotos": {
+    ru: "добавьте фото",
+    kg: "сүрөт кошуңуз",
+    en: "add photos",
+  },
+  "onboarding.listingFormHintPrice": {
+    ru: "укажите цену и город",
+    kg: "баа жана шаарды көрсөтүңүз",
+    en: "set price and city",
+  },
+  "onboarding.listingFormHintCompose": {
+    ru: "нажмите «Составить описание», если не хотите писать вручную",
+    kg: "кол менен жазгыңыз келбесе «Сүрөттөмө түзүү» баскычын басыңыз",
+    en: "tap Compose description if you do not want to write manually",
+  },
+  "onboarding.collapseHint": {
+    ru: "Свернуть подсказку",
+    kg: "Кеңешти жыйноо",
+    en: "Collapse hint",
+  },
+  "onboarding.expandHint": {
+    ru: "Развернуть подсказку",
+    kg: "Кеңешти ачуу",
+    en: "Expand hint",
+  },
+  "onboarding.cargoQuickGuideTitle": {
+    ru: "Как работает карго:",
+    kg: "Карго кантип иштейт:",
+    en: "How cargo works:",
+  },
+  "onboarding.cargoQuickGuideStep1": {
+    ru: "Создайте заявку",
+    kg: "Сурам түзүңүз",
+    en: "Create a request",
+  },
+  "onboarding.cargoQuickGuideStep2": {
+    ru: "Укажите маршрут и груз",
+    kg: "Маршрутту жана жүктү көрсөтүңүз",
+    en: "Specify route and cargo",
+  },
+  "onboarding.cargoQuickGuideStep3": {
+    ru: "Получите отклики от карго-компаний",
+    kg: "Карго компаниялардан жооп алыңыз",
+    en: "Get replies from cargo companies",
+  },
+  "onboarding.cargoCreateRequest": {
+    ru: "Создать заявку",
+    kg: "Сурам түзүү",
+    en: "Create request",
+  },
   "listingForm.aiKeptExistingDescription": {
-    ru: "Описание уже заполнено — AI не перезаписал текст.",
-    kg: "Сүрөттөмө толук — AI текстти алмаштырган жок.",
-    en: "Description already filled — AI did not overwrite your text.",
+    ru: "Описание уже заполнено — текст не перезаписан.",
+    kg: "Сүрөттөмө толук — текст алмаштырылган жок.",
+    en: "Description already filled — your text was kept.",
   },
   "listingForm.draft.found": {
     ru: "Найден черновик объявления",
@@ -5332,9 +5457,9 @@ export const DICTIONARY = {
     en: "Characteristics",
   },
   "listingCharacteristics.usedForAi": {
-    ru: "Эти параметры подставляются в AI-описание.",
-    kg: "Бул параметрлер AI сүрөттөмөсүнө кошулат.",
-    en: "These parameters are used in the AI description.",
+    ru: "Эти параметры учитываются при составлении описания.",
+    kg: "Бул параметрлер сүрөттөмө түзүүдө эске алынат.",
+    en: "These parameters are used when composing the description.",
   },
   "listingCharacteristics.detailTitle": {
     ru: "Характеристики",

@@ -5,11 +5,10 @@ import { AccountCompanySummaryCard } from "@/components/account/AccountCompanySu
 import { AccountListingsSummary } from "@/components/account/AccountListingsSummary";
 import { AccountMetaSummary } from "@/components/account/AccountMetaSummary";
 import { AccountProfileCard } from "@/components/account/AccountProfileCard";
-import { AccountQuickActions } from "@/components/account/AccountQuickActions";
+import { AccountQuickStart } from "@/components/account/AccountQuickStart";
 import { PushNotificationsSettings } from "@/components/account/PushNotificationsSettings";
 import { AccountRequestsSummary } from "@/components/account/AccountRequestsSummary";
 import { AccountServiceLinks } from "@/components/account/AccountServiceLinks";
-import { MobileOnboardingHints } from "@/components/mobile/MobileOnboardingHints";
 import { PwaInstallCard } from "@/components/pwa/PwaInstallCard";
 import { getAccountDashboardData } from "@/features/account/lib/account-dashboard-data";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
@@ -46,7 +45,6 @@ export default async function AccountPage() {
             phone={user.phone}
             hasCompany={Boolean(data.company)}
           />
-          <MobileOnboardingHints className="sm:hidden" />
           <AccountActivitySummary
             data={{
               unreadNotifications: data.unreadNotifications,
@@ -56,7 +54,10 @@ export default async function AccountPage() {
               cargoRequestsCount: data.cargoRequestsCount,
             }}
           />
-          <AccountQuickActions />
+          <AccountQuickStart
+            hasListings={data.listingStats.total > 0}
+            hasCompany={Boolean(data.company)}
+          />
           <PushNotificationsSettings />
           <AccountMetaSummary
             favoritesCount={data.favoritesCount}

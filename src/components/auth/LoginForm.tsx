@@ -107,11 +107,18 @@ export function LoginForm({ googleEnabled }: LoginFormProps) {
       ? `/register?next=${encodeURIComponent(resolveNextParam(searchParams.get("next")))}`
       : "/register";
 
+  const isPostingFlow =
+    nextPath === "/listings/new" || nextPath.startsWith("/listings/new?");
+  const loginTitle = isPostingFlow ? t("auth.continueLoginTitle") : t("auth.loginTitle");
+  const loginDescription = isPostingFlow
+    ? t("auth.continueLoginDescription")
+    : t("auth.loginDescription");
+
   const phoneError = getFieldError(errors, "phone");
   const passwordError = getFieldError(errors, "password");
 
   return (
-    <AuthFormCard title={t("auth.loginTitle")} description={t("auth.loginDescription")}>
+    <AuthFormCard title={loginTitle} description={loginDescription}>
       <form onSubmit={(event) => void handleSubmit(event)} autoComplete="on" className="min-w-0 space-y-4 sm:space-y-5">
         {successMessage ? <AuthAlert variant="success" messages={[successMessage]} /> : null}
         <AuthAlert variant="error" messages={errors.form} />

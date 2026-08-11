@@ -84,6 +84,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
       select: {
         company_name: true,
         company_type: true,
+        _count: { select: { listings: true } },
       },
     }),
   ]);
@@ -115,6 +116,7 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
             companyProfile={companyProfile}
             aiEnabled
             draftUserId={user.id}
+            hasExistingListings={(sellerProfile?._count.listings ?? 0) > 0}
           />
         )}
       </Container>

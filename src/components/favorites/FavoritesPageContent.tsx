@@ -48,7 +48,7 @@ export function FavoritesPageContent({
           {t("favorites.emptyDescription")}
         </p>
         <Button asChild className="mt-6 h-11 rounded-xl">
-          <Link href="/listings">{t("catalog.goToCatalog")}</Link>
+          <Link href="/listings">{t("favorites.findListings")}</Link>
         </Button>
       </div>
     );

@@ -8,6 +8,7 @@ import { CargoDirectionsSection } from "@/components/cargo/CargoDirectionsSectio
 import { CargoDualCta } from "@/components/cargo/CargoDualCta";
 import { CargoFeedbackCta } from "@/components/cargo/CargoFeedbackCta";
 import { CargoHowItWorks } from "@/components/cargo/CargoHowItWorks";
+import { CargoQuickGuide } from "@/components/cargo/CargoQuickGuide";
 import { CargoLandingSearch } from "@/components/cargo/CargoLandingSearch";
 import { CargoRequestModal } from "@/components/cargo/CargoRequestModal";
 import { Container } from "@/components/ui/container";
@@ -36,6 +37,10 @@ export function CargoLandingPage({
       <CargoCompactHero onCreateRequest={() => setRequestOpen(true)} />
 
       <Container size="lg" className="py-5 sm:py-7">
+        <CargoQuickGuide
+          className="mb-4 sm:mb-5"
+          onCreateRequest={() => setRequestOpen(true)}
+        />
         <CargoLandingSearch isAuthenticated={isAuthenticated} />
         <CargoDirectionsSection />
         <CargoCompaniesSection

@@ -160,6 +160,17 @@ Bottom sheet (`ListingLeadContactDrawer` + `ListingLeadFormContent`):
 
 ---
 
+## 13. Phase 121 — First-run onboarding ✅
+
+Empty state на `/account/requests` и auth copy дополнены в рамках Phase 121:
+
+- received tab: «Мои объявления» + «Подать объявление»
+- noListings: «Создайте объявление, чтобы начать получать заявки»
+
+См. `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
+
+---
+
 ## Связанные документы
 
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`
@@ -167,3 +178,4 @@ Bottom sheet (`ListingLeadContactDrawer` + `ListingLeadFormContent`):
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md` (infrastructure only; lead push deferred)
+- `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`

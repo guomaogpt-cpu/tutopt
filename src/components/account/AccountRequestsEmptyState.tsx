@@ -41,15 +41,24 @@ export function AccountRequestsEmptyState({
             <Link href="/listings/new">{t("account.postListing")}</Link>
           </Button>
         ) : variant === "received" ? (
-          <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
-            <Link href="/account/listings">{t("accountRequests.myListings")}</Link>
-          </Button>
+          <>
+            <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
+              <Link href="/account/listings">{t("accountRequests.myListings")}</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="h-11 w-full rounded-xl dark:border-slate-700 sm:w-auto"
+            >
+              <Link href="/listings/new">{t("account.postListing")}</Link>
+            </Button>
+          </>
         ) : (
           <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
             <Link href="/listings">{t("accountRequests.browseListings")}</Link>
           </Button>
         )}
-        {variant !== "received" ? (
+        {variant !== "received" && variant !== "noListings" ? (
           <Button
             asChild
             variant="outline"

@@ -148,6 +148,26 @@ Future: characteristic chips на card (нужны данные в `ListingCardD
 
 ---
 
+## 13. Phase 121 — First-run onboarding ✅
+
+Лёгкий первый опыт без блокирующих экранов:
+
+| Surface | Что добавлено |
+|---|---|
+| `/` mobile | `HomeWelcomeBlock` — dismissible welcome + CTA |
+| `/account` | `AccountQuickStart` — контекстные карточки быстрого старта |
+| `/listings/new` | `ListingFormFirstHint` — collapsible hint для первого объявления |
+| `/account/requests` | Улучшен empty state (received + noListings) |
+| `/favorites`, `/notifications` | Обновлённые empty states |
+| `/cargo` | `CargoQuickGuide` — компактный guide + CTA |
+| `/login` | Contextual copy при `next=/listings/new` |
+
+Storage: `vsetut_home_welcome_dismissed_v1`, `listingFormHintDismissed`.
+
+См. `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
@@ -156,3 +176,4 @@ Future: characteristic chips на card (нужны данные в `ListingCardD
 - `docs/PWA_FOUNDATION_PHASE_107.md`
 - `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
 - `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`
+- `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`

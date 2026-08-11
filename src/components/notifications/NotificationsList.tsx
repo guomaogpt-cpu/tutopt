@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Bell, BellRing, Building2, CalendarDays, Inbox, Package, Truck } from "lucide-react";
 import type { NotificationType, UserRole } from "@prisma/client";
-import { NotificationType as NotificationTypeEnum, UserRole as UserRoleEnum } from "@prisma/client";
+import { NotificationType as NotificationTypeEnum } from "@prisma/client";
 import { NotificationsSummaryCards } from "@/components/notifications/NotificationsSummaryCards";
 import type { NotificationItem } from "@/features/notifications/lib/notifications-data";
 import {
@@ -75,21 +75,13 @@ function getNotificationIcon(type: NotificationType) {
   }
 }
 
-function getEmptyStateAction(role: UserRole): { href: string; labelKey: DictionaryKey } {
-  if (role === UserRoleEnum.SELLER || role === UserRoleEnum.ADMIN) {
-    return { href: "/account", labelKey: "notifications.goToSellerDashboard" };
-  }
-
-  if (role === UserRoleEnum.BUYER) {
-    return { href: "/listings", labelKey: "catalog.goToCatalog" };
-  }
-
-  return { href: "/", labelKey: "notifications.goToHome" };
+function getEmptyStateAction(): { href: string; labelKey: DictionaryKey } {
+  return { href: "/account", labelKey: "notifications.goToAccount" };
 }
 
 export function NotificationsList({
   initialNotifications,
-  userRole,
+  userRole: _userRole,
   initialUnreadCount,
 }: NotificationsListProps) {
   const router = useRouter();
@@ -237,7 +229,7 @@ export function NotificationsList({
     }
   }
 
-  const emptyAction = getEmptyStateAction(userRole);
+  const emptyAction = getEmptyStateAction();
 
   if (notifications.length === 0) {
     return (

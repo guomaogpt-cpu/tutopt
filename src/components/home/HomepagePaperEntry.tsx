@@ -12,6 +12,7 @@ import {
 import { Container } from "@/components/ui/container";
 import { HomeMobileTrendingChips } from "@/components/home/HomeMobileTrendingChips";
 import { MobileHomeQuickActions } from "@/components/home/MobileHomeQuickActions";
+import { HomeWelcomeBlock } from "@/components/onboarding/HomeWelcomeBlock";
 import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -123,6 +124,8 @@ export function HomepagePaperEntry() {
             className="w-full"
           />
         </div>
+
+        <HomeWelcomeBlock className="mt-2.5 sm:hidden" />
 
         <div className="mt-2.5 sm:hidden">
           <MobileHomeQuickActions />

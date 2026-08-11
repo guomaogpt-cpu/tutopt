@@ -161,10 +161,22 @@ Lead notifications (`NEW_LEAD`) при отправке заявки покуп�
 
 ---
 
+## 13. Phase 121 — First-run onboarding ✅
+
+Empty state `/notifications`:
+
+- «Здесь будут заявки, статусы объявлений и важные события»
+- CTA «Перейти в кабинет» (без упоминания push)
+
+См. `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/LISTING_MODERATION_NOTIFICATIONS_PHASE_118.md`
 - `docs/ANDROID_PUSH_NOTIFICATIONS_PHASE_117.md`
+- `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
 - `product/FEATURES/NOTIFICATIONS.md`
