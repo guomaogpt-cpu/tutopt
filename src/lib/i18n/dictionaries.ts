@@ -2655,6 +2655,26 @@ export const DICTIONARY = {
     en: "Product gallery",
   },
   "listing.photo": { ru: "Фото", kg: "Сүрөт", en: "Photo" },
+  "listing.openFullscreen": {
+    ru: "Открыть фото на весь экран",
+    kg: "Сүрөттү толук экранга ачуу",
+    en: "Open photo fullscreen",
+  },
+  "listing.fullscreenGallery": {
+    ru: "Галерея фото",
+    kg: "Сүрөт галереясы",
+    en: "Photo gallery",
+  },
+  "listing.previousPhoto": {
+    ru: "Предыдущее фото",
+    kg: "Мурунку сүрөт",
+    en: "Previous photo",
+  },
+  "listing.nextPhoto": {
+    ru: "Следующее фото",
+    kg: "Кийинки сүрөт",
+    en: "Next photo",
+  },
   "listing.minOrder": { ru: "Мин. партия", kg: "Мин. партия", en: "Min. order" },
   "listing.city": { ru: "Город", kg: "Шаар", en: "City" },
   "listing.brand": { ru: "Бренд", kg: "Бренд", en: "Brand" },

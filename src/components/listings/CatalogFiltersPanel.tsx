@@ -528,7 +528,9 @@ export function CatalogFiltersPanel({
               {t("filters.title")}
             </DrawerTitle>
           </DrawerHeader>
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">{fields}</div>
+          <div data-drawer-scroll className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+            {fields}
+          </div>
           <DrawerFooter
             className="sticky bottom-0 border-t border-slate-200 bg-white px-4 pt-3 dark:border-slate-800 dark:bg-slate-950"
             style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}

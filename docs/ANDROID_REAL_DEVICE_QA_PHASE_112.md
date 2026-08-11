@@ -186,6 +186,20 @@ Status: **retest pending** after deploy.
 
 ---
 
+## Phase 122 — Mobile gestures and swipe UX
+
+Swipe gallery, drawer dismiss, horizontal scroll polish — см. `docs/MOBILE_GESTURES_PHASE_122.md`.
+
+**Device retest focus:**
+- Photo swipe on listing detail (WebView touch)
+- Swipe-down sheet vs inner scroll conflict
+- Android Back with fullscreen gallery open
+- No accidental form dismiss on cargo/lead drawers
+
+Status: **retest pending** on real device.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
@@ -196,3 +210,4 @@ Status: **retest pending** after deploy.
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`
+- `docs/MOBILE_GESTURES_PHASE_122.md`

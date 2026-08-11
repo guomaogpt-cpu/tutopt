@@ -141,9 +141,23 @@ Blockers before AAB:
 
 ---
 
+## Phase 122 — Mobile gestures and swipe UX
+
+См. `docs/MOBILE_GESTURES_PHASE_122.md`
+
+**Retest на device после Phase 122:**
+1. Listing detail — swipe photos, fullscreen, Back closes viewer
+2. Lead contact drawer — swipe down (empty form), blocked when dirty
+3. Catalog filters drawer — swipe down close
+4. Cargo request modal — swipe down blocked with input
+5. Horizontal chips — smooth pan-x without page scroll
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_FORM_STABILITY_PHASE_110.md`
 - `docs/ANDROID_MANUAL_TEST_CHECKLIST_PHASE_109.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
+- `docs/MOBILE_GESTURES_PHASE_122.md`
 - `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md`

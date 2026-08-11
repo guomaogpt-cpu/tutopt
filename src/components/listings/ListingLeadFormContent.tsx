@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { ListingVertical } from "@prisma/client";
 import {
   LeadRequestError,
@@ -44,6 +44,7 @@ export type ListingLeadFormContentProps = {
   compact?: boolean;
   onSuccess?: () => void;
   onClose?: () => void;
+  onDirtyChange?: (dirty: boolean) => void;
 };
 
 export function ListingLeadFormContent({
@@ -62,6 +63,7 @@ export function ListingLeadFormContent({
   compact = false,
   onSuccess,
   onClose: _onClose,
+  onDirtyChange,
 }: ListingLeadFormContentProps) {
   const router = useRouter();
   const { t } = useTranslation();
@@ -80,6 +82,17 @@ export function ListingLeadFormContent({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const requiresPhone = !defaultPhone?.trim();
+
+  const initialQuantity = String(Math.max(1, moq));
+  const isDirty =
+    message !== defaultMessage ||
+    contactPhone !== (defaultPhone ?? "") ||
+    contactEmail !== (defaultEmail ?? "") ||
+    (config.showQuantity && quantity !== initialQuantity);
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   function returnPath(): string {
     return getCurrentPathFromWindow();

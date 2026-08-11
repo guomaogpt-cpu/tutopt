@@ -96,7 +96,7 @@ export function MarketCatalogShortcuts({ categories }: MarketCatalogShortcutsPro
               Смотреть всё
             </Link>
           </div>
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="mobile-horizontal-scroll mt-3 flex gap-2 pb-0.5">
             {equipmentChildren.map((category) => (
               <Link
                 key={category.id}

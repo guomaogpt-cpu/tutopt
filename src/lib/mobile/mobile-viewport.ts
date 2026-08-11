@@ -31,6 +31,14 @@ export function mobileStickyBottomOffset(baseRem = 5): string {
 }
 
 export function closeTopmostOverlay(): boolean {
+  const fullscreenGallery = document.querySelector<HTMLElement>(
+    '[data-listing-fullscreen-gallery][data-state="open"]',
+  );
+  if (fullscreenGallery) {
+    fullscreenGallery.querySelector<HTMLElement>("[data-gallery-close]")?.click();
+    return true;
+  }
+
   const openDialog = document.querySelector('[role="dialog"][data-state="open"]');
   if (!openDialog) {
     return false;

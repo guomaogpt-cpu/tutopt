@@ -257,7 +257,7 @@ export function ListingsCatalogToolbar({
           )}
         >
           <div
-            className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="mobile-horizontal-scroll flex gap-2 pb-0.5"
             role="tablist"
             aria-label={t("catalog.sectionAriaLabel")}
           >
@@ -446,7 +446,7 @@ export function ListingsCatalogToolbar({
 
       {activeChips.length > 0 ? (
         <div
-          className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible"
+          className="mobile-horizontal-scroll flex gap-2 pb-0.5 sm:flex-wrap sm:overflow-visible"
           aria-label={t("filters.activeFilters")}
         >
           {activeChips.map((chip) => (

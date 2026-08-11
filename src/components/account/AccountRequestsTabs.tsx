@@ -31,7 +31,7 @@ type AccountRequestsTabsProps = {
 
 function ChipRow({ children }: { children: ReactNode }) {
   return (
-    <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="mobile-horizontal-scroll -mx-1 flex gap-2 px-1 pb-1">
       {children}
     </div>
   );

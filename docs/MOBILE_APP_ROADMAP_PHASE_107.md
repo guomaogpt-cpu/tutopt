@@ -128,6 +128,14 @@ npx cap add ios
 - Auth prompt при posting flow
 - См. `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
 
+## 6.4 Phase 122 — Mobile gestures and swipe UX ✅
+
+- Swipe gallery + fullscreen на `/listings/[id]`
+- Swipe-down bottom sheets (lead, cargo, filters)
+- Horizontal scroll utility для chips
+- Без PTR / destructive swipe actions
+- См. `docs/MOBILE_GESTURES_PHASE_122.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -168,7 +176,8 @@ npx cap add ios
 | 119 ✅ | Listing leads & contact flow (drawer, in-app notify, seller actions; push deferred) |
 | 120 ✅ | Listings search & filters (aliases, subcategory, mobile drawer, card chips) |
 | 121 ✅ | First-run onboarding (welcome, quick start, hints, empty states) |
-| 122 | Store assets + Play Console internal testing upload |
+| 122 ✅ | Mobile gestures (swipe gallery, drawer dismiss, horizontal scroll) |
+| 123 | Store assets + Play Console internal testing upload |
 | 123 | Production rollout (after QA + legal sign-off) |
 | 124 | Capacitor iOS wrapper |
 
@@ -213,5 +222,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
 - `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`
 - `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
+- `docs/MOBILE_GESTURES_PHASE_122.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

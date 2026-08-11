@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import {
   CargoRequestError,
@@ -59,6 +59,7 @@ type CargoRequestFormProps = {
   isAuthenticated?: boolean;
   /** Called after successful submit (e.g. close modal after a short delay). */
   onSuccessClose?: () => void;
+  onDirtyChange?: (dirty: boolean) => void;
 };
 
 function mapValidationMessage(
@@ -88,6 +89,7 @@ export function CargoRequestForm({
   variant = "page",
   isAuthenticated = false,
   onSuccessClose,
+  onDirtyChange,
 }: CargoRequestFormProps) {
   const { t } = useTranslation();
   const isModal = variant === "modal";
@@ -112,6 +114,26 @@ export function CargoRequestForm({
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
   const loginReturnPath = "/cargo";
+
+  const isDirty = Boolean(
+    name.trim() ||
+      phone.trim() ||
+      company.trim() ||
+      fromLocation.trim() ||
+      toLocation.trim() ||
+      itemName.trim() ||
+      weight.trim() ||
+      dimensions.trim() ||
+      quantity.trim() ||
+      comment.trim() ||
+      serviceType.trim() ||
+      direction.trim() ||
+      itemPhotoUrl,
+  );
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   if (!isAuthenticated && !isSuccess) {
     return (

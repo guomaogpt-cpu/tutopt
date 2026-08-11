@@ -4,6 +4,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 import * as React from "react";
+import { useDrawerSwipeDismiss } from "@/hooks/use-drawer-swipe-dismiss";
 import { cn } from "@/lib/utils";
 
 const Drawer = DialogPrimitive.Root;
@@ -46,30 +47,111 @@ const drawerVariants = cva(
 );
 
 type DrawerContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
-  VariantProps<typeof drawerVariants>;
+  VariantProps<typeof drawerVariants> & {
+    swipeToDismiss?: boolean;
+    swipeDismissGuard?: () => boolean;
+  };
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DrawerContentProps
->(({ side = "right", className, children, ...props }, ref) => (
-  <DrawerPortal>
-    <DrawerOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(drawerVariants({ side }), className)}
-      {...props}
-    >
-      {side === "bottom" ? (
-        <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-muted" aria-hidden="true" />
-      ) : null}
-      {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1 text-muted-foreground opacity-70 transition hover:bg-accent hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring disabled:pointer-events-none">
-        <X className="size-4" />
-        <span className="sr-only">Закрыть</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DrawerPortal>
-));
+>(
+  (
+    {
+      side = "right",
+      className,
+      children,
+      swipeToDismiss = true,
+      swipeDismissGuard,
+      style,
+      ...props
+    },
+    ref,
+  ) => {
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const scrollContainerRef = React.useRef<HTMLElement | null>(null);
+
+    React.useLayoutEffect(() => {
+      if (!contentRef.current) {
+        return;
+      }
+
+      scrollContainerRef.current =
+        contentRef.current.querySelector<HTMLElement>("[data-drawer-scroll]") ??
+        contentRef.current.querySelector<HTMLElement>(".overflow-y-auto");
+    });
+
+    const dismissViaCloseButton = React.useCallback(() => {
+      const root = contentRef.current;
+      if (!root) {
+        return;
+      }
+
+      const closeButton =
+        root.querySelector<HTMLElement>("[data-drawer-close]") ??
+        root.querySelector<HTMLElement>("button.absolute");
+      closeButton?.click();
+    }, []);
+
+    const shouldEnableSwipe = swipeToDismiss !== false && side === "bottom";
+
+    const { dragOffsetY, swipeHandlers } = useDrawerSwipeDismiss({
+      enabled: shouldEnableSwipe,
+      onDismiss: dismissViaCloseButton,
+      canDismiss: swipeDismissGuard,
+      scrollContainerRef,
+    });
+
+    const setRefs = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        contentRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      },
+      [ref],
+    );
+
+    return (
+      <DrawerPortal>
+        <DrawerOverlay />
+        <DialogPrimitive.Content
+          ref={setRefs}
+          className={cn(drawerVariants({ side }), className)}
+          style={{
+            ...style,
+            ...(dragOffsetY > 0
+              ? {
+                  transform: `translateY(${dragOffsetY}px)`,
+                  transition: "none",
+                }
+              : undefined),
+          }}
+          {...(shouldEnableSwipe ? swipeHandlers : {})}
+          {...props}
+        >
+          {side === "bottom" ? (
+            <div
+              className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-muted"
+              aria-hidden="true"
+              data-drawer-handle
+            />
+          ) : null}
+          {children}
+          <DialogPrimitive.Close
+            data-drawer-close
+            className="absolute right-4 top-4 rounded-lg p-1 text-muted-foreground opacity-70 transition hover:bg-accent hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring disabled:pointer-events-none"
+          >
+            <X className="size-4" />
+            <span className="sr-only">Закрыть</span>
+          </DialogPrimitive.Close>
+        </DialogPrimitive.Content>
+      </DrawerPortal>
+    );
+  },
+);
 DrawerContent.displayName = DialogPrimitive.Content.displayName;
 
 const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

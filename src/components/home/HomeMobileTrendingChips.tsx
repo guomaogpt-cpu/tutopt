@@ -34,7 +34,7 @@ export function HomeMobileTrendingChips() {
         {t("home.trendingShortLabel")}
       </p>
       <ul
-        className="mt-1.5 flex gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="mobile-horizontal-scroll mt-1.5 flex gap-1.5 pb-0.5"
         aria-label={t("home.trendingSearches")}
       >
         {MOBILE_TREND_CHIPS.map((chip) => (

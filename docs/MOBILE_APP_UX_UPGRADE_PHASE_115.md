@@ -168,6 +168,18 @@ Storage: `vsetut_home_welcome_dismissed_v1`, `listingFormHintDismissed`.
 
 ---
 
+## 14. Phase 122 — Mobile gestures and swipe UX ✅
+
+- Swipe gallery на `/listings/[id]` + fullscreen viewer
+- Swipe-down dismiss для bottom drawers (lead, cargo, filters)
+- `.mobile-horizontal-scroll` для chips/tabs
+- Hooks: `useSwipeGesture`, `useDrawerSwipeDismiss`
+- Без swipe actions на notifications/requests и без pull-to-refresh
+
+См. `docs/MOBILE_GESTURES_PHASE_122.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
@@ -177,3 +189,4 @@ Storage: `vsetut_home_welcome_dismissed_v1`, `listingFormHintDismissed`.
 - `docs/LISTING_LEADS_CONTACT_FLOW_PHASE_119.md`
 - `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`
 - `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
+- `docs/MOBILE_GESTURES_PHASE_122.md`

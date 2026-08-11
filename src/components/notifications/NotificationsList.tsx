@@ -274,7 +274,7 @@ export function NotificationsList({
       >
         <TabsList
           className={cn(
-            "h-auto w-full justify-start gap-1 overflow-x-auto rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white p-1",
+            "mobile-horizontal-scroll h-auto w-full justify-start gap-1 rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white p-1",
             "scrollbar-none dark:border-slate-800 dark:bg-slate-900",
           )}
         >
