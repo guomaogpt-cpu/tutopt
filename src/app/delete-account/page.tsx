@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/layout/Container";
 import { DeleteAccountPublicInstructions } from "@/components/account/DeleteAccountPublicInstructions";
-import { LegalDraftBanner } from "@/components/legal/LegalDraftBanner";
-import { PublicPageHeader } from "@/components/public/PublicPageHeader";
+import { LegalPageShell } from "@/components/legal/LegalPageShell";
+import { LegalPageUpdateNote } from "@/components/legal/LegalPageUpdateNote";
 import { buildPageMetadata } from "@/shared/seo/seo.config";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -14,19 +13,13 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function DeleteAccountPublicPage() {
   return (
-    <main className="bg-white py-10 dark:bg-slate-950 sm:py-14">
-      <Container>
-        <PublicPageHeader
-          eyebrow="Аккаунт"
-          title="Удаление аккаунта ВсеТут"
-          description="Публичная инструкция для пользователей приложения и сайта. Страница доступна без входа."
-        />
-
-        <div className="mt-8 max-w-3xl space-y-8">
-          <LegalDraftBanner />
-          <DeleteAccountPublicInstructions loginNextPath="/account/delete" />
-        </div>
-      </Container>
-    </main>
+    <LegalPageShell
+      eyebrow="Аккаунт"
+      title="Удаление аккаунта ВсеТут"
+      description="Как запросить удаление аккаунта через кабинет или поддержку. Страница доступна без входа."
+    >
+      <LegalPageUpdateNote />
+      <DeleteAccountPublicInstructions loginNextPath="/account/delete" />
+    </LegalPageShell>
   );
 }

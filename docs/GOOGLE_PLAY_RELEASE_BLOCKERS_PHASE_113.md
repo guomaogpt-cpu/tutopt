@@ -1,130 +1,95 @@
-# Google Play Release Blockers — Phase 113 / 114
+# Google Play Release Blockers — Phase 113 / 114 / 131
 
 > **Статус:** blockers checklist перед Google Play submission.  
-> **Phase 114** добавила legal pages (draft), account deletion request flow, data safety notes.  
+> **Phase 131** — store readiness pack: legal pages, listing texts, screenshots checklist, data safety notes.  
 > **Не публикуем** в Play Console в этих фазах.
 
+**⚠️ Legal:** Требуется финальная юридическая проверка Privacy Policy и Terms перед публикацией.
+
 ---
 
-## Обязательные blockers
+## Release blockers table
 
-Google Play publish **нельзя** делать, пока не закрыты пункты ниже.
-
-| # | Blocker | Status | Notes |
+| Blocker | Status | Owner | Notes |
 |---|---|---|---|
-| 1 | **Privacy Policy URL** | ⚠️ draft | `/privacy` — expanded draft, **needs legal review** |
-| 2 | **Terms of Service URL** | ⚠️ draft | `/terms` — expanded draft, **needs legal review** |
-| 3 | **Account deletion page / flow** | ✅ MVP | `/delete-account` (public), `/account/delete` (auth), request API |
-| 4 | **Support email / contact** | ⚠️ partial | `/support` added; email placeholder `hello@tutopt.kg` |
-| 5 | **App screenshots** | ❌ missing | Phone screenshots for store listing not prepared |
-| 6 | **App icon 1024×1024** | ⚠️ partial | PWA icons exist; store marketing asset not finalized |
-| 7 | **Short description** | ❌ missing | Play Console listing text not written |
-| 8 | **Full description** | ❌ missing | Play Console listing text not written |
-| 9 | **Test account for reviewers** | ❌ missing | Phone/password credentials for Google review |
-| 10 | **Data safety form** | ⚠️ notes | Draft notes in `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md` — not filled in Console |
-| 11 | **User generated content policy** | ⚠️ improved | Terms §4 expanded; see `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md` |
-| 12 | **Report listing flow** | ✅ Phase 125 | `ListingReportSection` + `/api/listings/[id]/report`; duplicate guard |
-| 13 | **Moderation explanation** | ⚠️ improved | Admin hide from reports; review notes in UGC doc |
-| 14 | **Contact / support flow** | ⚠️ partial | `/support` page; final email TBD |
-| 15 | **Signed release AAB** | ⏳ pending | Process documented; keystore must be created locally |
-| 16 | **Real Android device QA passed** | ⏳ pending | See `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md` |
-| 17 | **Firebase push credentials** | ⏳ pending | `FIREBASE_*` env + local `google-services.json` — see Phase 117 docs |
-| 18 | **Notification permission / privacy copy** | ⚠️ draft | Opt-in UX in `/account`; `/privacy` push section — legal review |
+| Privacy Policy final URL | Needs review | Legal | `/privacy` — content updated Phase 131; lawyer sign-off pending |
+| Terms final URL | Needs review | Legal | `/terms` — content updated Phase 131; lawyer sign-off pending |
+| Support contact | Needs review | Ops | `/support`; default `hello@tutopt.kg` — confirm before publish |
+| Account deletion flow | Done | Product | `/delete-account`, `/account/delete`, API request |
+| Test account | Missing | QA | Template: `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md` |
+| Screenshots | Missing | Design/QA | Checklist: `docs/STORE_SCREENSHOTS_CHECKLIST_PHASE_131.md` |
+| App description | Done | Product | `docs/STORE_LISTING_TEXTS_PHASE_131.md` — copy to Console manually |
+| Data safety answers | Needs review | Product/Legal | `docs/STORE_DATA_SAFETY_NOTES_PHASE_131.md` |
+| Signed AAB | Missing | Android | Local keystore + `npm run android:release` |
+| Real device QA | Needs review | QA | `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`, Phase 130 freeze |
+| Production URL stable | Needs review | DevOps | HTTPS domain for store URLs |
+| Moderation/report flow | Done | Product | Reports + admin queue Phase 125 |
+| No lorem ipsum | Done | Product | Verified Phase 131 |
+| No exposed secrets | Done | Security | No passwords in repo/docs |
+| No debug labels | Done | Product | Mobile QA Phase 130 |
+| No broken routes | Done | Product | Store-critical routes checked Phase 131 |
+
+**Status legend:** Done | Needs review | Missing
 
 ---
 
-## Legal pages (Phase 114)
+## Legal pages
 
 | Route | Exists | Store-ready |
 |---|---|---|
-| `/privacy` | ✅ | ❌ draft — требует юридической проверки |
-| `/terms` | ✅ | ❌ draft — требует юридической проверки |
-| `/support` | ✅ | ⚠️ placeholder support email |
-| `/delete-account` | ✅ | ✅ public Google Play web link |
-| `/account/delete` | ✅ | ✅ authenticated request form |
+| `/privacy` | ✅ | ⚠️ Needs legal review |
+| `/terms` | ✅ | ⚠️ Needs legal review |
+| `/support` | ✅ | ⚠️ Confirm support email |
+| `/delete-account` | ✅ | ✅ public store link |
+| `/account/delete` | ✅ | ✅ authenticated request |
 
-**Rule:** Do not publish to Google Play until Privacy Policy and Terms are **final** (lawyer-approved) and ops process for deletion requests is defined.
+**Rule:** Do not publish until Privacy Policy and Terms are lawyer-approved.
 
 ---
 
-## Account deletion (Phase 114)
+## Account deletion (Phase 114 / 131)
 
-**Implemented (MVP):**
-- Public page: `/delete-account`
-- Authenticated page: `/account/delete`
-- API: `POST /api/account/deletion-request` → AuditLog `account_deletion_requested`, status `PENDING`
-- Footer + account quick actions links
-- No Prisma migration (uses existing AuditLog)
-
-**Not implemented:**
-- Automatic user/data deletion
-- Admin queue UI
-- Email confirmations
-- 30-day SLA automation
+**Implemented:**
+- Public: `/delete-account`
+- Auth: `/account/delete` with confirmation checkbox
+- API: `POST /api/account/deletion-request` (session-scoped)
+- Success: «Запрос на удаление аккаунта отправлен»
+- Manual processing — no hard delete automation
 
 See `docs/ACCOUNT_DELETION_PHASE_114.md`
 
 ---
 
-## UGC / moderation (for review notes)
+## Store assets (Phase 131)
 
-Product already has:
-- Listing moderation workflow (submit → pending → published/rejected)
-- Admin moderation queue + `/admin/reports`
-- Report listing UI on listing detail (Phase 125)
-- Staff can hide reported listings → author notification
-- Prohibited content list in `/terms` §4 (draft)
-
-Need for Play:
-- Final Terms with prohibited content list (**legal review**)
-- Support contact for abuse reports (`/support`)
-
-See `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md` for review notes template.
-
----
-
-## Data safety (Google Play Console)
-
-Draft mapping: `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
-
-| Data type | Collected | Purpose |
-|---|---|---|
-| Name, phone | ✅ | Account, listings |
-| Email | ✅ optional | Google OAuth |
-| Photos | ✅ | Listing images, cargo requests |
-| User content | ✅ | Listings, leads, cargo requests |
-| Device IDs | ❌ intentional | Not collected intentionally |
-| Location | ❌ GPS | City text field only |
-| AI input | ✅ optional | Description generation on user action |
-
-Encryption in transit: ✅ HTTPS  
-Data deletion: ⚠️ request-based; manual processing
-
----
-
-## Store assets checklist
+See `docs/STORE_SCREENSHOTS_CHECKLIST_PHASE_131.md` and `docs/STORE_LISTING_TEXTS_PHASE_131.md`.
 
 - [ ] Feature graphic 1024×500
-- [ ] Phone screenshots (min 2):
-  - [ ] Home
-  - [ ] Market / listings
-  - [ ] Create listing
-  - [ ] Listing detail
-  - [ ] Account
-  - [ ] Cargo
-- [ ] App icon 512×512 (Play) / 1024×1024 (high-res)
-- [ ] Short description (≤80 chars)
-- [ ] Full description (≤4000 chars)
+- [ ] Phone screenshots (6–8 recommended)
+- [ ] App icon 512 / 1024
+- [ ] Short + full description copied to Console
 
 ---
 
-## Test account for Google reviewers
+## Test account
 
-Prepare before submission:
+Prepare before submission — **never commit real credentials**:
 
-- Phone + password login (primary — Google OAuth may fail in WebView)
-- Test user with sample listings
-- Credentials in Play Console → App access → testing instructions
+```
+Login: TO_BE_FILLED
+Password: TO_BE_FILLED
+```
+
+See `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
+
+---
+
+## Data safety
+
+Reference: `docs/STORE_DATA_SAFETY_NOTES_PHASE_131.md`  
+Earlier draft: `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
+
+Push notifications: **not declared** until production push enabled.
 
 ---
 
@@ -133,38 +98,32 @@ Prepare before submission:
 | Item | Status |
 |---|---|
 | Release signing docs | ✅ `docs/ANDROID_RELEASE_AAB_PHASE_113.md` |
-| `key.properties.example` | ✅ committed |
 | Local keystore | ⏳ owner creates |
-| Signed `app-release.aab` | ⏳ after keystore |
+| Output path | `android/app/build/outputs/bundle/release/app-release.aab` |
+
+**Never commit:** keystore, passwords, API keys, review credentials.
 
 ---
 
-## Recommended phase order
+## Phase order
 
 | Phase | Scope |
 |---|---|
-| 113 ✅ | Release AAB prep, signing docs, blockers checklist |
-| 114 ✅ | Legal pages (draft), account deletion request, data safety notes |
-| 115 | Store assets + Play Console internal testing upload |
-| 116 | Production rollout (after QA + legal sign-off) |
-| 130 ✅ | Mobile QA freeze — stabilize UX before RC |
-
----
-
-## Phase 130 — Mobile QA Freeze
-
-Before internal testing upload, complete mobile QA pass per `docs/MOBILE_QA_FREEZE_PHASE_130.md`:
-
-- Legal drafts remain — **not** store-ready until lawyer review
-- Mobile home/account/cargo stabilized
-- Real-device retest recommended
+| 113 ✅ | AAB prep, signing docs |
+| 114 ✅ | Legal drafts, account deletion |
+| 130 ✅ | Mobile QA freeze |
+| 131 ✅ | Store readiness pack |
+| Next | Legal sign-off → screenshots → signed AAB → internal testing |
 
 ---
 
 ## Связанные документы
 
-- `docs/ACCOUNT_DELETION_PHASE_114.md`
-- `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
+- `docs/STORE_READINESS_PACK_PHASE_131.md`
+- `docs/STORE_LISTING_TEXTS_PHASE_131.md`
+- `docs/STORE_SCREENSHOTS_CHECKLIST_PHASE_131.md`
+- `docs/STORE_DATA_SAFETY_NOTES_PHASE_131.md`
+- `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
+- `docs/IOS_TESTFLIGHT_PREP_PHASE_131.md`
 - `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
-- `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
-- `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
+- `docs/MOBILE_QA_FREEZE_PHASE_130.md`

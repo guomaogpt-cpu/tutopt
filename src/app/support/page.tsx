@@ -1,95 +1,108 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Container } from "@/components/layout/Container";
-import { LegalDraftBanner } from "@/components/legal/LegalDraftBanner";
+import { LegalPageShell } from "@/components/legal/LegalPageShell";
+import { LegalPageUpdateNote } from "@/components/legal/LegalPageUpdateNote";
 import { LegalSection } from "@/components/legal/LegalSection";
-import { PublicPageHeader } from "@/components/public/PublicPageHeader";
 import { buildPageMetadata } from "@/shared/seo/seo.config";
 import { getSupportEmail, getSupportMailtoHref } from "@/shared/config/support";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Поддержка — ВсеТут",
-  description: "Как связаться с поддержкой ВсеТут по вопросам аккаунта, объявлений и карго.",
+  description: "Как связаться с поддержкой ВсеТут по вопросам аккаунта, объявлений и заявок.",
   path: "/support",
 });
+
+const SUPPORT_TOPICS = [
+  {
+    title: "Вопрос по аккаунту",
+    description: "Вход, регистрация, смена данных, блокировка, удаление аккаунта.",
+    subject: "ВсеТут — вопрос по аккаунту",
+  },
+  {
+    title: "Проблема с объявлением",
+    description: "Модерация, публикация, редактирование, скрытие или восстановление объявления.",
+    subject: "ВсеТут — проблема с объявлением",
+  },
+  {
+    title: "Жалоба на объявление",
+    description:
+      "Сообщите о нарушении правил. Также можно нажать «Пожаловаться» на странице объявления.",
+    subject: "ВсеТут — жалоба на объявление",
+  },
+  {
+    title: "Удаление аккаунта",
+    description: "Запрос на удаление через кабинет или письмо в поддержку.",
+    subject: "ВсеТут — удаление аккаунта",
+  },
+  {
+    title: "Ошибка в приложении",
+    description: "Сбой, некорректное отображение, проблема с загрузкой фото или формой.",
+    subject: "ВсеТут — ошибка в приложении",
+  },
+] as const;
 
 export default function SupportPage() {
   const supportEmail = getSupportEmail();
 
   return (
-    <main className="bg-white py-10 dark:bg-slate-950 sm:py-14">
-      <Container>
-        <PublicPageHeader
-          eyebrow="Помощь"
-          title="Поддержка"
-          description="Свяжитесь с командой ВсеТут по вопросам аккаунта, объявлений и сервиса."
-        />
+    <LegalPageShell
+      eyebrow="Помощь"
+      title="Поддержка ВсеТут"
+      description="Если у вас вопрос по аккаунту, объявлению, заявке или жалобе, свяжитесь с поддержкой."
+    >
+      <LegalPageUpdateNote />
 
-        <div className="mt-8 max-w-3xl space-y-8">
-          <LegalDraftBanner />
+      <LegalSection title="Контакты">
+        <p>
+          Email поддержки:{" "}
+          <a
+            href={getSupportMailtoHref("ВсеТут — обращение в поддержку")}
+            className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+          >
+            {supportEmail}
+          </a>
+        </p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Укажите в письме телефон или email аккаунта и опишите проблему. Запрос будет рассмотрен
+          поддержкой.
+        </p>
+      </LegalSection>
 
-          <LegalSection title="Email поддержки">
-            <p>
-              Основной канал связи:{" "}
+      <LegalSection title="С чем поможем">
+        <ul className="space-y-4">
+          {SUPPORT_TOPICS.map((topic) => (
+            <li
+              key={topic.title}
+              className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-900"
+            >
+              <p className="font-semibold text-slate-900 dark:text-slate-100">{topic.title}</p>
+              <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                {topic.description}
+              </p>
               <a
-                href={getSupportMailtoHref("ВсеТут — обращение в поддержку")}
-                className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+                href={getSupportMailtoHref(topic.subject)}
+                className="mt-2 inline-flex min-h-10 items-center text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
               >
-                {supportEmail}
+                Написать в поддержку →
               </a>
-            </p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              Укажите в письме телефон или email аккаунта и опишите проблему. Мы ответим, когда
-              сможем — срок зависит от нагрузки поддержки.
-            </p>
-          </LegalSection>
+            </li>
+          ))}
+        </ul>
+      </LegalSection>
 
-          <LegalSection title="Чем можем помочь">
-            <ul className="list-disc space-y-2 pl-5">
-              <li>вход в аккаунт и восстановление доступа;</li>
-              <li>публикация и модерация объявлений;</li>
-              <li>жалобы на объявления (также кнопка «Пожаловаться» на странице объявления);</li>
-              <li>карго-заявки;</li>
-              <li>
-                <Link href="/delete-account" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
-                  удаление аккаунта
-                </Link>
-                ;
-              </li>
-              <li>технические проблемы приложения и сайта.</li>
-            </ul>
-          </LegalSection>
-
-          <LegalSection title="Удаление аккаунта">
-            <p>
-              Если вы авторизованы — откройте{" "}
-              <Link href="/account/delete" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
-                удаление в кабинете
-              </Link>
-              . Если войти не получается — используйте{" "}
-              <Link href="/delete-account" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
-                публичную инструкцию
-              </Link>{" "}
-              или напишите на {supportEmail}.
-            </p>
-          </LegalSection>
-
-          <LegalSection title="Правовая информация">
-            <ul className="list-disc space-y-2 pl-5">
-              <li>
-                <Link href="/privacy" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
-                  Политика конфиденциальности
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
-                  Пользовательское соглашение
-                </Link>
-              </li>
-            </ul>
-          </LegalSection>
-        </div>
-      </Container>
-    </main>
+      <LegalSection title="Удаление аккаунта">
+        <p>
+          Если вы авторизованы — откройте{" "}
+          <Link href="/account/delete" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+            удаление в кабинете
+          </Link>
+          . Если войти не получается — см.{" "}
+          <Link href="/delete-account" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+            инструкцию по удалению
+          </Link>
+          .
+        </p>
+      </LegalSection>
+    </LegalPageShell>
   );
 }

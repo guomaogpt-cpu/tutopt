@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { DeleteAccountForm } from "@/components/account/DeleteAccountForm";
 import { Container } from "@/components/ui/container";
-import { LegalDraftBanner } from "@/components/legal/LegalDraftBanner";
+import { LegalPageUpdateNote } from "@/components/legal/LegalPageUpdateNote";
 import { PublicPageHeader } from "@/components/public/PublicPageHeader";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { getCurrentUser } from "@/features/auth/lib/session";
@@ -33,7 +33,7 @@ export default async function AccountDeletePage() {
         />
 
         <div className="mt-8 space-y-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-          <LegalDraftBanner />
+          <LegalPageUpdateNote />
           <DeleteAccountForm userLabel={userLabel} />
         </div>
       </Container>

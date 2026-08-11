@@ -203,6 +203,16 @@ npx cap add ios
 
 См. `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 
+## 6.13 Phase 131 — Store readiness pack ✅
+
+- Legal pages: privacy, terms, support, account deletion
+- Store listing texts, screenshots checklist, data safety notes
+- Test account template (no real secrets)
+- iOS/TestFlight prep plan (future)
+- Release blockers table updated
+
+См. `docs/STORE_READINESS_PACK_PHASE_131.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:

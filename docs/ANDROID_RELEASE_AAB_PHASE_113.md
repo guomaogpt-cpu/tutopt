@@ -254,6 +254,37 @@ Focus: home/account/cargo mobile layout, no duplicate CTAs, legal drafts still r
 
 ---
 
+## 18. Phase 131 — Store readiness pack ✅
+
+- Legal pages polished (`/privacy`, `/terms`, `/support`, deletion)
+- Store listing texts, screenshots checklist, data safety notes
+- Test account doc (placeholders only)
+- iOS/TestFlight prep plan (no iOS project)
+
+См. `docs/STORE_READINESS_PACK_PHASE_131.md`
+
+---
+
+## 19. Before signed AAB upload
+
+| Ready | Item |
+|---|---|
+| ✅ | Mobile QA freeze (Phase 130) |
+| ✅ | Store listing texts draft |
+| ✅ | Account deletion public URL |
+| ⚠️ | Legal review privacy + terms |
+| ⚠️ | Support email confirmed |
+| ❌ | Screenshots captured |
+| ❌ | Test account in Play Console |
+| ❌ | Local keystore + signed AAB |
+| ❌ | Real device QA retest |
+
+**AAB output path:** `android/app/build/outputs/bundle/release/app-release.aab`
+
+**Never commit:** keystore, `key.properties` with secrets, passwords, API keys, real review credentials.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
@@ -263,4 +294,5 @@ Focus: home/account/cargo mobile layout, no duplicate CTAs, legal drafts still r
 - `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
 - `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
 - `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`
-- `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
+- `docs/MOBILE_QA_FREEZE_PHASE_130.md`
+- `docs/STORE_READINESS_PACK_PHASE_131.md`

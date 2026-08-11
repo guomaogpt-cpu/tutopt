@@ -14,7 +14,8 @@ export function getSupportMailtoHref(subject: string, body?: string): string {
 
 /** Placeholder until legal entity details are confirmed for store listing. */
 export const LEGAL_OPERATOR_PLACEHOLDER =
-  "Оператор платформы «ВсеТут» (реквизиты юридического лица уточняются перед публикацией в Google Play)";
+  "Оператор платформы «ВсеТут» (реквизиты юридического лица уточняются и будут опубликованы на этой странице).";
 
+/** Internal note — do not show in user-facing UI. See docs for legal review status. */
 export const LEGAL_DRAFT_NOTICE =
-  "Черновик документа. Требуется юридическая проверка перед публикацией в Google Play и использованием как финальной политики.";
+  "Требуется финальная юридическая проверка перед публикацией в Google Play и App Store.";

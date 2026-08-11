@@ -19,12 +19,15 @@ export function DeleteAccountPublicInstructions({
         </h2>
         <ol className="list-decimal space-y-2 pl-5">
           <li>
-            <Link href={buildLoginUrl(loginNextPath)} className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+            <Link
+              href={buildLoginUrl(loginNextPath)}
+              className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+            >
               Войдите в аккаунт
             </Link>
           </li>
-          <li>Откройте страницу удаления аккаунта в кабинете</li>
-          <li>Отправьте запрос на удаление и дождитесь подтверждения от поддержки</li>
+          <li>Откройте страницу удаления в кабинете</li>
+          <li>Нажмите «Запросить удаление аккаунта» и подтвердите запрос</li>
         </ol>
         <p>
           <Link
@@ -56,11 +59,25 @@ export function DeleteAccountPublicInstructions({
       </section>
 
       <section className="space-y-3">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          Что может быть удалено или скрыто
+        </h2>
+        <ul className="list-disc space-y-2 pl-5">
+          <li>профиль и контактные данные аккаунта;</li>
+          <li>объявления пользователя — скрыты или удалены согласно правилам платформы;</li>
+          <li>заявки и связанные данные — обработаны или обезличены, где это возможно;</li>
+          <li>данные, которые необходимо сохранить по закону или для разрешения споров.</li>
+        </ul>
+        <p>
+          Аккаунт <strong>не удаляется автоматически</strong> — запрос проверяется поддержкой.
+        </p>
+      </section>
+
+      <section className="space-y-3">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Срок обработки</h2>
         <p>
-          Запросы обрабатываются вручную, обычно в течение нескольких рабочих дней. Полное
-          автоматическое удаление всех связанных данных может быть добавлено в следующих версиях
-          сервиса.
+          Запрос будет рассмотрен поддержкой. Обычно это занимает несколько рабочих дней. Мы
+          свяжемся с вами при необходимости по контактным данным аккаунта.
         </p>
       </section>
     </div>

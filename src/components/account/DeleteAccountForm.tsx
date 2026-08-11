@@ -62,10 +62,10 @@ export function DeleteAccountForm({ userLabel }: DeleteAccountFormProps) {
   if (state === "success") {
     return (
       <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-100">
-        <p className="font-semibold">Запрос принят</p>
+        <p className="font-semibold">Запрос на удаление аккаунта отправлен</p>
         <p className="mt-2 leading-relaxed">
-          Мы получили ваш запрос на удаление аккаунта и обработаем его вручную. Обычно это занимает
-          несколько рабочих дней. При необходимости мы свяжемся с вами по контактным данным аккаунта.
+          Мы получили ваш запрос. После обработки профиль и связанные данные могут быть удалены или
+          обезличены. Обычно это занимает несколько рабочих дней.
         </p>
         <p className="mt-3">
           <Link href="/account" className="font-medium text-emerald-800 underline dark:text-emerald-200">
@@ -86,7 +86,7 @@ export function DeleteAccountForm({ userLabel }: DeleteAccountFormProps) {
         <p className="font-medium text-slate-900 dark:text-slate-100">Что произойдёт после запроса</p>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">
           <li>Аккаунт не удаляется автоматически — запрос проверяется вручную.</li>
-          <li>После подтверждения доступ может быть ограничен или аккаунт деактивирован.</li>
+          <li>После обработки запроса профиль и связанные данные могут быть удалены или обезличены.</li>
           <li>Объявления, заявки и связанные данные обрабатываются согласно правилам платформы.</li>
         </ul>
       </div>
