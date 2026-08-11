@@ -18,17 +18,17 @@
 
 ## 2. Что добавлено на главной
 
-**Компонент:** `HomeWelcomeBlock` в `HomepagePaperEntry.tsx` (только mobile, `sm:hidden`).
+**Hotfix (после Phase 121):** `HomeWelcomeBlock` **убран с mobile home** — перегружал первый экран. Компонент сохранён в кодовой базе; onboarding перенесён в `/account` (`AccountQuickStart`).
+
+Исторически (Phase 121):
 
 | Элемент | Значение |
 |---|---|
-| Текст | ВсеТут — объявления, услуги, опт и карго. Подайте объявление, найдите товар или создайте карго-заявку. |
-| CTA | Подать объявление → `/listings/new`, Найти товар → `/listings` |
-| Dismiss | «Скрыть» + крестик |
-| Storage | `vsetut_home_welcome_dismissed_v1` |
-| Guard | Не показывается при viewport &lt; 320×520 |
+| Текст | ВсеТут — объявления, услуги, опт и карго… |
+| CTA | Подать объявление, Найти товар |
+| Dismiss | «Скрыть» + `vsetut_home_welcome_dismissed_v1` |
 
-Не modal, не overlay, не блокирует экран.
+Сейчас на mobile `/`: title, search, разделы, новые объявления — без welcome card.
 
 ---
 
@@ -131,7 +131,7 @@ CTA: **Создать заявку** → открывает `CargoRequestModal`.
 | File | Role |
 |---|---|
 | `src/lib/onboarding/onboarding-storage.ts` | Storage keys + helpers |
-| `src/components/onboarding/HomeWelcomeBlock.tsx` | Mobile home welcome |
+| `src/components/onboarding/HomeWelcomeBlock.tsx` | Welcome block (не на mobile home после hotfix) |
 | `src/components/account/AccountQuickStart.tsx` | Account quick start |
 | `src/components/listings/ListingFormFirstHint.tsx` | First listing hint |
 | `src/components/cargo/CargoQuickGuide.tsx` | Cargo compact guide |

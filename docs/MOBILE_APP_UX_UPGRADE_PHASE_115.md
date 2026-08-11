@@ -180,6 +180,22 @@ Storage: `vsetut_home_welcome_dismissed_v1`, `listingFormHintDismissed`.
 
 ---
 
+## 15. Mobile home simplification hotfix ✅
+
+Phase 121 добавил welcome card и quick actions — mobile home снова перегрузился. Hotfix:
+
+| Убрано с mobile `/` | Оставлено |
+|---|---|
+| `HomeWelcomeBlock` | Title + subtitle |
+| `MobileHomeQuickActions` | Один search в hero |
+| `HomeMobileTrendingChips` | Разделы 2×2 (компактнее) |
+| Vertical discovery blocks (popular/opt/services/cargo) | «Новые объявления» |
+| — | «Подать» в bottom nav (center FAB) |
+
+Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop home без изменений по структуре.
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`

@@ -49,53 +49,55 @@ export default async function HomePage() {
         createListingHref={createListingHref}
       />
 
-      <HomeDiscoverySection
-        titleKey="home.popularMarket"
-        descriptionKey="home.sectionMarketDesc"
-        viewAllHref={VERTICALS.MARKET.href}
-        listings={data.popularMarket}
-        emptyCategories={data.emptyCategories.market}
-        isAuthenticated={isAuthenticated}
-        favoriteListingIds={favoriteListingIds}
-        createListingHref={VERTICALS.MARKET.createListingHref}
-        tone="muted"
-      />
+      <div className="hidden sm:contents">
+        <HomeDiscoverySection
+          titleKey="home.popularMarket"
+          descriptionKey="home.sectionMarketDesc"
+          viewAllHref={VERTICALS.MARKET.href}
+          listings={data.popularMarket}
+          emptyCategories={data.emptyCategories.market}
+          isAuthenticated={isAuthenticated}
+          favoriteListingIds={favoriteListingIds}
+          createListingHref={VERTICALS.MARKET.createListingHref}
+          tone="muted"
+        />
 
-      <HomeDiscoverySection
-        titleKey="home.wholesaleOffers"
-        descriptionKey="home.sectionOptDesc"
-        viewAllHref={VERTICALS.OPT.href}
-        listings={data.opt}
-        emptyCategories={data.emptyCategories.opt}
-        isAuthenticated={isAuthenticated}
-        favoriteListingIds={favoriteListingIds}
-        createListingHref={VERTICALS.OPT.createListingHref}
-        tone="white"
-      />
+        <HomeDiscoverySection
+          titleKey="home.wholesaleOffers"
+          descriptionKey="home.sectionOptDesc"
+          viewAllHref={VERTICALS.OPT.href}
+          listings={data.opt}
+          emptyCategories={data.emptyCategories.opt}
+          isAuthenticated={isAuthenticated}
+          favoriteListingIds={favoriteListingIds}
+          createListingHref={VERTICALS.OPT.createListingHref}
+          tone="white"
+        />
 
-      <HomeDiscoverySection
-        titleKey="home.services"
-        descriptionKey="home.sectionServicesDesc"
-        viewAllHref={VERTICALS.SERVICES.href}
-        listings={data.services}
-        emptyCategories={data.emptyCategories.services}
-        isAuthenticated={isAuthenticated}
-        favoriteListingIds={favoriteListingIds}
-        createListingHref={VERTICALS.SERVICES.createListingHref}
-        tone="muted"
-      />
+        <HomeDiscoverySection
+          titleKey="home.services"
+          descriptionKey="home.sectionServicesDesc"
+          viewAllHref={VERTICALS.SERVICES.href}
+          listings={data.services}
+          emptyCategories={data.emptyCategories.services}
+          isAuthenticated={isAuthenticated}
+          favoriteListingIds={favoriteListingIds}
+          createListingHref={VERTICALS.SERVICES.createListingHref}
+          tone="muted"
+        />
 
-      <HomeDiscoverySection
-        titleKey="home.cargo"
-        descriptionKey="home.sectionCargoDesc"
-        viewAllHref={VERTICALS.CARGO.href}
-        listings={data.cargo}
-        emptyCategories={data.emptyCategories.cargo}
-        isAuthenticated={isAuthenticated}
-        favoriteListingIds={favoriteListingIds}
-        createListingHref={VERTICALS.CARGO.createListingHref}
-        tone="white"
-      />
+        <HomeDiscoverySection
+          titleKey="home.cargo"
+          descriptionKey="home.sectionCargoDesc"
+          viewAllHref={VERTICALS.CARGO.href}
+          listings={data.cargo}
+          emptyCategories={data.emptyCategories.cargo}
+          isAuthenticated={isAuthenticated}
+          favoriteListingIds={favoriteListingIds}
+          createListingHref={VERTICALS.CARGO.createListingHref}
+          tone="white"
+        />
+      </div>
 
       <div className="hidden sm:block">
         <HomeWhyVsetutSection />
