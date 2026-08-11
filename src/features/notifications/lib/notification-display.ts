@@ -18,6 +18,7 @@ export const NOTIFICATION_CATEGORY_FILTERS: Array<{
 export function getNotificationCategory(type: NotificationType): Exclude<NotificationCategory, "all"> {
   switch (type) {
     case NotificationType.NEW_LEAD:
+    case NotificationType.LEAD_STATUS_UPDATED:
       return "leads";
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
@@ -60,7 +61,9 @@ export function resolveNotificationLink(notification: NotificationItem): string 
 
   switch (notification.type) {
     case NotificationType.NEW_LEAD:
-      return "/account/requests";
+      return "/account/requests?tab=received";
+    case NotificationType.LEAD_STATUS_UPDATED:
+      return "/account/requests?tab=sent";
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:
       return "/account/requests";
@@ -81,6 +84,7 @@ export function resolveNotificationLink(notification: NotificationItem): string 
 export function getNotificationActionLabelKey(type: NotificationType): DictionaryKey {
   switch (type) {
     case NotificationType.NEW_LEAD:
+    case NotificationType.LEAD_STATUS_UPDATED:
       return "notifications.actionOpenRequest";
     case NotificationType.NEW_CARGO_REQUEST:
     case NotificationType.NEW_CARGO_RESPONSE:

@@ -69,6 +69,7 @@ enum LeadStatus {
   NEW
   VIEWED
   CLOSED
+  REJECTED
 }
 
 enum CargoRequestStatus {
@@ -117,6 +118,7 @@ enum ContactEventType {
 
 enum NotificationType {
   NEW_LEAD
+  LEAD_STATUS_UPDATED
   NEW_CARGO_REQUEST
   NEW_CARGO_RESPONSE
   COMPANY_VERIFIED

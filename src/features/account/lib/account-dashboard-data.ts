@@ -67,6 +67,8 @@ export type AccountDashboardData = {
   cargo: AccountCargoSummary;
   favoritesCount: number;
   unreadNotifications: number;
+  sentLeadsCount: number;
+  totalReceivedLeadsCount: number;
   receivedLeadsCount: number;
   inProgressLeadsCount: number;
 };
@@ -227,5 +229,7 @@ export async function getAccountDashboardData(
     unreadNotifications,
     receivedLeadsCount: sellerLeads.filter((lead) => lead.status === LeadStatus.NEW).length,
     inProgressLeadsCount: sellerLeads.filter((lead) => lead.status === LeadStatus.VIEWED).length,
+    sentLeadsCount: leads.length,
+    totalReceivedLeadsCount: sellerLeads.length,
   };
 }

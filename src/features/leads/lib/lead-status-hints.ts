@@ -5,6 +5,7 @@ export const leadStatusHintKeys: Record<LeadStatus, DictionaryKey> = {
   NEW: "leadStatus.hint.new",
   VIEWED: "leadStatus.hint.inProgress",
   CLOSED: "leadStatus.hint.closed",
+  REJECTED: "leadStatus.hint.rejected",
 };
 
 export function getLeadStatusFallbackLabel(): string {

@@ -10,6 +10,7 @@ import { LeadStatusBadge } from "@/components/seller/LeadStatusBadge";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import type { SellerLeadItem } from "@/features/leads/lib/leads-data";
 import { getLeadFormConfig } from "@/features/leads/lib/lead-form-config";
+import { isLeadStatusTerminal } from "@/features/leads/lib/lead-status";
 import { updateSellerLeadStatus } from "@/features/leads/lib/leads-client";
 import {
   parseSellerLeadStatusFilter,
@@ -110,7 +111,7 @@ function LeadCard({
       : null;
 
   async function handleMarkDone() {
-    if (pending || lead.status === LeadStatus.CLOSED) {
+    if (pending || isLeadStatusTerminal(lead.status)) {
       return;
     }
 
@@ -322,7 +323,7 @@ function LeadCard({
           </>
         ) : null}
 
-        {lead.status !== LeadStatus.CLOSED ? (
+        {!isLeadStatusTerminal(lead.status) ? (
           <Button
             type="button"
             className="h-11 w-full rounded-xl bg-blue-600 hover:bg-blue-700 sm:ml-auto sm:w-auto"

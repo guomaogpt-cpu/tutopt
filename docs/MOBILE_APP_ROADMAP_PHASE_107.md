@@ -177,6 +177,14 @@ npx cap add ios
 
 См. `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
 
+## 6.10 Phase 128 — Listing leads workflow ✅
+
+- Contact form success state and duplicate guard for active leads
+- Received/sent tabs, status labels, seller complete/reject actions
+- Buyer status notifications, dashboard lead stats
+
+См. `docs/LISTING_LEADS_WORKFLOW_PHASE_128.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -274,5 +282,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
 - `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
 - `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
+- `docs/LISTING_LEADS_WORKFLOW_PHASE_128.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

@@ -94,7 +94,6 @@ export async function POST(request: Request, context: LeadRouteContext) {
       : await findRecentDuplicateLead({
           buyerId: user.id,
           listingId: listing.id,
-          message,
         });
 
     if (duplicateLead) {
@@ -126,6 +125,7 @@ export async function POST(request: Request, context: LeadRouteContext) {
         recipientId: listing.sellerProfile.user_id,
         actorId: user.id,
         listingTitle: listing.title,
+        listingId: listing.id,
         vertical: listing.vertical,
       });
     } catch {

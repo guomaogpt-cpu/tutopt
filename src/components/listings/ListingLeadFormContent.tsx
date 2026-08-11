@@ -70,6 +70,7 @@ export function ListingLeadFormContent({
   const theme = getVerticalTheme(vertical);
   const config = getLeadFormConfig(vertical);
   const defaultMessage = buildDefaultLeadMessage(listingTitle);
+  const onClose = _onClose;
 
   const [quantity, setQuantity] = useState(String(Math.max(1, moq)));
   const [message, setMessage] = useState(defaultMessage);
@@ -224,17 +225,28 @@ export function ListingLeadFormContent({
           </p>
         </div>
         <div className="flex flex-col gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 w-full rounded-xl"
-            asChild
-          >
-            <Link href={`/listings/${listingId}`}>{t("lead.backToListing")}</Link>
-          </Button>
           <Button type="button" className={cn("h-11 w-full rounded-xl", theme.primaryButton)} asChild>
-            <Link href="/listings">{t("lead.continueBrowsing")}</Link>
+            <Link href="/account/requests?tab=sent">{t("lead.openMyRequests")}</Link>
           </Button>
+          {onClose ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 w-full rounded-xl"
+              onClick={onClose}
+            >
+              {t("lead.close")}
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 w-full rounded-xl"
+              asChild
+            >
+              <Link href={`/listings/${listingId}`}>{t("lead.backToListing")}</Link>
+            </Button>
+          )}
         </div>
       </div>
     );
@@ -265,7 +277,7 @@ export function ListingLeadFormContent({
     return (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          {t("listing.mobile.signInToRequest")}
+          {t("lead.loginRequiredDescription")}
         </p>
         <div className="flex flex-col gap-2">
           <Button
@@ -398,6 +410,7 @@ export function ListingLeadFormContent({
           onChange={(event) => setMessage(event.target.value)}
           rows={compact ? 4 : 5}
           maxLength={LEAD_MESSAGE_MAX}
+          placeholder={t("lead.messagePlaceholderShort")}
           className="w-full rounded-xl"
         />
         {fieldErrors.message ? (

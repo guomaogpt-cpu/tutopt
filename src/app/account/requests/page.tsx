@@ -20,6 +20,7 @@ import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getBuyerCargoRequests } from "@/features/cargo/lib/cargo-requests-data";
 import { getBuyerLeads, getSellerLeads } from "@/features/leads/lib/leads-data";
+import { translate } from "@/lib/i18n/dictionaries";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
@@ -140,9 +141,12 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
         <div className="mt-5 space-y-4 sm:mt-6">
           {filteredListing ? (
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Заявки по объявлению «{filteredListing.title}» ·{" "}
-              <Link href="/account/requests?tab=received" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
-                Все заявки
+              {translate("ru", "accountRequests.listingLeadsTitle")}: «{filteredListing.title}» ·{" "}
+              <Link
+                href="/account/requests?tab=received"
+                className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+              >
+                {translate("ru", "accountRequests.showAllRequests")}
               </Link>
             </p>
           ) : null}
@@ -160,13 +164,17 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
           {!tabHasItems ? (
             <AccountRequestsEmptyState
               variant={
-                activeTab === "received"
-                  ? sellerListingCount === 0
-                    ? "noListings"
-                    : "received"
-                  : totalCount === 0
-                    ? "global"
-                    : "section"
+                listingIdFilter && (activeTab === "received" || activeTab === "all")
+                  ? "listingFilter"
+                  : activeTab === "received"
+                    ? sellerListingCount === 0
+                      ? "noListings"
+                      : "received"
+                    : activeTab === "sent"
+                      ? "sent"
+                      : totalCount === 0
+                        ? "global"
+                        : "section"
               }
             />
           ) : (

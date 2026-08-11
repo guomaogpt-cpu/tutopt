@@ -6,7 +6,7 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Button } from "@/components/ui/button";
 
 type AccountRequestsEmptyStateProps = {
-  variant?: "global" | "section" | "received" | "noListings";
+  variant?: "global" | "section" | "received" | "sent" | "noListings" | "listingFilter";
 };
 
 export function AccountRequestsEmptyState({
@@ -20,15 +20,27 @@ export function AccountRequestsEmptyState({
         <Inbox className="size-6" aria-hidden="true" />
       </div>
       <p className="mt-5 text-base font-semibold text-slate-900 dark:text-slate-100">
-        {variant === "noListings"
-          ? t("accountRequests.noListingsTitle")
-          : variant === "received" || variant === "global"
-            ? t("accountRequests.emptyTitle")
-            : t("account.noData")}
+        {variant === "listingFilter"
+          ? t("accountRequests.listingFilterEmptyTitle")
+          : variant === "sent"
+            ? t("accountRequests.emptySentTitle")
+            : variant === "noListings"
+              ? t("accountRequests.noListingsTitle")
+              : variant === "received" || variant === "global"
+                ? t("accountRequests.emptyReceivedTitle")
+                : t("account.noData")}
       </p>
       {variant === "global" || variant === "received" ? (
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-          {t("accountRequests.emptyDescription")}
+          {t("accountRequests.emptyReceivedDescription")}
+        </p>
+      ) : variant === "sent" ? (
+        <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+          {t("accountRequests.emptySentDescription")}
+        </p>
+      ) : variant === "listingFilter" ? (
+        <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+          {t("accountRequests.listingFilterEmptyDescription")}
         </p>
       ) : variant === "noListings" ? (
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500 dark:text-slate-400">
@@ -53,12 +65,20 @@ export function AccountRequestsEmptyState({
               <Link href="/listings/new">{t("account.postListing")}</Link>
             </Button>
           </>
+        ) : variant === "sent" ? (
+          <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
+            <Link href="/listings">{t("accountRequests.browseListings")}</Link>
+          </Button>
+        ) : variant === "listingFilter" ? (
+          <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
+            <Link href="/account/requests?tab=received">{t("accountRequests.showAllRequests")}</Link>
+          </Button>
         ) : (
           <Button asChild className="h-11 w-full rounded-xl sm:w-auto">
             <Link href="/listings">{t("accountRequests.browseListings")}</Link>
           </Button>
         )}
-        {variant !== "received" && variant !== "noListings" ? (
+        {variant !== "received" && variant !== "noListings" && variant !== "sent" && variant !== "listingFilter" ? (
           <Button
             asChild
             variant="outline"

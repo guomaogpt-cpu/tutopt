@@ -60,6 +60,9 @@ export function AccountSentLeadCard({ lead }: AccountSentLeadCardProps) {
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 {t("accountRequests.createdAt")}: {formatListingDate(lead.created_at)}
               </p>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                {t("lead.sellerLabel")}: {lead.sellerProfile.company_name}
+              </p>
             </div>
           </div>
 

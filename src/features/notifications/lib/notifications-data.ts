@@ -93,6 +93,7 @@ export async function createNewLeadNotification(input: {
   recipientId: string;
   actorId: string;
   listingTitle: string;
+  listingId?: string;
   vertical?: ListingVertical;
 }): Promise<void> {
   const config = input.vertical
@@ -101,7 +102,9 @@ export async function createNewLeadNotification(input: {
 
   const title = config.notificationTitle;
   const message = config.notificationMessage(input.listingTitle);
-  const link = "/account/requests";
+  const link = input.listingId
+    ? `/account/requests?tab=received&listingId=${input.listingId}`
+    : "/account/requests?tab=received";
 
   await prisma.notification.create({
     data: {
@@ -111,6 +114,25 @@ export async function createNewLeadNotification(input: {
       title,
       message,
       link,
+    },
+  });
+}
+
+export async function createLeadStatusUpdatedNotification(input: {
+  recipientId: string;
+  actorId: string;
+  listingId: string;
+  listingTitle: string;
+  statusLabel: string;
+}): Promise<void> {
+  await prisma.notification.create({
+    data: {
+      recipient_id: input.recipientId,
+      actor_id: input.actorId,
+      type: NotificationType.LEAD_STATUS_UPDATED,
+      title: "Статус заявки обновлён",
+      message: `«${input.listingTitle}» — ${input.statusLabel}`,
+      link: "/account/requests?tab=sent",
     },
   });
 }

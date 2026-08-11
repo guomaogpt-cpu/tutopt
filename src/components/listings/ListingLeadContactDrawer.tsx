@@ -59,6 +59,7 @@ export function ListingLeadContactDrawer(props: ListingLeadContactDrawerProps) {
             compact
             onClose={closeLeadDrawer}
             onDirtyChange={setFormDirty}
+            onSuccess={closeLeadDrawer}
           />
         </div>
       </DrawerContent>

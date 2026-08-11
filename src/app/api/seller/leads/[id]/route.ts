@@ -1,13 +1,15 @@
 import { LeadStatus, UserRole } from "@prisma/client";
 import { z } from "zod";
 import { requireAuth } from "@/features/auth/lib/session";
+import { leadStatusLabels } from "@/features/leads/lib/lead-status";
+import { createLeadStatusUpdatedNotification } from "@/features/notifications/lib/notifications-data";
 import { jsonData, parseJsonBody, withApiHandler } from "@/shared/lib/api-route";
 import { ForbiddenError, NotFoundError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
 
 const leadIdSchema = z.string().uuid();
 const updateLeadStatusSchema = z.object({
-  status: z.enum([LeadStatus.VIEWED, LeadStatus.CLOSED]),
+  status: z.enum([LeadStatus.VIEWED, LeadStatus.CLOSED, LeadStatus.REJECTED]),
 });
 
 type LeadStatusRouteContext = {
@@ -48,11 +50,22 @@ export async function PATCH(request: Request, context: LeadStatusRouteContext) {
         id: true,
         status: true,
         viewed_at: true,
+        buyer_id: true,
+        listing: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
       },
     });
 
     if (!lead) {
       throw new NotFoundError("Lead not found");
+    }
+
+    if (lead.status === input.status) {
+      return jsonData({ lead: { id: lead.id, status: lead.status } });
     }
 
     const nextStatus = input.status;
@@ -61,7 +74,9 @@ export async function PATCH(request: Request, context: LeadStatusRouteContext) {
       data: {
         status: nextStatus,
         viewed_at:
-          nextStatus === LeadStatus.VIEWED || nextStatus === LeadStatus.CLOSED
+          nextStatus === LeadStatus.VIEWED ||
+          nextStatus === LeadStatus.CLOSED ||
+          nextStatus === LeadStatus.REJECTED
             ? (lead.viewed_at ?? new Date())
             : lead.viewed_at,
       },
@@ -70,6 +85,18 @@ export async function PATCH(request: Request, context: LeadStatusRouteContext) {
         status: true,
       },
     });
+
+    try {
+      await createLeadStatusUpdatedNotification({
+        recipientId: lead.buyer_id,
+        actorId: user.id,
+        listingId: lead.listing.id,
+        listingTitle: lead.listing.title,
+        statusLabel: leadStatusLabels[nextStatus],
+      });
+    } catch {
+      // Notification must not block status update.
+    }
 
     return jsonData({ lead: updated });
   });

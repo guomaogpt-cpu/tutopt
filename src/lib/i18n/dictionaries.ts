@@ -2862,14 +2862,14 @@ export const DICTIONARY = {
   },
 
   "lead.title": {
-    ru: "Запрос по объявлению",
-    kg: "Жарыя боюнча сурам",
-    en: "Listing request",
+    ru: "Связаться с продавцом",
+    kg: "Сатууучу менен байланышуу",
+    en: "Contact seller",
   },
   "lead.description": {
-    ru: "Напишите, какое количество вас интересует и уточните условия.",
-    kg: "Канча көлөм керек экенин жана шарттарды жазыңыз.",
-    en: "Write the quantity you need and ask about the terms.",
+    ru: "Оставьте заявку — продавец увидит её в кабинете и свяжется с вами.",
+    kg: "Сурам калтырыңыз — сатууучу аны кабинетинен көрүп, сиз менен байланышат.",
+    en: "Send a request — the seller will see it in their account and contact you.",
   },
   "lead.messageLabel": {
     ru: "Сообщение",
@@ -2880,6 +2880,11 @@ export const DICTIONARY = {
     ru: "Ваше сообщение",
     kg: "Сиздин билдирүүңүз",
     en: "Your message",
+  },
+  "lead.messagePlaceholderShort": {
+    ru: "Здравствуйте. Меня интересует это объявление.",
+    kg: "Саламатсызбы. Бул жарыя мени кызыктырат.",
+    en: "Hello. I am interested in this listing.",
   },
   "lead.messagePlaceholder": {
     ru: "Здравствуйте. Меня интересует это объявление. Подскажите наличие, минимальную партию и условия отгрузки.",
@@ -2907,9 +2912,9 @@ export const DICTIONARY = {
     en: "Request sent",
   },
   "lead.successDescriptionSellerContact": {
-    ru: "Продавец увидит ваше сообщение и свяжется с вами.",
-    kg: "Сатууучу билдирүүңүздү көрүп, сиз менен байланышат.",
-    en: "The seller will see your message and contact you.",
+    ru: "Продавец увидит ваш номер и сообщение в кабинете.",
+    kg: "Сатууучу телефонуңузду жана билдирүүңүздү кабинетинен көрөт.",
+    en: "The seller will see your phone number and message in their account.",
   },
   "lead.successDescription": {
     ru: "Автор объявления получит ваши контакты и сообщение.",
@@ -2967,9 +2972,9 @@ export const DICTIONARY = {
     en: "Listing request",
   },
   "lead.loginRequiredDescription": {
-    ru: "Чтобы отправить запрос, войдите или зарегистрируйтесь.",
-    kg: "Сурам жөнөтүү үчүн кириңиз же катталыңыз.",
-    en: "Sign in or register to send a request.",
+    ru: "Войдите, чтобы отправить заявку продавцу.",
+    kg: "Сатууучуга сурам жөнөтүү үчүн кириңиз.",
+    en: "Sign in to send a request to the seller.",
   },
   "lead.signIn": { ru: "Войти", kg: "Кирүү", en: "Sign in" },
   "lead.register": { ru: "Регистрация", kg: "Катталуу", en: "Register" },
@@ -3111,7 +3116,7 @@ export const DICTIONARY = {
     en: "New",
   },
   "sellerLeads.status.inProgress": {
-    ru: "В обработке",
+    ru: "В работе",
     kg: "Иштетүүдө",
     en: "In progress",
   },
@@ -3121,9 +3126,14 @@ export const DICTIONARY = {
     en: "Done",
   },
   "sellerLeads.status.closed": {
-    ru: "Закрыта",
-    kg: "Жабылган",
-    en: "Closed",
+    ru: "Завершена",
+    kg: "Аякталды",
+    en: "Completed",
+  },
+  "sellerLeads.status.rejected": {
+    ru: "Отклонена",
+    kg: "Четке кагылды",
+    en: "Rejected",
   },
   "sellerLeads.filters.all": {
     ru: "Все",
@@ -4022,6 +4032,41 @@ export const DICTIONARY = {
     kg: "Менин карго жоопторум",
     en: "My cargo company responses",
   },
+  "accountRequests.emptyReceivedTitle": {
+    ru: "Пока нет полученных заявок",
+    kg: "Азырынча келген сурамдар жок",
+    en: "No received requests yet",
+  },
+  "accountRequests.emptyReceivedDescription": {
+    ru: "Когда покупатель заинтересуется вашим объявлением, заявка появится здесь.",
+    kg: "Сатып алуучу жарыяңызга кызыкканда, сурам ушул жерде көрүнөт.",
+    en: "When a buyer is interested in your listing, a request will appear here.",
+  },
+  "accountRequests.emptySentTitle": {
+    ru: "Вы ещё не отправляли заявки",
+    kg: "Сиз азырынча сурам жөнөткөн жоксуз",
+    en: "You have not sent any requests yet",
+  },
+  "accountRequests.emptySentDescription": {
+    ru: "Найдите объявление и нажмите «Связаться».",
+    kg: "Жарыя табып, «Байланышуу» баскычын басыңыз.",
+    en: "Find a listing and tap Contact.",
+  },
+  "accountRequests.listingFilterEmptyTitle": {
+    ru: "По этому объявлению пока нет заявок",
+    kg: "Бул жарыя боюнча азырынча сурамдар жок",
+    en: "No requests for this listing yet",
+  },
+  "accountRequests.listingFilterEmptyDescription": {
+    ru: "Когда покупатель заинтересуется, заявка появится в этом списке.",
+    kg: "Сатып алуучу кызыкканда, сурам бул тизмеде көрүнөт.",
+    en: "When a buyer is interested, the request will appear in this list.",
+  },
+  "accountRequests.showAllRequests": {
+    ru: "Показать все заявки",
+    kg: "Бардык сурамдарды көрсөтүү",
+    en: "Show all requests",
+  },
   "accountRequests.emptyTitle": {
     ru: "Пока нет заявок",
     kg: "Азырынча сурамдар жок",
@@ -4053,9 +4098,19 @@ export const DICTIONARY = {
     en: "Call",
   },
   "accountRequests.markInProgress": {
-    ru: "В работе",
-    kg: "Иште",
-    en: "In progress",
+    ru: "В работу",
+    kg: "Ишке алуу",
+    en: "Mark in progress",
+  },
+  "accountRequests.completeLead": {
+    ru: "Завершить",
+    kg: "Аяктоо",
+    en: "Complete",
+  },
+  "accountRequests.rejectLead": {
+    ru: "Отклонить",
+    kg: "Четке кагуу",
+    en: "Reject",
   },
   "accountRequests.closeLead": {
     ru: "Закрыть",
@@ -5749,9 +5804,14 @@ export const DICTIONARY = {
     en: "Request is in progress.",
   },
   "leadStatus.hint.closed": {
-    ru: "Заявка закрыта.",
-    kg: "Сурам жабылды.",
-    en: "Request is closed.",
+    ru: "Заявка завершена.",
+    kg: "Сурам аякталды.",
+    en: "Request is completed.",
+  },
+  "leadStatus.hint.rejected": {
+    ru: "Заявка отклонена.",
+    kg: "Сурам четке кагылды.",
+    en: "Request was rejected.",
   },
   "cargoStatus.hint.new": {
     ru: "Новая карго-заявка ожидает обработки.",
@@ -5837,6 +5897,26 @@ export const DICTIONARY = {
     ru: "Мои заявки",
     kg: "Менин сурамдарым",
     en: "My requests",
+  },
+  "accountActivity.leadsStatsTitle": {
+    ru: "Заявки по объявлениям",
+    kg: "Жарыялар боюнча сурамдар",
+    en: "Listing requests",
+  },
+  "accountActivity.newLeadsShort": {
+    ru: "Новые заявки",
+    kg: "Жаңы сурамдар",
+    en: "New requests",
+  },
+  "accountActivity.receivedLeadsShort": {
+    ru: "Полученные заявки",
+    kg: "Келген сурамдар",
+    en: "Received requests",
+  },
+  "accountActivity.sentLeadsShort": {
+    ru: "Отправленные заявки",
+    kg: "Жөнөтүлгөн сурамдар",
+    en: "Sent requests",
   },
 } as const;
 

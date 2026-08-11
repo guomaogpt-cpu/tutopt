@@ -181,6 +181,18 @@ Empty state на `/account/requests` и auth copy дополнены в рамк
 
 ---
 
+## 15. Phase 128 — Listing leads workflow ✅
+
+- UI terminology: Заявка, Новая / В работе / Завершена / Отклонена
+- Success state after contact form
+- Active-lead duplicate guard
+- Seller complete/reject actions; buyer status notifications
+- Dashboard lead stats on `/account`
+
+См. `docs/LISTING_LEADS_WORKFLOW_PHASE_128.md`
+
+---
+
 ## Связанные документы
 
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`

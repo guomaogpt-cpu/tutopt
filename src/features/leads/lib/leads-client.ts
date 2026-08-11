@@ -98,7 +98,7 @@ export async function createLeadRequest(
 
 export async function updateSellerLeadStatus(
   leadId: string,
-  status: Extract<LeadStatus, "VIEWED" | "CLOSED">,
+  status: Extract<LeadStatus, "VIEWED" | "CLOSED" | "REJECTED">,
 ): Promise<UpdateLeadStatusResponse> {
   const response = await fetch(`/api/seller/leads/${leadId}`, {
     method: "PATCH",
