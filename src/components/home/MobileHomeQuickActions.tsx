@@ -18,7 +18,7 @@ type QuickAction = {
 const ACTIONS: QuickAction[] = [
   {
     href: "/listings/new",
-    labelKey: "home.quickPostListing",
+    labelKey: "home.quickPostListingShort",
     icon: PlusCircle,
     accent: "text-blue-700 dark:text-blue-300",
     iconBg: "bg-blue-100 dark:bg-blue-950/60",
@@ -40,7 +40,7 @@ const ACTIONS: QuickAction[] = [
   },
   {
     href: "/cargo",
-    labelKey: "home.quickCargoRequest",
+    labelKey: "home.quickCargoRequestShort",
     icon: Truck,
     accent: "text-orange-700 dark:text-orange-300",
     iconBg: "bg-orange-100 dark:bg-orange-950/60",
@@ -54,7 +54,7 @@ export function MobileHomeQuickActions() {
   return (
     <div className="sm:hidden">
       <h2 className="sr-only">{t("home.quickActions")}</h2>
-      <ul className="grid grid-cols-2 gap-2">
+      <ul className="grid grid-cols-2 gap-1.5">
         {ACTIONS.map((action) => {
           const Icon = action.icon;
           return (
@@ -62,22 +62,22 @@ export function MobileHomeQuickActions() {
               <Link
                 href={action.href}
                 className={cn(
-                  "flex min-h-[4.25rem] items-center gap-2.5 rounded-xl border px-3 py-2.5 transition active:scale-[0.98]",
+                  "flex min-h-[3.25rem] items-center gap-2 rounded-xl border px-2.5 py-2 transition active:scale-[0.98]",
                   action.primary
-                    ? "border-blue-200 bg-blue-50/90 dark:border-blue-800/60 dark:bg-blue-950/40"
+                    ? "border-blue-200 bg-blue-50 dark:border-blue-800/60 dark:bg-blue-950/40"
                     : "border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900",
                 )}
               >
                 <span
                   className={cn(
-                    "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                    "flex size-8 shrink-0 items-center justify-center rounded-lg",
                     action.iconBg,
                     action.accent,
                   )}
                 >
-                  <Icon className="size-4" strokeWidth={2} aria-hidden="true" />
+                  <Icon className="size-3.5" strokeWidth={2} aria-hidden="true" />
                 </span>
-                <span className="text-[13px] font-semibold leading-snug text-slate-900 dark:text-slate-100">
+                <span className="text-xs font-semibold leading-tight text-slate-900 dark:text-slate-100">
                   {t(action.labelKey)}
                 </span>
               </Link>

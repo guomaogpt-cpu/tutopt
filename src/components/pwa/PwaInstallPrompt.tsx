@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Download, Share, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
   trackPwaPageView,
   type BeforeInstallPromptEvent,
 } from "@/lib/pwa/install-prompt";
+import { isNativeApp } from "@/lib/pwa/native-app";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +26,7 @@ export function PwaInstallPrompt({
   className,
 }: PwaInstallPromptProps) {
   const { t } = useTranslation();
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
     null,
@@ -31,7 +34,7 @@ export function PwaInstallPrompt({
   const [isIos, setIsIos] = useState(false);
 
   useEffect(() => {
-    if (isStandaloneMode()) {
+    if (isStandaloneMode() || isNativeApp()) {
       return;
     }
 
@@ -41,14 +44,14 @@ export function PwaInstallPrompt({
     function handleBeforeInstallPrompt(event: Event) {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
-      if (shouldOfferInstallPrompt()) {
+      if (shouldOfferInstallPrompt({ minPageViews: 3 })) {
         setVisible(true);
       }
     }
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-    if (isIosDevice() && shouldOfferInstallPrompt()) {
+    if (isIosDevice() && shouldOfferInstallPrompt({ minPageViews: 3 })) {
       setVisible(true);
     }
 
@@ -77,7 +80,7 @@ export function PwaInstallPrompt({
   }
 
   if (variant === "card") {
-    if (isStandaloneMode()) {
+    if (isStandaloneMode() || isNativeApp()) {
       return null;
     }
 
@@ -125,7 +128,7 @@ export function PwaInstallPrompt({
     );
   }
 
-  if (!visible) {
+  if (!visible || pathname === "/" || isNativeApp()) {
     return null;
   }
 

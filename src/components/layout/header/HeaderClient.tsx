@@ -32,6 +32,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const isHome = pathname === "/";
 
   const loginHref = buildLoginUrl(pathname);
   const registerHref = buildRegisterUrl({ returnPath: pathname });
@@ -131,22 +132,24 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
         </div>
 
-        <div className="border-t border-slate-100 pb-2 pt-2 lg:hidden dark:border-slate-800">
-          <Suspense
-            fallback={
+        {!isHome ? (
+          <div className="border-t border-slate-100 pb-2 pt-2 lg:hidden dark:border-slate-800">
+            <Suspense
+              fallback={
+                <HeaderSearch
+                  id="header-search-mobile"
+                  placeholderKey="mobileSearch.placeholder"
+                  syncDisabled
+                />
+              }
+            >
               <HeaderSearch
                 id="header-search-mobile"
                 placeholderKey="mobileSearch.placeholder"
-                syncDisabled
               />
-            }
-          >
-            <HeaderSearch
-              id="header-search-mobile"
-              placeholderKey="mobileSearch.placeholder"
-            />
-          </Suspense>
-        </div>
+            </Suspense>
+          </div>
+        ) : null}
       </Container>
 
       <SettingsDrawer

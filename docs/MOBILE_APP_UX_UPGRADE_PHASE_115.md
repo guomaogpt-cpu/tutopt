@@ -132,6 +132,22 @@ Future: characteristic chips на card (нужны данные в `ListingCardD
 
 ---
 
+## 12. Mobile home cleanup hotfix ✅
+
+После Phase 115 главная на 390×844 была перегружена. Hotfix:
+
+| Проблема | Решение |
+|---|---|
+| Два search bar (header + hero) | На `/` mobile: search только в hero; header — logo + bell + menu |
+| PWA install banner above the fold | Banner скрыт на `/`; в Capacitor/native не показывается; card остаётся в `/account` |
+| Тяжёлые quick actions | 2×2 компактнее; «Подать», «Карго»; primary accent на «Подать» |
+| Яркие разделы | Mobile tiles — белые карточки, меньше высота |
+| «Сейчас ищут» | Desktop: полный блок; mobile: compact chips «Популярное» под разделами |
+
+Файлы: `HeaderClient.tsx`, `HomepagePaperEntry.tsx`, `MobileHomeQuickActions.tsx`, `HomeMobileTrendingChips.tsx`, `PwaInstallPrompt.tsx`, `native-app.ts`.
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`

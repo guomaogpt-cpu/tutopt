@@ -65,6 +65,6 @@ export function shouldOfferInstallPrompt(options?: {
     return false;
   }
 
-  const minPageViews = options?.minPageViews ?? 2;
+  const minPageViews = options?.minPageViews ?? 3;
   return getPwaPageViews() >= minPageViews;
 }

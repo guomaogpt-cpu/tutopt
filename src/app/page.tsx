@@ -38,7 +38,9 @@ export default async function HomePage() {
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F8FAFC] dark:bg-slate-950">
       <HomepagePaperEntry />
-      <HomeTrendingSearchesSection compact />
+      <div className="hidden sm:block">
+        <HomeTrendingSearchesSection />
+      </div>
 
       <RecentListingsSection
         listings={data.latest}

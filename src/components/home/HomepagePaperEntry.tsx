@@ -10,6 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { HomeMobileTrendingChips } from "@/components/home/HomeMobileTrendingChips";
 import { MobileHomeQuickActions } from "@/components/home/MobileHomeQuickActions";
 import { SearchWithSuggest } from "@/components/search/SearchWithSuggest";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
@@ -21,13 +22,11 @@ type EntryCard = {
   id: "OPT" | "MARKET" | "SERVICES" | "CARGO";
   labelKey: DictionaryKey;
   descriptionKey: DictionaryKey;
-  shortKey: DictionaryKey;
   href: string;
   icon: LucideIcon;
   accentBar: string;
   iconWrap: string;
   iconColor: string;
-  mobileTile: string;
 };
 
 const ENTRY_CARDS: EntryCard[] = [
@@ -35,59 +34,47 @@ const ENTRY_CARDS: EntryCard[] = [
     id: "MARKET",
     labelKey: "nav.market",
     descriptionKey: "home.marketDesc",
-    shortKey: "home.marketShort",
     href: "/market",
     icon: Megaphone,
     accentBar: "bg-purple-500",
     iconWrap: "bg-purple-100 dark:bg-purple-950/60",
     iconColor: "text-purple-600 dark:text-purple-300",
-    mobileTile:
-      "border-purple-200/80 bg-gradient-to-br from-purple-50 to-purple-100/70 dark:border-purple-800/60 dark:from-purple-950/50 dark:to-slate-900",
   },
   {
     id: "SERVICES",
     labelKey: "nav.services",
     descriptionKey: "home.servicesDesc",
-    shortKey: "home.servicesShort",
     href: "/services",
     icon: Briefcase,
     accentBar: "bg-green-500",
     iconWrap: "bg-green-100 dark:bg-green-950/60",
     iconColor: "text-green-600 dark:text-green-300",
-    mobileTile:
-      "border-green-200/80 bg-gradient-to-br from-green-50 to-green-100/70 dark:border-green-800/60 dark:from-green-950/50 dark:to-slate-900",
   },
   {
     id: "OPT",
     labelKey: "nav.opt",
     descriptionKey: "home.optDesc",
-    shortKey: "home.optShort",
     href: "/opt",
     icon: Package,
     accentBar: "bg-blue-500",
     iconWrap: "bg-blue-100 dark:bg-blue-950/60",
     iconColor: "text-blue-600 dark:text-blue-300",
-    mobileTile:
-      "border-blue-200/80 bg-gradient-to-br from-blue-50 to-blue-100/70 dark:border-blue-800/60 dark:from-blue-950/50 dark:to-slate-900",
   },
   {
     id: "CARGO",
     labelKey: "nav.cargo",
     descriptionKey: "home.cargoDesc",
-    shortKey: "home.cargoShort",
     href: "/cargo",
     icon: Truck,
     accentBar: "bg-orange-500",
     iconWrap: "bg-orange-100 dark:bg-orange-950/60",
     iconColor: "text-orange-600 dark:text-orange-300",
-    mobileTile:
-      "border-orange-200/80 bg-gradient-to-br from-orange-50 to-amber-50 dark:border-orange-800/60 dark:from-orange-950/45 dark:to-slate-900",
   },
 ];
 
 /**
  * Marketplace entry for `/`.
- * Mobile: compact app start — search, quick actions, section tiles.
+ * Mobile: compact app start — one search, quick actions, calm section tiles.
  * sm+/desktop: lead + search row and wider white cards.
  */
 export function HomepagePaperEntry() {
@@ -96,7 +83,7 @@ export function HomepagePaperEntry() {
   return (
     <section
       data-home-section="marketplace-entry"
-      className="overflow-x-clip bg-[#F8FAFC] pb-2 pt-2 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
+      className="overflow-x-clip bg-[#F8FAFC] pb-3 pt-1 sm:pb-8 sm:pt-4 lg:pb-10 dark:bg-slate-950"
       aria-labelledby="home-marketplace-lead"
     >
       <Container size="lg">
@@ -104,7 +91,7 @@ export function HomepagePaperEntry() {
           <div className="min-w-0 max-w-xl">
             <h1
               id="home-marketplace-lead"
-              className="text-lg font-bold leading-snug tracking-tight text-slate-900 sm:hidden dark:text-slate-100"
+              className="text-base font-bold leading-snug tracking-tight text-slate-900 sm:hidden dark:text-slate-100"
             >
               {t("home.appTitle")}
             </h1>
@@ -137,16 +124,16 @@ export function HomepagePaperEntry() {
           />
         </div>
 
-        <div className="mt-3 sm:hidden">
+        <div className="mt-2.5 sm:hidden">
           <MobileHomeQuickActions />
         </div>
 
-        <h2 className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:mt-4 sm:text-sm sm:normal-case sm:tracking-normal sm:text-slate-700 dark:text-slate-400 dark:sm:text-slate-300">
+        <h2 className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500 sm:mt-4 sm:text-sm sm:normal-case sm:tracking-normal sm:text-slate-700 dark:text-slate-400 dark:sm:text-slate-300">
           {t("home.sectionsTitle")}
         </h2>
 
         <ul
-          className="mt-2 grid w-full grid-cols-2 gap-2 sm:mt-4 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
+          className="mt-1.5 grid w-full grid-cols-2 gap-2 sm:mt-4 sm:gap-3.5 lg:grid-cols-4 lg:gap-4"
           aria-label={t("home.directions")}
         >
           {ENTRY_CARDS.map((card) => {
@@ -161,9 +148,9 @@ export function HomepagePaperEntry() {
                   className={cn(
                     "group relative flex w-full flex-col overflow-hidden transition duration-200",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950",
-                    "min-h-[88px] justify-between gap-2 rounded-xl border p-2.5",
-                    card.mobileTile,
-                    "sm:min-h-[140px] sm:justify-start sm:gap-0 sm:rounded-2xl sm:border-slate-200/70 sm:bg-white sm:bg-none sm:p-5 sm:shadow-sm",
+                    "min-h-[4.5rem] justify-between gap-1.5 rounded-xl border border-slate-200/80 bg-white p-2",
+                    "dark:border-slate-800 dark:bg-slate-900",
+                    "sm:min-h-[140px] sm:justify-start sm:gap-0 sm:rounded-2xl sm:border-slate-200/70 sm:p-5 sm:shadow-sm",
                     "sm:hover:-translate-y-0.5 sm:hover:border-slate-300 sm:hover:shadow-md",
                     "dark:sm:border-slate-800 dark:sm:bg-slate-900 dark:sm:shadow-none dark:sm:hover:border-slate-700",
                   )}
@@ -172,10 +159,10 @@ export function HomepagePaperEntry() {
                     <span
                       className={cn(
                         "flex shrink-0 items-center justify-center rounded-lg sm:rounded-xl",
-                        "size-8 sm:size-10",
+                        "size-7 sm:size-10",
                         card.iconWrap,
                         card.iconColor,
-                        "sm:bg-opacity-100 dark:sm:bg-slate-800",
+                        "dark:sm:bg-slate-800",
                       )}
                       aria-hidden="true"
                     >
@@ -188,11 +175,8 @@ export function HomepagePaperEntry() {
                   </div>
 
                   <div className="min-w-0 sm:mt-3 sm:flex-1">
-                    <p className="line-clamp-1 text-sm font-semibold tracking-tight text-slate-900 sm:text-[15px] sm:font-bold dark:text-slate-100">
+                    <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-slate-900 sm:text-[15px] sm:font-bold dark:text-slate-100">
                       {t(card.labelKey)}
-                    </p>
-                    <p className="mt-0.5 line-clamp-1 text-[11px] leading-snug text-slate-600 sm:hidden dark:text-slate-400">
-                      {t(card.shortKey)}
                     </p>
                     <p className="mt-1 hidden text-xs leading-snug text-slate-500 sm:line-clamp-2 sm:block sm:text-[13px] dark:text-slate-400">
                       {t(card.descriptionKey)}
@@ -211,6 +195,10 @@ export function HomepagePaperEntry() {
             );
           })}
         </ul>
+
+        <div className="mt-3">
+          <HomeMobileTrendingChips />
+        </div>
       </Container>
     </section>
   );

@@ -310,6 +310,11 @@ export const DICTIONARY = {
     kg: "Жарыя берүү",
     en: "Post listing",
   },
+  "home.quickPostListingShort": {
+    ru: "Подать",
+    kg: "Берүү",
+    en: "Post",
+  },
   "home.quickFindGoods": {
     ru: "Найти товар",
     kg: "Товар табуу",
@@ -324,6 +329,11 @@ export const DICTIONARY = {
     ru: "Карго-заявка",
     kg: "Карго сурам",
     en: "Cargo request",
+  },
+  "home.quickCargoRequestShort": {
+    ru: "Карго",
+    kg: "Карго",
+    en: "Cargo",
   },
   "home.sectionsTitle": {
     ru: "Разделы",
@@ -472,6 +482,21 @@ export const DICTIONARY = {
     ru: "Сейчас ищут",
     kg: "Азыр издешет",
     en: "Trending searches",
+  },
+  "home.trendingShortLabel": {
+    ru: "Популярное",
+    kg: "Популярдуу",
+    en: "Popular",
+  },
+  "home.trendChip.equipment": {
+    ru: "Оборудование",
+    kg: "Жабдуулар",
+    en: "Equipment",
+  },
+  "home.trendChip.electronics": {
+    ru: "Электроника",
+    kg: "Электроника",
+    en: "Electronics",
   },
   "home.whyVsetut": {
     ru: "Почему ВсеТут",
