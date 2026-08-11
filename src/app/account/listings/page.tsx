@@ -89,9 +89,11 @@ export default async function AccountListingsPage({ searchParams }: AccountListi
             moq: true,
             unit: true,
             created_at: true,
+            updated_at: true,
             published_at: true,
             expires_at: true,
             view_count: true,
+            rejection_reason: true,
             city: { select: { name: true } },
             category: { select: { name: true } },
             images: {
@@ -134,6 +136,7 @@ export default async function AccountListingsPage({ searchParams }: AccountListi
       categoryName: listing.category.name,
       cityName: listing.city?.name ?? null,
       created_at: listing.created_at.toISOString(),
+      updated_at: listing.updated_at.toISOString(),
       published_at: listing.published_at?.toISOString() ?? null,
       expires_at: listing.expires_at?.toISOString() ?? null,
       view_count: listing.view_count,
@@ -143,6 +146,7 @@ export default async function AccountListingsPage({ searchParams }: AccountListi
       postedAsCompany,
       companyName: postedAsCompany ? sellerProfile?.company_name ?? null : null,
       leadsCount: listing._count.leads,
+      rejection_reason: listing.rejection_reason,
     };
   });
 
@@ -160,6 +164,7 @@ export default async function AccountListingsPage({ searchParams }: AccountListi
             <AccountListingsEmptyState
               hasFilters={hasFilters}
               vertical={filters.vertical}
+              statusFilter={filters.status}
             />
           ) : (
             <>

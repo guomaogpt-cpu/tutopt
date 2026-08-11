@@ -48,9 +48,11 @@ export type SellerManagedListing = {
   postedAsCompany?: boolean;
   companyName?: string | null;
   leadsCount?: number;
+  rejection_reason?: string | null;
+  updated_at?: string;
 };
 
-type ListingApiAction = "archive" | "restore" | "renew";
+type ListingApiAction = "archive" | "restore" | "renew" | "submit";
 
 type ErrorBody = {
   error?: { message?: string };
@@ -82,21 +84,29 @@ export function SellerListingManageCard({
   const [error, setError] = useState("");
 
   const expirationStatus = getListingExpirationStatus({ expires_at: listing.expires_at });
+  const isDraft = listing.status === ListingStatusEnum.DRAFT;
+  const isPending = listing.status === ListingStatusEnum.PENDING_MODERATION;
+  const isRejected = listing.status === ListingStatusEnum.REJECTED;
+  const isArchived = listing.status === ListingStatusEnum.ARCHIVED;
   const isPublished = listing.status === ListingStatusEnum.PUBLISHED;
-  const isExpired = expirationStatus === "expired";
-  const isExpiringSoon = expirationStatus === "expiring_soon";
 
   const canArchive =
-    listing.status === ListingStatusEnum.PUBLISHED ||
-    listing.status === ListingStatusEnum.PENDING_MODERATION ||
-    listing.status === ListingStatusEnum.REJECTED;
-  const canRestore = listing.status === ListingStatusEnum.ARCHIVED;
+    isPublished || isPending || isRejected;
+  const canRestore = isArchived;
   const canRenew = isPublished;
+  const canSubmit = isDraft || isRejected;
+  const canShowLeads = isPublished && typeof listing.leadsCount === "number";
+  const showOpen = !isDraft;
 
   const openLabel = useAccountLabels ? t("accountListings.open") : "Открыть";
   const editLabel = useAccountLabels ? t("accountListings.edit") : "Редактировать";
-  const archiveLabel = useAccountLabels ? t("accountListings.archive") : "Архивировать";
+  const archiveLabel = useAccountLabels ? t("accountListings.archive") : "В архив";
   const restoreLabel = useAccountLabels ? t("accountListings.restore") : "Восстановить";
+  const submitLabel = useAccountLabels
+    ? t("accountListings.submitModeration")
+    : "Отправить на модерацию";
+  const continueLabel = useAccountLabels ? t("accountListings.continueDraft") : "Продолжить";
+  const leadsLabel = useAccountLabels ? t("accountListings.leadsAction") : "Заявки";
   const postedAsLabel = listing.postedAsCompany
     ? `${t("accountListings.postedAs")}: ${t("accountListings.company")}${
         listing.companyName ? ` · ${listing.companyName}` : ""
@@ -122,11 +132,13 @@ export function SellerListingManageCard({
       const response =
         action === "renew"
           ? await fetch(`/api/listings/${listing.id}/renew`, { method: "POST" })
-          : await fetch(`/api/listings/${listing.id}/lifecycle`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ action }),
-            });
+          : action === "submit"
+            ? await fetch(`/api/listings/${listing.id}/submit`, { method: "POST" })
+            : await fetch(`/api/listings/${listing.id}/lifecycle`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action }),
+              });
 
       if (!response.ok) {
         const body = (await response.json()) as ErrorBody;
@@ -145,7 +157,12 @@ export function SellerListingManageCard({
 
   const dateLabel = listing.published_at
     ? `Опубликовано ${formatShortDate(listing.published_at)}`
-    : `Создано ${formatShortDate(listing.created_at)}`;
+    : listing.updated_at
+      ? `Обновлено ${formatShortDate(listing.updated_at)}`
+      : `Создано ${formatShortDate(listing.created_at)}`;
+
+  const isExpired = expirationStatus === "expired";
+  const isExpiringSoon = expirationStatus === "expiring_soon";
 
   return (
     <article
@@ -178,7 +195,7 @@ export function SellerListingManageCard({
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <ListingStatusBadge status={listing.status} />
+          <ListingStatusBadge status={listing.status} showHint={useAccountLabels} />
           <VerticalListingBadge vertical={listing.vertical} />
           {isPublished && (isExpired || isExpiringSoon) ? (
             <span
@@ -213,9 +230,12 @@ export function SellerListingManageCard({
           <span>{dateLabel}</span>
           {postedAsLabel ? <span>{postedAsLabel}</span> : null}
           {typeof listing.leadsCount === "number" && listing.leadsCount > 0 ? (
-            <span>
+            <Link
+              href={`/account/requests?tab=received&listingId=${listing.id}`}
+              className="inline-flex items-center gap-1 font-medium text-blue-600 hover:underline dark:text-blue-400"
+            >
               {t("accountListings.leadsCount")}: {listing.leadsCount}
-            </span>
+            </Link>
           ) : null}
           {listing.expires_at ? (
             <span className="inline-flex items-center gap-1">
@@ -231,24 +251,33 @@ export function SellerListingManageCard({
           ) : null}
         </div>
 
+        {listing.rejection_reason ? (
+          <p className="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs leading-relaxed text-red-800 dark:bg-red-950/40 dark:text-red-200">
+            Причина отклонения: {listing.rejection_reason}
+          </p>
+        ) : null}
+
         {error ? <p className="mt-2 text-xs text-[#DC2626]">{error}</p> : null}
       </div>
 
       <div className="grid w-full min-w-0 shrink-0 grid-cols-1 gap-2 min-[380px]:grid-cols-2 lg:w-[300px] [&_a]:min-w-0 [&_button]:min-w-0 [&_button]:whitespace-normal [&_a]:whitespace-normal">
-        <Button
-          asChild
-          variant="outline"
-          className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700 sm:h-10"
-          onClick={() =>
-            trackSellerListingActionClick({
-              action: "open",
-              vertical: listing.vertical,
-              statusFilter,
-            })
-          }
-        >
-          <Link href={`/listings/${listing.id}`}>{openLabel}</Link>
-        </Button>
+        {showOpen ? (
+          <Button
+            asChild
+            variant="outline"
+            className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700 sm:h-10"
+            onClick={() =>
+              trackSellerListingActionClick({
+                action: "open",
+                vertical: listing.vertical,
+                statusFilter,
+              })
+            }
+          >
+            <Link href={`/listings/${listing.id}`}>{openLabel}</Link>
+          </Button>
+        ) : null}
+
         <Button
           asChild
           variant="outline"
@@ -261,8 +290,38 @@ export function SellerListingManageCard({
             })
           }
         >
-          <Link href={`/listings/${listing.id}/edit`}>{editLabel}</Link>
+          <Link href={`/listings/${listing.id}/edit`}>
+            {isDraft && useAccountLabels ? continueLabel : editLabel}
+          </Link>
         </Button>
+
+        {canShowLeads ? (
+          <Button
+            asChild
+            variant="outline"
+            className="h-11 rounded-xl border-[rgba(148,163,184,0.25)] dark:border-slate-700 sm:h-10"
+          >
+            <Link href={`/account/requests?tab=received&listingId=${listing.id}`}>
+              {leadsLabel}
+              {listing.leadsCount ? ` (${listing.leadsCount})` : ""}
+            </Link>
+          </Button>
+        ) : null}
+
+        {canSubmit ? (
+          <Button
+            type="button"
+            disabled={pendingAction !== null}
+            className="h-11 rounded-xl bg-blue-600 hover:bg-blue-700 sm:h-10"
+            onClick={() => void runAction("submit")}
+          >
+            {pendingAction === "submit" ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            ) : (
+              submitLabel
+            )}
+          </Button>
+        ) : null}
 
         {canRenew ? (
           <ConfirmActionButton
@@ -283,8 +342,16 @@ export function SellerListingManageCard({
         {canArchive ? (
           <ConfirmActionButton
             label={archiveLabel}
-            title="Архивировать объявление?"
-            description="Объявление будет скрыто с сайта и перемещено в архив. Его можно восстановить позже."
+            title={
+              useAccountLabels
+                ? t("accountListings.archiveConfirmTitle")
+                : "Скрыть объявление из поиска?"
+            }
+            description={
+              useAccountLabels
+                ? t("accountListings.archiveConfirmDescription")
+                : "Вы точно хотите скрыть объявление из поиска? Его можно восстановить позже."
+            }
             confirmLabel={archiveLabel}
             isPending={pendingAction === "archive"}
             disabled={pendingAction !== null}

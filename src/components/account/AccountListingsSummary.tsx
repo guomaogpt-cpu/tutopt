@@ -6,6 +6,7 @@ import type { AccountListingStats, AccountRecentListing } from "@/features/accou
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type AccountListingsSummaryProps = {
   stats: AccountListingStats;
@@ -30,6 +31,18 @@ function statusLabel(
   }
 }
 
+const STAT_LINKS: Array<{
+  labelKey: DictionaryKey;
+  valueKey: keyof AccountListingStats;
+  href: string;
+}> = [
+  { labelKey: "account.listingsTotal", valueKey: "total", href: "/account/listings" },
+  { labelKey: "account.listingsActive", valueKey: "active", href: "/account/listings?status=active" },
+  { labelKey: "account.listingsPending", valueKey: "pending", href: "/account/listings?status=pending" },
+  { labelKey: "account.listingsRejected", valueKey: "rejected", href: "/account/listings?status=rejected" },
+  { labelKey: "account.listingsArchived", valueKey: "archived", href: "/account/listings?status=archived" },
+];
+
 export function AccountListingsSummary({
   stats,
   recentListings,
@@ -48,22 +61,20 @@ export function AccountListingsSummary({
       </div>
 
       <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
-        {[
-          { label: t("account.listingsTotal"), value: stats.total },
-          { label: t("account.listingsActive"), value: stats.active },
-          { label: t("account.listingsPending"), value: stats.pending },
-          { label: t("account.listingsRejected"), value: stats.rejected },
-          { label: t("account.listingsArchived"), value: stats.archived },
-        ].map((item) => (
-          <div
-            key={item.label}
-            className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-950"
+        {STAT_LINKS.map((item) => (
+          <Link
+            key={item.labelKey}
+            href={item.href}
+            className={cn(
+              "rounded-xl border border-slate-100 bg-slate-50 px-3 py-2 transition",
+              "hover:border-blue-200 hover:bg-blue-50/50 dark:border-slate-800 dark:bg-slate-950 dark:hover:border-blue-500/40",
+            )}
           >
-            <dt className="text-[11px] text-slate-500 dark:text-slate-400">{item.label}</dt>
+            <dt className="text-[11px] text-slate-500 dark:text-slate-400">{t(item.labelKey)}</dt>
             <dd className="mt-1 text-lg font-bold text-slate-900 dark:text-slate-100">
-              {item.value}
+              {stats[item.valueKey]}
             </dd>
-          </div>
+          </Link>
         ))}
       </dl>
 

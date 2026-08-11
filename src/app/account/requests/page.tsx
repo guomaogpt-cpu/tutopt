@@ -1,5 +1,6 @@
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { AccountCargoRequestCard } from "@/components/account/AccountCargoRequestCard";
 import { AccountCargoResponseCard } from "@/components/account/AccountCargoResponseCard";
 import { AccountMyCargoResponsesLink } from "@/components/account/AccountMyCargoResponsesLink";
@@ -58,11 +59,25 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
 
   const rawParams = await searchParams;
   const activeTab = parseAccountRequestsTab(rawParams.tab);
+  const listingIdParam = typeof rawParams.listingId === "string" ? rawParams.listingId.trim() : "";
 
   const sellerProfile = await prisma.sellerProfile.findUnique({
     where: { user_id: user.id },
     select: { id: true },
   });
+
+  const filteredListing =
+    listingIdParam && sellerProfile
+      ? await prisma.listing.findFirst({
+          where: {
+            id: listingIdParam,
+            seller_profile_id: sellerProfile.id,
+          },
+          select: { id: true, title: true },
+        })
+      : null;
+
+  const listingIdFilter = filteredListing?.id ?? null;
 
   const sellerListingCount = sellerProfile
     ? await prisma.listing.count({
@@ -72,7 +87,7 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
 
   const [sentLeads, receivedLeads, cargoRequests, ownCargoResponses] = await Promise.all([
     getBuyerLeads(user.id),
-    sellerProfile ? getSellerLeads(sellerProfile.id) : Promise.resolve([]),
+    sellerProfile ? getSellerLeads(sellerProfile.id, { listingId: listingIdFilter ?? undefined }) : Promise.resolve([]),
     getBuyerCargoRequests(user.id),
     sellerProfile ? getSellerOwnCargoResponses(sellerProfile.id) : Promise.resolve([]),
   ]);
@@ -118,9 +133,19 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
   return (
     <main className="min-w-0 bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
       <Container size="lg" className="max-w-[1100px] min-w-0">
-        <AccountRequestsPageHeader />
+        <AccountRequestsPageHeader
+          listingTitle={filteredListing?.title ?? null}
+        />
 
         <div className="mt-5 space-y-4 sm:mt-6">
+          {filteredListing ? (
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              Заявки по объявлению «{filteredListing.title}» ·{" "}
+              <Link href="/account/requests?tab=received" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+                Все заявки
+              </Link>
+            </p>
+          ) : null}
           <AccountRequestsTabs
             activeTab={activeTab}
             counts={{

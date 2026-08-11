@@ -159,8 +159,9 @@ export async function getAccountDashboardData(
         counts.active += count;
         break;
       case ListingStatus.PENDING_MODERATION:
-      case ListingStatus.DRAFT:
         counts.pending += count;
+        break;
+      case ListingStatus.DRAFT:
         break;
       case ListingStatus.REJECTED:
         counts.rejected += count;

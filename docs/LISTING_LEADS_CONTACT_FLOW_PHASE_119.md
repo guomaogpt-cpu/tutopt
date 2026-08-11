@@ -171,6 +171,16 @@ Empty state на `/account/requests` и auth copy дополнены в рамк
 
 ---
 
+## 14. Phase 126 — Leads per listing ✅
+
+- `/account/requests?listingId=...` — filter received leads by listing
+- Link from `SellerListingManageCard` on `/account/listings`
+- Owner-scoped listing lookup
+
+См. `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
+
+---
+
 ## Связанные документы
 
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`

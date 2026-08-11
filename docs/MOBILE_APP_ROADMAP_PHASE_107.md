@@ -160,6 +160,14 @@ npx cap add ios
 
 См. `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`
 
+## 6.8 Phase 126 — Seller listing management ✅
+
+- Status hints + status-specific actions on `/account/listings`
+- Submit/resubmit API, archive/restore UX
+- Leads link per listing; account dashboard integration
+
+См. `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -204,9 +212,10 @@ npx cap add ios
 | 123 ✅ | Mobile performance and stability (home trim, skeletons, polling) |
 | 124 ✅ | Listing cards and detail page conversion |
 | 125 ✅ | Trust, safety and listing reports |
-| 126 | Store assets + Play Console internal testing upload |
-| 127 | Production rollout (after QA + legal sign-off) |
-| 128 | Capacitor iOS wrapper |
+| 126 ✅ | Seller listing management in account |
+| 127 | Store assets + Play Console internal testing upload |
+| 128 | Production rollout (after QA + legal sign-off) |
+| 129 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 
@@ -254,5 +263,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
 - `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`
 - `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
+- `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

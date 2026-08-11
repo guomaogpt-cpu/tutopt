@@ -21,7 +21,7 @@ type AccountActivitySummaryProps = {
 export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
   const { t } = useTranslation();
 
-  const lines: Array<{ key: string; label: string }> = [];
+  const lines: Array<{ key: string; label: string; href?: string }> = [];
 
   if (data.unreadNotifications > 0) {
     lines.push({
@@ -30,6 +30,7 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
         "{count}",
         String(data.unreadNotifications),
       ),
+      href: "/notifications",
     });
   }
 
@@ -37,6 +38,7 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
     lines.push({
       key: "leads",
       label: t("accountActivity.newLeads").replace("{count}", String(data.receivedLeadsCount)),
+      href: "/account/requests?tab=received",
     });
   }
 
@@ -50,11 +52,11 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
     });
   }
 
-  const pendingModeration = data.listingStats.pending;
-  if (pendingModeration > 0) {
+  if (data.listingStats.pending > 0) {
     lines.push({
       key: "pending",
-      label: t("accountActivity.pendingListings").replace("{count}", String(pendingModeration)),
+      label: t("accountActivity.pendingListings").replace("{count}", String(data.listingStats.pending)),
+      href: "/account/listings?status=pending",
     });
   }
 
@@ -62,6 +64,18 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
     lines.push({
       key: "active",
       label: t("accountActivity.activeListings").replace("{count}", String(data.listingStats.active)),
+      href: "/account/listings?status=active",
+    });
+  }
+
+  if (data.listingStats.rejected > 0) {
+    lines.push({
+      key: "rejected",
+      label: t("accountActivity.rejectedListings").replace(
+        "{count}",
+        String(data.listingStats.rejected),
+      ),
+      href: "/account/listings?status=rejected",
     });
   }
 
@@ -108,12 +122,21 @@ export function AccountActivitySummary({ data }: AccountActivitySummaryProps) {
         <>
           <ul className="mt-4 space-y-2">
             {lines.map((line) => (
-              <li
-                key={line.key}
-                className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"
-              >
-                <span className="size-1.5 shrink-0 rounded-full bg-blue-500" aria-hidden="true" />
-                {line.label}
+              <li key={line.key}>
+                {line.href ? (
+                  <Link
+                    href={line.href}
+                    className="flex items-center gap-2 text-sm text-slate-700 transition hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400"
+                  >
+                    <span className="size-1.5 shrink-0 rounded-full bg-blue-500" aria-hidden="true" />
+                    {line.label}
+                  </Link>
+                ) : (
+                  <span className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                    <span className="size-1.5 shrink-0 rounded-full bg-blue-500" aria-hidden="true" />
+                    {line.label}
+                  </span>
+                )}
               </li>
             ))}
           </ul>

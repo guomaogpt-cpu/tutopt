@@ -220,6 +220,16 @@ Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop
 
 ---
 
+## 18. Phase 126 — Seller listing management ✅
+
+- `/account/listings`: status hints, submit/archive/restore, leads link
+- Filter empty states; dashboard stat links
+- `POST /api/listings/[id]/submit`
+
+См. `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
@@ -232,3 +242,4 @@ Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop
 - `docs/MOBILE_GESTURES_PHASE_122.md`
 - `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
 - `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
+- `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`

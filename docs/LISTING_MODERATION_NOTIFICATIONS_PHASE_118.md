@@ -139,6 +139,16 @@ Phase 119 улучшает **заявки по объявлениям** (`NEW_LE
 
 ---
 
+## 13. Phase 126 — Seller resubmit ✅
+
+`POST /api/listings/[id]/submit` triggers `LISTING_SUBMITTED` via `notifyListingSubmittedIfNeeded` (same helper as create/restore).
+
+Restore from archive also re-triggers submitted notification.
+
+См. `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
+
+---
+
 ## Связанные документы
 
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`

@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { Button } from "@/components/ui/button";
 
-export function AccountRequestsPageHeader() {
+type AccountRequestsPageHeaderProps = {
+  listingTitle?: string | null;
+};
+
+export function AccountRequestsPageHeader({ listingTitle = null }: AccountRequestsPageHeaderProps) {
   const { t } = useTranslation();
 
   return (
@@ -16,10 +20,12 @@ export function AccountRequestsPageHeader() {
           </Link>
         </p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
-          {t("accountRequests.title")}
+          {listingTitle ? t("accountRequests.listingLeadsTitle") : t("accountRequests.title")}
         </h1>
         <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
-          {t("accountRequests.description")}
+          {listingTitle
+            ? `«${listingTitle}»`
+            : t("accountRequests.description")}
         </p>
       </div>
       <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">

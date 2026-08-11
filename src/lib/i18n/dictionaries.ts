@@ -3847,6 +3847,61 @@ export const DICTIONARY = {
     kg: "Өтүнмөлөр",
     en: "Requests",
   },
+  "accountListings.leadsAction": {
+    ru: "Заявки",
+    kg: "Өтүнмөлөр",
+    en: "Requests",
+  },
+  "accountListings.submitModeration": {
+    ru: "Отправить на модерацию",
+    kg: "Модерацияга жөнөтүү",
+    en: "Submit for review",
+  },
+  "accountListings.continueDraft": {
+    ru: "Продолжить",
+    kg: "Улантуу",
+    en: "Continue",
+  },
+  "accountListings.archiveConfirmTitle": {
+    ru: "Скрыть объявление из поиска?",
+    kg: "Жарыяны издөөдөн жашыруу?",
+    en: "Hide listing from search?",
+  },
+  "accountListings.archiveConfirmDescription": {
+    ru: "Вы точно хотите скрыть объявление из поиска? Его можно восстановить позже.",
+    kg: "Жарыяны издөөдөн жашырууну каалайсызбы? Кийин калыбына келтире аласыз.",
+    en: "Hide this listing from search? You can restore it later.",
+  },
+  "accountListings.emptyActive": {
+    ru: "Активных объявлений пока нет.",
+    kg: "Активдүү жарыялар азырынча жок.",
+    en: "No active listings yet.",
+  },
+  "accountListings.emptyPending": {
+    ru: "Нет объявлений на модерации.",
+    kg: "Модерациядагы жарыялар жок.",
+    en: "No listings pending moderation.",
+  },
+  "accountListings.emptyRejected": {
+    ru: "Нет отклонённых объявлений.",
+    kg: "Четке кагылган жарыялар жок.",
+    en: "No rejected listings.",
+  },
+  "accountListings.emptyArchived": {
+    ru: "Архив пуст.",
+    kg: "Архив бош.",
+    en: "Archive is empty.",
+  },
+  "accountListings.emptyDraft": {
+    ru: "Черновиков пока нет.",
+    kg: "Долбоорлор азырынча жок.",
+    en: "No drafts yet.",
+  },
+  "accountRequests.listingLeadsTitle": {
+    ru: "Заявки по объявлению",
+    kg: "Жарыя боюнча сурамдар",
+    en: "Listing requests",
+  },
   "accountListings.filters.all": {
     ru: "Все",
     kg: "Баары",
@@ -5599,14 +5654,14 @@ export const DICTIONARY = {
   "status.rejected": { ru: "Отклонено", kg: "Четке кагылды", en: "Rejected" },
   "status.archived": { ru: "В архиве", kg: "Архивде", en: "Archived" },
   "status.hint.pendingModeration": {
-    ru: "Объявление проверяется. После одобрения оно появится в поиске.",
-    kg: "Жарыя текшерилүүдө. Макулданганда издөөдө көрүнөт.",
-    en: "Listing is being reviewed. It will appear in search after approval.",
+    ru: "Мы проверяем объявление. После одобрения оно появится в поиске.",
+    kg: "Жарыяны текшеребиз. Макулданганда издөөдө көрүнөт.",
+    en: "We are reviewing your listing. It will appear in search after approval.",
   },
   "status.hint.rejected": {
-    ru: "Объявление не прошло проверку. Проверьте описание и фото.",
-    kg: "Жарыя текшерүүдөн өткөн жок. Сүрөттөмө жана сүрөттү текшериңиз.",
-    en: "Listing was not approved. Check description and photos.",
+    ru: "Объявление не прошло проверку. Измените данные и отправьте повторно.",
+    kg: "Жарыя текшерүүдөн өткөн жок. Маалыматты өзгөртүп, кайра жөнөтүңүз.",
+    en: "Listing was not approved. Update details and submit again.",
   },
   "status.hint.published": {
     ru: "Объявление опубликовано и видно пользователям.",
@@ -5614,14 +5669,14 @@ export const DICTIONARY = {
     en: "Listing is published and visible to users.",
   },
   "status.hint.draft": {
-    ru: "Черновик не виден другим пользователям.",
-    kg: "Долбоор башка колдонуучулarga көрүнбөйт.",
-    en: "Draft is not visible to other users.",
+    ru: "Объявление ещё не отправлено на публикацию.",
+    kg: "Жарыя азырынча жарыялоого жөнөтүлгөн эмес.",
+    en: "Listing has not been submitted for publication yet.",
   },
   "status.hint.archived": {
-    ru: "Объявление снято с публикации.",
-    kg: "Жарыя жарыядан алынган.",
-    en: "Listing has been archived.",
+    ru: "Объявление скрыто из поиска. Его можно восстановить.",
+    kg: "Жарыя издөөдөн жашырылган. Аны калыбына келтирсе болот.",
+    en: "Listing is hidden from search. You can restore it.",
   },
   "leadStatus.hint.new": {
     ru: "Новая заявка — ответьте покупателю как можно скорее.",
@@ -5687,6 +5742,11 @@ export const DICTIONARY = {
     ru: "{count} активных объявлений",
     kg: "{count} активдүү жарыя",
     en: "{count} active listings",
+  },
+  "accountActivity.rejectedListings": {
+    ru: "{count} отклонённых объявлений",
+    kg: "{count} четке кагылган жарыя",
+    en: "{count} rejected listings",
   },
   "accountActivity.cargoRequests": {
     ru: "{count} карго-заявок",

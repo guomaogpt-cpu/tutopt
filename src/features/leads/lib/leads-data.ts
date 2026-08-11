@@ -99,12 +99,13 @@ export async function getBuyerLeads(userId: string): Promise<BuyerLeadItem[]> {
 
 export async function getSellerLeads(
   sellerProfileId: string,
-  options?: { statusFilter?: SellerLeadStatusFilter },
+  options?: { statusFilter?: SellerLeadStatusFilter; listingId?: string },
 ): Promise<SellerLeadItem[]> {
   const status = sellerLeadStatusFilterToEnum(options?.statusFilter ?? "all");
   const where: Prisma.LeadWhereInput = {
     seller_profile_id: sellerProfileId,
     ...(status ? { status } : {}),
+    ...(options?.listingId ? { listing_id: options.listingId } : {}),
   };
 
   const leads = await prisma.lead.findMany({
