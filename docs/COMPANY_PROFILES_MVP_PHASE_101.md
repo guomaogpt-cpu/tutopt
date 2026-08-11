@@ -32,6 +32,13 @@
 - Safe not-found для `/companies/[id]`
 - Admin: локализованная колонка «Действия»
 
+## 5. Phase 127 — Storefront upgrade ✅
+
+- Preview в `/account/company`
+- Блок «О компании», actions, report profile
+- Admin: публичная ссылка + active listings count
+- См. `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
+
 ## 4. Как работает `/account/company`
 
 1. Логин + телефон обязательны

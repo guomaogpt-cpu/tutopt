@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  BadgeCheck,
   Building2,
   Globe,
   Mail,
@@ -17,8 +16,14 @@ import {
 } from "lucide-react";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import type { ListingVertical } from "@prisma/client";
+import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import type { SellerProfileData } from "@/features/sellers/lib/seller-profile-data";
+import {
+  getPublicSellerDisplayName,
+  isPublicCompanyProfile,
+  shouldShowCompanyVerificationBadge,
+} from "@/features/sellers/lib/public-seller-display";
 import {
   getSellerCtaLabel,
   getSellerProfileDescription,
@@ -134,10 +139,18 @@ export function SellerProfileSidebar({
   trustSignals = [],
 }: SellerProfileSidebarProps) {
   const router = useRouter();
+  const displayName = getPublicSellerDisplayName(profile);
+  const isCompanyProfile = isPublicCompanyProfile(profile.company_type);
   const logoUrl = profile.logo_url ?? profile.user.avatar_url;
   const locationLabel = [profile.city?.name, profile.region?.name].filter(Boolean).join(", ");
   const showContactPerson =
-    profile.user.name.trim().length > 0 && profile.user.name !== profile.company_name;
+    isCompanyProfile &&
+    profile.user.name.trim().length > 0 &&
+    profile.user.name !== profile.company_name;
+  const showVerifiedCompanyBadge = shouldShowCompanyVerificationBadge({
+    companyType: profile.company_type,
+    verificationStatus: profile.verification_status,
+  });
   const hasAnyContact = Boolean(contactPhone || contactEmail || whatsapp || telegram || website);
   const roleLabel = getSellerProfileLabel(primaryVertical);
   const roleDescription = getSellerProfileDescription(primaryVertical);
@@ -161,7 +174,7 @@ export function SellerProfileSidebar({
               {logoUrl ? (
                 <Image
                   src={logoUrl}
-                  alt={profile.company_name}
+                  alt={displayName}
                   fill
                   unoptimized
                   className="object-cover"
@@ -169,7 +182,7 @@ export function SellerProfileSidebar({
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-lg font-bold text-[#2563EB] lg:text-xl">
-                  {getInitials(profile.company_name)}
+                  {getInitials(displayName)}
                 </div>
               )}
             </div>
@@ -179,22 +192,23 @@ export function SellerProfileSidebar({
                 <span className="rounded-full bg-[#F1F5F9] px-2.5 py-0.5 text-xs font-medium text-[#475569]">
                   {roleLabel}
                 </span>
-                {profile.is_verified ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-xs font-medium text-[#2563EB]">
-                    <BadgeCheck className="size-3.5" aria-hidden="true" />
-                    Проверен
-                  </span>
+                {showVerifiedCompanyBadge ? (
+                  <CompanyVerificationBadge
+                    status={profile.verification_status}
+                    isCargo={profile.company_type === "CARGO"}
+                    compact
+                  />
                 ) : null}
                 {trustLevel ? <SellerTrustBadge level={trustLevel} /> : null}
               </div>
 
               <h1 className="mt-2 text-xl font-bold tracking-tight text-[#0F172A] lg:text-2xl">
-                {profile.company_name}
+                {displayName}
               </h1>
 
               <p className="mt-1 text-sm leading-snug text-[#64748B]">{roleDescription}</p>
 
-              {profile.user.name !== profile.company_name ? (
+              {showContactPerson ? (
                 <p className="mt-1 flex items-center gap-1.5 text-sm text-[#64748B]">
                   <Building2 className="size-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate">{profile.user.name}</span>

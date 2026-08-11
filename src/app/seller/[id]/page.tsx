@@ -11,6 +11,9 @@ import { formatListingDate } from "@/features/listings/lib/format-listing-price"
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import {
+  getPublicSellerDisplayName,
+} from "@/features/sellers/lib/public-seller-display";
+import {
   getSellerProfileByParam,
   getSellerPublishedListingCount,
   getSellerPublishedListings,
@@ -59,12 +62,13 @@ export async function generateMetadata({
     const path = profile.slug
       ? `/seller/${profile.slug}`
       : `/seller/${profile.id}`;
-    const title = getSellerProfileSeoTitle(profile.company_name, primaryVertical);
+    const displayName = getPublicSellerDisplayName(profile);
+    const title = getSellerProfileSeoTitle(displayName, primaryVertical);
     const description = truncateSeoText(
       profile.description && profile.description.trim().length >= 40
         ? profile.description
         : getSellerProfileSeoDescription({
-            sellerName: profile.company_name,
+            sellerName: displayName,
             cityName,
             listingCount: listings.length,
             primaryVertical,
@@ -146,6 +150,7 @@ export default async function SellerProfilePage({
   const publicProfile = isAuthenticated
     ? profile
     : sanitizeSellerProfileForGuest(profile);
+  const displayName = getPublicSellerDisplayName(profile);
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] dark:bg-slate-950 py-6 sm:py-8">
@@ -169,7 +174,7 @@ export default async function SellerProfilePage({
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li className="line-clamp-1 font-medium text-[#334155]">{profile.company_name}</li>
+            <li className="line-clamp-1 font-medium text-[#334155]">{displayName}</li>
           </ol>
         </nav>
 

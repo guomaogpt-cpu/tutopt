@@ -4323,9 +4323,59 @@ export const DICTIONARY = {
     en: "Company listings",
   },
   "company.public.noListings": {
-    ru: "Компания пока не разместила объявления. Когда появятся публикации, они будут показаны здесь.",
-    kg: "Компания азырынча жарыя жайгаштыра элек. Жарыялар чыкканда бул жерде көрсөтүлөт.",
-    en: "This company has not posted any listings yet. When they appear, they will show up here.",
+    ru: "У этой компании пока нет активных объявлений.",
+    kg: "Бул компанияда азырынча активдүү жарыялар жок.",
+    en: "This company has no active listings yet.",
+  },
+  "company.public.aboutTitle": {
+    ru: "О компании",
+    kg: "Компания жөнүндө",
+    en: "About the company",
+  },
+  "company.public.noDescription": {
+    ru: "Компания пока не добавила описание.",
+    kg: "Компания азырынча сүрөттөмө кошкон жок.",
+    en: "This company has not added a description yet.",
+  },
+  "company.public.viewListings": {
+    ru: "Посмотреть объявления",
+    kg: "Жарыяларды көрүү",
+    en: "View listings",
+  },
+  "company.public.reportProfile": {
+    ru: "Пожаловаться на профиль",
+    kg: "Профилге арыздануу",
+    en: "Report profile",
+  },
+  "company.storefront.previewTitle": {
+    ru: "Как вас видят покупатели",
+    kg: "Сатып алуучулар сизди кандай көрүшөт",
+    en: "How buyers see you",
+  },
+  "company.storefront.previewHint": {
+    ru: "Заполненный профиль повышает доверие покупателей.",
+    kg: "Толук профиль сатып алуучулардын ишенимин жогорулатат.",
+    en: "A complete profile helps buyers trust your business.",
+  },
+  "company.storefront.fieldsTitle": {
+    ru: "Заполненность профиля",
+    kg: "Профилдин толуктугу",
+    en: "Profile completeness",
+  },
+  "company.storefront.emptyName": {
+    ru: "Название компании",
+    kg: "Компаниянын аталышы",
+    en: "Company name",
+  },
+  "company.storefront.emptyProfileHint": {
+    ru: "Заполните профиль компании, чтобы покупатели видели больше информации о вас.",
+    kg: "Сатып алуучулар сиз жөнүндө көбүрөөк маалымат көрүшү үчүн компаниянын профилин толтуруңуз.",
+    en: "Fill in your company profile so buyers can learn more about you.",
+  },
+  "company.storefront.viewPublicProfile": {
+    ru: "Посмотреть публичный профиль",
+    kg: "Ачык профилди көрүү",
+    en: "View public profile",
   },
   "company.public.contact": {
     ru: "Связаться",
@@ -4471,6 +4521,16 @@ export const DICTIONARY = {
     ru: "Статус проверки",
     kg: "Текшерүү статусу",
     en: "Verification status",
+  },
+  "admin.companies.publicProfile": {
+    ru: "Публичный профиль",
+    kg: "Ачык профиль",
+    en: "Public profile",
+  },
+  "admin.companies.activeListings": {
+    ru: "Активные объявления",
+    kg: "Активдүү жарыялар",
+    en: "Active listings",
   },
   "admin.companies.actions": {
     ru: "Действия",

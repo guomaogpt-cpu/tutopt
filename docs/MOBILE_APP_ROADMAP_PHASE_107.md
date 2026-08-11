@@ -168,6 +168,15 @@ npx cap add ios
 
 См. `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
 
+## 6.9 Phase 127 — Seller / company storefront ✅
+
+- Company public profile as listings showcase
+- Personal seller profile display name
+- Listing seller block + verified badge consistency
+- Account company preview + admin public links
+
+См. `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -264,5 +273,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`
 - `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
 - `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
+- `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

@@ -2,7 +2,7 @@
 
 import type { CompanyType, ListingVertical } from "@prisma/client";
 import Link from "next/link";
-import { BadgeCheck, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { SellerTrustCompactBlock } from "@/components/seller/SellerTrustBlock";
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
@@ -11,6 +11,9 @@ import {
   buildSellerProfileHref,
 } from "@/features/sellers/lib/seller-vertical-profile";
 import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
+import {
+  shouldShowCompanyVerificationBadge,
+} from "@/features/sellers/lib/public-seller-display";
 import type { SellerTrustLevel, SellerTrustSignal } from "@/lib/trust/seller-trust";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +27,6 @@ type ListingSellerCardProps = {
   companyName: string;
   companyType?: CompanyType | null;
   avatarUrl: string | null;
-  isVerified: boolean;
   verificationStatus?: CompanyVerificationStatus | null;
   sellerCity: string | null;
   sellerSinceLabel: string;
@@ -65,7 +67,6 @@ export function ListingSellerCard({
   companyName,
   companyType = null,
   avatarUrl,
-  isVerified,
   verificationStatus = null,
   sellerCity,
   sellerSinceLabel,
@@ -96,6 +97,11 @@ export function ListingSellerCard({
   const profileHref = postedAsCompany
     ? buildCompanyProfileHref(sellerSlug || sellerId, vertical)
     : buildSellerProfileHref(sellerSlug || sellerId, vertical);
+  const showVerifiedCompanyBadge = shouldShowCompanyVerificationBadge({
+    postedAsCompany,
+    companyType,
+    verificationStatus,
+  });
   const profileLabel = postedAsCompany
     ? t("company.openCompany")
     : t("listing.sellerProfile");
@@ -121,23 +127,24 @@ export function ListingSellerCard({
             <Badge variant="secondary" className="rounded-full text-[11px]">
               {roleLabel}
             </Badge>
-            {postedAsCompany && verificationStatus ? (
+            {showVerifiedCompanyBadge && verificationStatus ? (
               <CompanyVerificationBadge
                 status={verificationStatus}
                 isCargo={vertical === "CARGO"}
                 compact
               />
-            ) : isVerified ? (
-              <Badge variant="secondary" className="gap-1 rounded-full text-[11px]">
-                <BadgeCheck className="size-3.5" aria-hidden="true" />
-                {t("listing.verified")}
-              </Badge>
             ) : null}
           </div>
 
           <h2 className="mt-2 text-base font-semibold text-[#0F172A] dark:text-slate-100">
             {displayName}
           </h2>
+
+          {showVerifiedCompanyBadge ? (
+            <p className="mt-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+              {t("company.verification.verifiedBadge")}
+            </p>
+          ) : null}
 
           {companyTypeLabel ? (
             <p className="mt-1 text-sm text-[#64748B] dark:text-slate-400">

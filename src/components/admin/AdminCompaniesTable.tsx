@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -11,6 +12,8 @@ import { Button } from "@/components/ui/button";
 
 type AdminCompanyRow = {
   id: string;
+  slug: string;
+  publicHref: string;
   companyName: string;
   companyType: CompanyType;
   cityName: string | null;
@@ -19,6 +22,7 @@ type AdminCompanyRow = {
   verificationStatus: CompanyVerificationStatus;
   verificationNote: string | null;
   createdAt: string;
+  activeListingsCount: number;
 };
 
 type AdminCompaniesTableProps = {
@@ -114,8 +118,19 @@ export function AdminCompaniesTable({ companies }: AdminCompaniesTableProps) {
                 {t("admin.companies.owner")}: {company.ownerName}
               </div>
               <div>{company.cityName ?? "—"}</div>
+              <div>
+                {t("admin.companies.activeListings")}: {company.activeListingsCount}
+              </div>
               <div>{new Date(company.createdAt).toLocaleDateString("ru-RU")}</div>
             </dl>
+            <Link
+              href={company.publicHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+            >
+              {t("admin.companies.publicProfile")}
+            </Link>
             <label className="mt-3 block text-xs font-medium text-slate-600 dark:text-slate-300">
               {t("admin.companies.note")}
               <textarea
@@ -167,6 +182,7 @@ export function AdminCompaniesTable({ companies }: AdminCompaniesTableProps) {
           <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
             <tr>
               <th className="px-4 py-3">{t("company.name")}</th>
+              <th className="px-4 py-3">{t("admin.companies.activeListings")}</th>
               <th className="px-4 py-3">{t("admin.companies.companyType")}</th>
               <th className="px-4 py-3">{t("company.city")}</th>
               <th className="px-4 py-3">{t("admin.companies.owner")}</th>
@@ -186,6 +202,17 @@ export function AdminCompaniesTable({ companies }: AdminCompaniesTableProps) {
                   <div className="mt-1 text-xs font-normal text-slate-400">
                     {new Date(company.createdAt).toLocaleDateString("ru-RU")}
                   </div>
+                  <Link
+                    href={company.publicHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-block text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+                  >
+                    {t("admin.companies.publicProfile")}
+                  </Link>
+                </td>
+                <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
+                  {company.activeListingsCount}
                 </td>
                 <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
                   {t(TYPE_LABEL_KEY[company.companyType])}

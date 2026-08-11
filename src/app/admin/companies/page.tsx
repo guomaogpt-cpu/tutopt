@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
-import { UserRole } from "@prisma/client";
+import { ListingStatus, UserRole } from "@prisma/client";
 import { AdminCompaniesTable } from "@/components/admin/AdminCompaniesTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
+import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
+import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
 
@@ -22,6 +24,7 @@ export default async function AdminCompaniesPage() {
     orderBy: [{ verification_status: "asc" }, { updated_at: "desc" }],
     select: {
       id: true,
+      slug: true,
       company_name: true,
       company_type: true,
       verification_status: true,
@@ -31,6 +34,20 @@ export default async function AdminCompaniesPage() {
       user: { select: { id: true, name: true } },
     },
   });
+
+  const listingCounts = await prisma.listing.groupBy({
+    by: ["seller_profile_id"],
+    where: {
+      seller_profile_id: { in: companies.map((item) => item.id) },
+      status: ListingStatus.PUBLISHED,
+      posted_as_company: true,
+      AND: [buildNotExpiredListingFilter()],
+    },
+    _count: { _all: true },
+  });
+  const activeListingsByCompanyId = new Map(
+    listingCounts.map((item) => [item.seller_profile_id, item._count._all]),
+  );
 
   return (
     <div className="space-y-5">
@@ -46,6 +63,8 @@ export default async function AdminCompaniesPage() {
       <AdminCompaniesTable
         companies={companies.map((item) => ({
           id: item.id,
+          slug: item.slug,
+          publicHref: buildCompanyProfileHref(item.slug || item.id),
           companyName: item.company_name,
           companyType: item.company_type!,
           cityName: item.city?.name ?? null,
@@ -54,6 +73,7 @@ export default async function AdminCompaniesPage() {
           verificationStatus: item.verification_status,
           verificationNote: item.verification_note,
           createdAt: item.created_at.toISOString(),
+          activeListingsCount: activeListingsByCompanyId.get(item.id) ?? 0,
         }))}
       />
     </div>

@@ -117,6 +117,12 @@ Mobile layout:
 - Share button / WhatsApp deep link
 - Native share plugin
 
+## 11. Phase 127 — Seller / company storefront ✅
+
+- `ListingSellerCard`: verified company badge only when `VERIFIED`
+- Company profile link from listing detail seller block
+- См. `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
+
 ---
 
 ## Empty / error states

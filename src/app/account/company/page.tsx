@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { CompanyStorefrontPreview } from "@/components/company/CompanyStorefrontPreview";
 import { CompanyProfileForm } from "@/components/company/CompanyProfileForm";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { needsPhoneForPosting } from "@/features/auth/lib/seller-onboarding";
@@ -80,6 +81,8 @@ export default async function AccountCompanyPage() {
               : "Создайте профиль компании, чтобы публиковать объявления от имени бизнеса и показывать клиентам информацию о компании."}
           </p>
         </header>
+
+        <CompanyStorefrontPreview company={company} publicHref={publicHref} />
 
         <CompanyProfileForm
           initial={company}
