@@ -84,8 +84,8 @@ export function ListingSellerCard({
 }: ListingSellerCardProps) {
   const { t } = useTranslation();
   const displayName = postedAsCompany
-    ? companyName.trim() || sellerName
-    : sellerName.trim() || companyName;
+    ? companyName.trim() || sellerName.trim() || t("listing.listingAuthor")
+    : sellerName.trim() || companyName.trim() || t("listing.listingAuthor");
   const roleLabel = postedAsCompany
     ? t("company.badge")
     : vertical === "OPT"

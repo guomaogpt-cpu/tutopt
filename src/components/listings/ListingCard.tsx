@@ -28,7 +28,11 @@ type ListingCardProps = {
   onFavoriteChange?: (isFavorited: boolean) => void;
 };
 
-function formatCardDate(value: string | null, locale: "ru" | "kg" | "en"): string | null {
+function formatCardFreshness(
+  value: string | null,
+  locale: "ru" | "kg" | "en",
+  labels: { today: string; yesterday: string },
+): string | null {
   if (!value) {
     return null;
   }
@@ -36,6 +40,21 @@ function formatCardDate(value: string | null, locale: "ru" | "kg" | "en"): strin
   if (Number.isNaN(parsed.getTime())) {
     return null;
   }
+
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfDate = new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+  const diffDays = Math.floor(
+    (startOfToday.getTime() - startOfDate.getTime()) / 86_400_000,
+  );
+
+  if (diffDays === 0) {
+    return labels.today;
+  }
+  if (diffDays === 1) {
+    return labels.yesterday;
+  }
+
   const dateLocale = locale === "en" ? "en-US" : locale === "kg" ? "ky-KG" : "ru-RU";
   return parsed.toLocaleDateString(dateLocale, {
     day: "numeric",
@@ -66,16 +85,17 @@ export const ListingCard = memo(function ListingCard({
       ? t("services.priceByAgreement")
       : t("listingCard.priceOnRequest");
   const isCompact = variant === "home";
-  const showSeller = variant === "catalog" || variant === "default" || variant === "showcase";
-  const dateLabel = formatCardDate(listing.published_at ?? listing.created_at, locale);
+  const isCatalogLike = variant === "catalog" || variant === "default" || variant === "showcase";
+  const showSellerDesktop = isCatalogLike;
+  const dateLabel = formatCardFreshness(
+    listing.published_at ?? listing.created_at,
+    locale,
+    { today: t("listingCard.today"), yesterday: t("listingCard.yesterday") },
+  );
   const cityName = listing.city?.name ?? null;
   const categoryLabel = listing.category.parentName
     ? `${listing.category.parentName} · ${listing.category.name}`
     : listing.category.name;
-  const compactMetaLabel =
-    listing.vertical === "SERVICES"
-      ? (cityName ?? categoryLabel)
-      : (cityName ?? categoryLabel);
   const showUnitSuffix =
     ((listing.vertical === "OPT" || listing.vertical === "MARKET") &&
       Number(listing.price) > 0) ||
@@ -92,6 +112,7 @@ export const ListingCard = memo(function ListingCard({
         className={cn(
           "pointer-events-none absolute inset-x-3 -bottom-1 -z-10 h-16 rounded-3xl blur-2xl",
           "opacity-[0.14] transition-opacity duration-300 group-hover:opacity-[0.22]",
+          "max-sm:hidden",
           glowClass,
         )}
       />
@@ -151,7 +172,10 @@ export const ListingCard = memo(function ListingCard({
 
           <VerticalListingBadge
             vertical={listing.vertical}
-            className="absolute left-2 top-2 z-10 shadow-sm backdrop-blur-sm"
+            className={cn(
+              "absolute left-2 top-2 z-10 shadow-sm backdrop-blur-sm",
+              isCatalogLike && "max-sm:hidden",
+            )}
           />
 
           <FavoriteButton
@@ -162,8 +186,8 @@ export const ListingCard = memo(function ListingCard({
             variant="icon"
             onFavoriteChange={onFavoriteChange}
             className={cn(
-              "absolute right-2 top-2 z-10 rounded-full border border-[rgba(148,163,184,0.2)] bg-white/95 p-0 shadow-sm backdrop-blur-sm hover:bg-white dark:border-slate-700 dark:bg-slate-900/95 dark:hover:bg-slate-800",
-              "size-10 [&_svg]:size-4 sm:size-9",
+              "absolute right-2 top-2 z-[2] rounded-full border border-[rgba(148,163,184,0.2)] bg-white/95 p-0 shadow-sm backdrop-blur-sm hover:bg-white dark:border-slate-700 dark:bg-slate-900/95 dark:hover:bg-slate-800",
+              "size-9 [&_svg]:size-4 sm:size-9",
             )}
           />
         </div>
@@ -202,21 +226,14 @@ export const ListingCard = memo(function ListingCard({
           <h2
             className={cn(
               "line-clamp-2 font-medium leading-snug text-[#334155] dark:text-slate-200",
-              isCompact
-                ? "min-h-[2.4rem] text-[13px] md:text-sm"
-                : "min-h-[2.5rem] text-[13px] sm:text-sm md:text-[15px]",
+              isCompact ? "text-[13px] md:text-sm" : "text-[13px] sm:text-sm md:text-[15px]",
             )}
           >
             {listing.title}
           </h2>
 
           {listing.highlightChips.length > 0 ? (
-            <div
-              className={cn(
-                "flex flex-wrap gap-1.5",
-                isCompact ? "pt-1" : "pt-1.5",
-              )}
-            >
+            <div className={cn("flex flex-wrap gap-1", isCompact ? "pt-0.5" : "pt-1")}>
               {listing.highlightChips.map((chip) => (
                 <span
                   key={`${chip.label}-${chip.value}`}
@@ -232,36 +249,31 @@ export const ListingCard = memo(function ListingCard({
 
           <div
             className={cn(
-              "mt-auto flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[#94A3B8] dark:text-slate-400",
-              isCompact ? "pt-1 text-[11px]" : "pt-1.5 text-xs",
+              "mt-auto flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[#94A3B8] dark:text-slate-400",
+              isCompact ? "pt-0.5 text-[11px]" : "pt-1 text-[11px] sm:text-xs",
             )}
           >
-            <span className="inline-flex min-w-0 items-center gap-0.5">
-              {cityName ? <MapPin className="size-3 shrink-0" aria-hidden="true" /> : null}
-              <span className="truncate">{compactMetaLabel}</span>
-            </span>
-            {listing.vertical === "SERVICES" && cityName ? (
-              <>
-                <span aria-hidden="true">·</span>
-                <span className="truncate">{categoryLabel}</span>
-              </>
-            ) : listing.vertical !== "SERVICES" && cityName ? (
-              <>
-                <span aria-hidden="true">·</span>
-                <span className="truncate">{listing.category.name}</span>
-              </>
+            {cityName ? (
+              <span className="inline-flex min-w-0 max-w-full items-center gap-0.5">
+                <MapPin className="size-3 shrink-0" aria-hidden="true" />
+                <span className="truncate">{cityName}</span>
+              </span>
             ) : null}
+            {cityName ? <span aria-hidden="true">·</span> : null}
+            <span className="truncate">{categoryLabel}</span>
             {dateLabel ? (
-              <span aria-hidden="true">·</span>
+              <>
+                <span aria-hidden="true">·</span>
+                <span className="shrink-0">{dateLabel}</span>
+              </>
             ) : null}
-            {dateLabel ? <span className="shrink-0">{dateLabel}</span> : null}
           </div>
 
-          {showSeller ? (
+          {showSellerDesktop ? (
             <p
               className={cn(
-                "truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
-                "relative z-[2] flex items-center gap-1.5",
+                "hidden truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
+                "relative z-[2] items-center gap-1.5 md:flex",
                 isCompact
                   ? "mt-1.5 pt-1.5 text-[11px]"
                   : "mt-2 pt-2 text-xs md:text-[13px]",
@@ -303,7 +315,9 @@ export const ListingCard = memo(function ListingCard({
                 </Link>
               ) : (
                 <span className="truncate">
-                  {listing.sellerProfile.user.name || listing.sellerProfile.company_name}
+                  {listing.sellerProfile.user.name ||
+                    listing.sellerProfile.company_name ||
+                    t("listing.listingAuthor")}
                 </span>
               )}
             </p>

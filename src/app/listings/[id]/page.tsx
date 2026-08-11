@@ -5,7 +5,6 @@ import { ListingCharacteristics } from "@/components/listings/ListingCharacteris
 import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
 import { ListingGallery } from "@/components/listings/ListingGallery";
-import { ListingMainInfo } from "@/components/listings/ListingMainInfo";
 import { ListingMobileStickyCta } from "@/components/listings/ListingMobileStickyCta";
 import { ListingMobileSummary } from "@/components/listings/ListingMobileSummary";
 import { ListingRequestHint } from "@/components/listings/ListingRequestHint";
@@ -258,32 +257,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const showUnitSuffix =
     (listing.vertical === "OPT" || listing.vertical === "MARKET") && hasPrice;
 
-  const mainInfoItems = [
-    ...(displayFlags.showMoq
-      ? [
-          {
-            labelKey: "listing.minOrder" as const,
-            value: `${listing.moq} ${unitLabel.toLowerCase()}`,
-          },
-        ]
-      : []),
-    ...(listing.city
-      ? [{ labelKey: "listing.city" as const, value: listing.city.name }]
-      : []),
-    ...(displayFlags.showStock && listing.stock_quantity != null
-      ? [
-          {
-            labelKey: "listing.stock" as const,
-            value: String(listing.stock_quantity),
-          },
-        ]
-      : []),
-    { labelKey: "listing.unit" as const, value: unitLabel },
-    ...(publishedDateLabel
-      ? [{ labelKey: "listing.publishedAt" as const, value: publishedDateLabel }]
-      : []),
-  ];
-
   const characteristicItems = [
     {
       labelKey: "listing.direction" as const,
@@ -533,14 +506,15 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 showUnitSuffix={showUnitSuffix}
                 cityName={listing.city?.name ?? null}
                 categoryName={listing.category.name}
+                parentCategoryName={listing.category.parent?.name ?? null}
                 vertical={listing.vertical}
+                moq={listing.moq}
+                showMoq={displayFlags.showMoq}
+                publishedDateLabel={publishedDateLabel}
               />
-              <ListingMainInfo items={mainInfoItems} />
             </div>
 
-            <div className="order-3 lg:hidden">{sellerCard}</div>
-
-            <div className="order-5 lg:order-2">
+            <div className="order-4 lg:order-2">
               <ListingCharacteristics
                 headingId="listing-stored-specs-title"
                 titleKey={SPECS_TITLE_KEY[listing.vertical]}
@@ -548,11 +522,13 @@ export default async function ListingPage({ params }: ListingPageProps) {
               />
             </div>
 
-            <div className="order-6 lg:order-3">
+            <div className="order-5 lg:order-3">
               <ListingDescription text={listing.description} />
             </div>
 
-            <div className="order-7 lg:order-4">
+            <div className="order-6 lg:hidden">{sellerCard}</div>
+
+            <div className="order-7 hidden lg:order-4 lg:block">
               <ListingCharacteristics
                 headingId="listing-main-info-specs-title"
                 titleKey="listing.characteristics"

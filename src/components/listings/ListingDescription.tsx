@@ -18,6 +18,10 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
   const isLong = hasText && text.length > COLLAPSED_LENGTH;
   const displayText = !isLong || expanded ? text : `${text.slice(0, COLLAPSED_LENGTH).trimEnd()}…`;
 
+  if (!hasText) {
+    return null;
+  }
+
   return (
     <section aria-labelledby="listing-description-title">
       <h2
@@ -36,9 +40,7 @@ export function ListingDescription({ text }: ListingDescriptionProps) {
           <p className="break-words whitespace-pre-wrap text-[15px] leading-relaxed text-[#334155] sm:text-base dark:text-slate-300">
             {displayText}
           </p>
-        ) : (
-          <p className="text-sm text-[#94A3B8] dark:text-slate-500">{t("listing.noDescription")}</p>
-        )}
+        ) : null}
         {isLong ? (
           <Button
             type="button"

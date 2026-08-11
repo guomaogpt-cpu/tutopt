@@ -209,6 +209,17 @@ Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop
 
 ---
 
+## 17. Phase 124 — Listing cards and detail conversion ✅
+
+- Mobile listing cards: city · category · freshness, compact layout
+- Detail page mobile: clearer summary, specs, description, seller order
+- Empty description hidden; `/listings/[id]` not-found page
+- Lead CTA via Phase 119 drawer (unchanged)
+
+См. `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
@@ -220,3 +231,4 @@ Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop
 - `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
 - `docs/MOBILE_GESTURES_PHASE_122.md`
 - `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
+- `docs/LISTING_CARDS_DETAIL_PHASE_124.md`

@@ -2530,6 +2530,21 @@ export const DICTIONARY = {
     kg: "Баасы сурам боюнча",
     en: "Price on request",
   },
+  "listingCard.today": {
+    ru: "Сегодня",
+    kg: "Бүгүн",
+    en: "Today",
+  },
+  "listingCard.yesterday": {
+    ru: "Вчера",
+    kg: "Кечээ",
+    en: "Yesterday",
+  },
+  "listing.listingAuthor": {
+    ru: "Автор объявления",
+    kg: "Жарыя автору",
+    en: "Listing author",
+  },
   "listings.filters": { ru: "Фильтры", kg: "Чыпкалар", en: "Filters" },
   "listings.showFilters": {
     ru: "Показать фильтры",

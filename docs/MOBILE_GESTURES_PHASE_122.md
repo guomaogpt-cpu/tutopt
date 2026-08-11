@@ -143,6 +143,16 @@ Swipe/drawer UX совместим с perf hotfixes:
 
 ---
 
+## 12. Phase 124 — Listing cards and detail ✅
+
+- Card tap → detail; favorite isolated from link
+- Detail gallery swipe (Phase 122) + sticky CTA safe above bottom nav
+- Compact cards reduce scroll jank in catalog grids
+
+См. `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
@@ -150,3 +160,4 @@ Swipe/drawer UX совместим с perf hotfixes:
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/MOBILE_LISTING_DETAIL_PHASE_66.md`
+- `docs/LISTING_CARDS_DETAIL_PHASE_124.md`

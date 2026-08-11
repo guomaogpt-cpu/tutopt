@@ -149,6 +149,17 @@ Account `/account/listings` — все статусы продавца без и
 
 ---
 
+## 14. Phase 124 — Listing cards and detail ✅
+
+- Mobile card: city · category · date, freshness labels, compact height
+- Detail mobile: summary → specs → description → seller
+- Empty description hidden; listing-specific 404
+- Sticky CTA unchanged (Phase 119 lead flow)
+
+См. `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
@@ -156,3 +167,4 @@ Account `/account/listings` — все статусы продавца без и
 - `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
+- `docs/LISTING_CARDS_DETAIL_PHASE_124.md`

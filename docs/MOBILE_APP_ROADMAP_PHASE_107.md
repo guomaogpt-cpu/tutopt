@@ -144,6 +144,14 @@ npx cap add ios
 - Visibility-aware notification polling
 - См. `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
 
+## 6.6 Phase 124 — Listing cards and detail conversion ✅
+
+- Mobile card polish: price, meta, chips, compact height
+- Detail page mobile layout: summary → specs → description → seller
+- Listing-specific 404, empty description hidden
+- Sticky CTA unchanged (Phase 119)
+- См. `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -186,9 +194,10 @@ npx cap add ios
 | 121 ✅ | First-run onboarding (welcome, quick start, hints, empty states) |
 | 122 ✅ | Mobile gestures (swipe gallery, drawer dismiss, horizontal scroll) |
 | 123 ✅ | Mobile performance and stability (home trim, skeletons, polling) |
-| 124 | Store assets + Play Console internal testing upload |
-| 125 | Production rollout (after QA + legal sign-off) |
-| 126 | Capacitor iOS wrapper |
+| 124 ✅ | Listing cards and detail page conversion |
+| 125 | Store assets + Play Console internal testing upload |
+| 126 | Production rollout (after QA + legal sign-off) |
+| 127 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 
@@ -233,5 +242,6 @@ Next.js App Router с SSR потребует либо:
 - `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
 - `docs/MOBILE_GESTURES_PHASE_122.md`
 - `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
+- `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`
