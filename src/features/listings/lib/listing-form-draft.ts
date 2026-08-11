@@ -2,7 +2,7 @@ import type { ListingUnit, ListingVertical } from "@prisma/client";
 import type { CharacteristicValuesState } from "@/features/listings/lib/listing-characteristics";
 
 export const LISTING_FORM_DRAFT_VERSION = 1;
-export const LISTING_FORM_DRAFT_DEBOUNCE_MS = 800;
+export const LISTING_FORM_DRAFT_DEBOUNCE_MS = 1500;
 
 export type ListingFormDraft = {
   version: typeof LISTING_FORM_DRAFT_VERSION;

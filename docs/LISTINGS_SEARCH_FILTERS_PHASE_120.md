@@ -139,9 +139,20 @@ Account `/account/listings` — все статусы продавца без и
 
 ---
 
+## 13. Phase 123 — Catalog loading UX ✅
+
+- `src/app/listings/loading.tsx` — skeleton grid при navigation/filter
+- `ListingsCatalogToolbar` — `useTransition` + `aria-busy`
+- Search suggest debounce 300ms без изменений
+
+См. `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/LISTING_TAXONOMY_EQUIPMENT_PHASE_106.md`
 - `docs/LISTING_ATTRIBUTES_PERSISTENCE_PHASE_105.md`
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
+- `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`

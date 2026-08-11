@@ -2,7 +2,7 @@
 
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 import {
   CatalogFiltersPanel,
   type FilterDraft,
@@ -87,6 +87,7 @@ export function ListingsCatalogToolbar({
 }: ListingsCatalogToolbarProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
+  const [isNavigating, startTransition] = useTransition();
   const filtersButtonRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState(filters.q);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -156,7 +157,9 @@ export function ListingsCatalogToolbar({
       trackCatalogResetFilters(getCatalogAnalyticsContext(filters));
     }
 
-    router.push(`/listings${buildListingsCatalogQueryString(filters, { ...next, page: 1 })}`);
+    startTransition(() => {
+      router.push(`/listings${buildListingsCatalogQueryString(filters, { ...next, page: 1 })}`);
+    });
   }
 
   function handleCatalogSubmit(event: FormEvent<HTMLFormElement>) {
@@ -226,7 +229,9 @@ export function ListingsCatalogToolbar({
   function handleResetAll() {
     setQuery("");
     trackCatalogResetFilters(getCatalogAnalyticsContext(filters));
-    router.push("/listings");
+    startTransition(() => {
+      router.push("/listings");
+    });
   }
 
   function handleVerticalChange(nextVertical: ListingVertical | null) {
@@ -242,7 +247,7 @@ export function ListingsCatalogToolbar({
   }
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-3" aria-busy={isNavigating}>
       <div className="overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.16)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
         <div
           className={cn(

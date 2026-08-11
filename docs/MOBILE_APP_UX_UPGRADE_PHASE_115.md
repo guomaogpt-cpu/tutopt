@@ -196,6 +196,19 @@ Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop
 
 ---
 
+## 16. Phase 123 — Mobile performance and stability ✅
+
+- Mobile home SSR trim (`getHomePageData({ mobile })`)
+- Catalog skeleton loading + card memo/lazy
+- Keyboard inset rAF throttle
+- Notification polling visibility backoff
+- Category search debounce, draft debounce 1500ms
+- Bundle: Prisma runtime removed from card price path
+
+См. `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
@@ -206,3 +219,4 @@ Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop
 - `docs/LISTINGS_SEARCH_FILTERS_PHASE_120.md`
 - `docs/FIRST_RUN_ONBOARDING_PHASE_121.md`
 - `docs/MOBILE_GESTURES_PHASE_122.md`
+- `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`

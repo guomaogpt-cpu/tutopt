@@ -10,6 +10,7 @@ import { getCurrentUser } from "@/features/auth/lib/session";
 import { getCreateListingHref } from "@/features/auth/lib/login-redirect";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import { getHomePageData } from "@/features/home/lib/home-data";
+import { isMobileUserAgentRequest } from "@/lib/mobile/is-mobile-request";
 import { VERTICALS } from "@/features/verticals/verticals";
 import {
   DEFAULT_DESCRIPTION,
@@ -29,7 +30,8 @@ export const metadata = buildPageMetadata({
 
 export default async function HomePage() {
   const user = await getCurrentUser();
-  const data = await getHomePageData();
+  const mobile = await isMobileUserAgentRequest();
+  const data = await getHomePageData({ mobile });
   const favoriteListingIds = user ? await getUserFavoriteListingIds(user.id) : [];
   const headerUser = user ? { id: user.id, name: user.name, role: user.role } : null;
   const createListingHref = getCreateListingHref(headerUser);

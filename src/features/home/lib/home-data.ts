@@ -95,7 +95,59 @@ async function fetchCategories(
   }));
 }
 
-export async function getHomePageData(): Promise<HomePageData> {
+export type HomePageDataOptions = {
+  /** Skip desktop-only discovery queries on mobile first paint. */
+  mobile?: boolean;
+};
+
+const emptyHomeCategories = {
+  market: [] as HomeCategoryCard[],
+  opt: [] as HomeCategoryCard[],
+  services: [] as HomeCategoryCard[],
+  cargo: [] as HomeCategoryCard[],
+};
+
+export async function getHomePageData(options?: HomePageDataOptions): Promise<HomePageData> {
+  if (options?.mobile) {
+    const [latestRows, listingsCount, sellersCount, leadsCount] = await Promise.all([
+      prisma.listing.findMany({
+        where: publishedWhere,
+        orderBy: [{ published_at: "desc" }, { created_at: "desc" }],
+        take: HOME_LATEST_LIMIT,
+        select: listingCardSelect,
+      }),
+      prisma.listing.count({ where: publishedWhere }),
+      prisma.sellerProfile.count({
+        where: {
+          listings: {
+            some: publishedWhere,
+          },
+        },
+      }),
+      prisma.lead.count(),
+    ]);
+
+    const latest = serializeListingCards(latestRows);
+    const emptyListings: ListingCardData[] = [];
+
+    return {
+      latest,
+      popularMarket: emptyListings,
+      market: emptyListings,
+      opt: emptyListings,
+      services: emptyListings,
+      cargo: emptyListings,
+      emptyCategories: emptyHomeCategories,
+      stats: {
+        listingsCount,
+        sellersCount,
+        leadsCount,
+      },
+      listings: latest,
+      moreListings: emptyListings,
+    };
+  }
+
   const [
     latestRows,
     popularMarketRows,

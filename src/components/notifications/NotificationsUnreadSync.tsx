@@ -8,7 +8,8 @@ import {
   setUnreadNotificationCount,
 } from "@/features/notifications/lib/notifications-unread-store";
 
-const POLL_INTERVAL_MS = 30_000;
+const POLL_INTERVAL_ACTIVE_MS = 30_000;
+const POLL_INTERVAL_HIDDEN_MS = 120_000;
 
 type NotificationsUnreadSyncProps = {
   initialCount?: number;
@@ -22,8 +23,13 @@ export function NotificationsUnreadSync({ initialCount = 0 }: NotificationsUnrea
 
   useEffect(() => {
     let isMounted = true;
+    let intervalId = 0;
 
     async function loadUnreadCount() {
+      if (document.hidden) {
+        return;
+      }
+
       const pollStartGeneration = getUnreadMutationGeneration();
 
       try {
@@ -37,14 +43,29 @@ export function NotificationsUnreadSync({ initialCount = 0 }: NotificationsUnrea
       }
     }
 
+    function schedulePolling() {
+      window.clearInterval(intervalId);
+      const intervalMs = document.hidden ? POLL_INTERVAL_HIDDEN_MS : POLL_INTERVAL_ACTIVE_MS;
+      intervalId = window.setInterval(() => {
+        void loadUnreadCount();
+      }, intervalMs);
+    }
+
+    function handleVisibilityChange() {
+      if (!document.hidden) {
+        void loadUnreadCount();
+      }
+      schedulePolling();
+    }
+
     void loadUnreadCount();
-    const intervalId = window.setInterval(() => {
-      void loadUnreadCount();
-    }, POLL_INTERVAL_MS);
+    schedulePolling();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       isMounted = false;
       window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 

@@ -1,6 +1,7 @@
 import type { ListingUnit, ListingVertical, Prisma } from "@prisma/client";
-import { Prisma as PrismaRuntime } from "@prisma/client";
-import { formatListingPrice } from "@/features/listings/lib/format-listing-price";
+import {
+  formatListingPriceAmount,
+} from "@/features/listings/lib/format-listing-price";
 import { getUnitLabelForVertical } from "@/features/listings/lib/vertical-form-config";
 
 export type ListingDisplayMetaItem = {
@@ -111,10 +112,7 @@ export function formatListingCardPrice(input: PriceInput): string {
     return "Цена не указана";
   }
 
-  const formatted = formatListingPrice(
-    new PrismaRuntime.Decimal(amount),
-    input.currency,
-  );
+  const formatted = formatListingPriceAmount(amount, input.currency);
 
   if (input.vertical === "SERVICES" || input.vertical === "CARGO") {
     return `от ${formatted}`;

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Package } from "lucide-react";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
@@ -43,7 +43,7 @@ function formatCardDate(value: string | null, locale: "ru" | "kg" | "en"): strin
   });
 }
 
-export function ListingCard({
+export const ListingCard = memo(function ListingCard({
   listing,
   isAuthenticated = false,
   isFavorited = false,
@@ -119,6 +119,7 @@ export function ListingCard({
               alt={listing.title}
               fill
               unoptimized
+              loading="lazy"
               className="object-cover transition duration-500 group-hover:scale-[1.03]"
               onError={() => setImageFailed(true)}
               sizes={
@@ -311,4 +312,4 @@ export function ListingCard({
       </article>
     </div>
   );
-}
+});

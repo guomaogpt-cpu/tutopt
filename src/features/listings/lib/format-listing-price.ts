@@ -1,7 +1,10 @@
 import type { Prisma } from "@prisma/client";
 
 export function formatListingPrice(price: Prisma.Decimal, currency: string): string {
-  const amount = Number(price.toString());
+  return formatListingPriceAmount(Number(price.toString()), currency);
+}
+
+export function formatListingPriceAmount(amount: number, currency: string): string {
   const formatted = new Intl.NumberFormat("ru-RU", {
     maximumFractionDigits: amount % 1 === 0 ? 0 : 2,
   }).format(amount);

@@ -10,18 +10,37 @@ export function syncMobileKeyboardInset(): () => void {
     return () => undefined;
   }
 
+  let rafId = 0;
+  let lastInset = -1;
+
   const update = () => {
+    rafId = 0;
     const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-    document.documentElement.style.setProperty(KEYBOARD_INSET_VAR, `${Math.round(inset)}px`);
+    const rounded = Math.round(inset);
+    if (rounded === lastInset) {
+      return;
+    }
+    lastInset = rounded;
+    document.documentElement.style.setProperty(KEYBOARD_INSET_VAR, `${rounded}px`);
+  };
+
+  const scheduleUpdate = () => {
+    if (rafId !== 0) {
+      return;
+    }
+    rafId = window.requestAnimationFrame(update);
   };
 
   update();
-  viewport.addEventListener("resize", update);
-  viewport.addEventListener("scroll", update);
+  viewport.addEventListener("resize", scheduleUpdate);
+  viewport.addEventListener("scroll", scheduleUpdate);
 
   return () => {
-    viewport.removeEventListener("resize", update);
-    viewport.removeEventListener("scroll", update);
+    if (rafId !== 0) {
+      window.cancelAnimationFrame(rafId);
+    }
+    viewport.removeEventListener("resize", scheduleUpdate);
+    viewport.removeEventListener("scroll", scheduleUpdate);
     document.documentElement.style.setProperty(KEYBOARD_INSET_VAR, "0px");
   };
 }

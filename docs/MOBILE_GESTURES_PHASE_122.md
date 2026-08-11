@@ -131,6 +131,18 @@ Utility `.mobile-horizontal-scroll`:
 
 ---
 
+## 11. Phase 123 — Performance interaction ✅
+
+Swipe/drawer UX совместим с perf hotfixes:
+
+- Keyboard inset rAF — меньше jank при открытии sheet с input
+- Listing cards memo — меньше re-render при scroll lists под gallery routes
+- Catalog `loading.tsx` — skeleton при navigation back from listing detail
+
+См. `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`

@@ -45,6 +45,14 @@ export function CategoryPicker({
     return root?.id ?? null;
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (!value) {
@@ -66,23 +74,23 @@ export function CategoryPicker({
   );
 
   const globalSearchResults = useMemo(() => {
-    const normalized = searchQuery.trim();
+    const normalized = debouncedSearchQuery.trim();
     if (!normalized) {
       return [];
     }
     return searchCategoriesWithSynonyms(categories, normalized);
-  }, [categories, searchQuery]);
+  }, [categories, debouncedSearchQuery]);
 
   const scopedSearchResults = useMemo(() => {
-    if (!selectedRootId || !searchQuery.trim()) {
+    if (!selectedRootId || !debouncedSearchQuery.trim()) {
       return [];
     }
     const scope = getDescendantIds(categories, selectedRootId);
-    const all = searchCategoriesWithSynonyms(categories, searchQuery);
+    const all = searchCategoriesWithSynonyms(categories, debouncedSearchQuery);
     const scoped = all.filter((result) => scope.has(result.id));
     const rest = all.filter((result) => !scope.has(result.id));
     return [...scoped, ...rest].slice(0, 24);
-  }, [categories, searchQuery, selectedRootId]);
+  }, [categories, debouncedSearchQuery, selectedRootId]);
 
   function findFallbackCategoryId(): string | null {
     const fallback =
