@@ -230,6 +230,17 @@ Welcome/onboarding остаётся в `/account` (`AccountQuickStart`). Desktop
 
 ---
 
+## 19. Phase 130 — Mobile QA Freeze ✅
+
+- Account mobile declutter; footer hidden on mobile
+- Home: no duplicate post CTA; cargo trimmed
+- i18n: Lead/Listing/Dashboard → user Russian
+- Filter drawer clears bottom nav
+
+См. `docs/MOBILE_QA_FREEZE_PHASE_130.md`
+
+---
+
 ## Связанные документы
 
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`

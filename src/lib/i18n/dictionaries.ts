@@ -2211,7 +2211,7 @@ export const DICTIONARY = {
   "settings.dashboard": {
     ru: "Мой кабинет",
     kg: "Менин кабинетем",
-    en: "Dashboard",
+    en: "My account",
   },
   "settings.city": { ru: "Город", kg: "Шаар", en: "City" },
   "settings.cityValue": { ru: "Бишкек", kg: "Бишкек", en: "Bishkek" },
@@ -2852,9 +2852,9 @@ export const DICTIONARY = {
   "form.ownListingLeadNotice": {
     ru: "Это ваше объявление — заявки от клиентов появятся в разделе «Заявки».",
     kg: "Бул сиздин жарыяңыз — кардарлардын тапшырмалары «Тапшырмалар» бөлүмүндө көрүнөт.",
-    en: "This is your listing — client requests will appear in the Leads section.",
+    en: "This is your listing — client requests will appear in My requests.",
   },
-  "form.goToLeads": { ru: "Перейти к заявкам", kg: "Тапшырмаларга өтүү", en: "Go to leads" },
+  "form.goToLeads": { ru: "Перейти к заявкам", kg: "Сурамдарга өтүү", en: "Go to requests" },
   "form.leadHint": {
     ru: "Отправьте заявку — автор объявления увидит её в личном кабинете.",
     kg: "Тапшырма жөнөтүңүз — жарыянын автору аны жеке кабинетинен көрөт.",
@@ -3239,7 +3239,7 @@ export const DICTIONARY = {
     kg: "Тапшырмалар боюнча жаңылыктар",
     en: "Updates on your leads",
   },
-  "buyer.myLeads": { ru: "Мои заявки", kg: "Менин тапшырмаларым", en: "My leads" },
+  "buyer.myLeads": { ru: "Мои заявки", kg: "Менин сурамдарым", en: "My requests" },
   "buyer.myLeadsHint": {
     ru: "Отправленные запросы",
     kg: "Жөнөтүлгөн тапшырмалар",
@@ -3276,7 +3276,7 @@ export const DICTIONARY = {
     kg: "Башкаруу жана узартуу",
     en: "Manage and renew",
   },
-  "seller.viewLeads": { ru: "Посмотреть заявки", kg: "Тапшырмаларды көрүү", en: "View leads" },
+  "seller.viewLeads": { ru: "Посмотреть заявки", kg: "Сурамдарды көрүү", en: "View requests" },
   "seller.viewLeadsHint": {
     ru: "Ответы покупателей",
     kg: "Сатып алуучулардын жооптору",

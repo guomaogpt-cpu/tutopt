@@ -1,0 +1,190 @@
+# Mobile QA Freeze — Phase 130
+
+## 1. Цель
+
+Стабилизировать мобильную версию ВсеТут перед дальнейшими релизами без новых функций и без redesign.
+
+Основной путь: **Главная → поиск → список → объявление → заявка → кабинет → мои объявления/заявки**.
+
+---
+
+## 2. Проверенные маршруты
+
+| Route | Статус |
+|---|---|
+| `/` | ✅ упрощена |
+| `/market`, `/services`, `/opt`, `/cargo` | ✅ |
+| `/listings`, `/listings?q=...` | ✅ |
+| `/listings/[id]` | ✅ sticky CTA над bottom nav |
+| `/listings/new` | ✅ sticky submit, без raw npm |
+| `/account` | ✅ облегчён mobile layout |
+| `/account/listings`, `/account/requests` | ✅ |
+| `/account/company` | ✅ |
+| `/favorites`, `/notifications` | ✅ через bottom nav |
+| `/login`, `/register` | ✅ |
+| `/privacy`, `/terms`, `/support`, `/delete-account` | ✅ draft legal |
+
+---
+
+## 3. Проверенные viewport sizes
+
+- **375×812** — iPhone SE / mini
+- **390×844** — iPhone 14
+- **430×932** — iPhone Pro Max
+
+Проверки: overflow-x-clip, safe-area, bottom nav padding, horizontal chips scroll.
+
+---
+
+## 4. Главная
+
+**Оставлено на mobile:**
+- header (без search row на `/`)
+- title + subtitle ВсеТут
+- один search (`HomepagePaperEntry`)
+- разделы 2×2
+- новые объявления
+- bottom nav «Подать»
+
+**Убрано / не подключено:**
+- welcome card, quick actions, trending chips (компоненты есть, не импортируются)
+- PWA banner на `/` (скрыт в `PwaInstallPrompt`)
+- footer на mobile (`hidden md:block`) — нет дубля «Подать»
+- empty state «Подать» на mobile — только bottom nav FAB
+
+---
+
+## 5. Search/listings
+
+- Поиск с главной → `/listings?q=...`
+- Фильтры: drawer footer с отступом над bottom nav
+- Статусы через i18n (`status.*`)
+- Карточки: variant `home` компактнее
+
+---
+
+## 6. Listing detail
+
+- Sticky CTA: `mobileStickyBottomOffset(5)` — над bottom nav
+- Свой listing: «Редактировать» + «Перейти к заявкам», без «Связаться»
+- Характеристики: пустые значения фильтруются
+- 404 через not-found page (Phase 124)
+
+---
+
+## 7. Listing creation
+
+- Sticky submit над bottom nav, `pb-24` на форме
+- beforeunload при dirty form
+- AI: graceful fail без OpenAI key
+- Empty categories: user-friendly message без shell-команд
+
+---
+
+## 8. Account
+
+**Mobile упрощение:**
+- «Моя активность» — основной блок
+- Quick start — только desktop (`lg:block`)
+- Meta favorites/notifications — скрыты на xs (есть в bottom nav)
+- Listings/requests summaries — desktop only
+- Company/cargo cards — mobile
+- PWA install card — desktop only
+- Push settings — только native Android
+
+---
+
+## 9. Requests
+
+- Status chips horizontal scroll
+- tel: links на received cards
+- Empty states i18n
+
+---
+
+## 10. Cargo
+
+- Hero компактнее (150px mobile)
+- Dual CTA + How it works — desktop only
+- Feedback CTA — desktop only
+- Quick guide + hero CTA достаточны на mobile
+
+---
+
+## 11. Legal/store readiness
+
+- `/privacy`, `/terms` — draft + `LegalDraftBanner`
+- `/support` — contact email
+- `/delete-account` — понятный flow
+- Final legal review pending (docs note)
+
+---
+
+## 12. Android/WebView
+
+- Back: drawer/modal guards (Phase 122)
+- Keyboard inset CSS var
+- Bottom nav hides on `/listings/new` form focus
+- Native app: no PWA prompts
+- Google OAuth in WebView — known limitation (phone login primary)
+
+---
+
+## 13. Исправленные проблемы
+
+| Issue | Fix |
+|---|---|
+| Перегруженный `/account` на mobile | Скрыты duplicate blocks |
+| Footer дублирует bottom nav на mobile | Footer `md:block` only |
+| Два «Подать» на home empty state | CTA hidden on mobile |
+| Cargo page overload | Dual CTA/HowItWorks hidden mobile |
+| Raw `npm run db:seed` on create | User-friendly message |
+| `(leads)` in privacy text | «заявки» |
+| EN «Go to leads», «Dashboard» | «Go to requests», «My account» |
+| Filter drawer under bottom nav | Extra padding in drawer footer |
+| Push settings on mobile web | Native Android only |
+| Admin «Marketplace overview» EN | «Обзор маркетплейса» |
+
+---
+
+## 14. Known limitations
+
+- Google OAuth unstable in Android WebView — use phone/password
+- Legal texts are drafts — need lawyer review
+- View count not incremented
+- Orphan components: `HomeWelcomeBlock`, `MobileHomeQuickActions`, `HomeMobileTrendingChips` (not wired)
+- Desktop footer hidden on mobile — legal links via account service links + settings drawer
+
+---
+
+## 15. Что нельзя добавлять до release candidate
+
+- Новые большие features (чат, оплата, push campaigns)
+- iOS app
+- Google Play publish без legal finalization
+- Redesign desktop
+- Prisma migrations for analytics/views
+- Heavy chart libraries
+
+---
+
+## Файлы
+
+| File | Change |
+|---|---|
+| `src/app/account/page.tsx` | Mobile layout simplification |
+| `src/components/layout/Footer.tsx` | Hidden on mobile |
+| `src/components/home/HomeListingsSection.tsx` | No mobile post CTA in empty |
+| `src/components/cargo/CargoLandingPage.tsx` | Less sections on mobile |
+| `src/components/cargo/CargoCompactHero.tsx` | Smaller hero |
+| `src/components/account/PushNotificationsSettings.tsx` | Native only |
+| `src/app/listings/new/page.tsx` | No raw npm message |
+| `src/app/privacy/page.tsx` | Text cleanup |
+| `src/components/listings/CatalogFiltersPanel.tsx` | Drawer nav padding |
+| `src/lib/i18n/dictionaries.ts` | Label cleanup |
+
+---
+
+## Migration
+
+Нет.

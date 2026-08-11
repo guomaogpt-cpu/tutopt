@@ -147,6 +147,17 @@ Prepare before submission:
 | 114 ✅ | Legal pages (draft), account deletion request, data safety notes |
 | 115 | Store assets + Play Console internal testing upload |
 | 116 | Production rollout (after QA + legal sign-off) |
+| 130 ✅ | Mobile QA freeze — stabilize UX before RC |
+
+---
+
+## Phase 130 — Mobile QA Freeze
+
+Before internal testing upload, complete mobile QA pass per `docs/MOBILE_QA_FREEZE_PHASE_130.md`:
+
+- Legal drafts remain — **not** store-ready until lawyer review
+- Mobile home/account/cargo stabilized
+- Real-device retest recommended
 
 ---
 

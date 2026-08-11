@@ -279,7 +279,7 @@ export default async function AdminDashboardPage() {
       <div className="mt-6 space-y-6 lg:mt-8">
         <section aria-labelledby="admin-marketplace-overview-title">
           <h2 id="admin-marketplace-overview-title" className="mb-3 text-lg font-bold text-[#0F172A]">
-            Marketplace overview
+            Обзор маркетплейса
           </h2>
           {!hasMarketplaceData ? (
             <div className="rounded-2xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-5 py-8 text-center text-sm text-[#64748B]">

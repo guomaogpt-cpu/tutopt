@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { getVerticalTheme } from "@/lib/vertical-theme";
+import { mobileStickyBottomOffset } from "@/lib/mobile/mobile-viewport";
 import { cn } from "@/lib/utils";
 
 export type FilterDraft = {
@@ -533,7 +534,7 @@ export function CatalogFiltersPanel({
           </div>
           <DrawerFooter
             className="sticky bottom-0 border-t border-slate-200 bg-white px-4 pt-3 dark:border-slate-800 dark:bg-slate-950"
-            style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+            style={{ paddingBottom: mobileStickyBottomOffset(5.75) }}
           >
             <FilterActions
               onReset={handleResetPanel}

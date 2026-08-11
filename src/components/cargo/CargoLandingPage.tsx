@@ -53,9 +53,11 @@ export function CargoLandingPage({
           canRespond={canRespond}
           onCreateRequest={() => setRequestOpen(true)}
         />
-        <CargoDualCta onCreateRequest={() => setRequestOpen(true)} />
-        <CargoHowItWorks />
-        <CargoFeedbackCta className="mt-8 sm:mt-10" />
+        <div className="hidden md:contents">
+          <CargoDualCta onCreateRequest={() => setRequestOpen(true)} />
+          <CargoHowItWorks />
+        </div>
+        <CargoFeedbackCta className="mt-6 hidden sm:mt-8 md:block" />
       </Container>
 
       <CargoRequestModal

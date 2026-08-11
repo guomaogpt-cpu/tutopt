@@ -22,6 +22,10 @@ export function PushNotificationsSettings() {
   const isEnabled = state === "registered" || state === "registering";
   const isDenied = state === "denied";
 
+  if (!isNativeAndroid) {
+    return null;
+  }
+
   async function handleEnable() {
     setMessage(null);
     setError(null);

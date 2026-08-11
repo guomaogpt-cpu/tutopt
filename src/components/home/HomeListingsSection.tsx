@@ -135,7 +135,7 @@ export function HomeDiscoverySection({
               description={t(emptyDescriptionKey)}
               className="border-0 bg-transparent p-0 shadow-none"
               action={
-                <Button className="bg-blue-600 hover:bg-blue-700" asChild>
+                <Button className="hidden bg-blue-600 hover:bg-blue-700 md:inline-flex" asChild>
                   <Link href={createListingHref}>{t("home.postListing")}</Link>
                 </Button>
               }

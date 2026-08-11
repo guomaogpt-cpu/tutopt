@@ -103,8 +103,8 @@ export default async function NewListingPage({ searchParams }: NewListingPagePro
 
         {categories.length === 0 || cities.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200 sm:mt-8 sm:p-6">
-            Для создания объявления нужны категории и города в базе. Запустите{" "}
-            <code className="rounded bg-amber-100 px-1 dark:bg-amber-900/60">npm run db:seed</code>.
+            Сейчас нельзя создать объявление: в каталоге нет категорий или городов. Обратитесь в
+            поддержку — мы поможем.
           </div>
         ) : (
           <NewListingForm

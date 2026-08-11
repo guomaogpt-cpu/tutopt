@@ -200,6 +200,21 @@ Status: **retest pending** on real device.
 
 ---
 
+## Phase 130 — Mobile QA Freeze
+
+Pre-release mobile stabilization pass — см. `docs/MOBILE_QA_FREEZE_PHASE_130.md`.
+
+**Device retest focus:**
+- Home first screen (no clutter, single search)
+- Account mobile layout
+- Cargo page scroll length
+- Filter drawer apply/reset above bottom nav
+- Listing create sticky submit
+
+Status: **retest recommended** before RC.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
@@ -210,4 +225,4 @@ Status: **retest pending** on real device.
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`
-- `docs/MOBILE_GESTURES_PHASE_122.md`
+- `docs/MOBILE_QA_FREEZE_PHASE_130.md`

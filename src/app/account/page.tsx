@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { AccountMyActivityStats } from "@/components/account/AccountMyActivityStats";
-import { AccountActivitySummary } from "@/components/account/AccountActivitySummary";
 import { AccountCargoSummaryCard } from "@/components/account/AccountCargoSummaryCard";
 import { AccountCompanySummaryCard } from "@/components/account/AccountCompanySummaryCard";
 import { AccountListingsSummary } from "@/components/account/AccountListingsSummary";
@@ -53,26 +52,24 @@ export default async function AccountPage() {
             newLeads={data.receivedLeadsCount}
             sentLeads={data.sentLeadsCount}
           />
-          <AccountActivitySummary
-            data={{
-              unreadNotifications: data.unreadNotifications,
-              listingStats: data.listingStats,
-              receivedLeadsCount: data.receivedLeadsCount,
-              inProgressLeadsCount: data.inProgressLeadsCount,
-              cargoRequestsCount: data.cargoRequestsCount,
-            }}
-          />
-          <AccountQuickStart
-            hasListings={data.listingStats.total > 0}
-            hasCompany={Boolean(data.company)}
-          />
-          <PushNotificationsSettings />
-          <AccountMetaSummary
-            favoritesCount={data.favoritesCount}
-            unreadNotifications={data.unreadNotifications}
-          />
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
+          <div className="hidden lg:block">
+            <AccountQuickStart
+              hasListings={data.listingStats.total > 0}
+              hasCompany={Boolean(data.company)}
+            />
+          </div>
+
+          <PushNotificationsSettings />
+
+          <div className="hidden sm:grid">
+            <AccountMetaSummary
+              favoritesCount={data.favoritesCount}
+              unreadNotifications={data.unreadNotifications}
+            />
+          </div>
+
+          <div className="hidden gap-4 lg:grid lg:grid-cols-2 lg:gap-5">
             <AccountListingsSummary
               stats={data.listingStats}
               recentListings={data.recentListings}
@@ -87,7 +84,14 @@ export default async function AccountPage() {
             <AccountCargoSummaryCard cargo={data.cargo} />
           </div>
 
-          <PwaInstallCard />
+          <div className="grid gap-4 lg:hidden">
+            <AccountCompanySummaryCard company={data.company} />
+            <AccountCargoSummaryCard cargo={data.cargo} />
+          </div>
+
+          <div className="hidden md:block">
+            <PwaInstallCard />
+          </div>
           <AccountServiceLinks />
         </div>
       </Container>

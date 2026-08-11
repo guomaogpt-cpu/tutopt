@@ -16,7 +16,7 @@ export function CargoCompactHero({ onCreateRequest }: CargoCompactHeroProps) {
   const { t } = useTranslation();
 
   return (
-    <section className="relative min-h-[180px] overflow-hidden border-b border-orange-200/30 shadow-sm dark:border-slate-800 md:min-h-[220px] md:max-h-[260px]">
+    <section className="relative min-h-[150px] overflow-hidden border-b border-orange-200/30 shadow-sm dark:border-slate-800 md:min-h-[220px] md:max-h-[260px]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-no-repeat"
@@ -30,7 +30,7 @@ export function CargoCompactHero({ onCreateRequest }: CargoCompactHeroProps) {
         className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/25"
       />
 
-      <div className="relative flex min-h-[180px] items-center px-4 py-5 md:min-h-[220px] md:max-h-[260px] md:px-0 md:py-6">
+      <div className="relative flex min-h-[150px] items-center px-4 py-4 md:min-h-[220px] md:max-h-[260px] md:px-0 md:py-6">
         <Container size="lg" className="min-w-0 px-0 sm:px-6 lg:px-8">
           <div className="flex w-full max-w-2xl min-w-0 flex-col gap-3">
             <div>

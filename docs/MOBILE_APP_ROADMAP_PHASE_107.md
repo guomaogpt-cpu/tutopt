@@ -193,6 +193,16 @@ npx cap add ios
 
 См. `docs/MARKETPLACE_ANALYTICS_PHASE_129.md`
 
+## 6.12 Phase 130 — Mobile QA Freeze ✅
+
+- Home mobile simplified (single search, no footer on mobile)
+- Account decluttered for mobile
+- Cargo hero/sections trimmed
+- UI text cleanup (Lead/Listing/Dashboard)
+- Filter drawer bottom nav clearance
+
+См. `docs/MOBILE_QA_FREEZE_PHASE_130.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:

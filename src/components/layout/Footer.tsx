@@ -57,7 +57,7 @@ export function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="mt-auto border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
+    <footer className="mt-auto hidden border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950 md:block">
       <Container>
         <div className="grid grid-cols-1 gap-6 py-10 sm:gap-8 lg:grid-cols-5 lg:gap-10 lg:py-14">
           <div className="min-w-0">

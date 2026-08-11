@@ -246,6 +246,14 @@ See `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md` and `docs/TRUST_SAFETY_REP
 
 ---
 
+## 17. Phase 130 — Mobile QA Freeze
+
+Before building release AAB for testers, run mobile QA freeze checklist: `docs/MOBILE_QA_FREEZE_PHASE_130.md`.
+
+Focus: home/account/cargo mobile layout, no duplicate CTAs, legal drafts still require review before Play upload.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
