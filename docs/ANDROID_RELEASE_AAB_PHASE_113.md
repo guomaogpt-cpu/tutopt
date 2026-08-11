@@ -233,6 +233,19 @@ Typical size: ~3–5 MB (remote URL wrapper, minimal native code).
 
 ---
 
+## 16. Phase 125 — UGC safety (Play review)
+
+Before Play submission, document UGC moderation in review notes:
+
+- Listing reports on detail page (`/listings/[id]`)
+- Admin report queue `/admin/reports`
+- Manual hide → author notification
+- Prohibited content in `/terms` §4 (draft)
+
+See `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md` and `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
@@ -241,3 +254,5 @@ Typical size: ~3–5 MB (remote URL wrapper, minimal native code).
 - `docs/ACCOUNT_DELETION_PHASE_114.md`
 - `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`
 - `docs/GOOGLE_PLAY_READINESS_CHECKLIST_PHASE_108.md`
+- `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`
+- `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`

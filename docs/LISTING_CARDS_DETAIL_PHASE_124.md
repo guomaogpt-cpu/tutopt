@@ -113,7 +113,7 @@ Mobile layout:
 
 - Fullscreen gallery polish
 - Похожие объявления на mobile
-- Жалоба на объявление (ReportDialog уже есть)
+- Жалоба на объявление — ✅ Phase 125 (`ListingReportSection`)
 - Share button / WhatsApp deep link
 - Native share plugin
 

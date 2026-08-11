@@ -22,9 +22,9 @@ Google Play publish **нельзя** делать, пока не закрыты 
 | 8 | **Full description** | ❌ missing | Play Console listing text not written |
 | 9 | **Test account for reviewers** | ❌ missing | Phone/password credentials for Google review |
 | 10 | **Data safety form** | ⚠️ notes | Draft notes in `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md` — not filled in Console |
-| 11 | **User generated content policy** | ⚠️ partial | Terms draft + moderation; report flow exists |
-| 12 | **Report listing flow** | ✅ exists | `ReportDialog` on listing detail |
-| 13 | **Moderation explanation** | ⚠️ partial | Admin moderation queue exists; review notes not written |
+| 11 | **User generated content policy** | ⚠️ improved | Terms §4 expanded; see `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md` |
+| 12 | **Report listing flow** | ✅ Phase 125 | `ListingReportSection` + `/api/listings/[id]/report`; duplicate guard |
+| 13 | **Moderation explanation** | ⚠️ improved | Admin hide from reports; review notes in UGC doc |
 | 14 | **Contact / support flow** | ⚠️ partial | `/support` page; final email TBD |
 | 15 | **Signed release AAB** | ⏳ pending | Process documented; keystore must be created locally |
 | 16 | **Real Android device QA passed** | ⏳ pending | See `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md` |
@@ -70,13 +70,16 @@ See `docs/ACCOUNT_DELETION_PHASE_114.md`
 
 Product already has:
 - Listing moderation workflow (submit → pending → published/rejected)
-- Admin moderation queue
-- Report listing UI on listing detail
+- Admin moderation queue + `/admin/reports`
+- Report listing UI on listing detail (Phase 125)
+- Staff can hide reported listings → author notification
+- Prohibited content list in `/terms` §4 (draft)
 
 Need for Play:
-- Document in review notes how UGC is moderated
-- Final Terms with prohibited content list (legal review)
+- Final Terms with prohibited content list (**legal review**)
 - Support contact for abuse reports (`/support`)
+
+See `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md` for review notes template.
 
 ---
 

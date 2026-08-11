@@ -1,13 +1,18 @@
 "use client";
 
+import type { ListingVertical, ReportReason } from "@prisma/client";
+import { Flag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import type { ListingVertical, ReportReason } from "@prisma/client";
 import {
+  createListingReportRequest,
   createReportRequest,
   ReportRequestError,
 } from "@/features/reports/lib/reports-client";
-import { REPORT_REASON_OPTIONS } from "@/features/reports/validators/report.validators";
+import {
+  LISTING_REPORT_REASON_OPTIONS,
+  REPORT_REASON_OPTIONS,
+} from "@/features/reports/validators/report.validators";
 import { buildLoginUrl, getCurrentPathFromWindow } from "@/features/auth/lib/login-redirect";
 import { trackReportSubmit } from "@/lib/analytics/events";
 import { Button } from "@/components/ui/button";
@@ -61,6 +66,8 @@ export function ReportDialog({
 
   const title =
     targetType === "listing" ? "Пожаловаться на объявление" : "Пожаловаться на продавца";
+  const reasonOptions =
+    targetType === "listing" ? LISTING_REPORT_REASON_OPTIONS : REPORT_REASON_OPTIONS;
 
   function handleOpenChange(next: boolean) {
     if (next && !open) {
@@ -97,12 +104,19 @@ export function ReportDialog({
     setIsPending(true);
 
     try {
-      await createReportRequest({
-        listingId: listingId ?? null,
-        sellerId: sellerId ?? null,
-        reason,
-        message: message.trim() || null,
-      });
+      if (targetType === "listing" && listingId) {
+        await createListingReportRequest(listingId, {
+          reason,
+          message: message.trim() || null,
+        });
+      } else {
+        await createReportRequest({
+          listingId: listingId ?? null,
+          sellerId: sellerId ?? null,
+          reason,
+          message: message.trim() || null,
+        });
+      }
 
       trackReportSubmit(targetType, reason, vertical);
       setIsSuccess(true);
@@ -123,36 +137,58 @@ export function ReportDialog({
         <button
           type="button"
           className={cn(
-            "text-sm font-medium text-[#64748B] underline-offset-2 transition hover:text-[#DC2626] hover:underline",
+            "inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-[#64748B] underline-offset-2 transition hover:text-[#DC2626] hover:underline",
             triggerClassName,
           )}
         >
+          <Flag className="size-3.5 shrink-0" aria-hidden="true" />
           {triggerLabel}
         </button>
       </ModalTrigger>
 
-      <ModalContent className="max-w-md gap-0 p-0 sm:max-w-md">
+      <ModalContent className="max-h-[min(92dvh,720px)] max-w-md gap-0 overflow-y-auto p-0 sm:max-w-md">
         <ModalHeader className="border-b border-[rgba(148,163,184,0.14)] px-5 py-4 text-left sm:px-6">
-          <ModalTitle className="text-base text-[#0F172A]">{title}</ModalTitle>
-          <ModalDescription className="text-sm text-[#64748B]">
-            Мы проверим жалобу вручную. Автоматических блокировок нет.
-          </ModalDescription>
+          <ModalTitle className="text-base text-[#0F172A] dark:text-slate-100">{title}</ModalTitle>
+          {!isSuccess ? (
+            <ModalDescription className="text-sm text-[#64748B] dark:text-slate-400">
+              Мы проверим жалобу вручную. Автоматических блокировок нет.
+            </ModalDescription>
+          ) : null}
         </ModalHeader>
 
         {!isAuthenticated ? (
-          <div className="space-y-4 px-5 py-5 sm:px-6">
-            <p className="text-sm text-[#475569]">Войдите, чтобы отправить жалобу.</p>
-            <Button
-              type="button"
-              onClick={handleLogin}
-              className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
-            >
-              Войти
-            </Button>
+          <div className="space-y-4 px-5 py-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:px-6">
+            <p className="text-sm text-[#475569] dark:text-slate-300">
+              Войдите, чтобы пожаловаться на объявление.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button
+                type="button"
+                onClick={handleLogin}
+                className="h-11 w-full rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]"
+              >
+                Войти
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
+                className="h-11 w-full rounded-xl"
+              >
+                Отмена
+              </Button>
+            </div>
           </div>
         ) : isSuccess ? (
-          <div className="space-y-4 px-5 py-5 sm:px-6">
-            <p className="text-sm font-medium text-[#059669]">Жалоба отправлена. Спасибо.</p>
+          <div className="space-y-4 px-5 py-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:px-6">
+            <div>
+              <p className="text-base font-semibold text-[#0F172A] dark:text-slate-100">
+                Жалоба отправлена
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-[#475569] dark:text-slate-300">
+                Спасибо. Мы проверим объявление и примем меры при нарушении правил.
+              </p>
+            </div>
             <Button
               type="button"
               variant="outline"
@@ -163,20 +199,23 @@ export function ReportDialog({
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4 px-5 py-5 sm:px-6">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 px-5 py-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:px-6"
+          >
             <div className="space-y-2">
-              <label htmlFor="report-reason" className="text-sm font-medium text-[#0F172A]">
+              <label htmlFor="report-reason" className="text-sm font-medium text-[#0F172A] dark:text-slate-100">
                 Причина
               </label>
               <Select
                 value={reason || undefined}
                 onValueChange={(value) => setReason(value as ReportReason)}
               >
-                <SelectTrigger id="report-reason" className="h-11 rounded-xl bg-white">
+                <SelectTrigger id="report-reason" className="h-11 rounded-xl bg-white dark:bg-slate-900">
                   <SelectValue placeholder="Выберите причину" />
                 </SelectTrigger>
                 <SelectContent>
-                  {REPORT_REASON_OPTIONS.map((option) => (
+                  {reasonOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -186,7 +225,7 @@ export function ReportDialog({
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="report-message" className="text-sm font-medium text-[#0F172A]">
+              <label htmlFor="report-message" className="text-sm font-medium text-[#0F172A] dark:text-slate-100">
                 Комментарий <span className="font-normal text-[#94A3B8]">(необязательно)</span>
               </label>
               <Textarea

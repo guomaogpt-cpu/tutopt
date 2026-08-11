@@ -27,6 +27,7 @@ export default async function AdminReportsPage() {
             id: true,
             title: true,
             vertical: true,
+            status: true,
             sellerProfile: {
               select: {
                 id: true,
@@ -70,6 +71,7 @@ export default async function AdminReportsPage() {
       listingId: report.listing?.id ?? report.listing_id,
       listingTitle: report.listing?.title ?? null,
       listingVertical: report.listing?.vertical ?? null,
+      listingStatus: report.listing?.status ?? null,
       sellerId: seller?.id ?? report.seller_profile_id,
       sellerName: seller?.company_name ?? null,
       sellerUserId: seller?.user_id ?? null,

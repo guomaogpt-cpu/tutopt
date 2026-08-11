@@ -152,6 +152,14 @@ npx cap add ios
 - Sticky CTA unchanged (Phase 119)
 - См. `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
 
+## 6.7 Phase 125 — Trust and listing reports ✅
+
+- Report block on listing detail; dedicated API
+- Duplicate guard; admin hide from reports
+- Terms §4 prohibited goods; UGC safety docs
+
+См. `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
@@ -195,9 +203,10 @@ npx cap add ios
 | 122 ✅ | Mobile gestures (swipe gallery, drawer dismiss, horizontal scroll) |
 | 123 ✅ | Mobile performance and stability (home trim, skeletons, polling) |
 | 124 ✅ | Listing cards and detail page conversion |
-| 125 | Store assets + Play Console internal testing upload |
-| 126 | Production rollout (after QA + legal sign-off) |
-| 127 | Capacitor iOS wrapper |
+| 125 ✅ | Trust, safety and listing reports |
+| 126 | Store assets + Play Console internal testing upload |
+| 127 | Production rollout (after QA + legal sign-off) |
+| 128 | Capacitor iOS wrapper |
 
 ## Технические заметки для Capacitor
 
@@ -243,5 +252,7 @@ Next.js App Router с SSR потребует либо:
 - `docs/MOBILE_GESTURES_PHASE_122.md`
 - `docs/MOBILE_PERFORMANCE_STABILITY_PHASE_123.md`
 - `docs/LISTING_CARDS_DETAIL_PHASE_124.md`
+- `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`
+- `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
 - `docs/UX_PRODUCT_AUDIT_PHASE_87.md`
 - `docs/MOBILE_NAV_PHASE_64.md`

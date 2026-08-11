@@ -4,7 +4,6 @@ import type { CompanyType, ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { BadgeCheck, Building2 } from "lucide-react";
 import { SellerTrustCompactBlock } from "@/components/seller/SellerTrustBlock";
-import { ReportDialog } from "@/components/reports/ReportDialog";
 import { trackListingDetailAction } from "@/lib/analytics/events";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import type { CompanyVerificationStatus } from "@prisma/client";
@@ -73,12 +72,12 @@ export function ListingSellerCard({
   publishedListingCount,
   sellerId,
   sellerSlug = null,
-  listingId,
+  listingId: _listingId,
   vertical,
   postedAsCompany = false,
   trustLevel,
   trustSignals = [],
-  isAuthenticated = false,
+  isAuthenticated: _isAuthenticated = false,
   hasPrice = false,
   isOwnListing = false,
 }: ListingSellerCardProps) {
@@ -196,17 +195,6 @@ export function ListingSellerCard({
           {profileLabel}
         </Link>
       </Button>
-
-      <div className="mt-3 border-t border-[rgba(148,163,184,0.14)] pt-3 text-center dark:border-slate-800">
-        <ReportDialog
-          targetType="listing"
-          listingId={listingId}
-          isAuthenticated={isAuthenticated}
-          vertical={vertical}
-          triggerLabel={t("listing.report")}
-          onTriggerClick={() => trackListingDetailAction("report", analyticsParams)}
-        />
-      </div>
     </div>
   );
 }

@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import type { ListingVertical, ReportReason, ReportStatus } from "@prisma/client";
+import type { ListingStatus, ListingVertical, ReportReason, ReportStatus } from "@prisma/client";
 import { Flag, Package } from "lucide-react";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
-import { updateReportStatusRequest } from "@/features/reports/lib/reports-client";
+import {
+  hideListingFromReportRequest,
+  updateReportStatusRequest,
+} from "@/features/reports/lib/reports-client";
 import {
   getReportReasonLabel,
   getReportStatusLabel,
@@ -25,6 +28,7 @@ export type AdminReportRow = {
   listingId: string | null;
   listingTitle: string | null;
   listingVertical: ListingVertical | null;
+  listingStatus: ListingStatus | null;
   sellerId: string | null;
   sellerName: string | null;
   sellerUserId: string | null;
@@ -103,6 +107,27 @@ export function AdminReportsTable({ reports }: AdminReportsTableProps) {
       }),
     [reports, statusFilter, typeFilter],
   );
+
+  async function handleHideListing(report: AdminReportRow) {
+    if (!report.listingId) {
+      return;
+    }
+
+    setPendingId(report.id);
+    setErrorMessage("");
+
+    try {
+      await hideListingFromReportRequest(report.listingId, report.comment);
+      if (report.status === "OPEN") {
+        await updateReportStatusRequest(report.id, "resolve");
+      }
+      router.refresh();
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Не удалось скрыть объявление");
+    } finally {
+      setPendingId(null);
+    }
+  }
 
   async function handleAction(reportId: string, action: "resolve" | "dismiss") {
     setPendingId(reportId);
@@ -188,6 +213,11 @@ export function AdminReportsTable({ reports }: AdminReportsTableProps) {
         <div className="space-y-4">
           {filtered.map((report) => {
             const canAct = report.status === "OPEN";
+            const canHideListing =
+              canAct &&
+              report.listingId &&
+              (report.listingStatus === "PUBLISHED" ||
+                report.listingStatus === "PENDING_MODERATION");
             const objectHref = report.listingId
               ? `/listings/${report.listingId}`
               : report.sellerId
@@ -266,6 +296,17 @@ export function AdminReportsTable({ reports }: AdminReportsTableProps) {
                       <Link href={`/admin/users#user-${report.sellerUserId}`}>
                         Открыть пользователя
                       </Link>
+                    </Button>
+                  ) : null}
+                  {canHideListing ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={pendingId === report.id}
+                      onClick={() => void handleHideListing(report)}
+                      className="h-11 w-full rounded-xl border-[#FECACA] bg-[#FEF2F2] text-[#DC2626] hover:bg-[#FEE2E2] sm:flex-1"
+                    >
+                      Скрыть объявление
                     </Button>
                   ) : null}
                   {canAct ? (

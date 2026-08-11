@@ -4,6 +4,7 @@ import { ListingStatus, UserRole } from "@prisma/client";
 import { ListingCharacteristics } from "@/components/listings/ListingCharacteristics";
 import { ListingContactCard } from "@/components/listings/ListingContactCard";
 import { ListingDescription } from "@/components/listings/ListingDescription";
+import { ListingReportSection } from "@/components/listings/ListingReportSection";
 import { ListingGallery } from "@/components/listings/ListingGallery";
 import { ListingMobileStickyCta } from "@/components/listings/ListingMobileStickyCta";
 import { ListingMobileSummary } from "@/components/listings/ListingMobileSummary";
@@ -528,7 +529,18 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
             <div className="order-6 lg:hidden">{sellerCard}</div>
 
-            <div className="order-7 hidden lg:order-4 lg:block">
+            {!isOwner ? (
+              <div className="order-7 lg:hidden">
+                <ListingReportSection
+                  listingId={listing.id}
+                  vertical={listing.vertical}
+                  isAuthenticated={user !== null}
+                  isOwnListing={isOwner}
+                />
+              </div>
+            ) : null}
+
+            <div className="order-8 hidden lg:order-4 lg:block">
               <ListingCharacteristics
                 headingId="listing-main-info-specs-title"
                 titleKey="listing.characteristics"
@@ -536,7 +548,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               />
             </div>
 
-            <div className="order-8 space-y-5 lg:order-5 lg:space-y-6">
+            <div className="order-9 space-y-5 lg:order-5 lg:space-y-6">
               {!isOwner ? <ListingVerticalHint vertical={listing.vertical} /> : null}
               {!isOwner ? <ListingRequestHint vertical={listing.vertical} /> : null}
               <ListingLeadForm
@@ -562,6 +574,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
             <div className="sticky top-24 space-y-4">
               {contactCard}
               {sellerCard}
+              {!isOwner ? (
+                <ListingReportSection
+                  listingId={listing.id}
+                  vertical={listing.vertical}
+                  isAuthenticated={user !== null}
+                  isOwnListing={isOwner}
+                />
+              ) : null}
             </div>
           </aside>
         </div>

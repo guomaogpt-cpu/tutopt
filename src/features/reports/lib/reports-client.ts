@@ -7,6 +7,11 @@ type CreateReportPayload = {
   message?: string | null;
 };
 
+type ListingReportPayload = {
+  reason: ReportReason;
+  message?: string | null;
+};
+
 type CreateReportResponse = {
   report: {
     id: string;
@@ -79,6 +84,44 @@ export async function createReportRequest(
   }
 
   return (body as ApiSuccessBody<CreateReportResponse>).data;
+}
+
+export async function createListingReportRequest(
+  listingId: string,
+  payload: ListingReportPayload,
+): Promise<{ ok: true; message: string }> {
+  const response = await fetch(`/api/listings/${listingId}/report`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const body = (await response.json()) as
+    | ApiSuccessBody<{ ok: true; message: string }>
+    | ApiErrorBody;
+
+  if (!response.ok) {
+    const errorBody = body as ApiErrorBody;
+    throw new ReportRequestError(errorBody.error?.message ?? "Не удалось отправить жалобу");
+  }
+
+  return (body as ApiSuccessBody<{ ok: true; message: string }>).data;
+}
+
+export async function hideListingFromReportRequest(
+  listingId: string,
+  reason?: string | null,
+): Promise<void> {
+  const response = await fetch(`/api/admin/listings/${listingId}/hide`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason: reason?.trim() || null }),
+  });
+
+  if (!response.ok) {
+    const body = (await response.json()) as ApiErrorBody;
+    throw new Error(body.error?.message ?? "Не удалось скрыть объявление");
+  }
 }
 
 export async function updateReportStatusRequest(
