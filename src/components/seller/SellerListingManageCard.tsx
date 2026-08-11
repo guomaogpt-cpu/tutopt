@@ -95,7 +95,7 @@ export function SellerListingManageCard({
   const canRestore = isArchived;
   const canRenew = isPublished;
   const canSubmit = isDraft || isRejected;
-  const canShowLeads = isPublished && typeof listing.leadsCount === "number";
+  const canShowLeads = isPublished;
   const showOpen = !isDraft;
 
   const openLabel = useAccountLabels ? t("accountListings.open") : "Открыть";
@@ -156,10 +156,14 @@ export function SellerListingManageCard({
   }
 
   const dateLabel = listing.published_at
-    ? `Опубликовано ${formatShortDate(listing.published_at)}`
-    : listing.updated_at
-      ? `Обновлено ${formatShortDate(listing.updated_at)}`
-      : `Создано ${formatShortDate(listing.created_at)}`;
+    ? `${t("accountListings.publishedAt")} ${formatShortDate(listing.published_at)}`
+    : null;
+
+  const createdLabel = `${t("accountListings.createdAt")} ${formatShortDate(listing.created_at)}`;
+  const updatedLabel =
+    listing.updated_at && listing.updated_at !== listing.created_at
+      ? `${t("accountListings.updatedAt")} ${formatShortDate(listing.updated_at)}`
+      : null;
 
   const isExpired = expirationStatus === "expired";
   const isExpiringSoon = expirationStatus === "expiring_soon";
@@ -227,9 +231,21 @@ export function SellerListingManageCard({
           </span>
           <span>{listing.categoryName}</span>
           {listing.cityName ? <span>{listing.cityName}</span> : null}
-          <span>{dateLabel}</span>
+          {useAccountLabels ? (
+            <>
+              <span>{createdLabel}</span>
+              {updatedLabel ? <span>{updatedLabel}</span> : null}
+              {dateLabel ? <span>{dateLabel}</span> : null}
+            </>
+          ) : (
+            <span>{dateLabel ?? createdLabel}</span>
+          )}
           {postedAsLabel ? <span>{postedAsLabel}</span> : null}
-          {typeof listing.leadsCount === "number" && listing.leadsCount > 0 ? (
+          {useAccountLabels && typeof listing.leadsCount === "number" ? (
+            <span>
+              {t("accountListings.leadsCount")}: {listing.leadsCount}
+            </span>
+          ) : typeof listing.leadsCount === "number" && listing.leadsCount > 0 ? (
             <Link
               href={`/account/requests?tab=received&listingId=${listing.id}`}
               className="inline-flex items-center gap-1 font-medium text-blue-600 hover:underline dark:text-blue-400"

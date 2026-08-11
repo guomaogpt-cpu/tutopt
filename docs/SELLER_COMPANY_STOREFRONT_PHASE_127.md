@@ -102,6 +102,13 @@
 - Баннер витрины компании
 - Платное продвижение компании
 
+## Phase 129 — Marketplace analytics MVP
+
+- Admin «Компании на проверке» card links to `/admin/companies`
+- Storefront metrics remain separate from analytics phase
+
+См. `docs/MARKETPLACE_ANALYTICS_PHASE_129.md`
+
 ## Файлы
 
 | File | Change |

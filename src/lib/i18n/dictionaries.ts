@@ -3582,6 +3582,81 @@ export const DICTIONARY = {
     kg: "Жарыя берүү",
     en: "Post listing",
   },
+  "analytics.myActivity.title": {
+    ru: "Моя активность",
+    kg: "Менин активдүүлүгүм",
+    en: "My activity",
+  },
+  "analytics.myActivity.activeListings": {
+    ru: "Активные объявления",
+    kg: "Активдүү жарыялар",
+    en: "Active listings",
+  },
+  "analytics.myActivity.pendingListings": {
+    ru: "На модерации",
+    kg: "Модерацияда",
+    en: "Pending moderation",
+  },
+  "analytics.myActivity.receivedLeads": {
+    ru: "Полученные заявки",
+    kg: "Келген сурамдар",
+    en: "Received requests",
+  },
+  "analytics.myActivity.newLeads": {
+    ru: "Новые заявки",
+    kg: "Жаңы сурамдар",
+    en: "New requests",
+  },
+  "analytics.myActivity.sentLeads": {
+    ru: "Отправленные заявки",
+    kg: "Жөнөтүлгөн сурамдар",
+    en: "Sent requests",
+  },
+  "analytics.myActivity.emptyTitle": {
+    ru: "Пока нет активности.",
+    kg: "Азырынча активдүүлүк жок.",
+    en: "No activity yet.",
+  },
+  "analytics.myActivity.emptyDescription": {
+    ru: "Создайте объявление, чтобы начать получать заявки.",
+    kg: "Сурамдарды алуу үчүн жарыя түзүңүз.",
+    en: "Create a listing to start receiving requests.",
+  },
+  "analytics.requestsSummary.receivedTitle": {
+    ru: "Полученные заявки",
+    kg: "Келген сурамдар",
+    en: "Received requests",
+  },
+  "analytics.requestsSummary.sentTitle": {
+    ru: "Отправленные заявки",
+    kg: "Жөнөтүлгөн сурамдар",
+    en: "Sent requests",
+  },
+  "analytics.requestsSummary.total": {
+    ru: "Всего",
+    kg: "Бардыгы",
+    en: "Total",
+  },
+  "analytics.requestsSummary.new": {
+    ru: "Новые",
+    kg: "Жаңы",
+    en: "New",
+  },
+  "analytics.requestsSummary.inProgress": {
+    ru: "В работе",
+    kg: "Иште",
+    en: "In progress",
+  },
+  "analytics.requestsSummary.completed": {
+    ru: "Завершены",
+    kg: "Аякталган",
+    en: "Completed",
+  },
+  "analytics.requestsSummary.rejected": {
+    ru: "Отклонены",
+    kg: "Четке кагылган",
+    en: "Rejected",
+  },
   "account.submitCargoRequest": {
     ru: "Оставить карго-заявку",
     kg: "Карго сурам калтыруу",
@@ -3906,6 +3981,26 @@ export const DICTIONARY = {
     ru: "Черновиков пока нет.",
     kg: "Долбоорлор азырынча жок.",
     en: "No drafts yet.",
+  },
+  "accountListings.createdAt": {
+    ru: "Создано",
+    kg: "Түзүлгөн",
+    en: "Created",
+  },
+  "accountListings.updatedAt": {
+    ru: "Обновлено",
+    kg: "Жаңыртылган",
+    en: "Updated",
+  },
+  "accountListings.publishedAt": {
+    ru: "Опубликовано",
+    kg: "Жарыяланган",
+    en: "Published",
+  },
+  "accountListings.viewsCount": {
+    ru: "Просмотры",
+    kg: "Көрүүлөр",
+    en: "Views",
   },
   "accountRequests.listingLeadsTitle": {
     ru: "Заявки по объявлению",

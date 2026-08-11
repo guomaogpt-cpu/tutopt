@@ -105,6 +105,14 @@
 - Cancellation by buyer
 - Reminders
 
+## Phase 129 — Marketplace analytics MVP
+
+- Request status summary chips on `/account/requests`
+- `AccountMyActivityStats` replaces quick stats on `/account`
+- Status filter: `?status=new|viewed|closed|rejected`
+
+См. `docs/MARKETPLACE_ANALYTICS_PHASE_129.md`
+
 ## Migration
 
 - `LeadStatus.REJECTED`

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { AccountLeadsQuickStats } from "@/components/account/AccountLeadsQuickStats";
+import { AccountMyActivityStats } from "@/components/account/AccountMyActivityStats";
 import { AccountActivitySummary } from "@/components/account/AccountActivitySummary";
 import { AccountCargoSummaryCard } from "@/components/account/AccountCargoSummaryCard";
 import { AccountCompanySummaryCard } from "@/components/account/AccountCompanySummaryCard";
@@ -46,10 +46,12 @@ export default async function AccountPage() {
             phone={user.phone}
             hasCompany={Boolean(data.company)}
           />
-          <AccountLeadsQuickStats
-            newReceivedCount={data.receivedLeadsCount}
-            receivedCount={data.totalReceivedLeadsCount}
-            sentCount={data.sentLeadsCount}
+          <AccountMyActivityStats
+            activeListings={data.listingStats.active}
+            pendingListings={data.listingStats.pending}
+            receivedLeads={data.totalReceivedLeadsCount}
+            newLeads={data.receivedLeadsCount}
+            sentLeads={data.sentLeadsCount}
           />
           <AccountActivitySummary
             data={{

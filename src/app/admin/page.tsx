@@ -1,13 +1,14 @@
 import Link from "next/link";
 import type { ListingVertical } from "@prisma/client";
-import { ListingStatus, ReportStatus, UserRole } from "@prisma/client";
+import { ListingStatus, UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import {
+  Archive,
+  Building2,
   ClipboardCheck,
   ExternalLink,
   Flag,
   Inbox,
-  LayoutGrid,
   Package,
   ScrollText,
   ShieldOff,
@@ -16,15 +17,16 @@ import {
   UserCheck,
   Users,
   Wrench,
+  XCircle,
 } from "lucide-react";
 import { AdminStatCards } from "@/components/admin/AdminStatCards";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { isStaffRole } from "@/features/admin/lib/require-admin";
 import {
-  getAuditActionLabel,
-  getAuditTargetTypeLabel,
-} from "@/features/admin/lib/audit-labels";
+  getAdminMarketplaceMetrics,
+  getLatestMarketplaceEvents,
+} from "@/features/admin/lib/admin-marketplace-events";
 import { VERTICAL_LIST, VERTICALS } from "@/features/verticals/verticals";
 import { buildPublicListingWhere } from "@/lib/listings/listing-expiration";
 import { prisma } from "@/shared/lib/prisma";
@@ -39,7 +41,7 @@ const VERTICAL_ICONS = {
   CARGO: Truck,
 } as const;
 
-const auditDateFormatter = new Intl.DateTimeFormat("ru-RU", {
+const eventDateFormatter = new Intl.DateTimeFormat("ru-RU", {
   day: "2-digit",
   month: "2-digit",
   hour: "2-digit",
@@ -67,23 +69,22 @@ export default async function AdminDashboardPage() {
 
   const isAdmin = user.role === UserRole.ADMIN;
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-
   const publicPublishedWhere = buildPublicListingWhere();
 
   const [
-    pendingCount,
-    openReportsCount,
-    totalListingsCount,
-    publishedListingsCount,
+    marketplaceMetrics,
+    latestEvents,
     totalByVertical,
     publishedByVertical,
     pendingByVertical,
     newCargoRequestsCount,
+    sellersCount,
+    blockedUsersCount,
+    leadsWeekCount,
+    auditWeekCount,
   ] = await Promise.all([
-    prisma.listing.count({ where: { status: ListingStatus.PENDING_MODERATION } }),
-    prisma.report.count({ where: { status: ReportStatus.OPEN } }),
-    prisma.listing.count(),
-    prisma.listing.count({ where: publicPublishedWhere }),
+    getAdminMarketplaceMetrics(isAdmin),
+    getLatestMarketplaceEvents(10),
     prisma.listing.groupBy({ by: ["vertical"], _count: { _all: true } }),
     prisma.listing.groupBy({
       by: ["vertical"],
@@ -96,127 +97,140 @@ export default async function AdminDashboardPage() {
       _count: { _all: true },
     }),
     prisma.cargoRequest.count({ where: { status: "NEW" } }),
-  ]);
-
-  const [
-    usersCount,
-    sellersCount,
-    blockedUsersCount,
-    leadsCount,
-    leadsWeekCount,
-    auditWeekCount,
-    latestAuditLogs,
-  ] = isAdmin
-    ? await Promise.all([
-        prisma.user.count(),
-        prisma.sellerProfile.count(),
-        prisma.user.count({
+    isAdmin ? prisma.sellerProfile.count() : Promise.resolve(0),
+    isAdmin
+      ? prisma.user.count({
           where: { OR: [{ is_blocked: true }, { blocked_at: { not: null } }] },
-        }),
-        prisma.lead.count(),
-        prisma.lead.count({ where: { created_at: { gte: weekAgo } } }),
-        prisma.auditLog.count({ where: { created_at: { gte: weekAgo } } }),
-        prisma.auditLog.findMany({
-          orderBy: { created_at: "desc" },
-          take: 8,
-          select: {
-            id: true,
-            action: true,
-            entity_type: true,
-            created_at: true,
-            actor: { select: { name: true } },
-          },
-        }),
-      ])
-    : [0, 0, 0, 0, 0, 0, []];
+        })
+      : Promise.resolve(0),
+    isAdmin ? prisma.lead.count({ where: { created_at: { gte: weekAgo } } }) : Promise.resolve(0),
+    isAdmin ? prisma.auditLog.count({ where: { created_at: { gte: weekAgo } } }) : Promise.resolve(0),
+  ]);
 
   const totalCounts = countsByVertical(totalByVertical);
   const publishedCounts = countsByVertical(publishedByVertical);
   const pendingCounts = countsByVertical(pendingByVertical);
 
-  const moderationStats = [
+  const hasMarketplaceData =
+    marketplaceMetrics.publishedListingsCount > 0 ||
+    marketplaceMetrics.pendingCount > 0 ||
+    marketplaceMetrics.newLeadsCount > 0 ||
+    marketplaceMetrics.openReportsCount > 0 ||
+    (isAdmin && marketplaceMetrics.usersCount > 0);
+
+  const marketplaceOverviewStats = [
+    ...(isAdmin
+      ? [
+          {
+            label: "Пользователи",
+            value: marketplaceMetrics.usersCount,
+            icon: Users,
+            iconClassName: "bg-[#EFF6FF] text-[#2563EB]",
+            href: "/admin/users",
+          },
+        ]
+      : []),
     {
-      label: "Объявления на модерации",
-      value: pendingCount,
+      label: "Активные объявления",
+      value: marketplaceMetrics.publishedListingsCount,
+      icon: Package,
+      iconClassName: "bg-[#ECFDF5] text-[#059669]",
+    },
+    {
+      label: "На модерации",
+      value: marketplaceMetrics.pendingCount,
       icon: ClipboardCheck,
       iconClassName: "bg-[#FFFBEB] text-[#D97706]",
       href: "/admin/moderation/listings",
     },
     {
-      label: "Новые жалобы",
-      value: openReportsCount,
+      label: "Отклонённые",
+      value: marketplaceMetrics.rejectedListingsCount,
+      icon: XCircle,
+      iconClassName: "bg-[#FEF2F2] text-[#DC2626]",
+    },
+    {
+      label: "Архивные",
+      value: marketplaceMetrics.archivedListingsCount,
+      icon: Archive,
+      iconClassName: "bg-[#F1F5F9] text-[#64748B]",
+    },
+    {
+      label: "Новые заявки",
+      value: marketplaceMetrics.newLeadsCount,
+      icon: Inbox,
+      iconClassName: "bg-[#FFFBEB] text-[#D97706]",
+    },
+    {
+      label: "Жалобы",
+      value: marketplaceMetrics.openReportsCount,
       icon: Flag,
       iconClassName: "bg-[#FEF2F2] text-[#DC2626]",
       href: "/admin/reports",
     },
     {
-      label: "Новые карго-заявки",
-      value: newCargoRequestsCount,
-      icon: Truck,
-      iconClassName: "bg-[#FFF1F2] text-[#E11D48]",
-      href: "/admin/cargo-requests?status=NEW",
-    },
-    {
-      label: "Всего объявлений",
-      value: totalListingsCount,
-      icon: LayoutGrid,
+      label: "Компании на проверке",
+      value: marketplaceMetrics.pendingCompaniesCount,
+      icon: Building2,
       iconClassName: "bg-[#EFF6FF] text-[#2563EB]",
-    },
-    {
-      label: "Активные объявления",
-      value: publishedListingsCount,
-      icon: Package,
-      iconClassName: "bg-[#ECFDF5] text-[#059669]",
+      href: "/admin/companies",
     },
   ];
 
-  const adminStats = [
-    {
-      label: "Пользователи",
-      value: usersCount,
-      icon: Users,
-      iconClassName: "bg-[#EFF6FF] text-[#2563EB]",
-      href: "/admin/users",
-    },
-    {
-      label: "Продавцы",
-      value: sellersCount,
-      icon: UserCheck,
-      iconClassName: "bg-[#ECFDF5] text-[#059669]",
-    },
-    {
-      label: "Заблокированные",
-      value: blockedUsersCount,
-      icon: ShieldOff,
-      iconClassName: "bg-[#FEF2F2] text-[#DC2626]",
-      href: "/admin/users",
-    },
-    {
-      label: `Заявки (${leadsWeekCount} за 7 дней)`,
-      value: leadsCount,
-      icon: Inbox,
-      iconClassName: "bg-[#FFFBEB] text-[#D97706]",
-    },
-    {
-      label: "Действия за 7 дней",
-      value: auditWeekCount,
-      icon: ScrollText,
-      iconClassName: "bg-[#F1F5F9] text-[#64748B]",
-      href: "/admin/audit",
-    },
-  ];
+  const adminExtraStats = isAdmin
+    ? [
+        {
+          label: "Продавцы",
+          value: sellersCount,
+          icon: UserCheck,
+          iconClassName: "bg-[#ECFDF5] text-[#059669]",
+        },
+        {
+          label: "Заблокированные",
+          value: blockedUsersCount,
+          icon: ShieldOff,
+          iconClassName: "bg-[#FEF2F2] text-[#DC2626]",
+          href: "/admin/users",
+        },
+        {
+          label: `Заявки за 7 дней`,
+          value: leadsWeekCount,
+          icon: Inbox,
+          iconClassName: "bg-[#FFFBEB] text-[#D97706]",
+        },
+        {
+          label: "Действия за 7 дней",
+          value: auditWeekCount,
+          icon: ScrollText,
+          iconClassName: "bg-[#F1F5F9] text-[#64748B]",
+          href: "/admin/audit",
+        },
+        {
+          label: "Новые карго-заявки",
+          value: newCargoRequestsCount,
+          icon: Truck,
+          iconClassName: "bg-[#FFF1F2] text-[#E11D48]",
+          href: "/admin/cargo-requests?status=NEW",
+        },
+      ]
+    : [];
 
   const quickActions = [
     {
       label: "Модерация объявлений",
       description:
-        pendingCount > 0 ? `${pendingCount} ожидают проверки` : "Нет объявлений на модерации",
+        marketplaceMetrics.pendingCount > 0
+          ? `${marketplaceMetrics.pendingCount} ожидают проверки`
+          : "Нет объявлений на модерации",
       href: "/admin/moderation/listings",
       adminOnly: false,
     },
     {
       label: "Жалобы",
-      description: openReportsCount > 0 ? `${openReportsCount} новых жалоб` : "Нет новых жалоб",
+      description:
+        marketplaceMetrics.openReportsCount > 0
+          ? `${marketplaceMetrics.openReportsCount} новых жалоб`
+          : "Нет новых жалоб",
       href: "/admin/reports",
       adminOnly: false,
     },
@@ -263,8 +277,22 @@ export default async function AdminDashboardPage() {
       </PageHeader>
 
       <div className="mt-6 space-y-6 lg:mt-8">
-        <AdminStatCards stats={moderationStats} />
-        {isAdmin ? <AdminStatCards stats={adminStats} /> : null}
+        <section aria-labelledby="admin-marketplace-overview-title">
+          <h2 id="admin-marketplace-overview-title" className="mb-3 text-lg font-bold text-[#0F172A]">
+            Marketplace overview
+          </h2>
+          {!hasMarketplaceData ? (
+            <div className="rounded-2xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-5 py-8 text-center text-sm text-[#64748B]">
+              Пока нет данных для отображения.
+            </div>
+          ) : (
+            <AdminStatCards stats={marketplaceOverviewStats} />
+          )}
+        </section>
+
+        {isAdmin && adminExtraStats.length > 0 ? (
+          <AdminStatCards stats={adminExtraStats} />
+        ) : null}
 
         <section aria-labelledby="admin-quick-actions-title">
           <h2 id="admin-quick-actions-title" className="mb-3 text-lg font-bold text-[#0F172A]">
@@ -292,7 +320,7 @@ export default async function AdminDashboardPage() {
 
         <section aria-labelledby="admin-verticals-title">
           <h2 id="admin-verticals-title" className="mb-3 text-lg font-bold text-[#0F172A]">
-            По направлениям
+            Объявления по разделам
           </h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {VERTICAL_LIST.map((item) => {
@@ -339,48 +367,45 @@ export default async function AdminDashboardPage() {
           </div>
         </section>
 
-        {isAdmin ? (
-          <section aria-labelledby="admin-latest-audit-title">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <h2 id="admin-latest-audit-title" className="text-lg font-bold text-[#0F172A]">
-                Последние события
-              </h2>
+        <section aria-labelledby="admin-latest-events-title">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 id="admin-latest-events-title" className="text-lg font-bold text-[#0F172A]">
+              Последние события
+            </h2>
+            {isAdmin ? (
               <Link href="/admin/audit" className="text-sm font-medium text-[#2563EB]">
                 Открыть журнал действий →
               </Link>
-            </div>
+            ) : null}
+          </div>
 
-            {latestAuditLogs.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-5 py-8 text-center text-sm text-[#64748B]">
-                Журнал действий пока пуст
-              </div>
-            ) : (
-              <div className="overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
-                <ul className="divide-y divide-[rgba(148,163,184,0.1)]">
-                  {latestAuditLogs.map((log) => (
-                    <li
-                      key={log.id}
-                      className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+          {latestEvents.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-[rgba(148,163,184,0.25)] bg-white px-5 py-8 text-center text-sm text-[#64748B]">
+              Пока нет данных для отображения.
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-2xl border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
+              <ul className="divide-y divide-[rgba(148,163,184,0.1)]">
+                {latestEvents.map((event) => (
+                  <li key={event.id}>
+                    <Link
+                      href={event.href}
+                      className="flex flex-col gap-1 px-4 py-3 transition hover:bg-[#F8FAFC] sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-[#0F172A]">
-                          {getAuditActionLabel(log.action)}
-                          <span className="ml-2 text-xs font-normal text-[#94A3B8]">
-                            {getAuditTargetTypeLabel(log.entity_type)}
-                          </span>
-                        </p>
-                        <p className="text-xs text-[#64748B]">{log.actor.name}</p>
+                        <p className="text-sm font-medium text-[#0F172A]">{event.title}</p>
+                        <p className="truncate text-xs text-[#64748B]">{event.subtitle}</p>
                       </div>
                       <p className="shrink-0 text-xs text-[#94A3B8]">
-                        {auditDateFormatter.format(log.created_at)}
+                        {eventDateFormatter.format(event.created_at)}
                       </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </section>
-        ) : null}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
       </div>
     </section>
   );

@@ -140,6 +140,16 @@ Account dashboard:
 
 ---
 
+## Phase 129 — Marketplace analytics MVP
+
+- Per-listing leads count + dates on `/account/listings`
+- Leads button → `/account/requests?listingId=...`
+- Views shown only when `view_count > 0` (no increment in this phase)
+
+См. `docs/MARKETPLACE_ANALYTICS_PHASE_129.md`
+
+---
+
 ## Файлы
 
 | File | Change |
@@ -168,3 +178,4 @@ Account dashboard:
 - `docs/SELLER_LISTING_MANAGEMENT_PHASE_126.md`
 - `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
 - `docs/LISTING_LEADS_WORKFLOW_PHASE_128.md`
+- `docs/MARKETPLACE_ANALYTICS_PHASE_129.md`

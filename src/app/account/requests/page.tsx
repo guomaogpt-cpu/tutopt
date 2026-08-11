@@ -9,17 +9,23 @@ import { AccountReceivedRequestsSectionHeader } from "@/components/account/Accou
 import { AccountRequestsEmptyState } from "@/components/account/AccountRequestsEmptyState";
 import { AccountRequestsPageHeader } from "@/components/account/AccountRequestsPageHeader";
 import { AccountRequestsSectionTitle } from "@/components/account/AccountRequestsSectionTitle";
+import { AccountRequestsStatusSummary } from "@/components/account/AccountRequestsStatusSummary";
 import { AccountRequestsTabs } from "@/components/account/AccountRequestsTabs";
 import { AccountSentLeadCard } from "@/components/account/AccountSentLeadCard";
 import { CargoFeedbackCta } from "@/components/cargo/CargoFeedbackCta";
 import { getSellerOwnCargoResponses } from "@/features/account/lib/seller-own-cargo-responses";
 import { parseAccountRequestsTab } from "@/features/account/lib/account-requests-tabs";
+import {
+  accountRequestsStatusToLeadStatus,
+  parseAccountRequestsStatus,
+} from "@/features/account/lib/account-requests-status";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { needsSellerOnboarding } from "@/features/auth/lib/seller-onboarding";
 import { buildLoginUrl } from "@/features/auth/lib/login-redirect";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import { getBuyerCargoRequests } from "@/features/cargo/lib/cargo-requests-data";
 import { getBuyerLeads, getSellerLeads } from "@/features/leads/lib/leads-data";
+import { countLeadsByStatus, filterLeadsByStatus } from "@/features/leads/lib/lead-stats";
 import { translate } from "@/lib/i18n/dictionaries";
 import { prisma } from "@/shared/lib/prisma";
 import { Container } from "@/components/ui/container";
@@ -60,6 +66,10 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
 
   const rawParams = await searchParams;
   const activeTab = parseAccountRequestsTab(rawParams.tab);
+  const statusFilter = parseAccountRequestsStatus(
+    typeof rawParams.status === "string" ? rawParams.status : undefined,
+  );
+  const leadStatusFilter = accountRequestsStatusToLeadStatus(statusFilter);
   const listingIdParam = typeof rawParams.listingId === "string" ? rawParams.listingId.trim() : "";
 
   const sellerProfile = await prisma.sellerProfile.findUnique({
@@ -86,12 +96,17 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
       })
     : 0;
 
-  const [sentLeads, receivedLeads, cargoRequests, ownCargoResponses] = await Promise.all([
+  const [sentLeadsAll, receivedLeadsAll, cargoRequests, ownCargoResponses] = await Promise.all([
     getBuyerLeads(user.id),
     sellerProfile ? getSellerLeads(sellerProfile.id, { listingId: listingIdFilter ?? undefined }) : Promise.resolve([]),
     getBuyerCargoRequests(user.id),
     sellerProfile ? getSellerOwnCargoResponses(sellerProfile.id) : Promise.resolve([]),
   ]);
+
+  const sentLeadCounts = countLeadsByStatus(sentLeadsAll);
+  const receivedLeadCounts = countLeadsByStatus(receivedLeadsAll);
+  const sentLeads = filterLeadsByStatus(sentLeadsAll, leadStatusFilter);
+  const receivedLeads = filterLeadsByStatus(receivedLeadsAll, leadStatusFilter);
 
   const incomingCargoResponses = cargoRequests.flatMap((request) =>
     request.responses.map((response) => ({
@@ -114,8 +129,8 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
 
   const cargoResponsesCount = incomingCargoResponses.length + ownCargoResponses.length;
   const totalCount =
-    sentLeads.length +
-    receivedLeads.length +
+    sentLeadsAll.length +
+    receivedLeadsAll.length +
     cargoRequests.length +
     cargoResponsesCount;
 
@@ -126,10 +141,15 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
 
   const tabHasItems =
     (activeTab === "all" && totalCount > 0) ||
-    (activeTab === "sent" && sentLeads.length > 0) ||
-    (activeTab === "received" && receivedLeads.length > 0) ||
+    (activeTab === "sent" && sentLeadsAll.length > 0) ||
+    (activeTab === "received" && receivedLeadsAll.length > 0) ||
     (activeTab === "cargoRequests" && cargoRequests.length > 0) ||
     (activeTab === "cargoResponses" && cargoResponsesCount > 0);
+
+  const showStatusFilteredEmpty =
+    tabHasItems &&
+    ((activeTab === "sent" && sentLeads.length === 0 && statusFilter !== "all") ||
+      (activeTab === "received" && receivedLeads.length === 0 && statusFilter !== "all"));
 
   return (
     <main className="min-w-0 bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">
@@ -154,12 +174,21 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
             activeTab={activeTab}
             counts={{
               all: totalCount,
-              sent: sentLeads.length,
-              received: receivedLeads.length,
+              sent: sentLeadsAll.length,
+              received: receivedLeadsAll.length,
               cargoRequests: cargoRequests.length,
               cargoResponses: cargoResponsesCount,
             }}
           />
+
+          {(activeTab === "received" || activeTab === "sent") && tabHasItems ? (
+            <AccountRequestsStatusSummary
+              mode={activeTab === "sent" ? "sent" : "received"}
+              counts={activeTab === "sent" ? sentLeadCounts : receivedLeadCounts}
+              activeStatus={statusFilter}
+              listingId={listingIdFilter}
+            />
+          ) : null}
 
           {!tabHasItems ? (
             <AccountRequestsEmptyState
@@ -177,6 +206,8 @@ export default async function AccountRequestsPage({ searchParams }: AccountReque
                         : "section"
               }
             />
+          ) : showStatusFilteredEmpty ? (
+            <AccountRequestsEmptyState variant="section" />
           ) : (
             <div className="space-y-8">
               {showSent && sentLeads.length > 0 ? (

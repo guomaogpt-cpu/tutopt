@@ -185,6 +185,14 @@ npx cap add ios
 
 См. `docs/LISTING_LEADS_WORKFLOW_PHASE_128.md`
 
+## 6.11 Phase 129 — Marketplace analytics MVP ✅
+
+- Seller «Моя активность» on `/account`
+- Listing leads count + status chips on requests
+- Admin marketplace overview, vertical breakdown, latest events
+
+См. `docs/MARKETPLACE_ANALYTICS_PHASE_129.md`
+
 ## 7. Privacy / terms / account deletion
 
 Нужно подготовить до store submission:
