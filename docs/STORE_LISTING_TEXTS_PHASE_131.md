@@ -89,17 +89,34 @@ Character count: ~56
 
 ---
 
-## URLs (заменить YOUR_DOMAIN перед публикацией)
+## URLs (production)
 
 | Field | URL |
 |---|---|
-| Privacy Policy | `https://YOUR_DOMAIN/privacy` |
-| Terms | `https://YOUR_DOMAIN/terms` |
-| Support | `https://YOUR_DOMAIN/support` |
-| Account deletion | `https://YOUR_DOMAIN/delete-account` |
-| Website | `https://YOUR_DOMAIN` |
+| Privacy Policy | https://tutopt-production.up.railway.app/privacy |
+| Terms | https://tutopt-production.up.railway.app/terms |
+| Support | https://tutopt-production.up.railway.app/support |
+| Account deletion | https://tutopt-production.up.railway.app/delete-account |
+| Website | https://tutopt-production.up.railway.app |
 
-Production domain: set via deployment (Railway / custom domain).
+---
+
+## Google Play draft checklist
+
+| Item | Status | Source |
+|---|---|---|
+| App name | ВсеТут | This doc |
+| Short description (≤80) | Ready | § Short description |
+| Full description | Ready | § Full description |
+| App icon 512×512 | Ready | `/public/icons/icon-512.png` |
+| Feature graphic 1024×500 | Manual | Design — optional for first internal |
+| Phone screenshots | Manual | `STORE_SCREENSHOTS_CHECKLIST_PHASE_131.md` |
+| Privacy Policy URL | Live | production `/privacy` |
+| Support email/contact | Confirm | `/support` page |
+| App category | Shopping | § App category suggestion |
+| Content rating | Manual | UGC questionnaire in Console |
+
+**Phase 134:** paste into Play Console store listing draft for internal testing.
 
 ---
 
@@ -118,6 +135,7 @@ Production domain: set via deployment (Railway / custom domain).
 
 ## Связанные документы
 
+- `docs/GOOGLE_PLAY_INTERNAL_TESTING_PHASE_134.md`
 - `docs/STORE_SCREENSHOTS_CHECKLIST_PHASE_131.md`
 - `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`

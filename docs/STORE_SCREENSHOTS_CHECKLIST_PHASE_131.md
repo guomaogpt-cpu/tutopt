@@ -15,6 +15,13 @@
 | Язык UI | Русский (основной) |
 | Статус-бар | Чистый, без лишних уведомлений |
 
+**Phase 134-pre / 134:** делать screenshots **только на свежей версии** после hotfix (search, listing create, company page, account nav). Не использовать скриншоты со старого AAB.
+
+**Privacy:**
+- Не показывать реальные телефоны клиентов
+- Не показывать реальные персональные данные
+- Использовать тестовые объявления и тестовый аккаунт
+
 ---
 
 ## Android (Google Play)
@@ -82,6 +89,7 @@ App Store требует screenshots per device class (6.7", 6.5", 5.5" etc.) �
 
 ## Связанные документы
 
+- `docs/GOOGLE_PLAY_INTERNAL_TESTING_PHASE_134.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`
 - `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 - `docs/IOS_TESTFLIGHT_PREP_PHASE_131.md`

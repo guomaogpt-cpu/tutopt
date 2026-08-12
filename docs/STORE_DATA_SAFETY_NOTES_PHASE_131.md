@@ -1,9 +1,24 @@
-# Store Data Safety Notes — Phase 131
+# Store Data Safety Notes — Phase 131 / 134
 
 > Notes for Google Play Data safety form and App Store Privacy Nutrition Labels.  
 > **Do not auto-fill Console** — use as reference when completing forms manually.
 
-**Legal review required** before final submission.
+**Legal review required** before final **production** submission.  
+**Phase 134:** use for Internal testing Data Safety form in Play Console.
+
+---
+
+## Data usage summary (for Console)
+
+| Statement | Answer |
+|---|---|
+| Data used for marketplace operation | Yes — listings, leads, account |
+| Some data is public | Yes — published listings, photos, city name in listing |
+| Phone/contacts in leads | Visible to seller/buyer within a request |
+| Account deletion | Request via https://tutopt-production.up.railway.app/delete-account |
+| Payments | Not collected (no in-app purchases) |
+| GPS location | Not collected |
+| Push notifications | Not active in v1.0.0 — do not declare |
 
 ---
 
@@ -156,5 +171,6 @@ Mark data as **not sold**, **not used for advertising**.
 ## Связанные документы
 
 - `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md` (earlier draft)
+- `docs/GOOGLE_PLAY_INTERNAL_TESTING_PHASE_134.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/STORE_READINESS_PACK_PHASE_131.md`

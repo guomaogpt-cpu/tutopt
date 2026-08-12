@@ -26,6 +26,7 @@ Google Play и App Store могут запросить тестовый акка
 4. **Открыть кабинет** — `/account`
 5. **Отправить заявку** — форма «Связаться» на чужом объявлении
 6. **Пожаловаться** — кнопка «Пожаловаться» на странице объявления
+7. **Открыть delete account** — `/delete-account` или `/account/delete` (authenticated)
 
 ---
 
@@ -43,6 +44,8 @@ Google Play и App Store могут запросить тестовый акка
 ## Placeholder (заполнить перед отправкой)
 
 **⚠️ Перед отправкой в Google Play:** владелец проекта вручную создаёт тестовый аккаунт и заполняет данные **только в Google Play Console → App access → Testing instructions**. Не добавлять реальные пароли в git, docs или issue tracker.
+
+См. также `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md` — готовый текст для Console.
 
 ```
 Review test account:
@@ -79,6 +82,7 @@ Account deletion: https://tutopt-production.up.railway.app/delete-account
 
 ## Связанные документы
 
+- `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/IOS_TESTFLIGHT_PREP_PHASE_131.md`

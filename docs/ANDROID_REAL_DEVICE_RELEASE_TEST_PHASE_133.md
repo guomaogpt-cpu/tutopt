@@ -87,8 +87,8 @@
 | Production routes HTTP | ✅ 200/307 (Phase 133) |
 | Permissions (INTERNET only) | ✅ |
 | Debug APK build | ✅ |
-| Signed AAB | ⏳ not built — local keystore missing |
-| Real device QA execution | ⏳ pending manual test on physical device |
+| Signed AAB | ✅ owner builds; **rebuild after 134-pre hotfix** |
+| Real device QA execution | ✅ Phase 134-pre retest passed |
 
 **Note:** Google OAuth may be unstable in WebView — use phone/password for login during device test.
 
@@ -100,22 +100,13 @@ Hotfix commit `46df7a5` — retest **signed AAB** after production deploy:
 
 | Blocker | Code fix | Retest on device |
 |---|---|---|
-| Mobile search (query disappears) | ✅ `search-form.ts`, DOM read on submit | ⏳ required |
-| Listing create false error | ✅ notification try/catch | ⏳ required |
-| Company public page 404 | ✅ stable `SellerProfile.id` links | ⏳ required |
-| Account «Мои объявления» | ✅ `AccountManagementNav` | ⏳ required |
+| Mobile search (query disappears) | ✅ | ✅ retest passed |
+| Listing create false error | ✅ | ✅ retest passed |
+| Company public page 404 | ✅ | ✅ retest passed |
+| Account «Мои объявления» | ✅ | ✅ retest passed |
 
-**Before retest:** owner must run **Railway migrate deploy** (no reset/drop).  
-See `docs/RELEASE_BLOCKERS_HOTFIX_PHASE_134_PRE.md`.
-
-### Phase 134-pre device checklist (priority)
-
-- [ ] Homepage search «фасовщик» → `/listings?q=фасовщик`, query preserved
-- [ ] Listings page search update works
-- [ ] Create listing → success UI (no false error)
-- [ ] Company public page from `/account/company`
-- [ ] Company public page from `/admin/companies`
-- [ ] Account → «Управление» → «Мои объявления»
+**Fresh AAB:** перед Google Play Internal Testing собрать **новый** signed AAB — старый (до hotfix) не финальный.  
+See `docs/GOOGLE_PLAY_INTERNAL_TESTING_PHASE_134.md`.
 
 ---
 
@@ -126,4 +117,5 @@ See `docs/RELEASE_BLOCKERS_HOTFIX_PHASE_134_PRE.md`.
 - `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`
 - `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 - `docs/RELEASE_BLOCKERS_HOTFIX_PHASE_134_PRE.md`
+- `docs/GOOGLE_PLAY_INTERNAL_TESTING_PHASE_134.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`

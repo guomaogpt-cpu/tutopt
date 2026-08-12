@@ -33,7 +33,32 @@
 
 ## Для Google Play Console
 
-Скопировать в «Release notes» (ru-RU) для internal testing:
+### Internal testing — версия 1.0.0
+
+Скопировать в «Release notes» (ru-RU) для **Internal testing**:
+
+```
+ВсеТут 1.0.0 — internal testing
+
+Что проверить:
+• Главная и разделы (объявления, услуги, опт, карго)
+• Поиск (в т.ч. кириллица)
+• Просмотр объявлений
+• Подача объявления и загрузка фото
+• Заявки продавцам
+• Личный кабинет и «Мои объявления»
+• Профиль компании
+• Жалобы на объявления
+• Правовые страницы (privacy, terms, support, удаление аккаунта)
+
+Known limitations:
+• Чат пока не доступен
+• Оплата внутри приложения пока не доступна
+• Push-уведомления пока не включены
+• iOS версия готовится отдельно
+```
+
+### Краткий вариант (legacy)
 
 ```
 Первая версия приложения ВсеТут:
@@ -44,6 +69,8 @@
 • жалобы и модерация
 ```
 
+**⚠️ Fresh AAB:** перед загрузкой собрать новый signed AAB после Phase 134-pre hotfix.
+
 ---
 
 ## Связанные документы
@@ -51,15 +78,19 @@
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`
 - `docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md`
+- `docs/GOOGLE_PLAY_INTERNAL_TESTING_PHASE_134.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`
 
 ---
 
-## Phase 133 — release test status
+## Phase 134 — internal testing status
 
 | Item | Status |
 |---|---|
-| Signed AAB | ⏳ not built — local keystore missing |
-| Keystore | ⏳ owner creates locally |
-| Real device QA | ⏳ pending manual test |
-| Next step | Google Play internal testing (after signed AAB + device QA) |
+| Release blockers | ✅ Phase 134-pre fixed |
+| Device retest | ✅ passed |
+| Fresh AAB before upload | ⚠️ required |
+| Internal testing pack | ✅ Phase 134 docs |
+| Next step | Upload to Play Internal testing |
+
+---
