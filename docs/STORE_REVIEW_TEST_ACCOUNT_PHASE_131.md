@@ -42,6 +42,8 @@ Google Play и App Store могут запросить тестовый акка
 
 ## Placeholder (заполнить перед отправкой)
 
+**⚠️ Перед отправкой в Google Play:** владелец проекта вручную создаёт тестовый аккаунт и заполняет данные **только в Google Play Console → App access → Testing instructions**. Не добавлять реальные пароли в git, docs или issue tracker.
+
 ```
 Review test account:
 Login: TO_BE_FILLED
@@ -57,9 +59,9 @@ Notes: TO_BE_FILLED
 3. Bottom nav → Post (+) to create a listing.
 4. Profile tab → Account → My listings / My requests.
 5. On listing detail → Report button for complaints flow.
-Support: https://YOUR_DOMAIN/support
-Privacy: https://YOUR_DOMAIN/privacy
-Account deletion: https://YOUR_DOMAIN/delete-account
+Support: https://tutopt-production.up.railway.app/support
+Privacy: https://tutopt-production.up.railway.app/privacy
+Account deletion: https://tutopt-production.up.railway.app/delete-account
 ```
 
 ---

@@ -285,6 +285,25 @@ Focus: home/account/cargo mobile layout, no duplicate CTAs, legal drafts still r
 
 ---
 
+## 20. Phase 132 — Android Release Candidate ✅
+
+| Item | Status |
+|---|---|
+| App id `kg.vsetut.app` | ✅ |
+| App name ВсеТут | ✅ |
+| version 1.0.0 / code 1 | ✅ |
+| Production URL in Capacitor | ✅ |
+| Permissions INTERNET only | ✅ POST_NOTIFICATIONS removed |
+| Debug APK build | ✅ |
+| Release AAB | ⏳ needs local keystore |
+| Store URLs documented | ✅ |
+
+See `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md` and `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`.
+
+**Next:** Phase 133 — signed AAB + real device release test.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_APP_WRAPPER_PHASE_108.md`

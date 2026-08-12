@@ -215,6 +215,36 @@ Status: **retest recommended** before RC.
 
 ---
 
+## Phase 132 — Android Release Candidate checklist
+
+Before Play internal testing, verify on **real device** (APK or internal test AAB):
+
+| # | Scenario | Pass |
+|---|---|---|
+| 1 | Install APK / internal test AAB | ☐ |
+| 2 | App opens production URL (not localhost) | ☐ |
+| 3 | Splash → home loads | ☐ |
+| 4 | Login / register (phone + password) | ☐ |
+| 5 | Browse listings / search | ☐ |
+| 6 | Open listing detail | ☐ |
+| 7 | Create listing | ☐ |
+| 8 | Upload photo in listing form | ☐ |
+| 9 | Send lead (contact seller) | ☐ |
+| 10 | Receive lead (seller account) | ☐ |
+| 11 | Report listing | ☐ |
+| 12 | Account deletion page opens | ☐ |
+| 13 | Support / privacy / terms open in WebView | ☐ |
+| 14 | Android Back (app, modal, form) | ☐ |
+| 15 | Keyboard does not hide submit | ☐ |
+| 16 | `tel:` link opens dialer | ☐ |
+| 17 | Poor network / offline — graceful error, no crash | ☐ |
+
+See `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`.
+
+Status: **pending** — run after signed AAB internal test upload.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_MANUAL_QA_POLISH_PHASE_111.md`
@@ -225,4 +255,5 @@ Status: **retest recommended** before RC.
 - `docs/MOBILE_APP_ROADMAP_PHASE_107.md`
 - `docs/MOBILE_APP_UX_UPGRADE_PHASE_115.md`
 - `docs/APP_NOTIFICATIONS_ACTIVITY_PHASE_116.md`
-- `docs/MOBILE_QA_FREEZE_PHASE_130.md`
+- `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
+- `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`
