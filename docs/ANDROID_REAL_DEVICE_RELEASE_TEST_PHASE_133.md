@@ -94,10 +94,36 @@
 
 ---
 
+## Phase 134-pre Release blockers hotfix
+
+Hotfix commit `46df7a5` — retest **signed AAB** after production deploy:
+
+| Blocker | Code fix | Retest on device |
+|---|---|---|
+| Mobile search (query disappears) | ✅ `search-form.ts`, DOM read on submit | ⏳ required |
+| Listing create false error | ✅ notification try/catch | ⏳ required |
+| Company public page 404 | ✅ stable `SellerProfile.id` links | ⏳ required |
+| Account «Мои объявления» | ✅ `AccountManagementNav` | ⏳ required |
+
+**Before retest:** owner must run **Railway migrate deploy** (no reset/drop).  
+See `docs/RELEASE_BLOCKERS_HOTFIX_PHASE_134_PRE.md`.
+
+### Phase 134-pre device checklist (priority)
+
+- [ ] Homepage search «фасовщик» → `/listings?q=фасовщик`, query preserved
+- [ ] Listings page search update works
+- [ ] Create listing → success UI (no false error)
+- [ ] Company public page from `/account/company`
+- [ ] Company public page from `/admin/companies`
+- [ ] Account → «Управление» → «Мои объявления»
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`
 - `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
+- `docs/RELEASE_BLOCKERS_HOTFIX_PHASE_134_PRE.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`

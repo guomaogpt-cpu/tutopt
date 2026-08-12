@@ -1,11 +1,22 @@
 # Release Blockers Hotfix — Phase 134-pre
 
-> **Статус:** hotfix по результатам ручного теста Android release build.  
+> **Статус:** hotfix по результатам ручного теста **signed Android release AAB**.  
 > **Не публикуем** в Google Play в этой фазе.
 
 ---
 
-## 1. Найденные проблемы
+## 1. Цель
+
+Исправить критичные release blockers перед Google Play Internal Testing:
+
+- mobile search на Android
+- false error при создании объявления
+- 404 публичной страницы компании
+- неочевидная навигация «Мои объявления» в кабинете
+
+---
+
+## 2. Найденные проблемы
 
 | # | Проблема | Приоритет |
 |---|---|---|
@@ -16,35 +27,41 @@
 
 ---
 
-## 2. Root cause
-
-### Mobile search
+## 3. Root cause: mobile search
 
 - На Android WebView `type="search"` может очищать поле **до** чтения React state при submit.
 - Form submit читал `query` из state, который уже пустой → `router.push("/listings")` без `?q=`.
 - На `/listings` поле синхронизируется с URL → поиск «не работает».
 
-### Listing create false error
+---
+
+## 4. Root cause: listing create false error
 
 - `POST /api/listings` создаёт listing, затем вызывает `createListingSubmittedNotification`.
 - Если notification insert падает (часто: enum `LISTING_SUBMITTED` не применён в production DB), API возвращает **500**.
 - Frontend показывает ошибку, хотя listing уже в БД.
 - Повторный submit → duplicate guard → «такое объявление уже создано».
 
-### Company public page 404
+---
+
+## 5. Root cause: company public 404
 
 - Публичные ссылки использовали `slug`, который **меняется** при первом сохранении профиля компании.
 - Старый slug → 404; также возможна путаница slug vs `SellerProfile.id`.
 - `/seller/[id]` не редиректил на `/companies/[id]` для company profiles.
 
-### Account navigation
+---
+
+## 6. Account navigation fix
 
 - Карусель метрик (`AccountMyActivityStats`) выглядела как единственная навигация.
 - «Мои объявления» не был явной кнопкой на mobile.
 
+**Fix:** блок «Управление» на `/account` с list rows: Мои объявления, Мои заявки, Компания, Избранное, Уведомления, Поддержка — **над** аналитикой.
+
 ---
 
-## 3. Что исправлено
+## 7. Что исправлено (код)
 
 | Область | Fix |
 |---|---|
@@ -55,7 +72,7 @@
 
 ---
 
-## 4. Railway migration deploy
+## 8. Migration / Railway status
 
 **Да, Railway migration deploy required** (если ещё не выполнен после Phase 118+).
 
@@ -78,9 +95,11 @@
 
 Code fix для notification делает create устойчивым даже без migration, но migration всё равно нужна для полноценных уведомлений.
 
+**Migration: Railway migrate deploy required** (если ещё не выполнен).
+
 ---
 
-## 5. Как проверить на production
+## 9. Как проверить на телефоне
 
 1. **Поиск (Android):** главная → ввести «фасовщик» → Enter → `/listings?q=фасовщик`, query в поле сохранён.
 2. **Listing create:** `/listings/new` → submit → success UI, без ошибки; в админке moderation queue.
@@ -88,9 +107,11 @@ Code fix для notification делает create устойчивым даже �
 4. **Admin company link:** `/admin/companies` → open public → 200.
 5. **Account:** `/account` → блок «Управление» → «Мои объявления» → `/account/listings`.
 
+Viewport: 390×844, 430×932.
+
 ---
 
-## 6. Повторная проверка на Android release build
+## 10. Повторная проверка на Android release build
 
 - [ ] Homepage search → listings with q
 - [ ] Listings page search update
@@ -103,9 +124,25 @@ Code fix для notification делает create устойчивым даже �
 
 ---
 
+## 11. Что осталось перед Google Play Internal Testing
+
+| Item | Status |
+|---|---|
+| Deploy Railway migrations | ⏳ owner |
+| Redeploy production web | ⏳ after migrations |
+| Retest signed AAB on device | ⏳ after deploy |
+| Screenshots | Missing |
+| Test account in Play Console | Missing |
+| Legal sign-off privacy/terms | Needs review |
+| Upload AAB to internal testing | ⏳ after retest pass |
+
+**Not ready for internal testing** until: migrations deployed + device retest pass.
+
+---
+
 ## Migration
 
-**Railway migration deploy required** — см. §4.
+**Railway migrate deploy required** — см. §8.
 
 ---
 

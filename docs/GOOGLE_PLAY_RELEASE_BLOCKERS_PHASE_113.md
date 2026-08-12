@@ -1,7 +1,7 @@
-# Google Play Release Blockers — Phase 113 / 114 / 131 / 132 / 133
+# Google Play Release Blockers — Phase 113 / 114 / 131 / 132 / 133 / 134-pre
 
 > **Статус:** blockers checklist перед Google Play submission.  
-> **Phase 133** — signing setup verified; debug APK builds; signed AAB pending local keystore; real device QA pending.  
+> **Phase 134-pre** — release blockers hotfix (search, listing create, company 404, account nav); device retest pending.  
 > **Не публикуем** в Play Console в этих фазах.
 
 **⚠️ Legal:** Требуется финальная юридическая проверка Privacy Policy и Terms перед публикацией.
@@ -35,6 +35,12 @@
 | No broken store routes | Done | Product | Verified Phase 133 |
 | Minimal permissions | Done | Android | INTERNET only |
 | Debug APK build | Done | Android | assembleDebug ok Phase 133 |
+| Mobile search (Android) | Done | Product | Phase 134-pre hotfix — retest on device |
+| Listing create UX | Done | Product | Phase 134-pre — notification non-blocking |
+| Company public page | Done | Product | Phase 134-pre — id-based links |
+| Account navigation | Done | Product | Phase 134-pre — «Управление» block |
+| Railway migrations | Needs review | DevOps | Deploy only — no reset/drop |
+| Release blockers retest | Needs review | QA | After production deploy + migrations |
 
 **Status legend:** Done | Needs review | Missing
 
@@ -92,7 +98,8 @@ See `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 | 131 ✅ | Store readiness pack |
 | 132 ✅ | Android RC config + debug build |
 | 133 ✅ | Signing setup verified; keystore docs; device test checklist |
-| **Next** | Owner: local keystore → signed AAB → internal testing → real device QA |
+| 134-pre ✅ | Release blockers hotfix (code) — `RELEASE_BLOCKERS_HOTFIX_PHASE_134_PRE.md` |
+| **Next** | Railway migrate deploy → production redeploy → signed AAB device retest → internal testing |
 
 ---
 
@@ -108,4 +115,5 @@ See `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 - `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
 - `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`
 - `docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md`
+- `docs/RELEASE_BLOCKERS_HOTFIX_PHASE_134_PRE.md`
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
