@@ -31,6 +31,7 @@ pnpm-debug.log*
 # Android release signing (never commit)
 *.jks
 *.keystore
+*.p12
 android/key.properties
 android/signing.properties
 android/release-signing.properties

@@ -55,6 +55,7 @@ captures/
 # Keystore files — never commit
 *.jks
 *.keystore
+*.p12
 key.properties
 signing.properties
 release-signing.properties

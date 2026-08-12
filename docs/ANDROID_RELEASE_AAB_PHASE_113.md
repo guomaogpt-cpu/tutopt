@@ -304,10 +304,29 @@ See `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md` and `docs/ANDROID_RELEASE_NOTE
 
 ---
 
+## 21. Phase 133 — Signed AAB + real device release test ✅ (prep)
+
+| Item | Status |
+|---|---|
+| Signing setup verified | ✅ debug without keystore; release uses local `key.properties` |
+| Keystore local setup doc | ✅ `ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md` |
+| Real device release checklist | ✅ `ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md` |
+| `.gitignore` `*.p12` | ✅ |
+| Production routes re-check | ✅ 200/307 |
+| Debug APK build | ✅ Phase 133 |
+| Signed AAB | ⏳ not built — local keystore missing |
+| Real device QA executed | ⏳ pending manual test |
+
+**Next:** owner keystore → signed AAB → Play internal testing → complete device checklist.
+
+---
+
 ## Связанные документы
 
 - `docs/ANDROID_APP_WRAPPER_PHASE_108.md`
 - `docs/ANDROID_APK_TEST_INSTALL_PHASE_109.md`
+- `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`
+- `docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md`
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
 - `docs/ACCOUNT_DELETION_PHASE_114.md`
 - `docs/GOOGLE_PLAY_DATA_SAFETY_NOTES_PHASE_114.md`

@@ -49,4 +49,17 @@
 ## Связанные документы
 
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
+- `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`
+- `docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`
+
+---
+
+## Phase 133 — release test status
+
+| Item | Status |
+|---|---|
+| Signed AAB | ⏳ not built — local keystore missing |
+| Keystore | ⏳ owner creates locally |
+| Real device QA | ⏳ pending manual test |
+| Next step | Google Play internal testing (after signed AAB + device QA) |

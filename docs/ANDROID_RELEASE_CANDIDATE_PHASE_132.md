@@ -57,6 +57,9 @@ File: `android/app/src/main/AndroidManifest.xml`
 |---|---|
 | `/` | 200 |
 | `/market` | 200 |
+| `/services` | 200 |
+| `/opt` | 200 |
+| `/cargo` | 200 |
 | `/listings` | 200 |
 | `/listings/new` | 200 |
 | `/account` | 307 → login (expected) |
@@ -83,15 +86,21 @@ Release AAB requires local `android/key.properties` + keystore (not in git).
 - Debug APK: **ok** (Gradle assembleDebug)
 - Release AAB: **not tested** — requires local signing keystore
 
+**Phase 133 update:**
+- Debug APK: **ok** (re-verified)
+- Signed AAB: **not built** — `android/key.properties` missing locally
+- Real device QA: **pending** — see `docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md`
+
 ---
 
 ## 7. Signing safety
 
 | Item | Status |
 |---|---|
-| `*.jks` / `*.keystore` in `.gitignore` | ✅ |
+| `*.jks` / `*.keystore` / `*.p12` in `.gitignore` | ✅ |
 | `android/key.properties` in `.gitignore` | ✅ |
 | `android/key.properties.example` | ✅ committed (placeholders) |
+| Keystore setup doc | ✅ `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md` |
 | `google-services.json` ignored | ✅ |
 | Debug build without secrets | ✅ |
 | Release requires local keystore | ✅ expected |
@@ -153,7 +162,9 @@ See `docs/ANDROID_RELEASE_NOTES_PHASE_132.md` — version 1.0.0, features and li
 
 See updated `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`.
 
-**Not ready to publish yet:** signed AAB, screenshots, test account in Console, legal sign-off, real device QA retest.
+**Not ready to publish yet:** signed AAB, screenshots, test account in Console, legal sign-off, real device QA pass.
+
+**Phase 133:** signing verified; keystore instruction added; device checklist ready; signed AAB and device QA still pending owner/QA.
 
 ---
 
@@ -169,16 +180,14 @@ See updated `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`.
 
 ## 14. Next step
 
-**Phase 133 — signed AAB and real device release test**
+**After Phase 133 — Google Play internal testing**
 
-1. Create keystore locally
+1. Owner creates keystore locally (`docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`)
 2. Fill `android/key.properties`
-3. Run `npm run android:release`
-4. Upload AAB to Play Console internal testing
-5. Complete real device RC checklist (`docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`)
+3. Build signed AAB (`npm run android:release`)
+4. Complete real device checklist (`docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md`)
+5. Upload AAB to Play Console **internal testing** (not production)
 6. Capture screenshots per `docs/STORE_SCREENSHOTS_CHECKLIST_PHASE_131.md`
-
-Alternative if Android RC fully signed off: Phase 133 — iOS Capacitor setup (see `docs/IOS_TESTFLIGHT_PREP_PHASE_131.md`).
 
 ---
 

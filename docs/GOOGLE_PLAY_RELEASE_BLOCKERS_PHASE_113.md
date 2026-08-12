@@ -1,7 +1,7 @@
-# Google Play Release Blockers — Phase 113 / 114 / 131 / 132
+# Google Play Release Blockers — Phase 113 / 114 / 131 / 132 / 133
 
 > **Статус:** blockers checklist перед Google Play submission.  
-> **Phase 132** — Android release candidate config verified; debug APK builds.  
+> **Phase 133** — signing setup verified; debug APK builds; signed AAB pending local keystore; real device QA pending.  
 > **Не публикуем** в Play Console в этих фазах.
 
 **⚠️ Legal:** Требуется финальная юридическая проверка Privacy Policy и Terms перед публикацией.
@@ -22,17 +22,19 @@
 | Screenshots | Missing | Design/QA | `docs/STORE_SCREENSHOTS_CHECKLIST_PHASE_131.md` |
 | Store description | Done | Product | `docs/STORE_LISTING_TEXTS_PHASE_131.md` |
 | Data safety notes | Needs review | Product/Legal | `docs/STORE_DATA_SAFETY_NOTES_PHASE_131.md` |
-| Signed AAB | Missing | Android | Requires local keystore + `npm run android:release` |
-| Real device QA | Needs review | QA | RC checklist Phase 132 in `ANDROID_REAL_DEVICE_QA_PHASE_112.md` |
-| Production URL | Done | DevOps | Capacitor → `tutopt-production.up.railway.app`; routes 200/307 |
+| Signed AAB | Missing | Android | Local keystore + `key.properties` — Phase 133 |
+| Keystore prepared | Missing | Owner | `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md` |
+| Real device QA | Needs review | QA | `docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md` |
+| Internal testing track | Missing | Owner | After signed AAB + Play Console app |
+| Production URL | Done | DevOps | Capacitor → `tutopt-production.up.railway.app`; routes 200/307 Phase 133 |
 | Report/moderation flow | Done | Product | Reports + admin queue Phase 125 |
 | Release notes | Done | Product | `docs/ANDROID_RELEASE_NOTES_PHASE_132.md` v1.0.0 |
 | Android RC config | Done | Android | `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md` |
-| No exposed secrets | Done | Security | `.gitignore` keystore/key.properties |
+| No exposed secrets | Done | Security | `.gitignore` keystore/key.properties/*.p12 |
 | No debug labels | Done | Product | Mobile QA Phase 130 |
-| No broken store routes | Done | Product | Verified Phase 132 |
-| Minimal permissions | Done | Android | INTERNET only; POST_NOTIFICATIONS removed Phase 132 |
-| Debug APK build | Done | Android | assembleDebug ok Phase 132 |
+| No broken store routes | Done | Product | Verified Phase 133 |
+| Minimal permissions | Done | Android | INTERNET only |
+| Debug APK build | Done | Android | assembleDebug ok Phase 133 |
 
 **Status legend:** Done | Needs review | Missing
 
@@ -68,9 +70,12 @@ See `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 
 | Item | Status |
 |---|---|
-| Release signing docs | ✅ |
-| Debug APK | ✅ Phase 132 |
+| Release signing docs | ✅ Phase 133 |
+| Keystore local setup doc | ✅ `ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md` |
+| Debug APK | ✅ Phase 133 |
 | Local keystore | ⏳ owner creates |
+| Signed AAB built | ⏳ not built — local keystore missing |
+| Real device QA | ⏳ pending manual test |
 | Output path | `android/app/build/outputs/bundle/release/app-release.aab` |
 
 **Never commit:** keystore, passwords, API keys, review credentials.
@@ -86,7 +91,8 @@ See `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 | 130 ✅ | Mobile QA freeze |
 | 131 ✅ | Store readiness pack |
 | 132 ✅ | Android RC config + debug build |
-| **Next** | Signed AAB → internal testing → real device RC QA |
+| 133 ✅ | Signing setup verified; keystore docs; device test checklist |
+| **Next** | Owner: local keystore → signed AAB → internal testing → real device QA |
 
 ---
 
@@ -100,4 +106,6 @@ See `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 - `docs/STORE_DATA_SAFETY_NOTES_PHASE_131.md`
 - `docs/STORE_REVIEW_TEST_ACCOUNT_PHASE_131.md`
 - `docs/ANDROID_RELEASE_AAB_PHASE_113.md`
+- `docs/ANDROID_KEYSTORE_LOCAL_SETUP_PHASE_133.md`
+- `docs/ANDROID_REAL_DEVICE_RELEASE_TEST_PHASE_133.md`
 - `docs/ANDROID_REAL_DEVICE_QA_PHASE_112.md`
