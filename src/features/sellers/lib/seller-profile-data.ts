@@ -57,10 +57,15 @@ export function sanitizeSellerProfileForGuest(
 }
 
 export async function getSellerProfileByParam(param: string) {
+  const normalized = decodeURIComponent(param.trim());
+  if (!normalized) {
+    return null;
+  }
+
   return prisma.sellerProfile.findFirst({
-    where: isUuid(param)
-      ? { OR: [{ id: param }, { slug: param }] }
-      : { slug: param },
+    where: isUuid(normalized)
+      ? { OR: [{ id: normalized }, { slug: normalized }] }
+      : { slug: normalized },
     select: sellerProfileSelect,
   });
 }

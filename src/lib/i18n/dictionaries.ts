@@ -3667,6 +3667,11 @@ export const DICTIONARY = {
     kg: "Менин жарыяларым",
     en: "My listings",
   },
+  "account.management": {
+    ru: "Управление",
+    kg: "Башкаруу",
+    en: "Manage",
+  },
   "account.myRequests": {
     ru: "Мои заявки",
     kg: "Менин сурамдарым",

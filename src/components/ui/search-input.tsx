@@ -1,5 +1,6 @@
 import { Search, X } from "lucide-react";
 import * as React from "react";
+import { searchInputMobileProps } from "@/features/search/lib/search-form";
 import { cn } from "@/lib/utils";
 
 export type SearchInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
@@ -18,8 +19,8 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           aria-hidden="true"
         />
         <input
-          type="search"
           ref={ref}
+          {...searchInputMobileProps}
           value={value}
           disabled={disabled}
           className={cn(

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, Upload } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { CompanyType } from "@prisma/client";
 import {
   CompanyRequestError,
@@ -12,7 +12,7 @@ import {
   upsertCompanyProfileRequest,
 } from "@/features/company/lib/company-client";
 import type { CompanyProfileSummary } from "@/features/company/lib/company-profile";
-import { COMPANY_TYPES } from "@/features/company/lib/company-profile";
+import { buildCompanyPublicHref, COMPANY_TYPES } from "@/features/company/lib/company-profile";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { uploadListingImageRequest } from "@/features/listings/lib/upload-client";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
@@ -72,6 +72,11 @@ export function CompanyProfileForm({
   const [saved, setSaved] = useState(false);
   const [isSubmittingVerification, setIsSubmittingVerification] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState("");
+  const [livePublicHref, setLivePublicHref] = useState(publicHref);
+
+  useEffect(() => {
+    setLivePublicHref(publicHref);
+  }, [publicHref]);
 
   const isEdit = Boolean(initial?.isConfigured);
   const verificationStatus = initial?.verificationStatus ?? "UNVERIFIED";
@@ -127,7 +132,7 @@ export function CompanyProfileForm({
 
     setIsSubmitting(true);
     try {
-      await upsertCompanyProfileRequest({
+      const saved = await upsertCompanyProfileRequest({
         name: name.trim(),
         company_type: companyType,
         city_id: cityId || null,
@@ -136,6 +141,9 @@ export function CompanyProfileForm({
         website: website.trim() || null,
         logo_url: logoUrl || null,
       });
+      if (saved.isConfigured) {
+        setLivePublicHref(buildCompanyPublicHref(saved.id));
+      }
       setSaved(true);
       router.refresh();
     } catch (error) {
@@ -314,13 +322,13 @@ export function CompanyProfileForm({
           {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
           {isEdit ? t("company.save") : t("company.createProfile")}
         </Button>
-        {publicHref ? (
+        {livePublicHref ? (
           <Button
             asChild
             variant="outline"
             className="h-12 w-full rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:h-11 sm:w-auto"
           >
-            <Link href={publicHref}>{t("company.openPublicPage")}</Link>
+            <Link href={livePublicHref}>{t("company.openPublicPage")}</Link>
           </Button>
         ) : null}
       </div>

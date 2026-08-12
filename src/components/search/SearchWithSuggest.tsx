@@ -26,6 +26,10 @@ import {
   type SearchSuggestResponse,
 } from "@/features/search/lib/search-suggest-types";
 import { resolveSearchVertical } from "@/features/verticals/verticals";
+import {
+  handleSearchFormSubmit,
+  searchInputMobileProps,
+} from "@/features/search/lib/search-form";
 import { trackSearch } from "@/lib/analytics/events";
 import { useRouteVerticalTheme } from "@/lib/use-route-vertical-theme";
 import { cn } from "@/lib/utils";
@@ -178,13 +182,14 @@ export function SearchWithSuggest({
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsOpen(false);
-    const trimmed = query.trim();
-    if (trimmed) {
-      trackSearch(trimmed, searchVertical);
-    }
-    navigateWithQuery(query);
+    handleSearchFormSubmit(event, query, (trimmed) => {
+      setIsOpen(false);
+      setQuery(trimmed);
+      if (trimmed) {
+        trackSearch(trimmed, searchVertical);
+      }
+      navigateWithQuery(trimmed);
+    });
   }
 
   function handleClear() {
@@ -251,7 +256,7 @@ export function SearchWithSuggest({
             />
             <input
               id={inputId}
-              type="search"
+              {...searchInputMobileProps}
               role="combobox"
               value={query}
               disabled={disabled}
@@ -330,7 +335,6 @@ export function SearchWithSuggest({
           onKeyDown={handleInputKeyDown}
           onClear={handleClear}
           placeholder={resolvedPlaceholder}
-          autoComplete="off"
           aria-expanded={isOpen}
           aria-controls={dropdownId}
           aria-autocomplete="list"

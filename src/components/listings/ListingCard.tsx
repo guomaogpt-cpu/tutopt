@@ -7,7 +7,7 @@ import { useState, memo } from "react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
-import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
+import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import { getListingCardGlowClass } from "@/features/listings/lib/listing-card-glow";
 import type { CompanyVerificationStatus } from "@prisma/client";
 import {
@@ -307,7 +307,7 @@ export const ListingCard = memo(function ListingCard({
               ) : null}
               {listing.posted_as_company && listing.sellerProfile.company_type ? (
                 <Link
-                  href={buildCompanyProfileHref(listing.sellerProfile.slug)}
+                  href={buildCompanyPublicHref(listing.sellerProfile.id)}
                   className="relative z-[2] truncate hover:text-blue-600 hover:underline dark:hover:text-blue-400"
                   onClick={(event) => event.stopPropagation()}
                 >

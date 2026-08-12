@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { ListingStatus, UserRole } from "@prisma/client";
 import { AdminCompaniesTable } from "@/components/admin/AdminCompaniesTable";
 import { getCurrentUser } from "@/features/auth/lib/session";
-import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
+import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import { buildNotExpiredListingFilter } from "@/lib/listings/listing-expiration";
 import { prisma } from "@/shared/lib/prisma";
 import { buildPrivatePageMetadata } from "@/shared/seo/seo.config";
@@ -64,7 +64,7 @@ export default async function AdminCompaniesPage() {
         companies={companies.map((item) => ({
           id: item.id,
           slug: item.slug,
-          publicHref: buildCompanyProfileHref(item.slug || item.id),
+          publicHref: buildCompanyPublicHref(item.id),
           companyName: item.company_name,
           companyType: item.company_type!,
           cityName: item.city?.name ?? null,

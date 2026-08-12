@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { SellerProfileViewTracker } from "@/components/analytics/SellerProfileViewTracker";
 import { Container } from "@/components/layout/Container";
 import { SellerProfileListings } from "@/components/seller/SellerProfileListings";
@@ -28,6 +28,7 @@ import {
 } from "@/features/sellers/lib/seller-vertical-profile";
 import { calculateSellerTrust } from "@/lib/trust/seller-trust";
 import { parseListingVerticalParam } from "@/features/verticals/verticals";
+import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import { buildPageMetadata, truncateSeoText } from "@/shared/seo/seo.config";
 
 type SellerProfilePageProps = {
@@ -105,6 +106,10 @@ export default async function SellerProfilePage({
 
   if (!profile) {
     notFound();
+  }
+
+  if (profile.company_type) {
+    redirect(buildCompanyPublicHref(profile.id));
   }
 
   const [allListings, publishedListingCount, favoriteListingIds] = await Promise.all([

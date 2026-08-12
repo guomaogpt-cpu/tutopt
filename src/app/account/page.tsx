@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AccountManagementNav } from "@/components/account/AccountManagementNav";
 import { AccountMyActivityStats } from "@/components/account/AccountMyActivityStats";
 import { AccountCargoSummaryCard } from "@/components/account/AccountCargoSummaryCard";
 import { AccountCompanySummaryCard } from "@/components/account/AccountCompanySummaryCard";
@@ -45,6 +46,7 @@ export default async function AccountPage() {
             phone={user.phone}
             hasCompany={Boolean(data.company)}
           />
+          <AccountManagementNav />
           <AccountMyActivityStats
             activeListings={data.listingStats.active}
             pendingListings={data.listingStats.pending}

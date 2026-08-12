@@ -10,7 +10,7 @@ import type { CompanyVerificationStatus } from "@prisma/client";
 import {
   buildSellerProfileHref,
 } from "@/features/sellers/lib/seller-vertical-profile";
-import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
+import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import {
   shouldShowCompanyVerificationBadge,
 } from "@/features/sellers/lib/public-seller-display";
@@ -95,7 +95,7 @@ export function ListingSellerCard({
         : t("listing.seller");
   const analyticsParams = { vertical, hasPrice, isOwnListing };
   const profileHref = postedAsCompany
-    ? buildCompanyProfileHref(sellerSlug || sellerId, vertical)
+    ? buildCompanyPublicHref(sellerId, vertical)
     : buildSellerProfileHref(sellerSlug || sellerId, vertical);
   const showVerifiedCompanyBadge = shouldShowCompanyVerificationBadge({
     postedAsCompany,

@@ -736,7 +736,7 @@ export function NewListingForm({
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (isSubmitting) {
+    if (isSubmitting || createdListingId) {
       return;
     }
 

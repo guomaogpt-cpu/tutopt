@@ -7,7 +7,7 @@ import {
 } from "@prisma/client";
 import type { PublicUser } from "@/features/auth/lib/session";
 import {
-  buildCompanyProfileHref,
+  buildCompanyPublicHref,
   isCompanyProfileConfigured,
 } from "@/features/company/lib/company-profile";
 import { getBuyerCargoRequests } from "@/features/cargo/lib/cargo-requests-data";
@@ -185,7 +185,7 @@ export async function getAccountDashboardData(
           slug: sellerProfile.slug,
           companyType: sellerProfile.company_type,
           verificationStatus: sellerProfile.verification_status,
-          publicHref: buildCompanyProfileHref(sellerProfile.slug || sellerProfile.id),
+          publicHref: buildCompanyPublicHref(sellerProfile.id),
         }
       : null;
 

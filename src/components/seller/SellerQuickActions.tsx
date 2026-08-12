@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ExternalLink, Inbox, LayoutGrid, ListChecks, PlusCircle, Settings2, Truck } from "lucide-react";
 import type { ListingVertical } from "@prisma/client";
+import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import { VERTICALS } from "@/features/verticals/verticals";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -35,18 +36,19 @@ const CREATE_LINKS: Array<{ vertical: ListingVertical; labelKey: DictionaryKey }
 export function SellerQuickActions({
   sellerProfileId,
   companyConfigured = false,
-  companySlug = null,
+  companySlug: _companySlug = null,
   verticalCounts,
 }: SellerQuickActionsProps) {
   const { t } = useTranslation();
   const hasAnyListings =
     verticalCounts != null &&
     Object.values(verticalCounts).some((count) => (count ?? 0) > 0);
-  const publicProfileHref = companyConfigured
-    ? `/companies/${companySlug || sellerProfileId}`
-    : sellerProfileId
-      ? `/seller/${sellerProfileId}`
-      : null;
+  const publicProfileHref =
+    companyConfigured && sellerProfileId
+      ? buildCompanyPublicHref(sellerProfileId)
+      : sellerProfileId
+        ? `/seller/${sellerProfileId}`
+        : null;
 
   return (
     <section aria-labelledby="seller-quick-actions-title">

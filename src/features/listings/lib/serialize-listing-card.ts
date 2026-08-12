@@ -27,6 +27,7 @@ export const listingCardSelect = {
   brand: { select: { name: true } },
   sellerProfile: {
     select: {
+      id: true,
       company_name: true,
       company_type: true,
       slug: true,

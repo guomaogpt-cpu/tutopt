@@ -7,7 +7,7 @@ import { needsPhoneForPosting } from "@/features/auth/lib/seller-onboarding";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { buildSellerOnboardingUrl } from "@/features/auth/validators/seller-onboarding.validators";
 import {
-  buildCompanyProfileHref,
+  buildCompanyPublicHref,
   toCompanyProfileSummary,
 } from "@/features/company/lib/company-profile";
 import { Container } from "@/components/ui/container";
@@ -59,9 +59,7 @@ export default async function AccountCompanyPage() {
   const company = profile ? toCompanyProfileSummary(profile) : null;
   const isConfigured = Boolean(company?.isConfigured);
   const publicHref =
-    company && isConfigured
-      ? buildCompanyProfileHref(company.slug || company.id)
-      : null;
+    company && isConfigured ? buildCompanyPublicHref(company.id) : null;
 
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F5F7FA] pt-4 dark:bg-slate-950 sm:py-8">

@@ -74,6 +74,14 @@ export function buildCompanyProfileHref(
   return `/companies/${idOrSlug}?vertical=${vertical}`;
 }
 
+/** Stable public URL — always use SellerProfile.id (slug may change after first save). */
+export function buildCompanyPublicHref(
+  sellerProfileId: string,
+  vertical?: string | null,
+): string {
+  return buildCompanyProfileHref(sellerProfileId, vertical);
+}
+
 export function resolveListingPublisherDisplay(options: {
   postedAsCompany: boolean;
   companyName: string;

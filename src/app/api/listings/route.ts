@@ -182,10 +182,18 @@ export async function POST(request: Request) {
       },
     });
 
-    await createListingSubmittedNotification({
-      recipientId: user.id,
-      listingTitle: listing.title,
-    });
+    try {
+      await createListingSubmittedNotification({
+        recipientId: user.id,
+        listingTitle: listing.title,
+      });
+    } catch (notificationError) {
+      logger.warn("Listing submitted notification failed", {
+        listingId: listing.id,
+        userId: user.id,
+        error: notificationError,
+      });
+    }
 
     return jsonData({ listing }, 201);
   });

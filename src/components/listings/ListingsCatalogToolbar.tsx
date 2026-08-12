@@ -23,6 +23,7 @@ import {
   type ListingsCatalogFilters,
 } from "@/features/listings/lib/listings-catalog";
 import { catalogShowsBrandFilter } from "@/features/listings/lib/vertical-form-config";
+import { handleSearchFormSubmit, searchInputMobileProps } from "@/features/search/lib/search-form";
 import { VERTICAL_LIST } from "@/features/verticals/verticals";
 import {
   trackCatalogFilterChange,
@@ -163,8 +164,10 @@ export function ListingsCatalogToolbar({
   }
 
   function handleCatalogSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    pushFilters({ q: query.trim() }, "search");
+    handleSearchFormSubmit(event, query, (trimmed) => {
+      setQuery(trimmed);
+      pushFilters({ q: trimmed }, "search");
+    });
   }
 
   function handleCatalogClear() {
@@ -324,7 +327,7 @@ export function ListingsCatalogToolbar({
               />
               <Input
                 id="catalog-search"
-                type="search"
+                {...searchInputMobileProps}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder={

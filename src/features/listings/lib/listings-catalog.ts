@@ -48,6 +48,7 @@ export type ListingCardData = {
   city: { name: string } | null;
   brand: { name: string } | null;
   sellerProfile: {
+    id: string;
     company_name: string;
     company_type: string | null;
     slug: string;

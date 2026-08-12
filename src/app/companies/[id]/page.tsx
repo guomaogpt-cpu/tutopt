@@ -11,7 +11,7 @@ import { Container } from "@/components/layout/Container";
 import { isCompanyVerified } from "@/features/company/lib/company-verification";
 import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import { getCurrentUser } from "@/features/auth/lib/session";
-import { buildCompanyProfileHref } from "@/features/company/lib/company-profile";
+import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import {
   getSellerProfileByParam,
@@ -70,7 +70,7 @@ export async function generateMetadata({
     });
   }
 
-  const path = buildCompanyProfileHref(profile.slug || profile.id);
+  const path = buildCompanyPublicHref(profile.id);
   return buildPageMetadata({
     title: `${profile.company_name} — компания на ВсеТут`,
     description: truncateSeoText(
@@ -97,7 +97,7 @@ export default async function CompanyPublicPage({
     notFound();
   }
 
-  const companyPath = profile.slug || profile.id;
+  const companyPath = profile.id;
   const [allListings, favoriteListingIds] = await Promise.all([
     getSellerPublishedListings(profile.id, { postedAsCompanyOnly: true }),
     user ? getUserFavoriteListingIds(user.id) : Promise.resolve([]),
@@ -264,7 +264,7 @@ export default async function CompanyPublicPage({
             <div className="mt-4 -mx-1 overflow-x-auto px-1">
               <div className="flex w-max min-w-full gap-2 sm:flex-wrap sm:w-auto">
                 <Link
-                  href={buildCompanyProfileHref(companyPath)}
+                  href={buildCompanyPublicHref(companyPath)}
                   className={cn(
                     "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
                     filterVertical === null
@@ -280,7 +280,7 @@ export default async function CompanyPublicPage({
                   return (
                     <Link
                       key={vertical}
-                      href={buildCompanyProfileHref(companyPath, vertical)}
+                      href={buildCompanyPublicHref(companyPath, vertical)}
                       className={cn(
                         "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium transition",
                         isActive
