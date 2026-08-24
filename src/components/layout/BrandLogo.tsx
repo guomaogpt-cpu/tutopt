@@ -9,7 +9,7 @@ export const BRAND_LOGO_SRC = "/logos/vsetut-logo-new.png";
 
 const variantSizeClasses = {
   header:
-    "h-11 w-auto max-w-[44px] sm:h-12 sm:max-w-[48px] md:h-[60px] md:max-w-[60px] lg:h-[72px] lg:max-w-[72px]",
+    "h-12 w-auto max-w-[48px] sm:h-[52px] sm:max-w-[52px] md:h-16 md:max-w-[64px] lg:h-[80px] lg:max-w-[80px]",
   footer: "h-9 w-auto max-w-[36px] md:h-10 md:max-w-[40px]",
   default: "h-10 w-auto max-w-[40px]",
 } as const;
@@ -46,10 +46,11 @@ export function BrandLogo({
       {showWordmark ? (
         <span
           className={cn(
-            "whitespace-nowrap font-extrabold uppercase tracking-[0.06em] text-slate-900 dark:text-slate-100",
+            "whitespace-nowrap font-black uppercase leading-none text-[#111827] dark:text-slate-100",
             "hidden min-[360px]:inline",
+            "tracking-[0.035em]",
             variant === "header"
-              ? "text-sm sm:text-base md:text-lg lg:text-xl"
+              ? "text-[15px] sm:text-base md:text-lg lg:text-[1.35rem]"
               : "text-sm",
           )}
         >
@@ -65,7 +66,7 @@ export function BrandLogo({
         href={href}
         className={cn(
           "flex min-w-0 shrink-0 items-center",
-          showWordmark && "gap-1.5 sm:gap-2",
+          showWordmark && "gap-1",
         )}
         aria-label="ВСЁ ТУТ — на главную"
       >
@@ -78,7 +79,7 @@ export function BrandLogo({
     <div
       className={cn(
         "flex shrink-0 items-center",
-        showWordmark && "gap-1.5 sm:gap-2",
+        showWordmark && "gap-1",
       )}
     >
       {logoContent}

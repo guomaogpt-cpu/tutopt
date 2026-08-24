@@ -175,6 +175,19 @@ See `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
 
 ---
 
+## Phase 137 — Sticky two-level header
+
+| Issue | Fix |
+|---|---|
+| Nav in top header row | Moved to level 2 only |
+| Home section dupes | Removed `HomepagePaperEntry` |
+| Search camera padding | Tightened right padding |
+| Logo spacing/font | Brand block gap 4px, font-black |
+
+See `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

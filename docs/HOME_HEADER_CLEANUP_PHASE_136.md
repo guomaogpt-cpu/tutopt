@@ -71,9 +71,11 @@ Routes:
 - Desktop-only discovery blocks (opt/services/cargo sections) остаются ниже fold — не менялись в этой фазе
 - `HomeTrendingSearchesSection` компонент остаётся в codebase, но не рендерится на `/`
 - Legacy hero components (`HeroSection`, `HomeMarketplaceEntry`) не удалены
+- Superseded by Phase 137: section nav moved to sticky header level 2; `HomepagePaperEntry` no longer rendered
 
 ## Связанные документы
 
 - `docs/LISTING_CARDS_MODALS_PROFILE_CLEANUP_PHASE_135.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`

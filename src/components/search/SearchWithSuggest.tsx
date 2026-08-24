@@ -334,17 +334,19 @@ export function SearchWithSuggest({
           onFocus={handleInputFocus}
           onKeyDown={handleInputKeyDown}
           onClear={handleClear}
+          clearButtonClassName={query.trim() ? "right-9" : undefined}
           placeholder={resolvedPlaceholder}
           aria-expanded={isOpen}
           aria-controls={dropdownId}
           aria-autocomplete="list"
           containerClassName="w-full"
           className={cn(
-            "h-10 rounded-xl bg-white pr-20 dark:bg-slate-900",
+            "h-11 rounded-xl bg-white shadow-sm dark:bg-slate-900",
+            query.trim() ? "pr-[4.25rem]" : "pr-10",
             inputClassName,
           )}
         />
-        <div className="absolute right-10 top-1/2 z-10 -translate-y-1/2">
+        <div className="absolute right-1 top-1/2 z-10 -translate-y-1/2">
           <PhotoSearchButton
             disabled={disabled}
             vertical={searchVertical}
@@ -368,7 +370,7 @@ export function SearchWithSuggest({
         type="submit"
         size="icon"
         disabled={disabled}
-        className={cn("h-10 w-10 shrink-0 sm:hidden", theme.primaryButton)}
+        className={cn("h-11 w-11 shrink-0 sm:hidden", theme.primaryButton)}
         aria-label={resolvedButtonLabel}
       >
         <Search className="size-4" aria-hidden="true" />
@@ -376,7 +378,10 @@ export function SearchWithSuggest({
       <Button
         type="submit"
         disabled={disabled}
-        className={cn("hidden h-10 shrink-0 sm:inline-flex", theme.primaryButton)}
+        className={cn(
+          "hidden h-11 shrink-0 px-5 text-sm font-semibold sm:inline-flex lg:h-12 lg:px-6 lg:text-base",
+          theme.primaryButton,
+        )}
       >
         {resolvedButtonLabel}
       </Button>

@@ -1,6 +1,8 @@
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import type { DictionaryKey } from "@/lib/i18n/dictionaries";
+import { parseListingVerticalParam } from "@/features/verticals/verticals";
 import { getVerticalTheme } from "@/lib/vertical-theme";
+import type { ListingVertical } from "@prisma/client";
 
 export type NavLinkItem = {
   labelKey: DictionaryKey;
@@ -18,6 +20,14 @@ export const HEADER_PRIMARY_LINKS: NavLinkItem[] = [
   { labelKey: "nav.opt", href: "/opt" },
   { labelKey: "nav.market", href: "/market" },
   { labelKey: "nav.services", href: "/services" },
+  { labelKey: "nav.cargo", href: "/cargo" },
+];
+
+/** Second-level header section nav — Объявления first. */
+export const HEADER_SECTION_LINKS: NavLinkItem[] = [
+  { labelKey: "nav.market", href: "/market" },
+  { labelKey: "nav.services", href: "/services" },
+  { labelKey: "nav.opt", href: "/opt" },
   { labelKey: "nav.cargo", href: "/cargo" },
 ];
 
@@ -44,6 +54,36 @@ export function isNavLinkActive(pathname: string, href: string): boolean {
   }
 
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+const SECTION_HREF_VERTICAL: Record<string, ListingVertical> = {
+  "/market": "MARKET",
+  "/services": "SERVICES",
+  "/opt": "OPT",
+  "/cargo": "CARGO",
+};
+
+/** Active state for second-level section nav (pathname + listings vertical query). */
+export function isSectionNavActive(
+  pathname: string,
+  searchParams: URLSearchParams | { get(name: string): string | null },
+  href: string,
+): boolean {
+  if (isNavLinkActive(pathname, href)) {
+    return true;
+  }
+
+  if (pathname !== "/listings") {
+    return false;
+  }
+
+  const targetVertical = SECTION_HREF_VERTICAL[href];
+  if (!targetVertical) {
+    return false;
+  }
+
+  const queryVertical = parseListingVerticalParam(searchParams.get("vertical"));
+  return queryVertical === targetVertical;
 }
 
 /**

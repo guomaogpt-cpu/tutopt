@@ -38,7 +38,7 @@
 | Real device QA | Done | QA | Phase 134-pre retest passed |
 | Real tester feedback | Needs manual | QA | After internal testing install |
 | Cards/modals/profile UX | Done | Product | Phase 135 cleanup |
-| Home/header UX | Done | Product | Phase 136 cleanup |
+| Home/header UX | Done | Product | Phase 136–137 cleanup |
 | Internal testing track | Needs manual | Owner | Not production / not open testing |
 | Production URL | Done | DevOps | tutopt-production.up.railway.app |
 | Android RC config | Done | Android | Phase 132 |
@@ -102,6 +102,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 | **134** | Internal testing pack — **current** |
 | 135 ✅ | Cards/modals/profile UX cleanup |
 | 136 ✅ | Home/header UX cleanup |
+| 137 ✅ | Sticky two-level header |
 | **Next** | Upload fresh AAB → internal testers → feedback |
 
 ---
@@ -114,6 +115,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/LISTING_CARDS_MODALS_PROFILE_CLEANUP_PHASE_135.md`
 - `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
+- `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`

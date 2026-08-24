@@ -1,4 +1,3 @@
-import { HomepagePaperEntry } from "@/components/home/HomepagePaperEntry";
 import {
   HomeDiscoverySection,
   RecentListingsSection,
@@ -38,8 +37,6 @@ export default async function HomePage() {
 
   return (
     <main className="min-w-0 overflow-x-clip bg-[#F8FAFC] dark:bg-slate-950">
-      <HomepagePaperEntry />
-
       <RecentListingsSection
         listings={data.latest}
         isAuthenticated={isAuthenticated}

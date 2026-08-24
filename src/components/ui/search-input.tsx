@@ -6,10 +6,11 @@ import { cn } from "@/lib/utils";
 export type SearchInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
   onClear?: () => void;
   containerClassName?: string;
+  clearButtonClassName?: string;
 };
 
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ className, containerClassName, value, onClear, disabled, ...props }, ref) => {
+  ({ className, containerClassName, clearButtonClassName, value, onClear, disabled, ...props }, ref) => {
     const hasValue = value !== undefined && value !== "";
 
     return (
@@ -33,7 +34,10 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           <button
             type="button"
             onClick={onClear}
-            className="absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-accent hover:text-foreground"
+            className={cn(
+              "absolute right-2 top-1/2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-accent hover:text-foreground",
+              clearButtonClassName,
+            )}
             aria-label="Очистить поиск"
           >
             <X className="size-4" />
