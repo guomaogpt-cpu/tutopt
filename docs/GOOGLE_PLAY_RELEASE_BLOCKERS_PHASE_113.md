@@ -40,6 +40,7 @@
 | Cards/modals/profile UX | Done | Product | Phase 135 cleanup |
 | Home/header UX | Done | Product | Phase 136–137 cleanup |
 | Compact listing cards | Done | Product | Phase 138 |
+| Category drawer header | Done | Product | Phase 139 |
 | Internal testing track | Needs manual | Owner | Not production / not open testing |
 | Production URL | Done | DevOps | tutopt-production.up.railway.app |
 | Android RC config | Done | Android | Phase 132 |
@@ -105,6 +106,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 | 136 ✅ | Home/header UX cleanup |
 | 137 ✅ | Sticky two-level header |
 | 138 ✅ | Compact marketplace cards |
+| 139 ✅ | Category drawer header |
 | **Next** | Upload fresh AAB → internal testers → feedback |
 
 ---
@@ -119,6 +121,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
 - `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
 - `docs/COMPACT_MARKETPLACE_CARDS_PHASE_138.md`
+- `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`

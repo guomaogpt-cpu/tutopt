@@ -72,6 +72,7 @@ Routes:
 - `HomeTrendingSearchesSection` компонент остаётся в codebase, но не рендерится на `/`
 - Legacy hero components (`HeroSection`, `HomeMarketplaceEntry`) не удалены
 - Superseded by Phase 137: section nav moved to sticky header level 2; `HomepagePaperEntry` no longer rendered
+- Superseded by Phase 139: section nav removed; categories via header drawer
 
 ## Связанные документы
 
@@ -79,3 +80,4 @@ Routes:
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
+- `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`

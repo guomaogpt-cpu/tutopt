@@ -201,6 +201,18 @@ See `docs/COMPACT_MARKETPLACE_CARDS_PHASE_138.md`
 
 ---
 
+## Phase 139 — Category drawer header
+
+| Issue | Fix |
+|---|---|
+| Second-level section nav overload | Removed; categories in drawer |
+| No category navigation | «Категории» button next to logo |
+| Section dupes | Drawer replaces sticky nav |
+
+See `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

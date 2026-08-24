@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
-import { Heart, Menu, Settings2, X } from "lucide-react";
+import { Heart, LayoutGrid, Menu, Settings2, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   buildLoginUrl,
@@ -10,14 +10,15 @@ import {
 } from "@/features/auth/lib/login-redirect";
 import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import { BrandLogo } from "@/components/layout/BrandLogo";
+import { CategoryDrawer } from "@/components/layout/header/CategoryDrawer";
 import { HeaderSearch } from "@/components/layout/header/HeaderSearch";
-import { HeaderSectionNav } from "@/components/layout/header/HeaderSectionNav";
 import { HeaderNotificationsBell } from "@/components/layout/header/HeaderNotificationsBell";
 import { SettingsDrawer } from "@/components/layout/header/SettingsDrawer";
 import { UserMenu } from "@/components/layout/header/UserMenu";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { cn } from "@/lib/utils";
 
 type HeaderClientProps = {
   user: HeaderUser | null;
@@ -27,6 +28,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
 
   const loginHref = buildLoginUrl(pathname);
   const registerHref = buildRegisterUrl({ returnPath: pathname });
@@ -34,9 +36,19 @@ export function HeaderClient({ user }: HeaderClientProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/90">
       <Container>
-        {/* Level 1 — brand, search, actions */}
-        <div className="flex h-14 min-w-0 items-center gap-2 lg:h-[76px] lg:gap-3">
-          <BrandLogo variant="header" priority showWordmark />
+        <div className="flex h-14 min-w-0 items-center gap-1.5 lg:h-[76px] lg:gap-2">
+          <div className="flex min-w-0 shrink-0 items-center gap-1">
+            <BrandLogo variant="header" priority showWordmark />
+            <CategoriesButton
+              onClick={() => setCategoriesOpen(true)}
+              className="hidden min-[360px]:inline-flex"
+            />
+            <CategoriesButton
+              onClick={() => setCategoriesOpen(true)}
+              iconOnly
+              className="min-[360px]:hidden"
+            />
+          </div>
 
           <div className="hidden min-w-0 flex-1 justify-center px-2 lg:flex">
             <Suspense
@@ -120,7 +132,6 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
         </div>
 
-        {/* Mobile search — still level 1 */}
         <div className="border-t border-slate-100 pb-2 pt-2 lg:hidden dark:border-slate-800">
           <Suspense
             fallback={
@@ -139,12 +150,9 @@ export function HeaderClient({ user }: HeaderClientProps) {
             />
           </Suspense>
         </div>
-
-        {/* Level 2 — section nav */}
-        <Suspense fallback={null}>
-          <HeaderSectionNav />
-        </Suspense>
       </Container>
+
+      <CategoryDrawer open={categoriesOpen} onOpenChange={setCategoriesOpen} />
 
       <SettingsDrawer
         open={settingsOpen}
@@ -152,6 +160,34 @@ export function HeaderClient({ user }: HeaderClientProps) {
         user={user}
       />
     </header>
+  );
+}
+
+type CategoriesButtonProps = {
+  onClick: () => void;
+  iconOnly?: boolean;
+  className?: string;
+};
+
+function CategoriesButton({ onClick, iconOnly = false, className }: CategoriesButtonProps) {
+  const { t } = useTranslation();
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={onClick}
+      aria-label={t("vertical.categories")}
+      aria-haspopup="dialog"
+      className={cn(
+        "h-9 shrink-0 border-slate-200 bg-white font-semibold text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800",
+        iconOnly ? "w-9 px-0" : "gap-1.5 px-2.5 text-xs sm:h-10 sm:px-3 sm:text-sm",
+        className,
+      )}
+    >
+      <LayoutGrid className="size-4 shrink-0" aria-hidden="true" />
+      {iconOnly ? null : <span className="truncate">{t("vertical.categories")}</span>}
+    </Button>
   );
 }
 
