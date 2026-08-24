@@ -161,6 +161,20 @@ See `docs/LISTING_CARDS_MODALS_PROFILE_CLEANUP_PHASE_135.md`
 
 ---
 
+## Phase 136 — Home/header cleanup
+
+| Issue | Fix |
+|---|---|
+| Duplicate search on home | Removed hero search; header search on all pages |
+| Large hero title | Removed from `HomepagePaperEntry` |
+| «Сейчас ищут» chips | Removed from `/` |
+| Large section cards | Compact horizontal nav row |
+| Header logo | Icon + «ВСЁ ТУТ» wordmark |
+
+See `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

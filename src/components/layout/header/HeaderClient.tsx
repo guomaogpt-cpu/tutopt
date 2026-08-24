@@ -32,7 +32,6 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const pathname = usePathname();
   const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const isHome = pathname === "/";
 
   const loginHref = buildLoginUrl(pathname);
   const registerHref = buildRegisterUrl({ returnPath: pathname });
@@ -41,7 +40,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/80">
       <Container>
         <div className="flex h-[56px] min-w-0 items-center gap-1.5 sm:gap-2 lg:h-[96px] lg:gap-3">
-          <BrandLogo variant="header" priority />
+          <BrandLogo variant="header" priority showWordmark />
 
           <nav
             className="hidden shrink-0 items-center gap-1 lg:flex"
@@ -132,24 +131,22 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
         </div>
 
-        {!isHome ? (
-          <div className="border-t border-slate-100 pb-2 pt-2 lg:hidden dark:border-slate-800">
-            <Suspense
-              fallback={
-                <HeaderSearch
-                  id="header-search-mobile"
-                  placeholderKey="mobileSearch.placeholder"
-                  syncDisabled
-                />
-              }
-            >
+        <div className="border-t border-slate-100 pb-2 pt-2 lg:hidden dark:border-slate-800">
+          <Suspense
+            fallback={
               <HeaderSearch
                 id="header-search-mobile"
                 placeholderKey="mobileSearch.placeholder"
+                syncDisabled
               />
-            </Suspense>
-          </div>
-        ) : null}
+            }
+          >
+            <HeaderSearch
+              id="header-search-mobile"
+              placeholderKey="mobileSearch.placeholder"
+            />
+          </Suspense>
+        </div>
       </Container>
 
       <SettingsDrawer

@@ -397,6 +397,11 @@ export const DICTIONARY = {
     kg: "Жаңы жарыялар",
     en: "New listings",
   },
+  "home.popularProducts": {
+    ru: "Популярные товары",
+    kg: "Популярдуу товарлар",
+    en: "Popular products",
+  },
   "home.popularMarket": {
     ru: "Популярное в объявлениях",
     kg: "Жарыялардагы популярдуу",

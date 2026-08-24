@@ -110,3 +110,4 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/listings`, `/listings/[id]`, `/fa
 - `docs/SELLER_COMPANY_STOREFRONT_PHASE_127.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/HOME_HEADER_CLEANUP_PHASE_136.md`

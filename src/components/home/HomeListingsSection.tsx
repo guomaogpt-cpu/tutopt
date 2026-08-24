@@ -185,8 +185,7 @@ export function RecentListingsSection({
 }: RecentListingsSectionProps) {
   return (
     <HomeDiscoverySection
-      eyebrow="home.showcase"
-      titleKey="home.latestListings"
+      titleKey="home.popularProducts"
       viewAllHref="/listings"
       listings={listings.slice(0, HOME_LATEST_PREVIEW)}
       isAuthenticated={isAuthenticated}
