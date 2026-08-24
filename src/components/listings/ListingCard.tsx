@@ -6,13 +6,10 @@ import { MapPin, Package } from "lucide-react";
 import { useState, memo } from "react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
-import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import { getListingCardGlowClass } from "@/features/listings/lib/listing-card-glow";
-import type { CompanyVerificationStatus } from "@prisma/client";
 import {
   formatListingCardPrice,
-  getListingUnitLabel,
 } from "@/features/listings/lib/listing-display";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
@@ -62,6 +59,17 @@ function formatCardFreshness(
   });
 }
 
+function getSellerDisplayName(listing: ListingCardData, fallback: string): string {
+  if (listing.posted_as_company && listing.sellerProfile.company_type) {
+    return listing.sellerProfile.company_name.trim() || fallback;
+  }
+  return (
+    listing.sellerProfile.user.name?.trim() ||
+    listing.sellerProfile.company_name?.trim() ||
+    fallback
+  );
+}
+
 export const ListingCard = memo(function ListingCard({
   listing,
   isAuthenticated = false,
@@ -73,7 +81,6 @@ export const ListingCard = memo(function ListingCard({
   const rawMainImage = listing.images[0]?.url;
   const mainImage = rawMainImage ? normalizeListingImageUrl(rawMainImage) : undefined;
   const [imageFailed, setImageFailed] = useState(false);
-  const unitLabel = getListingUnitLabel(listing.unit, listing.vertical);
   const hasPrice = Number.isFinite(Number(listing.price)) && Number(listing.price) > 0;
   const priceLabel = hasPrice
     ? formatListingCardPrice({
@@ -85,25 +92,20 @@ export const ListingCard = memo(function ListingCard({
       ? t("services.priceByAgreement")
       : t("listingCard.priceOnRequest");
   const isCompact = variant === "home";
-  const isCatalogLike = variant === "catalog" || variant === "default" || variant === "showcase";
-  const showSellerDesktop = isCatalogLike;
   const dateLabel = formatCardFreshness(
     listing.published_at ?? listing.created_at,
     locale,
     { today: t("listingCard.today"), yesterday: t("listingCard.yesterday") },
   );
   const cityName = listing.city?.name ?? null;
-  const categoryLabel = listing.category.parentName
-    ? `${listing.category.parentName} · ${listing.category.name}`
-    : listing.category.name;
-  const showUnitSuffix =
-    ((listing.vertical === "OPT" || listing.vertical === "MARKET") &&
-      Number(listing.price) > 0) ||
-    (listing.vertical === "SERVICES" && Number(listing.price) > 0);
+  const categoryLabel = listing.category.name;
+  const sellerName = getSellerDisplayName(listing, t("listing.listingAuthor"));
   const glowClass = getListingCardGlowClass(
     listing.vertical,
     listing.category?.name,
   );
+
+  const metaParts = [cityName, categoryLabel, dateLabel].filter(Boolean);
 
   return (
     <div className="group relative h-full w-full min-w-0">
@@ -133,7 +135,7 @@ export const ListingCard = memo(function ListingCard({
           <span className="sr-only">{listing.title}</span>
         </Link>
 
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#EEF2F7] dark:bg-slate-800">
+        <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-[#EEF2F7] dark:bg-slate-800">
           {mainImage && !imageFailed ? (
             <Image
               src={mainImage}
@@ -172,10 +174,7 @@ export const ListingCard = memo(function ListingCard({
 
           <VerticalListingBadge
             vertical={listing.vertical}
-            className={cn(
-              "absolute left-2 top-2 z-10 shadow-sm backdrop-blur-sm",
-              isCatalogLike && "max-sm:hidden",
-            )}
+            className="absolute left-2 top-2 z-10 opacity-90 shadow-sm backdrop-blur-sm"
           />
 
           <FavoriteButton
@@ -194,134 +193,66 @@ export const ListingCard = memo(function ListingCard({
 
         <div
           className={cn(
-            "flex flex-1 flex-col bg-white dark:bg-slate-900",
+            "flex min-h-[8.75rem] flex-1 flex-col bg-white dark:bg-slate-900",
             isCompact ? "gap-1 p-2.5 md:p-3" : "gap-1 p-2.5 sm:gap-1.5 sm:p-3 md:p-3.5",
           )}
         >
           <p
             className={cn(
-              "font-bold leading-tight tracking-tight text-[#0F172A] dark:text-slate-100",
+              "line-clamp-1 font-bold leading-tight tracking-tight text-[#0F172A] dark:text-slate-100",
               isCompact ? "text-[15px] md:text-base" : "text-[15px] sm:text-base md:text-lg",
             )}
           >
             {priceLabel}
-            {showUnitSuffix ? (
-              <span className="text-[11px] font-medium text-[#94A3B8] md:text-xs dark:text-slate-500">
-                {" "}
-                / {unitLabel.toLowerCase()}
-              </span>
-            ) : null}
           </p>
-          {listing.vertical === "OPT" && listing.moq > 0 ? (
-            <p
-              className={cn(
-                "font-medium text-slate-500 dark:text-slate-400",
-                isCompact ? "text-[11px]" : "text-xs",
-              )}
-            >
-              {t("listing.minOrder")}: {listing.moq} {unitLabel.toLowerCase()}
-            </p>
-          ) : null}
 
           <h2
             className={cn(
-              "line-clamp-2 font-medium leading-snug text-[#334155] dark:text-slate-200",
+              "line-clamp-2 min-h-[2.5em] font-medium leading-snug text-[#334155] dark:text-slate-200",
               isCompact ? "text-[13px] md:text-sm" : "text-[13px] sm:text-sm md:text-[15px]",
             )}
           >
             {listing.title}
           </h2>
 
-          {listing.highlightChips.length > 0 ? (
-            <div className={cn("flex flex-wrap gap-1", isCompact ? "pt-0.5" : "pt-1")}>
-              {listing.highlightChips.map((chip) => (
-                <span
-                  key={`${chip.label}-${chip.value}`}
-                  className="inline-flex max-w-full items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300 sm:text-[11px]"
-                >
-                  <span className="truncate">
-                    {chip.label}: {chip.value}
-                  </span>
-                </span>
-              ))}
-            </div>
-          ) : null}
-
-          <div
-            className={cn(
-              "mt-auto flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[#94A3B8] dark:text-slate-400",
-              isCompact ? "pt-0.5 text-[11px]" : "pt-1 text-[11px] sm:text-xs",
-            )}
-          >
-            {cityName ? (
-              <span className="inline-flex min-w-0 max-w-full items-center gap-0.5">
-                <MapPin className="size-3 shrink-0" aria-hidden="true" />
-                <span className="truncate">{cityName}</span>
-              </span>
-            ) : null}
-            {cityName ? <span aria-hidden="true">·</span> : null}
-            <span className="truncate">{categoryLabel}</span>
-            {dateLabel ? (
-              <>
-                <span aria-hidden="true">·</span>
-                <span className="shrink-0">{dateLabel}</span>
-              </>
-            ) : null}
-          </div>
-
-          {showSellerDesktop ? (
+          {metaParts.length > 0 ? (
             <p
               className={cn(
-                "hidden truncate border-t border-[rgba(148,163,184,0.12)] font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
-                "relative z-[2] items-center gap-1.5 md:flex",
-                isCompact
-                  ? "mt-1.5 pt-1.5 text-[11px]"
-                  : "mt-2 pt-2 text-xs md:text-[13px]",
+                "line-clamp-2 text-[#94A3B8] dark:text-slate-400",
+                isCompact ? "text-[11px]" : "text-[11px] sm:text-xs",
               )}
             >
-              {listing.posted_as_company && listing.sellerProfile.company_type ? (
-                <span
-                  className={cn(
-                    "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold",
-                    listing.vertical === "MARKET"
-                      ? "bg-purple-50 text-purple-700 dark:bg-slate-800 dark:text-purple-300"
-                      : listing.vertical === "SERVICES"
-                        ? "bg-green-50 text-green-700 dark:bg-slate-800 dark:text-green-300"
-                        : listing.vertical === "OPT"
-                          ? "bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300"
-                          : "bg-orange-50 text-orange-700 dark:bg-slate-800 dark:text-orange-300",
-                  )}
-                >
-                  {t("company.badge")}
+              {cityName ? (
+                <span className="inline-flex min-w-0 max-w-full items-center gap-0.5 align-middle">
+                  <MapPin className="mb-px inline size-3 shrink-0" aria-hidden="true" />
+                  <span>{metaParts.join(" · ")}</span>
                 </span>
-              ) : null}
-              {listing.posted_as_company &&
-              listing.sellerProfile.verification_status === "VERIFIED" ? (
-                <CompanyVerificationBadge
-                  status={
-                    listing.sellerProfile.verification_status as CompanyVerificationStatus
-                  }
-                  isCargo={listing.vertical === "CARGO"}
-                  compact
-                />
-              ) : null}
-              {listing.posted_as_company && listing.sellerProfile.company_type ? (
-                <Link
-                  href={buildCompanyPublicHref(listing.sellerProfile.id)}
-                  className="relative z-[2] truncate hover:text-blue-600 hover:underline dark:hover:text-blue-400"
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  {listing.sellerProfile.company_name}
-                </Link>
               ) : (
-                <span className="truncate">
-                  {listing.sellerProfile.user.name ||
-                    listing.sellerProfile.company_name ||
-                    t("listing.listingAuthor")}
-                </span>
+                metaParts.join(" · ")
               )}
             </p>
           ) : null}
+
+          <div className="mt-auto" />
+
+          <p
+            className={cn(
+              "relative z-[2] truncate border-t border-[rgba(148,163,184,0.12)] pt-2 font-medium text-[#64748B] dark:border-slate-800 dark:text-slate-400",
+              isCompact ? "text-[11px]" : "text-xs md:text-[13px]",
+            )}
+          >
+            {listing.posted_as_company && listing.sellerProfile.company_type ? (
+              <Link
+                href={buildCompanyPublicHref(listing.sellerProfile.id)}
+                className="truncate hover:text-blue-600 hover:underline dark:hover:text-blue-400"
+                onClick={(event) => event.stopPropagation()}
+              >
+                {sellerName}
+              </Link>
+            ) : (
+              <span className="truncate">{sellerName}</span>
+            )}
+          </p>
         </div>
       </article>
     </div>

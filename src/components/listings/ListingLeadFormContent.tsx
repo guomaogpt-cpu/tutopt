@@ -408,7 +408,7 @@ export function ListingLeadFormContent({
           id="lead-message"
           value={message}
           onChange={(event) => setMessage(event.target.value)}
-          rows={compact ? 4 : 5}
+          rows={compact ? 3 : 4}
           maxLength={LEAD_MESSAGE_MAX}
           placeholder={t("lead.messagePlaceholderShort")}
           className="w-full rounded-xl"

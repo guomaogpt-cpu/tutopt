@@ -147,6 +147,20 @@
 
 ---
 
+## Phase 135 — Cards/modals/profile cleanup
+
+| Issue | Fix |
+|---|---|
+| Listing cards overloaded with characteristics | Removed chips/MOQ from `ListingCard` |
+| Uneven card heights | Fixed min-height + line-clamp layout |
+| Contact modal huge on desktop | Centered dialog md+ |
+| Cargo modal bottom on desktop | Centered dialog md+ |
+| Seller profile duplicate stats | Removed `SellerProfileStats` |
+
+See `docs/LISTING_CARDS_MODALS_PROFILE_CLEANUP_PHASE_135.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

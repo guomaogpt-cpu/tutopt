@@ -5,9 +5,7 @@ import { SellerProfileViewTracker } from "@/components/analytics/SellerProfileVi
 import { Container } from "@/components/layout/Container";
 import { SellerProfileListings } from "@/components/seller/SellerProfileListings";
 import { SellerProfileSidebar } from "@/components/seller/SellerProfileSidebar";
-import { SellerProfileStats } from "@/components/seller/SellerProfileStats";
 import { getListingCountBucket } from "@/lib/analytics/events";
-import { formatListingDate } from "@/features/listings/lib/format-listing-price";
 import { getCurrentUser } from "@/features/auth/lib/session";
 import { getUserFavoriteListingIds } from "@/features/favorites/lib/favorites-data";
 import {
@@ -131,9 +129,6 @@ export default async function SellerProfilePage({
   const sellerHasProfile = Boolean(
     profile.description && profile.description.trim().length > 0,
   );
-  const onPlatformSinceLabel = formatListingDate(
-    profile.user.created_at ?? profile.created_at,
-  );
 
   const sellerTrust = calculateSellerTrust({
     hasSellerProfile: true,
@@ -201,12 +196,6 @@ export default async function SellerProfilePage({
             trustSignals={sellerTrust.signals}
           />
           <div className="order-2 flex min-w-0 flex-col gap-6 lg:order-1">
-            <SellerProfileStats
-              publishedListingCount={publishedListingCount}
-              sellerVerticals={sellerVerticals}
-              verticalCounts={verticalCounts}
-              onPlatformSinceLabel={onPlatformSinceLabel}
-            />
             <SellerProfileListings
               listings={listings}
               sellerPath={sellerPath}

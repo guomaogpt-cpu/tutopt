@@ -11,7 +11,9 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { responsiveModalContentClass } from "@/components/ui/responsive-modal-classes";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { cn } from "@/lib/utils";
 
 type ListingLeadContactDrawerProps = {
   listingId: string;
@@ -44,9 +46,12 @@ export function ListingLeadContactDrawer(props: ListingLeadContactDrawerProps) {
       <DrawerContent
         side="bottom"
         swipeDismissGuard={() => !formDirty}
-        className="max-h-[min(85dvh,calc(100dvh-env(safe-area-inset-bottom)-var(--keyboard-inset,0px)))] gap-0 overflow-hidden px-4 pb-[calc(1rem+env(safe-area-inset-bottom)+var(--keyboard-inset,0px))] pt-2"
+        className={cn(
+          responsiveModalContentClass,
+          "px-4 pb-[calc(1rem+env(safe-area-inset-bottom)+var(--keyboard-inset,0px))] pt-2",
+        )}
       >
-        <DrawerHeader className="px-0 pb-2 text-left">
+        <DrawerHeader className="px-0 pb-2 pt-0 text-left md:pt-2">
           <DrawerTitle>{t("lead.title")}</DrawerTitle>
           <DrawerDescription>{t("lead.description")}</DrawerDescription>
         </DrawerHeader>

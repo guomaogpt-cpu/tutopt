@@ -14,7 +14,13 @@
 
 ---
 
-## 2. Что улучшено в карточках
+## Phase 135 — cards/modals/profile cleanup ✅
+
+Public listing cards simplified (no characteristics in card). Contact + cargo modals centered on desktop. Seller profile stats block removed. See `docs/LISTING_CARDS_MODALS_PROFILE_CLEANUP_PHASE_135.md`.
+
+---
+
+## 2. Что улучшено в карточках (Phase 124 → updated Phase 135)
 
 | Было | Стало |
 |---|---|
@@ -26,7 +32,9 @@
 | min-h на title | Убран — карточки ниже |
 | Пустой seller name | Fallback **«Автор объявления»** |
 
-Карточка показывает: фото, цена (+ единица), MOQ для OPT, title, 1–2 highlight chips, meta, favorite.
+**Phase 135:** карточка только фото · цена · название · meta · продавец. Характеристики и MOQ убраны из карточки (остаются на detail page).
+
+Карточка показывает: фото, бейдж раздела, цена, title, meta (город · категория · дата), seller, favorite.
 
 Файл: `src/components/listings/ListingCard.tsx`
 

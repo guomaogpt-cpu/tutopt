@@ -9,7 +9,9 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { responsiveModalWideContentClass } from "@/components/ui/responsive-modal-classes";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { cn } from "@/lib/utils";
 
 type CargoRequestModalProps = {
   open: boolean;
@@ -38,9 +40,12 @@ export function CargoRequestModal({
       <DrawerContent
         side="bottom"
         swipeDismissGuard={() => !formDirty}
-        className="max-h-[92vh] gap-0 overflow-hidden p-0 dark:border-slate-800 dark:bg-slate-950 sm:left-1/2 sm:right-auto sm:max-w-2xl sm:-translate-x-1/2 sm:rounded-t-2xl"
+        className={cn(
+          responsiveModalWideContentClass,
+          "p-0 dark:border-slate-800 dark:bg-slate-950",
+        )}
       >
-        <DrawerHeader className="border-b border-slate-100 px-4 pb-3 pt-4 dark:border-slate-800 sm:px-6">
+        <DrawerHeader className="border-b border-slate-100 px-4 pb-3 pt-4 dark:border-slate-800 md:px-6 md:pt-5">
           <DrawerTitle>{t("cargo.requestModalTitle")}</DrawerTitle>
           <DrawerDescription>{t("cargo.requestModalDescription")}</DrawerDescription>
         </DrawerHeader>

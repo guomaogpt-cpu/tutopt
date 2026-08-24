@@ -1,5 +1,5 @@
 import type { ListingVertical } from "@prisma/client";
-import { VERTICALS, VERTICAL_LIST } from "@/features/verticals/verticals";
+import { VERTICAL_LIST } from "@/features/verticals/verticals";
 
 export type SellerVerticalCounts = Record<ListingVertical, number>;
 
@@ -133,7 +133,16 @@ export function getListingSellerCardCtaLabel(vertical: ListingVertical): string 
 }
 
 export function getSellerVerticalBrandLabel(vertical: ListingVertical): string {
-  return VERTICALS[vertical].label;
+  switch (vertical) {
+    case "MARKET":
+      return "Объявления";
+    case "OPT":
+      return "Опт";
+    case "SERVICES":
+      return "Услуги";
+    case "CARGO":
+      return "Карго";
+  }
 }
 
 export function getSellerListingsEmptyMessage(
