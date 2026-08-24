@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { CompanyType, ListingVertical } from "@prisma/client";
 import { Building2, MapPin } from "lucide-react";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { LISTING_CARD_GRID_PROFILE_CLASS } from "@/components/listings/listing-card-grid";
 import { CompanyPublicProfileActions } from "@/components/company/CompanyPublicProfileActions";
 import { CompanyVerificationBadge } from "@/components/company/CompanyVerificationBadge";
 import { Container } from "@/components/layout/Container";
@@ -304,7 +305,7 @@ export default async function CompanyPublicPage({
                 : translate("ru", "company.public.noListingsFiltered")}
             </p>
           ) : (
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            <div className={cn("mt-4", LISTING_CARD_GRID_PROFILE_CLASS)}>
               {listings.map((listing) => (
                 <ListingCard
                   key={listing.id}

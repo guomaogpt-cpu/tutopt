@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ListingCard } from "@/components/listings/ListingCard";
+import {
+  LISTING_CARD_GRID_CLASS,
+  LISTING_CARD_GRID_HOME_CLASS,
+} from "@/components/listings/listing-card-grid";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -30,10 +34,7 @@ export function HomeListingsGrid({
   return (
     <div
       className={cn(
-        "grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:gap-4",
-        compact
-          ? "md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
-          : "md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+        compact ? LISTING_CARD_GRID_HOME_CLASS : LISTING_CARD_GRID_CLASS,
       )}
     >
       {listings.map((listing) => (

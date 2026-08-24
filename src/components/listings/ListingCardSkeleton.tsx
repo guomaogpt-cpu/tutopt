@@ -6,21 +6,22 @@ type ListingCardSkeletonProps = {
   className?: string;
 };
 
-export function ListingCardSkeleton({ compact = false, className }: ListingCardSkeletonProps) {
+export function ListingCardSkeleton({ className }: ListingCardSkeletonProps) {
   return (
     <div
       className={cn(
-        "flex h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900",
+        "flex h-full w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900",
         className,
       )}
       aria-hidden="true"
     >
-      <Skeleton className="aspect-[4/3] w-full rounded-none" />
-      <div className={cn("space-y-2", compact ? "p-2.5" : "p-3")}>
-        <Skeleton className="h-4 w-2/5" />
-        <Skeleton className="h-3.5 w-full" />
-        <Skeleton className="h-3.5 w-4/5" />
-        <Skeleton className="h-3 w-3/5" />
+      <Skeleton className="aspect-square w-full rounded-none" />
+      <div className="space-y-1.5 px-2.5 pb-2.5 pt-2 sm:px-3 sm:pb-3 sm:pt-2.5">
+        <Skeleton className="h-3.5 w-2/5" />
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-4/5" />
+        <Skeleton className="h-2.5 w-3/5" />
+        <Skeleton className="h-2.5 w-2/5" />
       </div>
     </div>
   );

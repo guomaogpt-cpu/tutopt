@@ -101,6 +101,7 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/listings`, `/listings/[id]`, `/fa
 - Account dashboard uses separate `SellerDashboardListingCard` (seller tools, not public catalog)
 - Company page layout unchanged (no duplicate stats block)
 - Detail page contact form on desktop remains inline (not modal)
+- Superseded by Phase 138: compact dense marketplace cards
 
 ---
 
@@ -111,3 +112,5 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/listings`, `/listings/[id]`, `/fa
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
+- `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
+- `docs/COMPACT_MARKETPLACE_CARDS_PHASE_138.md`

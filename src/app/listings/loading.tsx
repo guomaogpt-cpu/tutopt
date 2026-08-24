@@ -1,4 +1,5 @@
 import { ListingCardSkeleton } from "@/components/listings/ListingCardSkeleton";
+import { LISTING_CARD_GRID_CLASS } from "@/components/listings/listing-card-grid";
 import { Container } from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -14,7 +15,7 @@ export default function ListingsLoading() {
           <Skeleton className="h-9 w-16 shrink-0 rounded-full" />
         </div>
         <div
-          className="grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5"
+          className={LISTING_CARD_GRID_CLASS}
           aria-busy="true"
           aria-label="Загрузка объявлений"
         >

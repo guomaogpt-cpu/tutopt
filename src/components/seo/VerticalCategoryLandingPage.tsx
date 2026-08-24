@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ListingVertical } from "@prisma/client";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { LISTING_CARD_GRID_CLASS } from "@/components/listings/listing-card-grid";
 import { AppBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -131,7 +132,7 @@ export function VerticalCategoryLandingPage({
             объявление в раздел {config.label}.
           </div>
         ) : (
-          <div className="grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className={LISTING_CARD_GRID_CLASS}>
             {listings.map((listing) => (
               <div key={listing.id} className="min-w-0 w-full">
                 <ListingCard listing={listing} variant="catalog" />

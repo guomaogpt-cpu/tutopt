@@ -188,6 +188,19 @@ See `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
 
 ---
 
+## Phase 138 — Compact marketplace cards
+
+| Issue | Fix |
+|---|---|
+| Cards too tall | Removed min-height, divider, mt-auto |
+| Sparse grid | Up to 6 cols @ 2xl, tighter gaps |
+| Long meta | line-clamp-1, category truncate |
+| Photo ratio | aspect-square for density |
+
+See `docs/COMPACT_MARKETPLACE_CARDS_PHASE_138.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { LISTING_CARD_GRID_CLASS } from "@/components/listings/listing-card-grid";
 import { ListingsCatalogToolbar } from "@/components/listings/ListingsCatalogToolbar";
 import { ListingsEmptyState } from "@/components/listings/ListingsEmptyState";
 import { ListingsPagination } from "@/components/listings/ListingsPagination";
@@ -274,7 +275,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
           />
         ) : (
           <>
-            <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3.5 pb-24 max-[339px]:grid-cols-1 md:grid-cols-3 md:gap-4 md:pb-8 lg:grid-cols-4 xl:grid-cols-5">
+            <div className={cn("mt-5 pb-24 md:pb-8", LISTING_CARD_GRID_CLASS)}>
               {listings.map((listing) => (
                 <div key={listing.id} className="min-w-0 w-full">
                   <ListingCard

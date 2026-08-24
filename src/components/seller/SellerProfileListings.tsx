@@ -5,6 +5,7 @@ import type { ListingVertical } from "@prisma/client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { LISTING_CARD_GRID_PROFILE_CLASS } from "@/components/listings/listing-card-grid";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import {
   trackSellerListingClick,
@@ -259,7 +260,7 @@ export function SellerProfileListings({
             </div>
           ) : (
             <>
-              <div className="mt-5 grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:grid-cols-2 md:gap-4 lg:grid-cols-3 2xl:grid-cols-4">
+              <div className={cn("mt-5", LISTING_CARD_GRID_PROFILE_CLASS)}>
                 {visibleListings.map((listing) => (
                   <div
                     key={listing.id}

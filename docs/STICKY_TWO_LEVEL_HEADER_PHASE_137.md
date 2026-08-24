@@ -76,5 +76,6 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 ## Связанные документы
 
 - `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
+- `docs/COMPACT_MARKETPLACE_CARDS_PHASE_138.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`

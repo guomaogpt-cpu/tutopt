@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ListingVertical } from "@prisma/client";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { LISTING_CARD_GRID_CLASS } from "@/components/listings/listing-card-grid";
 import { OptCategoryHighlights } from "@/components/opt/OptCategoryHighlights";
 import { VerticalHero } from "@/components/verticals/VerticalHero";
 import { VerticalCards } from "@/components/verticals/VerticalCards";
@@ -169,7 +170,7 @@ export function VerticalLandingPage({
               {`В ${config.label} пока нет объявлений`}
             </div>
           ) : (
-            <div className="grid w-full min-w-0 grid-cols-2 gap-3 max-[339px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+            <div className={LISTING_CARD_GRID_CLASS}>
               {listings.map((listing) => (
                 <div key={listing.id} className="min-w-0 w-full">
                   <ListingCard listing={listing} variant="catalog" />

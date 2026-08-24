@@ -2,6 +2,7 @@
 
 import type { ListingVertical } from "@prisma/client";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { LISTING_CARD_GRID_CLASS } from "@/components/listings/listing-card-grid";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
 import { trackSimilarListingClick } from "@/lib/analytics/events";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -55,7 +56,7 @@ export function SimilarListings({
         {t("listing.similarListings")}
       </h2>
 
-      <div className="grid w-full min-w-0 grid-cols-2 gap-3.5 max-[339px]:grid-cols-1 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+      <div className={LISTING_CARD_GRID_CLASS}>
         {listings.map((listing) => (
           <div
             key={listing.id}
