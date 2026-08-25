@@ -238,6 +238,18 @@ See `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
 
 ---
 
+## Phase 142 — Header/card density cleanup
+
+| Issue | Fix |
+|---|---|
+| Header gray second level | Unified white header block |
+| Cards too tall | One-line title, no seller, smaller text |
+| Narrow desktop layout | Container max-w 1600px, denser grid |
+
+See `docs/HEADER_CARD_DENSITY_CLEANUP_PHASE_142.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

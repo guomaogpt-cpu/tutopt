@@ -62,6 +62,8 @@ Active: pathname + `/listings?vertical=…` via `isSectionNavActive`
 - Home desktop sections below fold unchanged
 - Category drawer list still static config
 
+- Category drawer list still static config
+
 ## Связанные документы
 
 - `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
@@ -69,3 +71,4 @@ Active: pathname + `/listings?vertical=…` via `isSectionNavActive`
 - `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/HEADER_CARD_DENSITY_CLEANUP_PHASE_142.md`

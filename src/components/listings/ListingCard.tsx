@@ -6,7 +6,6 @@ import { Package } from "lucide-react";
 import { useState, memo } from "react";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { VerticalListingBadge } from "@/components/listings/VerticalListingBadge";
-import { buildCompanyPublicHref } from "@/features/company/lib/company-profile";
 import { formatListingCardPrice } from "@/features/listings/lib/listing-display";
 import { normalizeListingImageUrl } from "@/features/listings/lib/listing-image-url";
 import type { ListingCardData } from "@/features/listings/lib/listings-catalog";
@@ -56,18 +55,7 @@ function formatCardFreshness(
   });
 }
 
-function getSellerDisplayName(listing: ListingCardData, fallback: string): string {
-  if (listing.posted_as_company && listing.sellerProfile.company_type) {
-    return listing.sellerProfile.company_name.trim() || fallback;
-  }
-  return (
-    listing.sellerProfile.user.name?.trim() ||
-    listing.sellerProfile.company_name?.trim() ||
-    fallback
-  );
-}
-
-function shortenCategoryLabel(name: string, maxLength = 16): string {
+function shortenCategoryLabel(name: string, maxLength = 14): string {
   const trimmed = name.trim();
   if (trimmed.length <= maxLength) {
     return trimmed;
@@ -104,7 +92,6 @@ export const ListingCard = memo(function ListingCard({
   );
   const cityName = listing.city?.name ?? null;
   const categoryLabel = shortenCategoryLabel(listing.category.name);
-  const sellerName = getSellerDisplayName(listing, t("listing.listingAuthor"));
 
   const metaParts = [cityName, categoryLabel, dateLabel].filter(Boolean);
 
@@ -112,16 +99,16 @@ export const ListingCard = memo(function ListingCard({
     <div className="group relative h-full w-full min-w-0">
       <article
         className={cn(
-          "relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white",
+          "relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white",
           "dark:border-slate-700 dark:bg-slate-900",
-          "shadow-[0_2px_8px_rgba(15,23,42,0.06)] dark:shadow-none",
-          "transition-shadow duration-200 hover:shadow-[0_6px_16px_rgba(15,23,42,0.1)] dark:hover:border-slate-600",
+          "shadow-[0_1px_4px_rgba(15,23,42,0.05)] dark:shadow-none",
+          "transition-shadow duration-200 hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)] dark:hover:border-slate-600",
         )}
       >
         <Link
           href={`/listings/${listing.id}`}
           aria-label={`${t("listings.openListing")}: ${listing.title}`}
-          className="absolute inset-0 z-[1] rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          className="absolute inset-0 z-[1] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
         >
           <span className="sr-only">{listing.title}</span>
         </Link>
@@ -138,8 +125,8 @@ export const ListingCard = memo(function ListingCard({
               onError={() => setImageFailed(true)}
               sizes={
                 isHome
-                  ? "(max-width: 640px) 50vw, (max-width: 1280px) 20vw, 14vw"
-                  : "(max-width: 640px) 50vw, (max-width: 1280px) 25vw, 16vw"
+                  ? "(max-width: 640px) 50vw, (max-width: 1280px) 16vw, 12vw"
+                  : "(max-width: 640px) 50vw, (max-width: 1280px) 20vw, 14vw"
               }
             />
           ) : (
@@ -180,34 +167,26 @@ export const ListingCard = memo(function ListingCard({
           />
         </div>
 
-        <div className="flex flex-col px-2.5 pb-2.5 pt-2 sm:px-3 sm:pb-3 sm:pt-2.5">
-          <p className="line-clamp-1 text-sm font-bold leading-tight text-slate-900 dark:text-slate-100 sm:text-[15px]">
+        <div className="flex flex-col px-2 pb-2 pt-1.5 sm:px-2.5 sm:pb-2.5">
+          <p className="truncate text-xs font-bold leading-tight text-slate-900 dark:text-slate-100 sm:text-[13px]">
             {priceLabel}
           </p>
 
-          <h2 className="mt-1 line-clamp-2 text-xs font-medium leading-[1.25] text-slate-700 dark:text-slate-200 sm:text-[13px]">
+          <h2 className="mt-0.5 truncate text-[11px] font-medium leading-tight text-slate-700 dark:text-slate-200 sm:text-xs">
             {listing.title}
           </h2>
 
           {metaParts.length > 0 ? (
-            <p className="mt-1.5 line-clamp-1 text-[10px] leading-tight text-slate-500 dark:text-slate-400 sm:text-[11px]">
-              {metaParts.join(" · ")}
-            </p>
+            <>
+              <div
+                className="mt-1.5 border-t border-slate-100 pt-1.5 dark:border-slate-800"
+                aria-hidden="true"
+              />
+              <p className="truncate text-[9px] leading-tight text-slate-500 dark:text-slate-400 sm:text-[10px]">
+                {metaParts.join(" · ")}
+              </p>
+            </>
           ) : null}
-
-          <p className="relative z-[2] mt-1.5 line-clamp-1 text-[10px] font-medium leading-tight text-slate-600 dark:text-slate-300 sm:text-[11px]">
-            {listing.posted_as_company && listing.sellerProfile.company_type ? (
-              <Link
-                href={buildCompanyPublicHref(listing.sellerProfile.id)}
-                className="truncate hover:text-blue-600 hover:underline dark:hover:text-blue-400"
-                onClick={(event) => event.stopPropagation()}
-              >
-                {sellerName}
-              </Link>
-            ) : (
-              <span className="truncate">{sellerName}</span>
-            )}
-          </p>
         </div>
       </article>
     </div>

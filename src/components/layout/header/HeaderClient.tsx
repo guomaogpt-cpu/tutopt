@@ -35,7 +35,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const registerHref = buildRegisterUrl({ returnPath: pathname });
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/90">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white text-slate-900 shadow-[0_1px_3px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100">
       <Container>
         <div className="flex h-14 min-w-0 items-center gap-1.5 lg:h-[76px] lg:gap-2">
           <div className="flex min-w-0 shrink-0 items-center gap-1.5">
@@ -125,7 +125,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
         </div>
 
-        <div className="border-t border-slate-100 pb-2 pt-2 lg:hidden dark:border-slate-800">
+        <div className="border-t border-slate-100 bg-white pb-2 pt-2 lg:hidden dark:border-slate-800 dark:bg-slate-950">
           <Suspense
             fallback={
               <HeaderSearch
