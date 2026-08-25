@@ -72,12 +72,15 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - `HomepagePaperEntry.tsx` остаётся в codebase (unused)
 - Header высота на mobile больше из-за search row + section nav — ожидаемо
 - `/` не подсвечивает активный раздел (нет false positive на OPT)
-- **Superseded by Phase 139:** second-level section nav removed; use category drawer
+- **Phase 139:** second-level nav temporarily removed
+- **Phase 141:** second-level nav restored alongside category drawer
 
 ## Связанные документы
 
 - `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
 - `docs/COMPACT_MARKETPLACE_CARDS_PHASE_138.md`
 - `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`
+- `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`
+- `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`

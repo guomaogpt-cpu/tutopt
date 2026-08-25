@@ -67,6 +67,7 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - Category drawer list still static config (Phase 139)
 - Contrast tuned for light mode primarily
 - No category search in drawer (future)
+- **Phase 141:** second-level section nav restored alongside icon-only category button
 
 ## Связанные документы
 
@@ -74,3 +75,4 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - `docs/COMPACT_MARKETPLACE_CARDS_PHASE_138.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`

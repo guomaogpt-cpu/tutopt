@@ -226,6 +226,18 @@ See `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`
 
 ---
 
+## Phase 141 — Second-level header nav restored
+
+| Issue | Fix |
+|---|---|
+| Missing section nav after Phase 139 | Restored `HeaderSectionNav` in sticky header |
+| Home section dupes | Still no large cards on `/` |
+| Category drawer | Kept icon-only + drawer alongside level 2 |
+
+See `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

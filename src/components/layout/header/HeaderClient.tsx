@@ -12,6 +12,7 @@ import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import { BrandLogo } from "@/components/layout/BrandLogo";
 import { CategoryDrawer } from "@/components/layout/header/CategoryDrawer";
 import { HeaderSearch } from "@/components/layout/header/HeaderSearch";
+import { HeaderSectionNav } from "@/components/layout/header/HeaderSectionNav";
 import { HeaderNotificationsBell } from "@/components/layout/header/HeaderNotificationsBell";
 import { SettingsDrawer } from "@/components/layout/header/SettingsDrawer";
 import { UserMenu } from "@/components/layout/header/UserMenu";
@@ -142,6 +143,10 @@ export function HeaderClient({ user }: HeaderClientProps) {
             />
           </Suspense>
         </div>
+
+        <Suspense fallback={null}>
+          <HeaderSectionNav />
+        </Suspense>
       </Container>
 
       <CategoryDrawer open={categoriesOpen} onOpenChange={setCategoriesOpen} />

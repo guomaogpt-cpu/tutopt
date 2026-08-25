@@ -65,11 +65,11 @@ export function HeaderSectionNav() {
 
   return (
     <nav
-      className="min-w-0 border-t border-slate-100 dark:border-slate-800"
+      className="min-w-0 border-t border-slate-200/80 bg-[#F6F8FB]/95 dark:border-slate-800 dark:bg-slate-900/95"
       aria-label={t("nav.main")}
     >
       <ul
-        className="flex h-11 min-w-0 items-center gap-1.5 overflow-x-auto py-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:h-12 sm:justify-center sm:gap-2 lg:h-14 lg:gap-2.5 [&::-webkit-scrollbar]:hidden"
+        className="flex h-11 min-w-0 items-center gap-1.5 overflow-x-auto px-0.5 py-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:h-12 sm:justify-center sm:gap-2 lg:gap-2.5 [&::-webkit-scrollbar]:hidden"
       >
         {SECTION_LINKS.map((link) => {
           const Icon = link.icon;
@@ -83,8 +83,8 @@ export function HeaderSectionNav() {
                   trackVerticalClick(link.id, "header");
                 }}
                 className={cn(
-                  "flex h-9 min-w-[6.75rem] items-center gap-1.5 rounded-full px-3 text-sm font-semibold transition",
-                  "text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800",
+                  "flex h-9 min-w-[6.75rem] items-center gap-1.5 rounded-full border border-transparent px-3 text-sm font-semibold transition",
+                  "text-slate-700 hover:border-slate-200 hover:bg-white/90 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-800",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2",
                   "sm:h-10 sm:min-w-[7.5rem] sm:px-3.5",
                   isActive && getHeaderNavActiveClass(link.href),
