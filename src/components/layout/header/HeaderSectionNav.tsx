@@ -25,6 +25,7 @@ type SectionLinkConfig = {
   href: string;
   icon: LucideIcon;
   iconColor: string;
+  activeAccent: string;
 };
 
 const SECTION_LINKS: SectionLinkConfig[] = [
@@ -34,6 +35,7 @@ const SECTION_LINKS: SectionLinkConfig[] = [
     href: "/market",
     icon: Megaphone,
     iconColor: "text-purple-600 dark:text-purple-300",
+    activeAccent: "text-purple-700 dark:text-purple-300",
   },
   {
     id: "SERVICES",
@@ -41,6 +43,7 @@ const SECTION_LINKS: SectionLinkConfig[] = [
     href: "/services",
     icon: Briefcase,
     iconColor: "text-green-600 dark:text-green-300",
+    activeAccent: "text-green-700 dark:text-green-300",
   },
   {
     id: "OPT",
@@ -48,6 +51,7 @@ const SECTION_LINKS: SectionLinkConfig[] = [
     href: "/opt",
     icon: Package,
     iconColor: "text-blue-600 dark:text-blue-300",
+    activeAccent: "text-blue-700 dark:text-blue-300",
   },
   {
     id: "CARGO",
@@ -55,21 +59,36 @@ const SECTION_LINKS: SectionLinkConfig[] = [
     href: "/cargo",
     icon: Truck,
     iconColor: "text-orange-600 dark:text-orange-300",
+    activeAccent: "text-orange-700 dark:text-orange-300",
   },
 ];
 
-export function HeaderSectionNav() {
+type HeaderSectionNavProps = {
+  variant?: "inline" | "scroll";
+  className?: string;
+};
+
+export function HeaderSectionNav({
+  variant = "inline",
+  className,
+}: HeaderSectionNavProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
+  const isScroll = variant === "scroll";
 
   return (
     <nav
-      className="min-w-0 border-t border-slate-100 bg-white dark:border-slate-800 dark:bg-slate-950"
+      className={cn("min-w-0", className)}
       aria-label={t("nav.main")}
     >
       <ul
-        className="flex h-10 min-w-0 items-center gap-1 overflow-x-auto px-0.5 py-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:h-11 sm:justify-center sm:gap-1.5 lg:gap-2 [&::-webkit-scrollbar]:hidden"
+        className={cn(
+          "flex min-w-0 items-center gap-0.5",
+          isScroll
+            ? "h-9 overflow-x-auto px-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            : "hidden h-full lg:flex lg:gap-1",
+        )}
       >
         {SECTION_LINKS.map((link) => {
           const Icon = link.icon;
@@ -83,19 +102,39 @@ export function HeaderSectionNav() {
                   trackVerticalClick(link.id, "header");
                 }}
                 className={cn(
-                  "flex h-8 min-w-[6.25rem] items-center gap-1.5 rounded-full border border-transparent px-2.5 text-xs font-semibold transition",
-                  "text-slate-700 hover:border-slate-200 hover:bg-slate-50 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-800",
+                  "relative flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-semibold transition",
+                  "text-slate-600 hover:bg-white/70 hover:text-slate-900",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2",
-                  "sm:h-9 sm:min-w-[7rem] sm:px-3 sm:text-sm",
-                  isActive && getHeaderNavActiveClass(link.href),
+                  "dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-slate-100",
+                  "lg:px-2.5 lg:text-sm",
+                  isScroll && "h-8 whitespace-nowrap sm:px-2.5",
+                  isActive && !isScroll && getHeaderNavInlineActiveClass(link),
+                  isActive && isScroll && getHeaderNavActiveClass(link.href),
+                  isActive && isScroll && "rounded-full px-2.5",
                 )}
               >
                 <Icon
-                  className={cn("size-3.5 shrink-0", !isActive && link.iconColor)}
+                  className={cn(
+                    "size-3.5 shrink-0",
+                    !isActive && link.iconColor,
+                    isActive && !isScroll && link.activeAccent,
+                  )}
                   strokeWidth={1.75}
                   aria-hidden="true"
                 />
                 <span className="truncate">{t(link.labelKey)}</span>
+                {isActive && !isScroll ? (
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-x-1 -bottom-1 h-0.5 rounded-full",
+                      link.id === "MARKET" && "bg-purple-500",
+                      link.id === "SERVICES" && "bg-green-500",
+                      link.id === "OPT" && "bg-blue-500",
+                      link.id === "CARGO" && "bg-orange-500",
+                    )}
+                  />
+                ) : null}
               </Link>
             </li>
           );
@@ -103,4 +142,8 @@ export function HeaderSectionNav() {
       </ul>
     </nav>
   );
+}
+
+function getHeaderNavInlineActiveClass(link: SectionLinkConfig): string {
+  return cn(link.activeAccent, "font-semibold");
 }

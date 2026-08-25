@@ -10,6 +10,36 @@ export const DICTIONARY = {
   "nav.cargo": { ru: "Карго", kg: "Карго", en: "Cargo" },
   "nav.main": { ru: "Основная навигация", kg: "Негизги навигация", en: "Main navigation" },
 
+  // Display preferences (Phase 143)
+  "preferences.regionCurrency": {
+    ru: "Регион и валюта",
+    kg: "Аймак жана валюта",
+    en: "Region and currency",
+  },
+  "preferences.region": { ru: "Регион", kg: "Аймак", en: "Region" },
+  "preferences.currency": { ru: "Валюта", kg: "Валюта", en: "Currency" },
+  "preferences.regionKG": {
+    ru: "Кыргызстан",
+    kg: "Кыргызстан",
+    en: "Kyrgyzstan",
+  },
+  "preferences.regionKZ": {
+    ru: "Казахстан",
+    kg: "Казакстан",
+    en: "Kazakhstan",
+  },
+  "preferences.regionRU": { ru: "Россия", kg: "Орусия", en: "Russia" },
+  "preferences.regionOther": { ru: "Другое", kg: "Башка", en: "Other" },
+  "preferences.currencyKGS": { ru: "KGS — сом", kg: "KGS — сом", en: "KGS — som" },
+  "preferences.currencyKZT": { ru: "KZT — тенге", kg: "KZT — теңге", en: "KZT — tenge" },
+  "preferences.currencyRUB": { ru: "RUB — рубль", kg: "RUB — рубль", en: "RUB — ruble" },
+  "preferences.currencyUSD": { ru: "USD — доллар", kg: "USD — доллар", en: "USD — dollar" },
+  "preferences.conversionNotice": {
+    ru: "Цены объявлений отображаются в валюте, указанной продавцом. Конвертация будет добавлена позже.",
+    kg: "Жарыялардын баалары сатуучу көрсөткөн валютада. Конвертация кийинчерээк кошулат.",
+    en: "Listing prices are shown in the seller's currency. Conversion will be added later.",
+  },
+
   // Mobile bottom navigation
   "mobileNav.label": {
     ru: "Мобильная навигация",
@@ -83,6 +113,12 @@ export const DICTIONARY = {
 
   // Search
   "search.find": { ru: "Найти", kg: "Табуу", en: "Search" },
+  "search.submit": { ru: "Поиск", kg: "Издөө", en: "Search" },
+  "search.lalafoPlaceholder": {
+    ru: "Я ищу...",
+    kg: "Мен издейм...",
+    en: "I'm looking for...",
+  },
   "search.headerPlaceholder": {
     ru: "Найти товар, услугу или доставку...",
     kg: "Товар, кызмат же жеткирүүнү издөө...",

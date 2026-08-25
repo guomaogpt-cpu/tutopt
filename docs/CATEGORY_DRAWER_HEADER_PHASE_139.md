@@ -96,6 +96,7 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - Some “popular” labels map to nearest existing slug (e.g. «Склад» → biznes-i-sklad)
 - **Phase 140:** category button is icon-only; drawer/button contrast improved
 - **Phase 141:** second-level section nav restored in header
+- **Phase 143:** category button with text in bottom header row; icon-only removed from top row
 
 ## Связанные документы
 
@@ -105,3 +106,4 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`
 - `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
+- `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`

@@ -250,6 +250,19 @@ See `docs/HEADER_CARD_DENSITY_CLEANUP_PHASE_142.md`
 
 ---
 
+## Phase 143 — Lalafo-style glass header
+
+| Issue | Fix |
+|---|---|
+| Sections in wrong row | Moved to top row near logo |
+| Search/categories layout | Bottom row: Категории + search + Поиск |
+| Flat white header | Glass blur + 4-color gradient accent |
+| Currency unclear | Region/currency indicator (no auto conversion) |
+
+See `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

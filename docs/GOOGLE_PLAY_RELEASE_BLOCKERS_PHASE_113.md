@@ -40,7 +40,7 @@
 | Cards/modals/profile UX | Done | Product | Phase 135 cleanup |
 | Home/header UX | Done | Product | Phase 136–137 cleanup |
 | Compact listing cards | Done | Product | Phase 138 |
-| Category drawer header | Done | Product | Phase 139–142 |
+| Category drawer header | Done | Product | Phase 139–143 |
 | Internal testing track | Needs manual | Owner | Not production / not open testing |
 | Production URL | Done | DevOps | tutopt-production.up.railway.app |
 | Android RC config | Done | Android | Phase 132 |
@@ -110,6 +110,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 | 140 ✅ | Category icon + contrast |
 | 141 ✅ | Second-level header nav restored |
 | 142 ✅ | Header/card density pre-AAB polish |
+| 143 ✅ | Lalafo-style glass header + currency UI |
 | **Next** | Upload fresh AAB → internal testers → feedback |
 
 ---
@@ -128,6 +129,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`
 - `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
 - `docs/HEADER_CARD_DENSITY_CLEANUP_PHASE_142.md`
+- `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`

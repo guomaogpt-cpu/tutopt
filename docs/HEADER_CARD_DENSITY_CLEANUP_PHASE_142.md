@@ -73,6 +73,7 @@ Routes: `/`, `/market`, `/listings`, `/favorites`, `/seller/[id]`, `/listings/[i
 - Seller removed from cards only (Pinduoduo-style later)
 - Container widen affects all `size="lg"` pages
 - Detail page full title unchanged
+- **Phase 143:** header layout replaced — sections in top row, glass style
 
 ## Связанные документы
 
@@ -80,3 +81,4 @@ Routes: `/`, `/market`, `/listings`, `/favorites`, `/seller/[id]`, `/listings/[i
 - `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`

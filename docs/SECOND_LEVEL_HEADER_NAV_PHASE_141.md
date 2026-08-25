@@ -61,8 +61,7 @@ Active: pathname + `/listings?vertical=…` via `isSectionNavActive`
 - Header taller than Phase 139–140 single-level (by design)
 - Home desktop sections below fold unchanged
 - Category drawer list still static config
-
-- Category drawer list still static config
+- **Phase 143:** section nav moved to top row; bottom row is categories+search
 
 ## Связанные документы
 
@@ -72,3 +71,4 @@ Active: pathname + `/listings?vertical=…` via `isSectionNavActive`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/HEADER_CARD_DENSITY_CLEANUP_PHASE_142.md`
+- `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`

@@ -16,6 +16,7 @@ type HeaderSearchProps = {
   syncDisabled?: boolean;
   inputClassName?: string;
   placeholderKey?: DictionaryKey;
+  buttonLabelKey?: DictionaryKey;
 };
 
 export function HeaderSearch(props: HeaderSearchProps) {
@@ -24,7 +25,8 @@ export function HeaderSearch(props: HeaderSearchProps) {
   const isGenericPlaceholder =
     !props.placeholderKey ||
     props.placeholderKey === "mobileSearch.placeholder" ||
-    props.placeholderKey === "search.headerPlaceholder";
+    props.placeholderKey === "search.headerPlaceholder" ||
+    props.placeholderKey === "search.lalafoPlaceholder";
 
   let placeholderKey: DictionaryKey = "search.headerPlaceholder";
   if (!isGenericPlaceholder && props.placeholderKey) {
@@ -37,21 +39,24 @@ export function HeaderSearch(props: HeaderSearchProps) {
     placeholderKey = "opt.searchPlaceholder";
   } else if (vertical === "CARGO") {
     placeholderKey = "search.cargoPlaceholder";
+  } else if (props.placeholderKey === "search.lalafoPlaceholder") {
+    placeholderKey = "search.lalafoPlaceholder";
   } else if (props.placeholderKey) {
     placeholderKey = props.placeholderKey;
   }
 
   const placeholder = t(placeholderKey);
+  const buttonLabel = t(props.buttonLabelKey ?? "search.submit");
 
   if (props.syncDisabled) {
-    return <HeaderSearchStatic {...props} placeholder={placeholder} />;
+    return <HeaderSearchStatic {...props} placeholder={placeholder} buttonLabel={buttonLabel} />;
   }
 
   return (
     <SearchWithSuggest
       variant="header"
       placeholder={placeholder}
-      buttonLabel={t("search.find")}
+      buttonLabel={buttonLabel}
       id={props.id}
       className={props.className}
       inputClassName={props.inputClassName}
@@ -64,7 +69,8 @@ function HeaderSearchStatic({
   className = "",
   inputClassName = "",
   placeholder,
-}: HeaderSearchProps & { placeholder: string }) {
+  buttonLabel,
+}: HeaderSearchProps & { placeholder: string; buttonLabel: string }) {
   const { t } = useTranslation();
   const { theme } = useRouteVerticalTheme();
 
@@ -96,7 +102,7 @@ function HeaderSearchStatic({
         disabled
         size="icon"
         className={cn("h-11 w-11 shrink-0 sm:hidden", theme.primaryButton)}
-        aria-label={t("search.find")}
+        aria-label={buttonLabel}
       >
         <Search className="size-4" aria-hidden="true" />
       </Button>
@@ -108,7 +114,7 @@ function HeaderSearchStatic({
           theme.primaryButton,
         )}
       >
-        {t("search.find")}
+        {buttonLabel}
       </Button>
     </form>
   );
