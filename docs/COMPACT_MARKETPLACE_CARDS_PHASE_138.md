@@ -84,6 +84,7 @@ Profile grid (seller/company): max 3–4 columns.
 - `/account/listings` uses `SellerListingManageCard` — не затронут
 - Services cards in 2-col mobile may feel tight for long titles — mitigated by line-clamp-2
 - Category truncation is card-only; full name on detail page
+- **Phase 140:** card border/shadow/text contrast improved
 
 ## Связанные документы
 
@@ -91,3 +92,4 @@ Profile grid (seller/company): max 3–4 columns.
 - `docs/STICKY_TWO_LEVEL_HEADER_PHASE_137.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`

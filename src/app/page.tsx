@@ -36,7 +36,7 @@ export default async function HomePage() {
   const isAuthenticated = user !== null;
 
   return (
-    <main className="min-w-0 overflow-x-clip bg-[#F8FAFC] dark:bg-slate-950">
+    <main className="min-w-0 overflow-x-clip bg-[#F6F8FB] dark:bg-slate-950">
       <RecentListingsSection
         listings={data.latest}
         isAuthenticated={isAuthenticated}

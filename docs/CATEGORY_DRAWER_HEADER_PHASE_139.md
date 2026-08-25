@@ -94,6 +94,7 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - Category list is static config, not live DB fetch
 - No in-drawer category search yet
 - Some “popular” labels map to nearest existing slug (e.g. «Склад» → biznes-i-sklad)
+- **Phase 140:** category button is icon-only; drawer/button contrast improved
 
 ## Связанные документы
 
@@ -101,3 +102,4 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - `docs/HOME_HEADER_CLEANUP_PHASE_136.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`

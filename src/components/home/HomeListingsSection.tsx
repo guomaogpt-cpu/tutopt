@@ -89,7 +89,10 @@ export function HomeDiscoverySection({
     <section
       className={cn(
         dense ? "pb-5 pt-4 sm:pb-10 sm:pt-8" : "pb-8 pt-6 sm:pb-10 sm:pt-8",
-        tone === "muted" ? "bg-[#F8FAFC] dark:bg-slate-950" : "bg-white dark:bg-slate-950",
+        "border-t border-slate-200/70 first:border-t-0 dark:border-slate-800",
+        tone === "muted"
+          ? "bg-[#EEF2F6] dark:bg-slate-900"
+          : "bg-white dark:bg-slate-950",
       )}
     >
       <Container size="lg">
@@ -105,11 +108,11 @@ export function HomeDiscoverySection({
                 {t(eyebrow)}
               </p>
             ) : null}
-            <h2 className="mt-0.5 text-base font-bold tracking-tight text-slate-900 sm:text-xl dark:text-slate-100">
+            <h2 className="mt-0.5 text-lg font-bold tracking-tight text-slate-900 sm:text-xl dark:text-slate-100">
               {t(titleKey)}
             </h2>
             {descriptionKey ? (
-              <p className="mt-1 hidden max-w-2xl text-sm text-slate-500 sm:block dark:text-slate-400">
+              <p className="mt-1 hidden max-w-2xl text-sm text-slate-600 sm:block dark:text-slate-400">
                 {t(descriptionKey)}
               </p>
             ) : null}
@@ -118,7 +121,7 @@ export function HomeDiscoverySection({
             <Button
               variant="outline"
               size="sm"
-              className="h-9 shrink-0 rounded-xl border-slate-200 bg-white text-sm font-semibold text-blue-600 hover:bg-blue-50 sm:h-10 dark:border-slate-700 dark:bg-slate-900 dark:text-blue-400 dark:hover:bg-slate-800"
+              className="h-9 shrink-0 rounded-xl border border-blue-200 bg-white text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-50 sm:h-10 dark:border-blue-800 dark:bg-slate-900 dark:text-blue-400 dark:hover:bg-slate-800"
               asChild
             >
               <Link href={viewAllHref}>

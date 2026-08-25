@@ -112,10 +112,10 @@ export const ListingCard = memo(function ListingCard({
     <div className="group relative h-full w-full min-w-0">
       <article
         className={cn(
-          "relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-white",
-          "dark:border-slate-800 dark:bg-slate-900",
-          "shadow-[0_1px_4px_rgba(15,23,42,0.04)] dark:shadow-none",
-          "transition-shadow duration-200 hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)] dark:hover:border-slate-700",
+          "relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white",
+          "dark:border-slate-700 dark:bg-slate-900",
+          "shadow-[0_2px_8px_rgba(15,23,42,0.06)] dark:shadow-none",
+          "transition-shadow duration-200 hover:shadow-[0_6px_16px_rgba(15,23,42,0.1)] dark:hover:border-slate-600",
         )}
       >
         <Link
@@ -126,7 +126,7 @@ export const ListingCard = memo(function ListingCard({
           <span className="sr-only">{listing.title}</span>
         </Link>
 
-        <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-[#EEF2F7] dark:bg-slate-800">
+        <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-[#E8EDF3] ring-1 ring-inset ring-slate-200/50 dark:bg-slate-800 dark:ring-slate-700/50">
           {mainImage && !imageFailed ? (
             <Image
               src={mainImage}
@@ -190,12 +190,12 @@ export const ListingCard = memo(function ListingCard({
           </h2>
 
           {metaParts.length > 0 ? (
-            <p className="mt-1.5 line-clamp-1 text-[10px] leading-tight text-slate-400 dark:text-slate-500 sm:text-[11px]">
+            <p className="mt-1.5 line-clamp-1 text-[10px] leading-tight text-slate-500 dark:text-slate-400 sm:text-[11px]">
               {metaParts.join(" · ")}
             </p>
           ) : null}
 
-          <p className="relative z-[2] mt-1.5 line-clamp-1 text-[10px] font-medium leading-tight text-slate-500 dark:text-slate-400 sm:text-[11px]">
+          <p className="relative z-[2] mt-1.5 line-clamp-1 text-[10px] font-medium leading-tight text-slate-600 dark:text-slate-300 sm:text-[11px]">
             {listing.posted_as_company && listing.sellerProfile.company_type ? (
               <Link
                 href={buildCompanyPublicHref(listing.sellerProfile.id)}

@@ -37,17 +37,9 @@ export function HeaderClient({ user }: HeaderClientProps) {
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 text-slate-900 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100 dark:supports-[backdrop-filter]:bg-slate-950/90">
       <Container>
         <div className="flex h-14 min-w-0 items-center gap-1.5 lg:h-[76px] lg:gap-2">
-          <div className="flex min-w-0 shrink-0 items-center gap-1">
+          <div className="flex min-w-0 shrink-0 items-center gap-1.5">
             <BrandLogo variant="header" priority showWordmark />
-            <CategoriesButton
-              onClick={() => setCategoriesOpen(true)}
-              className="hidden min-[360px]:inline-flex"
-            />
-            <CategoriesButton
-              onClick={() => setCategoriesOpen(true)}
-              iconOnly
-              className="min-[360px]:hidden"
-            />
+            <CategoriesButton onClick={() => setCategoriesOpen(true)} />
           </div>
 
           <div className="hidden min-w-0 flex-1 justify-center px-2 lg:flex">
@@ -165,28 +157,30 @@ export function HeaderClient({ user }: HeaderClientProps) {
 
 type CategoriesButtonProps = {
   onClick: () => void;
-  iconOnly?: boolean;
-  className?: string;
 };
 
-function CategoriesButton({ onClick, iconOnly = false, className }: CategoriesButtonProps) {
+function CategoriesButton({ onClick }: CategoriesButtonProps) {
   const { t } = useTranslation();
+  const label = t("vertical.categories");
 
   return (
     <Button
       type="button"
       variant="outline"
+      size="icon"
       onClick={onClick}
-      aria-label={t("vertical.categories")}
+      aria-label={label}
+      title={label}
       aria-haspopup="dialog"
       className={cn(
-        "h-9 shrink-0 border-slate-200 bg-white font-semibold text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800",
-        iconOnly ? "w-9 px-0" : "gap-1.5 px-2.5 text-xs sm:h-10 sm:px-3 sm:text-sm",
-        className,
+        "size-10 shrink-0 rounded-xl border-slate-200/90 bg-slate-50 text-slate-700 shadow-sm",
+        "hover:border-slate-300 hover:bg-white hover:text-slate-900",
+        "focus-visible:ring-2 focus-visible:ring-blue-500/40",
+        "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800",
+        "sm:size-11",
       )}
     >
-      <LayoutGrid className="size-4 shrink-0" aria-hidden="true" />
-      {iconOnly ? null : <span className="truncate">{t("vertical.categories")}</span>}
+      <LayoutGrid className="size-[18px] sm:size-5" aria-hidden="true" />
     </Button>
   );
 }

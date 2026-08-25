@@ -213,6 +213,19 @@ See `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`
 
 ---
 
+## Phase 140 — Header category icon & contrast
+
+| Issue | Fix |
+|---|---|
+| Category button too large | Icon-only 44–48px |
+| Home too flat/white | Section bg alternation + borders |
+| Cards blend with bg | Stronger border/shadow/text |
+| Drawer low contrast | Tinted verticals + list cards |
+
+See `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password
