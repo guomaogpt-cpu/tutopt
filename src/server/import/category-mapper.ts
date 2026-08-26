@@ -97,13 +97,6 @@ export function mapExternalCategory(params: {
   description?: string | null;
   breadcrumbSlugs?: string[];
 }): MappedImportCategory {
-  for (const slug of params.breadcrumbSlugs ?? []) {
-    const mapped = LALAFO_CATEGORY_SLUG_MAP[slug];
-    if (mapped) {
-      return mapped;
-    }
-  }
-
   const haystack = normalizeSearchText(
     params.categoryText,
     params.subcategoryText,
@@ -120,6 +113,13 @@ export function mapExternalCategory(params: {
     }
   }
 
+  for (const slug of [...(params.breadcrumbSlugs ?? [])].reverse()) {
+    const mapped = LALAFO_CATEGORY_SLUG_MAP[slug];
+    if (mapped) {
+      return mapped;
+    }
+  }
+
   return {
     normalizedCategory: null,
     normalizedSubcategory: null,
@@ -127,20 +127,15 @@ export function mapExternalCategory(params: {
 }
 
 export function extractLalafoBreadcrumbSlugs(html: string): string[] {
-  const matches = [...html.matchAll(/href="\/bishkek\/([^"/?#]+)/gi)];
-  const slugs: string[] = [];
+  const matches = [
+    ...html.matchAll(
+      /DetailBreadcrumbs_detailBreadcrumbsListItem__[^"]*"[^>]*>\s*<a[^>]*href="\/bishkek\/([^"/?#]+)"/gi,
+    ),
+  ];
 
-  for (const match of matches) {
-    const slug = match[1]?.trim();
-    if (!slug || slug === "ads" || slug === "bishkek") {
-      continue;
-    }
-    if (!slugs.includes(slug)) {
-      slugs.push(slug);
-    }
-  }
-
-  return slugs;
+  return matches
+    .map((match) => match[1]?.trim())
+    .filter((value): value is string => Boolean(value && value !== "ads"));
 }
 
 export function extractLalafoBreadcrumbLabels(html: string): string[] {
@@ -240,13 +235,10 @@ export function parseLalafoTitleParts(title: string | null): {
   let rawPrice: string | null = null;
 
   if (segments.length >= 2) {
-    subcategoryText = segments[1]?.replace(/^.*➤\s*/u, "").trim() || null;
+    city = segments[1] ?? null;
   }
   if (segments.length >= 3) {
-    city = segments[2] ?? null;
-  }
-  if (segments.length >= 4) {
-    sourceExternalId = segments[3]?.replace(/\D/g, "") || null;
+    sourceExternalId = segments[2]?.replace(/\D/g, "") || null;
   }
 
   const priceMatch = main.match(/:\s*([\d\s.,]+)\s*(KGS|USD|EUR|сом|\$|€)/iu);
@@ -258,7 +250,7 @@ export function parseLalafoTitleParts(title: string | null): {
   const arrowParts = main.split("➤").map((part) => part.trim());
   if (arrowParts.length > 1) {
     main = arrowParts[0] ?? main;
-    subcategoryText = subcategoryText ?? arrowParts[1] ?? null;
+    subcategoryText = arrowParts[1] ?? null;
   }
 
   return {
