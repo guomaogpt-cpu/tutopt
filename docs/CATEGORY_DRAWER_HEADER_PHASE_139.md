@@ -97,6 +97,7 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - **Phase 140:** category button is icon-only; drawer/button contrast improved
 - **Phase 141:** second-level section nav restored in header
 - **Phase 143:** category button with text in bottom header row; icon-only removed from top row
+- **Phase 145:** side drawer replaced by Lalafo-style mega dropdown under header
 
 ## Связанные документы
 
@@ -107,3 +108,4 @@ Routes: `/`, `/market`, `/services`, `/opt`, `/cargo`, `/listings`, `/listings?q
 - `docs/HEADER_CATEGORY_CONTRAST_PHASE_140.md`
 - `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
 - `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`
+- `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`

@@ -40,7 +40,7 @@
 | Cards/modals/profile UX | Done | Product | Phase 135 cleanup |
 | Home/header UX | Done | Product | Phase 136–137 cleanup |
 | Compact listing cards | Done | Product | Phase 138 |
-| Category drawer header | Done | Product | Phase 139–143 |
+| Category drawer header | Done | Product | Phase 139–145 |
 | Internal testing track | Needs manual | Owner | Not production / not open testing |
 | Production URL | Done | DevOps | tutopt-production.up.railway.app |
 | Android RC config | Done | Android | Phase 132 |
@@ -112,6 +112,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 | 142 ✅ | Header/card density pre-AAB polish |
 | 143 ✅ | Lalafo-style glass header + currency UI |
 | 144 ✅ | Header click disappear bugfix |
+| 145 ✅ | Lalafo-style category mega dropdown |
 | **Next** | Upload fresh AAB → internal testers → feedback |
 
 ---
@@ -132,6 +133,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/HEADER_CARD_DENSITY_CLEANUP_PHASE_142.md`
 - `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`
 - `docs/HEADER_CLICK_DISAPPEAR_BUGFIX_PHASE_144.md`
+- `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`
 - `docs/STORE_LISTING_TEXTS_PHASE_131.md`

@@ -64,9 +64,11 @@ Auto-hide header logic **не найдена** — проблема не в scro
 
 - При открытом drawer overlay закрывает header (expected modal behavior)
 - Glass blur может иметь minor GPU flicker на старых Safari
+- **Phase 145:** category side drawer replaced by mega dropdown (z-55 below header)
 
 ## Связанные документы
 
 - `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`

@@ -38,7 +38,7 @@ Android WebView fix сохранён: `type="text"` + `inputMode="search"`.
 
 ## 6. Category drawer compatibility
 
-Единственная кнопка категорий — в нижней строке. Drawer без изменений логики.
+Единственная кнопка категорий — в нижней строке. **Phase 145:** заменено на mega dropdown (`CategoryMegaDropdown`).
 
 ## 7. Currency/region indicator
 
@@ -93,3 +93,4 @@ Routes: `/`, `/market`, `/listings?q=фасовщик`, `/listings/new`, `/accou
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
 - `docs/HEADER_CLICK_DISAPPEAR_BUGFIX_PHASE_144.md`
+- `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`

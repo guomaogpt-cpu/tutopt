@@ -275,6 +275,18 @@ See `docs/HEADER_CLICK_DISAPPEAR_BUGFIX_PHASE_144.md`
 
 ---
 
+## Phase 145 — Lalafo-style category mega dropdown
+
+| Issue | Fix |
+|---|---|
+| Side drawer UX | Mega dropdown under header |
+| Category navigation | Left main + right subcategory grid |
+| Overlay bugs | z-55 panel below header z-60 |
+
+See `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password
