@@ -169,6 +169,19 @@ Empty state: «Пока нет данных для отображения.»
 
 ---
 
+## Phase 146 — Import drafts (admin)
+
+Admin-only import pipeline для наполнения каталога без auto-publish:
+
+- `ImportedListingDraft` model + migration
+- `/admin/import` manual import + review queue
+- Publish → `PENDING_MODERATION` listing
+- `rawContact` internal-only; no scraper/workers in this phase
+
+См. `docs/IMPORT_DRAFTS_SYSTEM_PHASE_146.md`.
+
+---
+
 ## Migration
 
-Нет — Prisma schema не менялась.
+Phase 146: да — `ImportedListingDraft` (`20260826120000_import_listing_drafts`).

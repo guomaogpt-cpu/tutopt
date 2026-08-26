@@ -141,6 +141,15 @@ enum CargoResponseStatus {
   WITHDRAWN
 }
 
+enum ImportDraftStatus {
+  PENDING_REVIEW
+  READY
+  REJECTED
+  DUPLICATE
+  PUBLISHED
+  FAILED
+}
+
 // ---------------------------------------------------------------------------
 // Models
 // ---------------------------------------------------------------------------
@@ -238,6 +247,8 @@ model User {
   pushTokens               PushToken[]
   cargoRequests            CargoRequest[]
   cargoRequestSubscriptions CargoSubscription[]
+  importDraftsCreated      ImportedListingDraft[] @relation("ImportDraftCreatedBy")
+  importDraftsReviewed     ImportedListingDraft[] @relation("ImportDraftReviewedBy")
 
   @@index([email])
   @@index([phone])
@@ -383,6 +394,8 @@ model Listing {
   views          ListingView[]
   userViews      UserListingView[]
   contactEvents  ListingContactEvent[]
+  importDraftsPublished ImportedListingDraft[] @relation("ImportDraftPublishedListing")
+  importDraftsDuplicate ImportedListingDraft[] @relation("ImportDraftDuplicateOf")
 
   @@unique([slug, short_id])
   @@index([status, published_at(sort: Desc)])
@@ -703,6 +716,49 @@ model AuditLog {
   @@index([entity_type, entity_id])
   @@index([actor_id])
   @@map("audit_logs")
+}
+
+model ImportedListingDraft {
+  id                      String            @id @default(uuid()) @db.Uuid
+  source_platform         String            @map("source_platform") @db.VarChar(50)
+  source_url              String?           @map("source_url") @db.Text
+  source_external_id      String?           @map("source_external_id") @db.VarChar(200)
+  raw_title               String?           @map("raw_title") @db.VarChar(200)
+  raw_description         String?           @map("raw_description") @db.Text
+  raw_price               String?           @map("raw_price") @db.VarChar(50)
+  raw_currency            String?           @map("raw_currency") @db.VarChar(10)
+  raw_city                String?           @map("raw_city") @db.VarChar(100)
+  raw_images              Json?             @map("raw_images") @db.JsonB
+  raw_contact             String?           @map("raw_contact") @db.Text
+  normalized_title        String?           @map("normalized_title") @db.VarChar(200)
+  normalized_description  String?           @map("normalized_description") @db.Text
+  normalized_price        Decimal?          @map("normalized_price") @db.Decimal(12, 2)
+  normalized_currency     String?           @map("normalized_currency") @db.VarChar(3)
+  normalized_city         String?           @map("normalized_city") @db.VarChar(100)
+  normalized_category     String?           @map("normalized_category") @db.VarChar(170)
+  normalized_subcategory  String?           @map("normalized_subcategory") @db.VarChar(170)
+  normalized_images       Json?             @map("normalized_images") @db.JsonB
+  notes                   String?           @db.Text
+  status                  ImportDraftStatus @default(PENDING_REVIEW)
+  duplicate_of_listing_id String?           @map("duplicate_of_listing_id") @db.Uuid
+  published_listing_id    String?           @map("published_listing_id") @db.Uuid
+  created_by_id           String?           @map("created_by_id") @db.Uuid
+  reviewed_by_id          String?           @map("reviewed_by_id") @db.Uuid
+  created_at              DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updated_at              DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+  reviewed_at             DateTime?         @map("reviewed_at") @db.Timestamptz
+  published_at            DateTime?         @map("published_at") @db.Timestamptz
+
+  createdBy          User?    @relation("ImportDraftCreatedBy", fields: [created_by_id], references: [id], onDelete: SetNull)
+  reviewedBy         User?    @relation("ImportDraftReviewedBy", fields: [reviewed_by_id], references: [id], onDelete: SetNull)
+  publishedListing   Listing? @relation("ImportDraftPublishedListing", fields: [published_listing_id], references: [id], onDelete: SetNull)
+  duplicateOfListing Listing? @relation("ImportDraftDuplicateOf", fields: [duplicate_of_listing_id], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([source_url])
+  @@index([source_platform])
+  @@index([created_at(sort: Desc)])
+  @@map("imported_listing_drafts")
 }
 
 model SeoPage {

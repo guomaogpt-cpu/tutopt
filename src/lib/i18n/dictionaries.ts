@@ -3396,6 +3396,7 @@ export const DICTIONARY = {
   },
   "admin.overview": { ru: "Обзор", kg: "Обзор", en: "Overview" },
   "admin.moderation": { ru: "Модерация", kg: "Модерация", en: "Moderation" },
+  "admin.import": { ru: "Импорт", kg: "Импорт", en: "Import" },
   "admin.reports": { ru: "Жалобы", kg: "Даттануулар", en: "Reports" },
   "admin.users": { ru: "Пользователи", kg: "Колдонуучулар", en: "Users" },
   "admin.auditLog": { ru: "Журнал", kg: "Журнал", en: "Audit log" },

@@ -27,6 +27,13 @@ const navItems = [
     prefix: "/admin/moderation",
   },
   {
+    labelKey: "admin.import" as DictionaryKey,
+    href: "/admin/import",
+    roles: [UserRole.ADMIN, UserRole.MODERATOR],
+    match: "prefix" as const,
+    prefix: "/admin/import",
+  },
+  {
     labelKey: "admin.reports" as DictionaryKey,
     href: "/admin/reports",
     roles: [UserRole.ADMIN, UserRole.MODERATOR],
