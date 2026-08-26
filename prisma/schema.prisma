@@ -150,6 +150,15 @@ enum ImportDraftStatus {
   FAILED
 }
 
+enum ImportQueueStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  DUPLICATE
+  SKIPPED
+}
+
 // ---------------------------------------------------------------------------
 // Models
 // ---------------------------------------------------------------------------
@@ -249,6 +258,7 @@ model User {
   cargoRequestSubscriptions CargoSubscription[]
   importDraftsCreated      ImportedListingDraft[] @relation("ImportDraftCreatedBy")
   importDraftsReviewed     ImportedListingDraft[] @relation("ImportDraftReviewedBy")
+  importBatchesCreated     ImportBatch[]          @relation("ImportBatchCreatedBy")
 
   @@index([email])
   @@index([phone])
@@ -753,12 +763,58 @@ model ImportedListingDraft {
   reviewedBy         User?    @relation("ImportDraftReviewedBy", fields: [reviewed_by_id], references: [id], onDelete: SetNull)
   publishedListing   Listing? @relation("ImportDraftPublishedListing", fields: [published_listing_id], references: [id], onDelete: SetNull)
   duplicateOfListing Listing? @relation("ImportDraftDuplicateOf", fields: [duplicate_of_listing_id], references: [id], onDelete: SetNull)
+  queueItems         ImportQueueItem[] @relation("ImportQueueDraft")
+  queueDuplicateRefs ImportQueueItem[] @relation("ImportQueueDuplicateDraft")
 
   @@index([status])
   @@index([source_url])
   @@index([source_platform])
   @@index([created_at(sort: Desc)])
   @@map("imported_listing_drafts")
+}
+
+model ImportBatch {
+  id               String    @id @default(uuid()) @db.Uuid
+  source_platform  String?   @map("source_platform") @db.VarChar(50)
+  total_count      Int       @map("total_count")
+  pending_count    Int       @map("pending_count")
+  processing_count Int       @default(0) @map("processing_count")
+  success_count    Int       @default(0) @map("success_count")
+  failed_count     Int       @default(0) @map("failed_count")
+  duplicate_count  Int       @default(0) @map("duplicate_count")
+  skipped_count    Int       @default(0) @map("skipped_count")
+  created_by_id    String?   @map("created_by_id") @db.Uuid
+  created_at       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updated_at       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  completed_at     DateTime? @map("completed_at") @db.Timestamptz
+
+  createdBy User?              @relation("ImportBatchCreatedBy", fields: [created_by_id], references: [id], onDelete: SetNull)
+  items     ImportQueueItem[]
+
+  @@index([created_at(sort: Desc)])
+  @@map("import_batches")
+}
+
+model ImportQueueItem {
+  id                 String            @id @default(uuid()) @db.Uuid
+  batch_id           String            @map("batch_id") @db.Uuid
+  url                String            @db.Text
+  source_platform    String            @map("source_platform") @db.VarChar(50)
+  status             ImportQueueStatus @default(PENDING)
+  error_message      String?           @map("error_message") @db.Text
+  draft_id           String?           @map("draft_id") @db.Uuid
+  duplicate_draft_id String?           @map("duplicate_draft_id") @db.Uuid
+  created_at         DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updated_at         DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+  processed_at       DateTime?         @map("processed_at") @db.Timestamptz
+
+  batch          ImportBatch           @relation(fields: [batch_id], references: [id], onDelete: Cascade)
+  draft          ImportedListingDraft? @relation("ImportQueueDraft", fields: [draft_id], references: [id], onDelete: SetNull)
+  duplicateDraft ImportedListingDraft? @relation("ImportQueueDuplicateDraft", fields: [duplicate_draft_id], references: [id], onDelete: SetNull)
+
+  @@index([batch_id, status])
+  @@index([url])
+  @@map("import_queue_items")
 }
 
 model SeoPage {

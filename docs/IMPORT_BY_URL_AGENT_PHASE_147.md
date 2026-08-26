@@ -14,6 +14,8 @@ Phase 146 добавила ручной импорт и publish flow, но ад�
 
 Phase 147 добавляет **Import by URL Agent MVP**: один URL → автозаполнение draft без auto-publish.
 
+Phase 149 добавляет **Bulk Import Queue**: список URL → batch → очередь → drafts (см. `docs/BULK_IMPORT_QUEUE_PHASE_149.md`).
+
 ## 3. Import by URL flow
 
 1. Admin открывает `/admin/import`

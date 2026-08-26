@@ -42,6 +42,13 @@ Migration: `20260826120000_import_listing_drafts`
 - SSRF-safe fetch, category mapping, duplicate by URL
 - См. `docs/IMPORT_BY_URL_AGENT_PHASE_147.md`
 
+## 4.2 Bulk Import Queue (Phase 149)
+
+- Блок «Массовый импорт» на `/admin/import`
+- API: `POST /api/admin/import/bulk`, `POST /api/admin/import/batches/[id]/process`
+- Страница `/admin/import/batches/[id]` — progress, retry, duplicate handling
+- См. `docs/BULK_IMPORT_QUEUE_PHASE_149.md`
+
 ## 5. Manual import
 
 Форма ручного импорта:
@@ -127,7 +134,9 @@ API: `POST /api/admin/import-drafts/[id]/publish`
 | `src/features/import-drafts/**` | normalize, duplicate, publish, validators |
 | `src/app/api/admin/import-drafts/**` | CRUD + status + publish APIs |
 | `src/app/api/admin/import/by-url/route.ts` | Import by URL (Phase 147) |
+| `src/app/api/admin/import/bulk/route.ts` | Bulk import queue (Phase 149) |
 | `src/server/import/**` | Extractors, SSRF-safe fetch (Phase 147) |
+| `src/features/import-batches/**` | Batch queue processing (Phase 149) |
 | `src/app/admin/import/**` | Admin pages |
 | `src/components/admin/ImportDraft*.tsx` | UI components |
 

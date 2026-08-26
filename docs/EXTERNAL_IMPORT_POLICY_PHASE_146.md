@@ -28,6 +28,9 @@
 8. **Import by URL — single listing only**  
    Phase 147 разрешает fetch одной страницы по URL staff-ом с SSRF protection. Запрещены crawler, bulk queue, CAPTCHA bypass.
 
+9. **Bulk import queue — staff-initiated URL list only**  
+   Phase 149 разрешает batch до 100 URL, обработка chunks без background crawler. Запрещены category crawler, auto-publish, CAPTCHA bypass.
+
 ## Запрещено в Phase 146
 
 - Массовый парсинг Lalafo и других площадок
@@ -40,6 +43,7 @@
 
 - Ручной ввод данных staff-ом
 - Import by URL (Phase 147): один URL, SSRF-safe fetch, draft only
+- Bulk import queue (Phase 149): до 100 URL за batch, chunked processing, draft only
 - Хранение external image URLs (client-side preview only)
 - Duplicate check MVP
 - Publish в Listing через admin action
@@ -57,5 +61,6 @@ Staff, создающий import draft, несёт ответственност�
 
 - `docs/IMPORT_DRAFTS_SYSTEM_PHASE_146.md`
 - `docs/IMPORT_BY_URL_AGENT_PHASE_147.md`
+- `docs/BULK_IMPORT_QUEUE_PHASE_149.md`
 - `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
 - `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`

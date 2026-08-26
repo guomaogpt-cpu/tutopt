@@ -13,9 +13,11 @@ import type { ImportDraftRow } from "@/features/import-drafts/types/import-draft
 
 type ImportDraftsTableProps = {
   drafts: ImportDraftRow[];
+  initialFilter?: DraftTab;
+  batchId?: string | null;
 };
 
-type DraftTab = "all" | "drafts" | "published" | "rejected";
+type DraftTab = "all" | "drafts" | "ready" | "errors" | "duplicates" | "published";
 
 function filterDrafts(drafts: ImportDraftRow[], tab: DraftTab): ImportDraftRow[] {
   switch (tab) {
@@ -23,12 +25,14 @@ function filterDrafts(drafts: ImportDraftRow[], tab: DraftTab): ImportDraftRow[]
       return drafts.filter((draft) =>
         ["PENDING_REVIEW", "READY"].includes(draft.status),
       );
+    case "ready":
+      return drafts.filter((draft) => draft.status === "READY");
     case "published":
       return drafts.filter((draft) => draft.status === "PUBLISHED");
-    case "rejected":
-      return drafts.filter((draft) =>
-        ["REJECTED", "DUPLICATE", "FAILED"].includes(draft.status),
-      );
+    case "errors":
+      return drafts.filter((draft) => draft.status === "FAILED");
+    case "duplicates":
+      return drafts.filter((draft) => draft.status === "DUPLICATE");
     default:
       return drafts;
   }
@@ -69,9 +73,13 @@ async function postDraftAction(draftId: string, action: "ready" | "reject" | "du
   }
 }
 
-export function ImportDraftsTable({ drafts }: ImportDraftsTableProps) {
+export function ImportDraftsTable({
+  drafts,
+  initialFilter = "all",
+  batchId = null,
+}: ImportDraftsTableProps) {
   const router = useRouter();
-  const [tab, setTab] = useState<DraftTab>("all");
+  const [tab, setTab] = useState<DraftTab>(initialFilter);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -95,14 +103,19 @@ export function ImportDraftsTable({ drafts }: ImportDraftsTableProps) {
     <div className="rounded-[20px] border border-[rgba(148,163,184,0.18)] bg-white shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900">
       <div className="border-b border-[rgba(148,163,184,0.18)] px-5 py-4 dark:border-slate-800">
         <h2 className="text-lg font-semibold text-[#0F172A] dark:text-slate-100">Черновики</h2>
+        {batchId ? (
+          <p className="mt-1 text-sm text-[#64748B]">Фильтр по batch: {batchId.slice(0, 8)}…</p>
+        ) : null}
       </div>
 
       <Tabs value={tab} onValueChange={(value) => setTab(value as DraftTab)} className="p-5 pt-4">
         <TabsList className="mb-4 flex h-auto flex-wrap gap-1">
           <TabsTrigger value="all">Все</TabsTrigger>
+          <TabsTrigger value="ready">Готовые</TabsTrigger>
           <TabsTrigger value="drafts">Черновики</TabsTrigger>
+          <TabsTrigger value="errors">Ошибки</TabsTrigger>
+          <TabsTrigger value="duplicates">Дубли</TabsTrigger>
           <TabsTrigger value="published">Опубликованные</TabsTrigger>
-          <TabsTrigger value="rejected">Отклонённые / Дубли</TabsTrigger>
         </TabsList>
 
         {errorMessage ? (
