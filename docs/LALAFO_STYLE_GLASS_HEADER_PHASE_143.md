@@ -92,3 +92,4 @@ Routes: `/`, `/market`, `/listings?q=фасовщик`, `/listings/new`, `/accou
 - `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/HEADER_CLICK_DISAPPEAR_BUGFIX_PHASE_144.md`
