@@ -4,24 +4,38 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 import * as React from "react";
+import { HEADER_HEIGHT_VAR } from "@/components/layout/header/use-site-header-height";
 import { useDrawerSwipeDismiss } from "@/hooks/use-drawer-swipe-dismiss";
 import { cn } from "@/lib/utils";
+
+const HEADER_OFFSET_FALLBACK = "128px";
+const BELOW_HEADER_TOP = `var(${HEADER_HEIGHT_VAR}, ${HEADER_OFFSET_FALLBACK})`;
+const BELOW_HEADER_HEIGHT = `calc(100dvh - var(${HEADER_HEIGHT_VAR}, ${HEADER_OFFSET_FALLBACK}))`;
 
 const Drawer = DialogPrimitive.Root;
 const DrawerTrigger = DialogPrimitive.Trigger;
 const DrawerClose = DialogPrimitive.Close;
 const DrawerPortal = DialogPrimitive.Portal;
 
+type DrawerOverlayProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & {
+  belowHeader?: boolean;
+};
+
 const DrawerOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+  DrawerOverlayProps
+>(({ className, belowHeader = false, style, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-[70] bg-slate-900/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:pointer-events-none",
+      "fixed z-[70] bg-slate-900/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:pointer-events-none",
+      belowHeader ? "inset-x-0 bottom-0" : "inset-0",
       className,
     )}
+    style={{
+      ...(belowHeader ? { top: BELOW_HEADER_TOP } : undefined),
+      ...style,
+    }}
     {...props}
   />
 ));
@@ -50,6 +64,8 @@ type DrawerContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.
   VariantProps<typeof drawerVariants> & {
     swipeToDismiss?: boolean;
     swipeDismissGuard?: () => boolean;
+    /** Keep panel and backdrop below the sticky site header (`--site-header-height`). */
+    belowHeader?: boolean;
   };
 
 const DrawerContent = React.forwardRef<
@@ -63,6 +79,7 @@ const DrawerContent = React.forwardRef<
       children,
       swipeToDismiss = true,
       swipeDismissGuard,
+      belowHeader = false,
       style,
       ...props
     },
@@ -114,13 +131,28 @@ const DrawerContent = React.forwardRef<
       [ref],
     );
 
+    const belowHeaderPanelStyle =
+      belowHeader && side === "right"
+        ? {
+            top: BELOW_HEADER_TOP,
+            height: BELOW_HEADER_HEIGHT,
+          }
+        : undefined;
+
     return (
       <DrawerPortal>
-        <DrawerOverlay />
+        <DrawerOverlay belowHeader={belowHeader} />
         <DialogPrimitive.Content
           ref={setRefs}
-          className={cn(drawerVariants({ side }), className)}
+          className={cn(
+            drawerVariants({ side }),
+            belowHeader &&
+              side === "right" &&
+              "inset-y-auto bottom-0 z-[85] h-auto max-h-none border-l",
+            className,
+          )}
           style={{
+            ...belowHeaderPanelStyle,
             ...style,
             ...(dragOffsetY > 0
               ? {

@@ -53,10 +53,10 @@
 
 | Layer | z-index |
 |-------|---------|
-| Header | 80 |
-| Header dropdowns | 90 |
+| Header | 90 |
+| Header dropdowns / settings panel | 90 / 85 |
 | Category mega menu | 70 |
-| Category backdrop | 60 |
+| Category / settings backdrop | 60 / 70 |
 | Decorative gradient | 0, pointer-events-none |
 
 ## 10. Desktop/mobile checks
@@ -71,12 +71,17 @@
 ## 11. Known limitations
 
 - Fixed header adds spacer — height measured client-side
-- Settings drawer still uses Radix modal drawer (z-70)
+- ~~Settings drawer still uses Radix modal drawer (z-70)~~ → **Phase 148:** settings drawer below header via `belowHeader`
+
+## Phase 148 follow-up
+
+Settings/profile panel (`SettingsDrawer`) repositioned below header — см. `docs/PROFILE_PANEL_BELOW_HEADER_FIX_PHASE_148.md`.
 
 ## Связанные документы
 
 - `docs/HEADER_CLICK_DISAPPEAR_BUGFIX_PHASE_144.md`
 - `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`
 - `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`
+- `docs/PROFILE_PANEL_BELOW_HEADER_FIX_PHASE_148.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`

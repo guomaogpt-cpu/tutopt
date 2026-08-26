@@ -299,6 +299,18 @@ See `docs/HEADER_DROPDOWN_SCROLL_LOCK_FIX_PHASE_147.md`
 
 ---
 
+## Phase 148 — Profile panel below header
+
+| Issue | Fix |
+|---|---|
+| Settings drawer overlaps header/search | `belowHeader` drawer offset via `--site-header-height` |
+| Backdrop dims header glass | Backdrop starts below header |
+| Scroll jump on open | `useBodyScrollLock` + `modal={false}` |
+
+See `docs/PROFILE_PANEL_BELOW_HEADER_FIX_PHASE_148.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

@@ -77,6 +77,7 @@ Routes: `/`, `/market`, `/listings?q=фасовщик`, `/listings/new`, `/accou
 - Post button compact on mobile
 - **Phase 144:** z-index/pointer-events bugfix — header click disappear
 - **Phase 147:** fixed header, dropdown interaction, scroll lock
+- **Phase 148:** settings drawer below header (no overlay on header area)
 
 ## 11. Future currency plan
 

@@ -32,6 +32,7 @@ import {
 import type { PreferredLocale } from "@/features/preferences/locale-preference";
 import type { PreferredTheme } from "@/features/preferences/theme-preference";
 import { BrandLogo } from "@/components/layout/BrandLogo";
+import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -89,6 +90,8 @@ export function SettingsDrawer({
     setMounted(true);
   }, []);
 
+  useBodyScrollLock(open);
+
   function handleLocaleSelect(next: PreferredLocale) {
     setLocale(next);
   }
@@ -114,11 +117,12 @@ export function SettingsDrawer({
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} modal={false}>
       <DrawerContent
         id="settings-drawer-menu"
         side="right"
-        className="w-[min(85vw,23.75rem)] max-w-[23.75rem] gap-0 border-slate-200 bg-background p-0 dark:border-slate-800 dark:bg-slate-950"
+        belowHeader
+        className="w-[min(100vw,23.75rem)] max-w-[23.75rem] gap-0 border-slate-200 bg-background p-0 dark:border-slate-800 dark:bg-slate-950 sm:w-[min(85vw,23.75rem)]"
       >
         <DrawerHeader className="flex shrink-0 flex-row items-center gap-3 border-b border-slate-100 px-4 py-3 pr-12 text-left dark:border-slate-800">
           <BrandLogo variant="default" className="h-9 max-w-[36px]" />

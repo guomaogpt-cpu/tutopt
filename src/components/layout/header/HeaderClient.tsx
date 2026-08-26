@@ -30,7 +30,7 @@ type HeaderClientProps = {
 };
 
 const HEADER_GLASS =
-  "fixed inset-x-0 top-0 z-[80] border-b border-slate-200/70 bg-white/88 text-slate-900 shadow-[0_4px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl backdrop-saturate-150 dark:border-slate-800/70 dark:bg-slate-950/88 dark:text-slate-100";
+  "fixed inset-x-0 top-0 z-[90] border-b border-slate-200/70 bg-white/88 text-slate-900 shadow-[0_4px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl backdrop-saturate-150 dark:border-slate-800/70 dark:bg-slate-950/88 dark:text-slate-100";
 
 const SECTION_GRADIENT =
   "h-[2px] bg-gradient-to-r from-purple-400/55 via-green-400/50 via-[38%] via-blue-400/50 via-[62%] to-orange-400/55";
@@ -170,7 +170,12 @@ export function HeaderClient({ user }: HeaderClientProps) {
                   aria-label={
                     settingsOpen ? t("auth.closeMenu") : t("auth.openMenu")
                   }
-                  onClick={() => setSettingsOpen((current) => !current)}
+                  onClick={() => {
+                    setCategoriesOpen(false);
+                    setProfileOpen(false);
+                    setCurrencyOpen(false);
+                    setSettingsOpen((current) => !current);
+                  }}
                 >
                   {settingsOpen ? (
                     <X className="size-5" aria-hidden="true" />
