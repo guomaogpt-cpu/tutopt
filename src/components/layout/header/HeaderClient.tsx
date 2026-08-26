@@ -27,7 +27,7 @@ type HeaderClientProps = {
 };
 
 const HEADER_GLASS =
-  "sticky top-0 z-50 border-b border-slate-200/70 bg-white/82 text-slate-900 shadow-[0_4px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl backdrop-saturate-150 dark:border-slate-800/70 dark:bg-slate-950/82 dark:text-slate-100";
+  "sticky top-0 isolate z-[60] border-b border-slate-200/70 bg-white/88 text-slate-900 shadow-[0_4px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl backdrop-saturate-150 dark:border-slate-800/70 dark:bg-slate-950/88 dark:text-slate-100";
 
 const SECTION_GRADIENT =
   "h-[2px] bg-gradient-to-r from-purple-400/55 via-green-400/50 via-[38%] via-blue-400/50 via-[62%] to-orange-400/55";
@@ -42,13 +42,14 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const registerHref = buildRegisterUrl({ returnPath: pathname });
 
   return (
-    <header className={cn("relative", HEADER_GLASS)}>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-purple-50/25 via-transparent via-35% via-green-50/15 via-65% to-orange-50/20 dark:from-purple-950/20 dark:via-transparent dark:to-orange-950/15"
-      />
+    <>
+      <header className={cn("relative pointer-events-auto", HEADER_GLASS)}>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-purple-50/25 via-transparent via-35% via-green-50/15 via-65% to-orange-50/20 dark:from-purple-950/20 dark:via-transparent dark:to-orange-950/15"
+        />
 
-      <Container className="relative">
+        <Container className="relative z-10">
         {/* Row 1 — logo, sections, actions */}
         <div className="flex h-12 min-w-0 items-center gap-2 lg:h-14 lg:gap-3">
           <div className="flex min-w-0 shrink-0 items-center gap-2 lg:gap-3">
@@ -158,6 +159,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </Suspense>
         </div>
       </Container>
+    </header>
 
       <CategoryDrawer open={categoriesOpen} onOpenChange={setCategoriesOpen} />
 
@@ -166,7 +168,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
         onOpenChange={setSettingsOpen}
         user={user}
       />
-    </header>
+    </>
   );
 }
 

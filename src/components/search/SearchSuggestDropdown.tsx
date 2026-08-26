@@ -120,7 +120,7 @@ export function SearchSuggestDropdown({
       role="listbox"
       aria-label="Подсказки поиска"
       className={cn(
-        "absolute left-0 top-[calc(100%+8px)] z-40 flex w-full max-w-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-xl",
+        "absolute left-0 top-[calc(100%+8px)] z-50 flex w-full max-w-full flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-xl",
         "max-h-[280px] md:max-h-[360px]",
         className,
       )}

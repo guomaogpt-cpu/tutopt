@@ -75,6 +75,7 @@ Routes: `/`, `/market`, `/listings?q=фасовщик`, `/listings/new`, `/accou
 - Auto region detection не реализован
 - Mobile sections в horizontal scroll (не drawer)
 - Post button compact on mobile
+- **Phase 144:** z-index/pointer-events bugfix — header click disappear
 
 ## 11. Future currency plan
 

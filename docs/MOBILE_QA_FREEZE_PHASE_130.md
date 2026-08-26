@@ -263,6 +263,18 @@ See `docs/LALAFO_STYLE_GLASS_HEADER_PHASE_143.md`
 
 ---
 
+## Phase 144 — Header click disappear bugfix
+
+| Issue | Fix |
+|---|---|
+| Header disappears on click | z-index layering + pointer-events fix |
+| Drawer overlay blocks header | Overlay z-70, header z-60, closed overlay inert |
+| Glass gradient intercepts clicks | gradient z-0 pointer-events-none |
+
+See `docs/HEADER_CLICK_DISAPPEAR_BUGFIX_PHASE_144.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password
