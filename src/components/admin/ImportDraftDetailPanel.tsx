@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ExternalLink, Package } from "lucide-react";
+import { ImportCategorySelect } from "@/components/admin/ImportCategorySelect";
 import { ImportDraftStatusBadge } from "@/components/admin/ImportDraftStatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,11 +17,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import type { ImportCategoryOption } from "@/features/import-drafts/lib/get-import-category-options";
 import type { ImportDraftRow } from "@/features/import-drafts/types/import-draft";
 import { IMPORT_SOURCE_PLATFORMS } from "@/features/import-drafts/types/import-draft";
 
 type ImportDraftDetailPanelProps = {
   draft: ImportDraftRow;
+  categories: ImportCategoryOption[];
 };
 
 type ApiErrorBody = {
@@ -40,15 +43,21 @@ function FieldBlock({ label, value }: { label: string; value: string | null | un
   );
 }
 
-export function ImportDraftDetailPanel({ draft }: ImportDraftDetailPanelProps) {
+export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailPanelProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [sourcePlatform, setSourcePlatform] = useState(draft.sourcePlatform);
+  const [categorySlug, setCategorySlug] = useState(draft.normalizedCategory ?? "");
+  const [subcategorySlug, setSubcategorySlug] = useState(draft.normalizedSubcategory ?? "");
 
   const images = draft.normalizedImages.length > 0 ? draft.normalizedImages : draft.rawImages;
   const isPublished = draft.status === "PUBLISHED";
+  const isAutoExtracted = Boolean(draft.sourceUrl && draft.sourcePlatform !== "MANUAL");
+  const hasValidCategorySlug = categories.some(
+    (option) => option.slug === subcategorySlug || option.slug === categorySlug,
+  );
 
   async function runAction(action: "ready" | "reject" | "duplicate" | "publish") {
     setIsSubmitting(true);
@@ -107,8 +116,8 @@ export function ImportDraftDetailPanel({ draft }: ImportDraftDetailPanelProps) {
           price: String(formData.get("price") ?? ""),
           currency: String(formData.get("currency") ?? ""),
           city: String(formData.get("city") ?? ""),
-          category: String(formData.get("category") ?? ""),
-          subcategory: String(formData.get("subcategory") ?? ""),
+          category: categorySlug,
+          subcategory: subcategorySlug,
           imageUrlsText: String(formData.get("imageUrlsText") ?? ""),
           rawContact: String(formData.get("rawContact") ?? ""),
           notes: String(formData.get("notes") ?? ""),
@@ -187,6 +196,19 @@ export function ImportDraftDetailPanel({ draft }: ImportDraftDetailPanelProps) {
           </Button>
         ) : null}
       </div>
+
+      {isAutoExtracted ? (
+        <div className="rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] px-4 py-3 text-sm text-[#1D4ED8]">
+          Данные получены автоматически по ссылке ({draft.sourcePlatform}). Проверьте поля перед
+          публикацией.
+        </div>
+      ) : null}
+
+      {!hasValidCategorySlug && !isPublished ? (
+        <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] px-4 py-3 text-sm text-[#92400E]">
+          Укажите категорию перед публикацией.
+        </div>
+      ) : null}
 
       {draft.duplicateOfListingId ? (
         <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] px-4 py-3 text-sm text-[#92400E]">
@@ -338,27 +360,18 @@ export function ImportDraftDetailPanel({ draft }: ImportDraftDetailPanelProps) {
               <Input id="city" name="city" defaultValue={draft.rawCity ?? draft.normalizedCity ?? ""} />
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="category" className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                Категория (slug)
-              </label>
-              <Input
-                id="category"
-                name="category"
-                defaultValue={draft.normalizedCategory ?? ""}
+            <div className="space-y-2 md:col-span-2">
+              <ImportCategorySelect
+                categories={categories}
+                categorySlug={categorySlug}
+                subcategorySlug={subcategorySlug}
+                onCategoryChange={setCategorySlug}
+                onSubcategoryChange={setSubcategorySlug}
               />
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="subcategory" className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                Подкатегория (slug)
-              </label>
-              <Input
-                id="subcategory"
-                name="subcategory"
-                defaultValue={draft.normalizedSubcategory ?? ""}
-              />
-            </div>
+            <input type="hidden" name="category" value={categorySlug} />
+            <input type="hidden" name="subcategory" value={subcategorySlug} />
 
             <div className="space-y-2 md:col-span-2">
               <label htmlFor="imageUrlsText" className="text-sm font-medium text-slate-900 dark:text-slate-100">

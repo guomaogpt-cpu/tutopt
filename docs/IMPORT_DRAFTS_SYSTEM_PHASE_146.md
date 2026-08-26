@@ -30,9 +30,17 @@ Migration: `20260826120000_import_listing_drafts`
 
 ## 4. Admin import flow
 
-- `/admin/import` — список черновиков + форма создания (только ADMIN/MODERATOR)
-- `/admin/import/[id]` — детальная страница черновика с raw/normalized данными и actions
+- `/admin/import` — **Import by URL** (главный сценарий) + список черновиков + ручной импорт (только ADMIN/MODERATOR)
+- `/admin/import/[id]` — детальная страница черновика с raw/normalized данными, auto-extracted banner и actions
 - Пункт «Импорт» в `AdminNav`
+
+## 4.1 Import by URL (Phase 147)
+
+- Блок «Импорт по ссылке» на `/admin/import`
+- API: `POST /api/admin/import/by-url`
+- Lalafo / Instagram (limited) / Website extractors
+- SSRF-safe fetch, category mapping, duplicate by URL
+- См. `docs/IMPORT_BY_URL_AGENT_PHASE_147.md`
 
 ## 5. Manual import
 
@@ -76,7 +84,7 @@ API: `POST /api/admin/import-drafts/[id]/publish`
 
 - Только staff
 - Draft status: `READY` или `PENDING_REVIEW`
-- Title обязателен; category и city резолвятся по slug/name
+- Title обязателен; category резолвится по **valid slug** (leaf subcategory), city — по name/slug
 - Listing создаётся со статусом `PENDING_MODERATION` (существующий moderation flow)
 - Owner: seller profile текущего admin/moderator (`ensureSellerProfile`)
 - Images: external URLs сохраняются как есть (без server-side download)
@@ -103,8 +111,8 @@ API: `POST /api/admin/import-drafts/[id]/publish`
 
 ## 11. Future
 
-- Lalafo importer (respectful, with consent)
-- Instagram link importer (official/manual)
+- ~~Lalafo importer (respectful, with consent)~~ → Phase 147 MVP (single URL, no bulk)
+- Instagram link importer (official/manual) — Phase 147 limited OG only
 - Screenshot OCR importer
 - AI normalization (optional button)
 - Image duplicate detection
@@ -118,6 +126,8 @@ API: `POST /api/admin/import-drafts/[id]/publish`
 | `prisma/schema.prisma` | `ImportedListingDraft`, `ImportDraftStatus` |
 | `src/features/import-drafts/**` | normalize, duplicate, publish, validators |
 | `src/app/api/admin/import-drafts/**` | CRUD + status + publish APIs |
+| `src/app/api/admin/import/by-url/route.ts` | Import by URL (Phase 147) |
+| `src/server/import/**` | Extractors, SSRF-safe fetch (Phase 147) |
 | `src/app/admin/import/**` | Admin pages |
 | `src/components/admin/ImportDraft*.tsx` | UI components |
 

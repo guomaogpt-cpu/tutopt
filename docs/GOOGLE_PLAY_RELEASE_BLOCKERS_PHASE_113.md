@@ -113,8 +113,9 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 | 143 ✅ | Lalafo-style glass header + currency UI |
 | 144 ✅ | Header click disappear bugfix |
 | 145 ✅ | Lalafo-style category mega dropdown |
-| 147 ✅ | Header dropdown & scroll lock fix |
 | 146 ✅ | Import drafts system (admin manual import) |
+| 147-import ✅ | Import by URL agent MVP (Lalafo/OG extractors) |
+| 147 ✅ | Header dropdown & scroll lock fix |
 | 148 ✅ | Profile/settings panel below header |
 | **Next** | Upload fresh AAB → internal testers → feedback |
 
@@ -139,6 +140,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`
 - `docs/HEADER_DROPDOWN_SCROLL_LOCK_FIX_PHASE_147.md`
 - `docs/IMPORT_DRAFTS_SYSTEM_PHASE_146.md`
+- `docs/IMPORT_BY_URL_AGENT_PHASE_147.md`
 - `docs/PROFILE_PANEL_BELOW_HEADER_FIX_PHASE_148.md`
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`

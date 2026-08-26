@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ImportCategorySelect } from "@/components/admin/ImportCategorySelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { IMPORT_SOURCE_PLATFORMS } from "@/features/import-drafts/types/import-draft";
+import type { ImportCategoryOption } from "@/features/import-drafts/lib/get-import-category-options";
 
 type ApiErrorBody = {
   error?: {
@@ -21,14 +23,17 @@ type ApiErrorBody = {
 };
 
 type ImportDraftCreateFormProps = {
+  categories: ImportCategoryOption[];
   onCreated?: () => void;
 };
 
-export function ImportDraftCreateForm({ onCreated }: ImportDraftCreateFormProps) {
+export function ImportDraftCreateForm({ categories, onCreated }: ImportDraftCreateFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sourcePlatform, setSourcePlatform] = useState<string>("MANUAL");
+  const [categorySlug, setCategorySlug] = useState("");
+  const [subcategorySlug, setSubcategorySlug] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,8 +54,8 @@ export function ImportDraftCreateForm({ onCreated }: ImportDraftCreateFormProps)
           price: String(formData.get("price") ?? ""),
           currency: String(formData.get("currency") ?? ""),
           city: String(formData.get("city") ?? ""),
-          category: String(formData.get("category") ?? ""),
-          subcategory: String(formData.get("subcategory") ?? ""),
+          category: categorySlug,
+          subcategory: subcategorySlug,
           imageUrlsText: String(formData.get("imageUrlsText") ?? ""),
           rawContact: String(formData.get("rawContact") ?? ""),
           notes: String(formData.get("notes") ?? ""),
@@ -84,7 +89,7 @@ export function ImportDraftCreateForm({ onCreated }: ImportDraftCreateFormProps)
       className="rounded-[20px] border border-[rgba(148,163,184,0.18)] bg-white p-5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900"
     >
       <h2 className="mb-4 text-lg font-semibold text-[#0F172A] dark:text-slate-100">
-        Новый импорт
+        Ручной импорт
       </h2>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -150,18 +155,14 @@ export function ImportDraftCreateForm({ onCreated }: ImportDraftCreateFormProps)
           <Input id="city" name="city" placeholder="Бишкек" />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="category" className="text-sm font-medium text-slate-900 dark:text-slate-100">
-            Категория (slug)
-          </label>
-          <Input id="category" name="category" placeholder="electronics" />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="subcategory" className="text-sm font-medium text-slate-900 dark:text-slate-100">
-            Подкатегория (slug)
-          </label>
-          <Input id="subcategory" name="subcategory" placeholder="phones" />
+        <div className="space-y-2 md:col-span-2">
+          <ImportCategorySelect
+            categories={categories}
+            categorySlug={categorySlug}
+            subcategorySlug={subcategorySlug}
+            onCategoryChange={setCategorySlug}
+            onSubcategoryChange={setSubcategorySlug}
+          />
         </div>
 
         <div className="space-y-2 md:col-span-2">

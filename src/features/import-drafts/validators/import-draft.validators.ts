@@ -40,3 +40,10 @@ export const markDuplicateImportDraftSchema = z.object({
 });
 
 export type MarkDuplicateImportDraftInput = z.infer<typeof markDuplicateImportDraftSchema>;
+
+export const importByUrlSchema = z.object({
+  url: z.string().trim().url("Укажите корректную ссылку"),
+  sourcePlatform: z.enum(IMPORT_SOURCE_PLATFORMS).optional().nullable(),
+});
+
+export type ImportByUrlInput = z.infer<typeof importByUrlSchema>;

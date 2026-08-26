@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { ImportDraftDetailPanel } from "@/components/admin/ImportDraftDetailPanel";
+import { getImportCategoryOptions } from "@/features/import-drafts/lib/get-import-category-options";
 import { serializeImportDraft } from "@/features/import-drafts/lib/import-draft-serializer";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/shared/lib/prisma";
@@ -13,9 +14,10 @@ type AdminImportDetailPageProps = {
 export default async function AdminImportDetailPage({ params }: AdminImportDetailPageProps) {
   const { id } = await params;
 
-  const draft = await prisma.importedListingDraft.findUnique({
-    where: { id },
-  });
+  const [draft, categories] = await Promise.all([
+    prisma.importedListingDraft.findUnique({ where: { id } }),
+    getImportCategoryOptions(),
+  ]);
 
   if (!draft) {
     notFound();
@@ -30,7 +32,7 @@ export default async function AdminImportDetailPage({ params }: AdminImportDetai
         </Link>
       </Button>
 
-      <ImportDraftDetailPanel draft={serializeImportDraft(draft)} />
+      <ImportDraftDetailPanel draft={serializeImportDraft(draft)} categories={categories} />
     </div>
   );
 }

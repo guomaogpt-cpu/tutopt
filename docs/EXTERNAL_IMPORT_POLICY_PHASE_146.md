@@ -23,7 +23,10 @@
    Запрещены CAPTCHA bypass, scraping workers, browser automation против ToS источников в production без согласования.
 
 7. **Instagram — только ссылки / официальные доступы / ручной импорт**  
-   Login bot и автоматический scraping Instagram — запрещены в Phase 146.
+   Login bot и автоматический scraping Instagram — запрещены. Phase 147: limited OG-only fetch без login.
+
+8. **Import by URL — single listing only**  
+   Phase 147 разрешает fetch одной страницы по URL staff-ом с SSRF protection. Запрещены crawler, bulk queue, CAPTCHA bypass.
 
 ## Запрещено в Phase 146
 
@@ -36,6 +39,7 @@
 ## Разрешено
 
 - Ручной ввод данных staff-ом
+- Import by URL (Phase 147): один URL, SSRF-safe fetch, draft only
 - Хранение external image URLs (client-side preview only)
 - Duplicate check MVP
 - Publish в Listing через admin action
@@ -52,5 +56,6 @@ Staff, создающий import draft, несёт ответственност�
 ## Связанные документы
 
 - `docs/IMPORT_DRAFTS_SYSTEM_PHASE_146.md`
+- `docs/IMPORT_BY_URL_AGENT_PHASE_147.md`
 - `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
 - `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`

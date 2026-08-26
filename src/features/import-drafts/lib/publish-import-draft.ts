@@ -2,7 +2,6 @@ import {
   ImportDraftStatus,
   ListingStatus,
   ListingUnit,
-  type ListingVertical,
   Prisma,
 } from "@prisma/client";
 import type { PublicUser } from "@/features/auth/lib/session";
@@ -13,6 +12,7 @@ import {
   LISTING_TITLE_MIN,
 } from "@/features/listings/validators/listing.validators";
 import type { ImportDraftImageList } from "@/features/import-drafts/types/import-draft";
+import { resolveImportCategorySlug } from "@/features/import-drafts/lib/resolve-import-category";
 import { validateListingContent } from "@/lib/moderation/content-checks";
 import { NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
@@ -23,47 +23,6 @@ function parseImageJson(value: Prisma.JsonValue | null): ImportDraftImageList {
   }
 
   return value.filter((item): item is string => typeof item === "string");
-}
-
-async function resolveCategoryId(params: {
-  normalizedCategory: string | null;
-  normalizedSubcategory: string | null;
-}): Promise<{ categoryId: string; vertical: ListingVertical }> {
-  const slugCandidates = [params.normalizedSubcategory, params.normalizedCategory].filter(
-    (value): value is string => Boolean(value),
-  );
-
-  for (const slug of slugCandidates) {
-    const category = await prisma.category.findFirst({
-      where: {
-        is_active: true,
-        OR: [{ slug }, { slug: slug.replace(/\s+/g, "-") }],
-      },
-    });
-
-    if (category) {
-      return { categoryId: category.id, vertical: category.vertical };
-    }
-  }
-
-  if (params.normalizedCategory) {
-    const byName = await prisma.category.findFirst({
-      where: {
-        is_active: true,
-        name: { equals: params.normalizedCategory, mode: "insensitive" },
-      },
-    });
-
-    if (byName) {
-      return { categoryId: byName.id, vertical: byName.vertical };
-    }
-  }
-
-  throw new ValidationError("Укажите категорию перед публикацией.", {
-    fieldErrors: {
-      category: ["Категория не найдена. Проверьте slug или название."],
-    },
-  });
 }
 
 async function resolveCityId(cityName: string | null): Promise<{
@@ -148,9 +107,11 @@ export async function publishImportDraft(params: {
     throw new ValidationError(contentIssues[0]?.message ?? "Проверьте текст объявления.");
   }
 
-  const { categoryId, vertical } = await resolveCategoryId({
+  const { categoryId, vertical } = await resolveImportCategorySlug({
     normalizedCategory: draft.normalized_category,
     normalizedSubcategory: draft.normalized_subcategory,
+    title: draft.normalized_title ?? draft.raw_title,
+    description: draft.normalized_description ?? draft.raw_description,
   });
 
   const cityName = draft.normalized_city ?? draft.raw_city;
