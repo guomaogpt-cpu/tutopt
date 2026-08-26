@@ -287,6 +287,18 @@ See `docs/LALAFO_STYLE_CATEGORY_MEGA_DROPDOWN_PHASE_145.md`
 
 ---
 
+## Phase 147 — Header dropdown & scroll lock fix
+
+| Issue | Fix |
+|---|---|
+| Profile/currency broken mid-scroll | Fixed header + modal={false} dropdowns |
+| Category menu scroll | Body scroll lock with position restore |
+| Header top row disappears | Fixed header instead of sticky |
+
+See `docs/HEADER_DROPDOWN_SCROLL_LOCK_FIX_PHASE_147.md`
+
+---
+
 ## 14. Known limitations
 
 - Google OAuth unstable in Android WebView — use phone/password

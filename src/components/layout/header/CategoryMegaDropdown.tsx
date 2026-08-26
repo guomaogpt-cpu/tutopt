@@ -5,11 +5,8 @@ import { useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
-  useRef,
   useState,
   type MouseEvent,
-  type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
 import { ChevronRight, X } from "lucide-react";
@@ -18,6 +15,7 @@ import {
   CATEGORY_MEGA_MENU_DEFAULT_ID,
   type CategoryMegaItem,
 } from "@/features/navigation/lib/category-mega-menu-data";
+import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/utils";
 
@@ -46,7 +44,6 @@ export function CategoryMegaDropdown({
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
   const [activeId, setActiveId] = useState(CATEGORY_MEGA_MENU_DEFAULT_ID);
-  const panelRef = useRef<HTMLDivElement>(null);
 
   const activeCategory =
     CATEGORY_MEGA_MENU.find((item) => item.id === activeId) ?? CATEGORY_MEGA_MENU[0];
@@ -54,6 +51,8 @@ export function CategoryMegaDropdown({
   const close = useCallback(() => {
     onOpenChange(false);
   }, [onOpenChange]);
+
+  useBodyScrollLock(open && visible);
 
   useEffect(() => {
     if (open) {
@@ -87,18 +86,6 @@ export function CategoryMegaDropdown({
   }, [open, close]);
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [open]);
-
-  useEffect(() => {
     if (open) {
       setActiveId(CATEGORY_MEGA_MENU_DEFAULT_ID);
     }
@@ -118,33 +105,33 @@ export function CategoryMegaDropdown({
     return null;
   }
 
-  const maxPanelHeight = `min(78vh, calc(100dvh - ${headerHeight}px))`;
+  const panelTop = headerHeight > 0 ? headerHeight : 128;
+  const maxPanelHeight = `min(78vh, calc(100dvh - ${panelTop}px))`;
 
   return createPortal(
     <>
       <div
         aria-hidden="true"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-[55] bg-slate-900/45 transition-opacity duration-200 ease-out",
+          "fixed inset-x-0 bottom-0 z-[60] bg-slate-900/45 transition-opacity duration-200 ease-out",
           visible ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
         )}
-        style={{ top: headerHeight }}
+        style={{ top: panelTop }}
         onClick={close}
       />
 
       <div
-        ref={panelRef}
         id="category-mega-menu"
         role="dialog"
-        aria-modal="true"
+        aria-modal="false"
         aria-label="Категории"
         className={cn(
-          "fixed inset-x-0 z-[55] transition-[opacity,transform] duration-200 ease-out",
+          "fixed inset-x-0 z-[70] transition-[opacity,transform] duration-200 ease-out",
           visible
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-3 opacity-0",
         )}
-        style={{ top: headerHeight, maxHeight: maxPanelHeight }}
+        style={{ top: panelTop, maxHeight: maxPanelHeight }}
         onClick={handlePanelClick}
       >
         <Container className="h-full max-h-[inherit] px-3 sm:px-5 lg:px-6">
@@ -251,37 +238,4 @@ export function CategoryMegaDropdown({
     </>,
     document.body,
   );
-}
-
-/** Measure sticky header height for mega menu positioning. */
-export function useSiteHeaderHeight(headerRef: RefObject<HTMLElement | null>): number {
-  const [height, setHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    const element = headerRef.current;
-    if (!element) {
-      return;
-    }
-
-    function updateHeight() {
-      const current = headerRef.current;
-      if (!current) {
-        return;
-      }
-      setHeight(Math.ceil(current.getBoundingClientRect().height));
-    }
-
-    updateHeight();
-
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(element);
-    window.addEventListener("resize", updateHeight);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateHeight);
-    };
-  }, [headerRef]);
-
-  return height;
 }

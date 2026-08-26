@@ -12,8 +12,8 @@ import type { HeaderUser } from "@/features/navigation/lib/header-menu";
 import { BrandLogo } from "@/components/layout/BrandLogo";
 import {
   CategoryMegaDropdown,
-  useSiteHeaderHeight,
 } from "@/components/layout/header/CategoryMegaDropdown";
+import { useSiteHeaderHeight } from "@/components/layout/header/use-site-header-height";
 import { CurrencyRegionIndicator } from "@/components/layout/header/CurrencyRegionIndicator";
 import { HeaderSearch } from "@/components/layout/header/HeaderSearch";
 import { HeaderSectionNav } from "@/components/layout/header/HeaderSectionNav";
@@ -30,7 +30,7 @@ type HeaderClientProps = {
 };
 
 const HEADER_GLASS =
-  "sticky top-0 isolate z-[60] border-b border-slate-200/70 bg-white/88 text-slate-900 shadow-[0_4px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl backdrop-saturate-150 dark:border-slate-800/70 dark:bg-slate-950/88 dark:text-slate-100";
+  "fixed inset-x-0 top-0 z-[80] border-b border-slate-200/70 bg-white/88 text-slate-900 shadow-[0_4px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl backdrop-saturate-150 dark:border-slate-800/70 dark:bg-slate-950/88 dark:text-slate-100";
 
 const SECTION_GRADIENT =
   "h-[2px] bg-gradient-to-r from-purple-400/55 via-green-400/50 via-[38%] via-blue-400/50 via-[62%] to-orange-400/55";
@@ -42,6 +42,8 @@ export function HeaderClient({ user }: HeaderClientProps) {
   const headerHeight = useSiteHeaderHeight(headerRef);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
 
   const loginHref = buildLoginUrl(pathname);
   const registerHref = buildRegisterUrl({ returnPath: pathname });
@@ -51,7 +53,25 @@ export function HeaderClient({ user }: HeaderClientProps) {
   }
 
   function toggleCategories() {
+    setProfileOpen(false);
+    setCurrencyOpen(false);
     setCategoriesOpen((current) => !current);
+  }
+
+  function handleProfileOpenChange(open: boolean) {
+    if (open) {
+      setCategoriesOpen(false);
+      setCurrencyOpen(false);
+    }
+    setProfileOpen(open);
+  }
+
+  function handleCurrencyOpenChange(open: boolean) {
+    if (open) {
+      setCategoriesOpen(false);
+      setProfileOpen(false);
+    }
+    setCurrencyOpen(open);
   }
 
   return (
@@ -65,7 +85,7 @@ export function HeaderClient({ user }: HeaderClientProps) {
           className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-purple-50/25 via-transparent via-35% via-green-50/15 via-65% to-orange-50/20 dark:from-purple-950/20 dark:via-transparent dark:to-orange-950/15"
         />
 
-        <Container className="relative z-10">
+        <Container className="relative z-[1]">
           {/* Row 1 — logo, sections, actions */}
           <div className="flex h-12 min-w-0 items-center gap-2 lg:h-14 lg:gap-3">
             <div className="flex min-w-0 shrink-0 items-center gap-2 lg:gap-3">
@@ -79,7 +99,10 @@ export function HeaderClient({ user }: HeaderClientProps) {
               <div className="hidden items-center gap-1.5 lg:flex">
                 {user ? <FavoritesButton /> : null}
                 {user ? <HeaderNotificationsBell /> : null}
-                <CurrencyRegionIndicator />
+                <CurrencyRegionIndicator
+                  open={currencyOpen}
+                  onOpenChange={handleCurrencyOpenChange}
+                />
 
                 {!user ? (
                   <>
@@ -99,7 +122,11 @@ export function HeaderClient({ user }: HeaderClientProps) {
                     </Button>
                   </>
                 ) : (
-                  <UserMenu user={user} />
+                  <UserMenu
+                    user={user}
+                    open={profileOpen}
+                    onOpenChange={handleProfileOpenChange}
+                  />
                 )}
 
                 <Button
@@ -112,7 +139,12 @@ export function HeaderClient({ user }: HeaderClientProps) {
                   aria-label={
                     settingsOpen ? t("auth.closeSettings") : t("auth.openSettings")
                   }
-                  onClick={() => setSettingsOpen(true)}
+                  onClick={() => {
+                    setCategoriesOpen(false);
+                    setProfileOpen(false);
+                    setCurrencyOpen(false);
+                    setSettingsOpen(true);
+                  }}
                 >
                   <Settings2 className="size-5" aria-hidden="true" />
                 </Button>
@@ -121,7 +153,11 @@ export function HeaderClient({ user }: HeaderClientProps) {
               </div>
 
               <div className="flex items-center gap-1 lg:hidden">
-                <CurrencyRegionIndicator className="h-9 px-2" />
+                <CurrencyRegionIndicator
+                  className="h-9 px-2"
+                  open={currencyOpen}
+                  onOpenChange={handleCurrencyOpenChange}
+                />
                 {user ? <HeaderNotificationsBell /> : null}
                 <PostListingButton compact />
                 <Button
@@ -188,6 +224,12 @@ export function HeaderClient({ user }: HeaderClientProps) {
           </div>
         </Container>
       </header>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none shrink-0"
+        style={{ height: headerHeight > 0 ? headerHeight : 128 }}
+      />
 
       <CategoryMegaDropdown
         open={categoriesOpen}

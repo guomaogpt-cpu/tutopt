@@ -72,6 +72,7 @@ Data: `category-mega-menu-data.ts` — maps to existing DB slugs from seed.
 - Auto brands (Toyota etc.) use search query fallback
 - No in-menu category search yet
 - `CategoryDrawer.tsx` removed
+- **Phase 147:** fixed header, body scroll lock with position restore, dropdown fixes
 
 ## Связанные документы
 
@@ -80,3 +81,4 @@ Data: `category-mega-menu-data.ts` — maps to existing DB slugs from seed.
 - `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`
+- `docs/HEADER_DROPDOWN_SCROLL_LOCK_FIX_PHASE_147.md`

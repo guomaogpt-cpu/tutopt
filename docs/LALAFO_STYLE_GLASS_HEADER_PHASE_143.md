@@ -76,6 +76,7 @@ Routes: `/`, `/market`, `/listings?q=фасовщик`, `/listings/new`, `/accou
 - Mobile sections в horizontal scroll (не drawer)
 - Post button compact on mobile
 - **Phase 144:** z-index/pointer-events bugfix — header click disappear
+- **Phase 147:** fixed header, dropdown interaction, scroll lock
 
 ## 11. Future currency plan
 
@@ -89,6 +90,7 @@ Routes: `/`, `/market`, `/listings?q=фасовщик`, `/listings/new`, `/accou
 
 - `docs/SECOND_LEVEL_HEADER_NAV_PHASE_141.md`
 - `docs/HEADER_CARD_DENSITY_CLEANUP_PHASE_142.md`
+- `docs/HEADER_DROPDOWN_SCROLL_LOCK_FIX_PHASE_147.md`
 - `docs/CATEGORY_DRAWER_HEADER_PHASE_139.md`
 - `docs/MOBILE_QA_FREEZE_PHASE_130.md`
 - `docs/GOOGLE_PLAY_RELEASE_BLOCKERS_PHASE_113.md`

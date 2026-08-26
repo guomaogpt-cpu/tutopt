@@ -25,12 +25,23 @@ import {
 type UserMenuProps = {
   user: HeaderUser | null;
   align?: "start" | "end";
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
-export function UserMenu({ user, align = "end" }: UserMenuProps) {
+export function UserMenu({ user, align = "end", open, onOpenChange }: UserMenuProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const isControlled = open !== undefined;
+  const menuOpen = isControlled ? open : internalOpen;
+
+  function setMenuOpen(next: boolean) {
+    if (!isControlled) {
+      setInternalOpen(next);
+    }
+    onOpenChange?.(next);
+  }
 
   const items = getHeaderMenuItems(user);
   const menuLabel = user ? `Меню пользователя: ${user.name}` : "Меню входа";
@@ -40,7 +51,7 @@ export function UserMenu({ user, align = "end" }: UserMenuProps) {
 
     try {
       await logoutRequest();
-      setOpen(false);
+      setMenuOpen(false);
       router.push("/");
       router.refresh();
     } catch {
@@ -58,16 +69,17 @@ export function UserMenu({ user, align = "end" }: UserMenuProps) {
       return;
     }
 
-    setOpen(false);
+    setMenuOpen(false);
   }
 
   return (
-    <Dropdown open={open} onOpenChange={setOpen}>
+    <Dropdown open={menuOpen} onOpenChange={setMenuOpen} modal={false}>
       <DropdownTrigger asChild>
         <Button
           variant="outline"
-          className="h-10 shrink-0 gap-2 px-2.5"
+          className="relative z-[1] h-10 shrink-0 gap-2 px-2.5"
           aria-label={menuLabel}
+          aria-expanded={menuOpen}
         >
           <Avatar className="size-8">
             <AvatarFallback className="bg-muted text-xs font-semibold text-muted-foreground">
@@ -78,7 +90,7 @@ export function UserMenu({ user, align = "end" }: UserMenuProps) {
             <span className="hidden max-w-[120px] truncate font-medium xl:inline">{user.name}</span>
           ) : null}
           <ChevronDown
-            className={`size-4 shrink-0 text-muted-foreground transition ${open ? "rotate-180" : ""}`}
+            className={`size-4 shrink-0 text-muted-foreground transition ${menuOpen ? "rotate-180" : ""}`}
             aria-hidden="true"
           />
         </Button>
@@ -88,7 +100,7 @@ export function UserMenu({ user, align = "end" }: UserMenuProps) {
         align={align}
         sideOffset={8}
         collisionPadding={12}
-        className="min-w-[220px] max-w-[min(100vw-2rem,280px)]"
+        className="z-[90] min-w-[220px] max-w-[min(100vw-2rem,280px)]"
       >
         {user ? (
           <>

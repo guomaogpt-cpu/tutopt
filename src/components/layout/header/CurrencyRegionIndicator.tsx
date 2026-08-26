@@ -40,13 +40,29 @@ const CURRENCY_OPTIONS: Array<{ id: DisplayCurrency; labelKey: DictionaryKey }> 
 
 type CurrencyRegionIndicatorProps = {
   className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
-export function CurrencyRegionIndicator({ className }: CurrencyRegionIndicatorProps) {
+export function CurrencyRegionIndicator({
+  className,
+  open,
+  onOpenChange,
+}: CurrencyRegionIndicatorProps) {
   const { t } = useTranslation();
+  const [internalOpen, setInternalOpen] = useState(false);
   const [preferences, setPreferences] = useState<DisplayPreferences>(
     DEFAULT_DISPLAY_PREFERENCES,
   );
+  const isControlled = open !== undefined;
+  const menuOpen = isControlled ? open : internalOpen;
+
+  function setMenuOpen(next: boolean) {
+    if (!isControlled) {
+      setInternalOpen(next);
+    }
+    onOpenChange?.(next);
+  }
 
   useEffect(() => {
     setPreferences(readDisplayPreferences());
@@ -65,19 +81,20 @@ export function CurrencyRegionIndicator({ className }: CurrencyRegionIndicatorPr
     : preferences.currency;
 
   return (
-    <Dropdown>
+    <Dropdown open={menuOpen} onOpenChange={setMenuOpen} modal={false}>
       <DropdownTrigger asChild>
         <Button
           type="button"
           variant="outline"
           size="sm"
           className={cn(
-            "h-9 shrink-0 gap-1 border-slate-200/80 bg-white/60 px-2 text-xs font-semibold text-slate-700 backdrop-blur-sm",
+            "relative z-[1] h-9 shrink-0 gap-1 border-slate-200/80 bg-white/60 px-2 text-xs font-semibold text-slate-700 backdrop-blur-sm",
             "hover:bg-white/90 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200",
             "lg:h-10 lg:px-2.5",
             className,
           )}
           aria-label={t("preferences.regionCurrency")}
+          aria-expanded={menuOpen}
         >
           <Globe2 className="size-3.5 shrink-0 opacity-70" aria-hidden="true" />
           <span className="hidden sm:inline">{fullLabel}</span>
@@ -85,7 +102,7 @@ export function CurrencyRegionIndicator({ className }: CurrencyRegionIndicatorPr
           <ChevronDown className="size-3 opacity-60" aria-hidden="true" />
         </Button>
       </DropdownTrigger>
-      <DropdownContent align="end" className="w-64">
+      <DropdownContent align="end" className="z-[90] w-64">
         <DropdownLabel>{t("preferences.regionCurrency")}</DropdownLabel>
         <DropdownSeparator />
         <DropdownLabel className="text-[11px] font-medium uppercase tracking-wide">
