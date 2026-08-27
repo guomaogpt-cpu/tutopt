@@ -112,3 +112,7 @@ API `details`: `{ importErrorCode, nextAction, debug }`
 ## Phase 152 follow-up
 
 См. `docs/LALAFO_REAL_EXTRACTOR_FALLBACK_PHASE_152.md` — Lalafo public API, transliteration, duplicate UX, re-extract.
+
+## Phase 153 follow-up
+
+См. `docs/LALAFO_BROWSER_RENDER_IMPORT_PHASE_153.md` — Playwright render fallback для HTTP 403, `IMPORT_RENDER_FALLBACK_ENABLED`.

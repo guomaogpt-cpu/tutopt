@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ImportCategoryOption } from "@/features/import-drafts/lib/get-import-category-options";
-import { getImportQuality } from "@/features/import-drafts/lib/import-quality";
+import { getImportQuality, isLalafoUrlOnlyDraft } from "@/features/import-drafts/lib/import-quality";
 import type { ImportDraftRow } from "@/features/import-drafts/types/import-draft";
 import { IMPORT_SOURCE_PLATFORMS } from "@/features/import-drafts/types/import-draft";
 
@@ -56,29 +56,41 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
   const images = draft.normalizedImages.length > 0 ? draft.normalizedImages : draft.rawImages;
   const isPublished = draft.status === "PUBLISHED";
   const isDuplicate = draft.status === "DUPLICATE";
-  const isAutoExtracted = Boolean(draft.sourceUrl && draft.sourcePlatform !== "MANUAL");
-  const isPartialExtract = Boolean(draft.notes?.toLowerCase().includes("частично"));
   const importQuality = getImportQuality(draft);
+  const isAutoExtracted =
+    Boolean(draft.sourceUrl && draft.sourcePlatform !== "MANUAL") &&
+    importQuality.level !== "url-only";
+  const isPartialExtract =
+    importQuality.level === "partial" || importQuality.level === "url-only";
+  const isLalafoUrlOnly = isLalafoUrlOnlyDraft(draft);
   const hasValidCategorySlug = categories.some(
     (option) => option.slug === subcategorySlug || option.slug === categorySlug,
   );
 
-  async function handleReextract() {
+  async function handleReextract(mode: "fetch" | "render" = "fetch") {
     setIsSubmitting(true);
     setErrorMessage(null);
     setSuccessMessage(null);
 
     try {
-      const response = await fetch(`/api/admin/import-drafts/${draft.id}/reextract`, {
+      const query = mode === "render" ? "?mode=render" : "";
+      const response = await fetch(`/api/admin/import-drafts/${draft.id}/reextract${query}`, {
         method: "POST",
       });
-      const body = (await response.json()) as ApiErrorBody;
+      const body = (await response.json()) as ApiErrorBody & {
+        data?: { draft?: { warnings?: string[] } };
+      };
 
       if (!response.ok) {
         throw new Error(body.error?.message ?? "Не удалось повторить извлечение");
       }
 
-      setSuccessMessage("Данные обновлены из источника (только пустые поля).");
+      const warning = body.data?.draft?.warnings?.[0];
+      setSuccessMessage(
+        mode === "render"
+          ? warning ?? "Browser render выполнен (обновлены только пустые поля)."
+          : "Данные обновлены из источника (только пустые поля).",
+      );
       router.refresh();
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Не удалось повторить извлечение");
@@ -194,9 +206,20 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
         {!isPublished ? (
           <div className="flex flex-wrap gap-2">
             {draft.sourceUrl ? (
-              <Button variant="outline" disabled={isSubmitting} onClick={handleReextract}>
-                Повторить извлечение
-              </Button>
+              <>
+                <Button variant="outline" disabled={isSubmitting} onClick={() => handleReextract("fetch")}>
+                  Повторить извлечение
+                </Button>
+                {draft.sourcePlatform === "LALAFO" && (isLalafoUrlOnly || isPartialExtract) ? (
+                  <Button
+                    variant="outline"
+                    disabled={isSubmitting}
+                    onClick={() => handleReextract("render")}
+                  >
+                    Повторить с браузерным режимом
+                  </Button>
+                ) : null}
+              </>
             ) : null}
             <Button
               variant="outline"
@@ -232,10 +255,16 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
         ) : null}
       </div>
 
-      {isAutoExtracted ? (
+      {isPartialExtract && !isAutoExtracted ? (
+        <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] px-4 py-3 text-sm text-[#92400E]">
+          {importQuality.level === "url-only"
+            ? "Данные получены только из ссылки. Цена, описание и фото не извлечены. Используйте браузерный режим или заполните вручную."
+            : "Черновик создан частично. Проверьте и дополните данные перед публикацией."}
+        </div>
+      ) : isAutoExtracted ? (
         <div className="rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] px-4 py-3 text-sm text-[#1D4ED8]">
-          {isPartialExtract
-            ? "Черновик создан частично. Проверьте и дополните данные перед публикацией."
+          {importQuality.sourceHint
+            ? `${importQuality.sourceHint}. Проверьте поля перед публикацией.`
             : `Данные получены автоматически по ссылке (${draft.sourcePlatform}). Проверьте поля перед публикацией.`}
         </div>
       ) : null}
@@ -243,6 +272,9 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
       <div className="rounded-xl border border-[rgba(148,163,184,0.18)] bg-white px-4 py-4 dark:border-slate-800 dark:bg-slate-900">
         <h2 className="mb-3 text-sm font-semibold text-[#0F172A] dark:text-slate-100">
           Качество импорта: {importQuality.label}
+          {importQuality.sourceHint ? (
+            <span className="ml-2 text-xs font-normal text-[#64748B]">({importQuality.sourceHint})</span>
+          ) : null}
         </h2>
         <div className="grid gap-2 sm:grid-cols-3">
           <QualityField label="Название" found={importQuality.fields.title} />

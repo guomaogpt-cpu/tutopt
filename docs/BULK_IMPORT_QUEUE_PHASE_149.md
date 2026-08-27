@@ -50,7 +50,7 @@ Migration: `20260826140000_import_bulk_queue`
 
 - Max **100** URLs per batch
 - Max **8** URLs per process API call (configurable 1–10)
-- Reuses `importListingDraftFromUrl` with improved error codes (Phase 151) and Lalafo API pipeline (Phase 152)
+- Reuses `importListingDraftFromUrl` with improved error codes (Phase 151), Lalafo API (Phase 152), browser render optional (Phase 153, disabled in bulk)
 - Timeout per URL ~12 sec (existing safe fetch)
 - No image download, no headless browser
 

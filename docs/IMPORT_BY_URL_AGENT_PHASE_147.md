@@ -20,6 +20,8 @@ Phase 151 улучшает fetch и ошибки Import by URL (см. `docs/IMPO
 
 Phase 152 добавляет **Lalafo real extraction** через public API + улучшенный slug fallback (см. `docs/LALAFO_REAL_EXTRACTOR_FALLBACK_PHASE_152.md`).
 
+Phase 153 добавляет **browser render fallback** для production 403 (см. `docs/LALAFO_BROWSER_RENDER_IMPORT_PHASE_153.md`).
+
 ## 3. Import by URL flow
 
 1. Admin открывает `/admin/import`

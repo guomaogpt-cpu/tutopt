@@ -19,7 +19,7 @@ import {
   throwImportError,
   type ImportExtractionDebug,
 } from "@/server/import/import-error-codes";
-import { extractLalafoListingPipeline } from "@/server/import/lalafo-extraction-pipeline";
+import { extractLalafoListingPipeline, isAutoExtractedFromDebug } from "@/server/import/lalafo-extraction-pipeline";
 import { safeFetchImportPage, validateImportUrl } from "@/server/import/safe-fetch-url";
 import type { ExtractedListingData } from "@/server/import/types";
 import { ValidationError } from "@/shared/lib/errors";
@@ -29,6 +29,7 @@ import { prisma } from "@/shared/lib/prisma";
 export type ImportDraftFromUrlResult = {
   draft: ReturnType<typeof serializeImportDraft>;
   autoExtracted: boolean;
+  extractionQuality?: "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED";
   duplicate?: boolean;
   partial?: boolean;
   existingDraftId?: string;
@@ -123,8 +124,20 @@ async function createDraftFromExtractedData(params: {
   });
 
   const warnings = [...duplicateCheck.warnings];
-  if (params.extracted.partial) {
+  const autoExtracted = isAutoExtractedFromDebug({
+    ...params.debug,
+    fieldsFound: params.extracted.fieldsFound,
+    extractionSource: params.debug?.extractionSource,
+    extractionQuality: params.debug?.extractionQuality,
+  });
+
+  if (params.debug?.extractionQuality === "URL_ONLY") {
+    warnings.push("Данные получены только из ссылки. Цена, описание и фото не извлечены.");
+  } else if (params.extracted.partial) {
     warnings.push("Черновик создан частично. Проверьте данные вручную.");
+  }
+  if (params.debug?.failureReason && params.debug.extractionQuality === "URL_ONLY") {
+    warnings.push(params.debug.failureReason);
   }
   if (!hasValidCategory) {
     warnings.push("Укажите категорию перед публикацией.");
@@ -132,7 +145,8 @@ async function createDraftFromExtractedData(params: {
 
   return {
     draft: serializeImportDraft(draft, warnings),
-    autoExtracted: true,
+    autoExtracted,
+    extractionQuality: params.debug?.extractionQuality,
     partial: params.extracted.partial ?? false,
     debug: {
       ...params.debug,
@@ -145,19 +159,23 @@ async function createDraftFromExtractedData(params: {
 async function extractListingData(params: {
   canonicalUrl: string;
   platform: ImportSourcePlatform;
+  allowRender?: boolean;
+  useRender?: boolean;
 }): Promise<{ extracted: ExtractedListingData; debug: ImportExtractionDebug }> {
   if (params.platform === "LALAFO") {
     let html: string | null = null;
     let htmlFinalUrl: string | null = null;
     let fetchDebug: ImportExtractionDebug | undefined;
 
-    try {
-      const fetchResult = await safeFetchImportPage(params.canonicalUrl);
-      html = fetchResult.html;
-      htmlFinalUrl = fetchResult.finalUrl;
-      fetchDebug = fetchResult.debug;
-    } catch {
-      // HTML fetch may fail on datacenter IPs — Lalafo API fallback handles this.
+    if (!params.useRender) {
+      try {
+        const fetchResult = await safeFetchImportPage(params.canonicalUrl);
+        html = fetchResult.html;
+        htmlFinalUrl = fetchResult.finalUrl;
+        fetchDebug = fetchResult.debug;
+      } catch {
+        // HTML fetch may fail on datacenter IPs — render/API fallback handles this.
+      }
     }
 
     return extractLalafoListingPipeline({
@@ -165,6 +183,8 @@ async function extractListingData(params: {
       html,
       htmlFinalUrl,
       fetchDebug,
+      allowRender: params.allowRender,
+      useRender: params.useRender,
     });
   }
 
@@ -203,6 +223,7 @@ export async function importListingDraftFromUrl(params: {
   sourcePlatform?: ImportSourcePlatform | null;
   staff: PublicUser;
   forceNew?: boolean;
+  allowRender?: boolean;
 }): Promise<ImportDraftFromUrlResult> {
   const parsedUrl = await validateImportUrl(params.url);
   const platform = detectImportPlatform(parsedUrl, params.sourcePlatform ?? null);
@@ -229,15 +250,21 @@ export async function importListingDraftFromUrl(params: {
   const { extracted, debug } = await extractListingData({
     canonicalUrl,
     platform,
+    allowRender: params.allowRender ?? true,
   });
 
-  const notes = extracted.partial
-    ? debug.extractionSource === "url-slug-fallback"
-      ? "Данные извлечены частично из URL. Проверьте и дополните вручную."
-      : "Данные извлечены частично. Проверьте вручную."
-    : debug.extractionSource === "lalafo-api"
-      ? "Данные получены через Lalafo API."
-      : "Данные получены автоматически по ссылке.";
+  const notes =
+    debug.extractionSource === "browser-render"
+      ? "Данные получены со страницы (browser render)."
+      : debug.extractionQuality === "URL_ONLY"
+        ? "Данные получены только из URL. Цена, описание и фото не извлечены."
+        : extracted.partial
+          ? debug.extractionSource === "url-slug-fallback"
+            ? "Данные извлечены частично из URL. Проверьте и дополните вручную."
+            : "Данные извлечены частично. Проверьте вручную."
+          : debug.extractionSource === "lalafo-api"
+            ? "Данные получены через Lalafo API."
+            : "Данные получены автоматически по ссылке.";
 
   return createDraftFromExtractedData({
     extracted,
@@ -250,7 +277,13 @@ export async function importListingDraftFromUrl(params: {
 export async function reextractImportDraft(params: {
   draftId: string;
   staff: PublicUser;
-}): Promise<{ draft: ReturnType<typeof serializeImportDraft>; debug?: ImportExtractionDebug }> {
+  mode?: "fetch" | "render";
+}): Promise<{
+  draft: ReturnType<typeof serializeImportDraft>;
+  debug?: ImportExtractionDebug;
+  autoExtracted?: boolean;
+  extractionQuality?: "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED";
+}> {
   const draft = await prisma.importedListingDraft.findUnique({
     where: { id: params.draftId },
   });
@@ -267,10 +300,30 @@ export async function reextractImportDraft(params: {
     new URL(draft.source_url),
     draft.source_platform as ImportSourcePlatform,
   );
-  const { extracted, debug } = await extractListingData({
-    canonicalUrl: draft.source_url,
-    platform,
-  });
+
+  let extracted: ExtractedListingData;
+  let debug: ImportExtractionDebug;
+
+  try {
+    const result = await extractListingData({
+      canonicalUrl: draft.source_url,
+      platform,
+      allowRender: params.mode === "render",
+      useRender: params.mode === "render",
+    });
+    extracted = result.extracted;
+    debug = result.debug;
+  } catch (error) {
+    if (params.mode === "render") {
+      throw new ValidationError(
+        error instanceof Error
+          ? error.message
+          : "Браузерный режим импорта не включён на сервере.",
+        { importErrorCode: "RENDER_FALLBACK_UNAVAILABLE" },
+      );
+    }
+    throw error;
+  }
 
   const mappedCategory = mapExternalCategory({
     categoryText: extracted.categoryText,
@@ -303,6 +356,11 @@ export async function reextractImportDraft(params: {
     return existing.length > 0 ? existing : next;
   };
 
+  const reextractNote =
+    params.mode === "render"
+      ? "Повторное извлечение выполнено (browser render)."
+      : "Повторное извлечение выполнено.";
+
   const updated = await prisma.importedListingDraft.update({
     where: { id: draft.id },
     data: {
@@ -330,18 +388,36 @@ export async function reextractImportDraft(params: {
         normalized.normalizedSubcategory,
       ),
       normalized_images: pickImages(draft.normalized_images, normalized.normalizedImages),
-      notes: `${draft.notes ?? ""}\nПовторное извлечение выполнено.`.trim(),
+      notes: `${draft.notes ?? ""}\n${reextractNote}`.trim(),
       reviewed_by_id: params.staff.id,
       reviewed_at: new Date(),
     },
   });
 
+  const autoExtracted = isAutoExtractedFromDebug(debug);
+  const warnings =
+    debug.extractionQuality === "URL_ONLY"
+      ? ["Данные получены только из ссылки.", debug.failureReason].filter(
+          (value): value is string => Boolean(value),
+        )
+      : extracted.partial
+        ? ["Данные обновлены частично."]
+        : ["Данные обновлены."];
+
+  if (params.mode === "render" && debug.renderFallbackAttempted && !autoExtracted) {
+    warnings.push(
+      debug.failureReason ??
+        (debug.renderFallbackAvailable
+          ? "Browser render не нашёл данные на странице."
+          : "Браузерный режим импорта не включён на сервере."),
+    );
+  }
+
   return {
-    draft: serializeImportDraft(
-      updated,
-      extracted.partial ? ["Данные обновлены частично."] : ["Данные обновлены."],
-    ),
+    draft: serializeImportDraft(updated, warnings),
     debug,
+    autoExtracted,
+    extractionQuality: debug.extractionQuality,
   };
 }
 

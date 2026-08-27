@@ -37,6 +37,7 @@ export type ImportFetchDebugInfo = {
   extractorUsed?: string;
   extractionSource?: string;
   extractionSources?: string[];
+  extractionQuality?: "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED";
   failureReason?: string;
   fieldsFound?: {
     title: boolean;

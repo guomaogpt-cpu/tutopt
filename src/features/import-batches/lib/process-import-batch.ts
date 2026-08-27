@@ -42,6 +42,7 @@ async function processQueueItem(params: {
       url: params.url,
       sourcePlatform: params.sourcePlatform,
       staff: params.staff,
+      allowRender: false,
     });
 
     if (result.duplicate) {

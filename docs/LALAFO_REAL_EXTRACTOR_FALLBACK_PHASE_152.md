@@ -165,3 +165,7 @@ UI: кнопка «Повторить извлечение» на `/admin/import
 ## Migration
 
 Нет.
+
+## Phase 153 follow-up
+
+На production API также может вернуть HTTP 403. См. `docs/LALAFO_BROWSER_RENDER_IMPORT_PHASE_153.md` — optional Playwright render fallback.

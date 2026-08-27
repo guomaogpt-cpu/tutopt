@@ -128,6 +128,11 @@ export function ImportByUrlForm() {
                 Открыть существующий черновик
               </Link>
             </Button>
+            <Button asChild size="sm" variant="outline">
+              <Link href={`/admin/import/${duplicateState.existingDraftId}?reextract=1`}>
+                Повторить извлечение существующего черновика
+              </Link>
+            </Button>
             {duplicateState.existingListingId ? (
               <Button asChild size="sm" variant="outline">
                 <Link href={`/listings/${duplicateState.existingListingId}`}>Открыть объявление</Link>
@@ -139,7 +144,7 @@ export function ImportByUrlForm() {
               disabled={isSubmitting}
               onClick={() => submitImport(true)}
             >
-              Импортировать заново
+              Импортировать заново как новый черновик
             </Button>
           </div>
         </div>

@@ -9,10 +9,19 @@ import { parseLalafoUrlHints } from "@/server/import/lalafo-url-hints";
 import { mapExternalCategory, parsePriceText } from "@/server/import/category-mapper";
 import type { ImportExtractionDebug } from "@/server/import/import-error-codes";
 import { uniqueUrls } from "@/server/import/parse-html-meta";
+import {
+  extractLalafoViaRender,
+  hasMeaningfulLalafoFields,
+} from "@/server/import/render/lalafo-render-extractor";
+import {
+  getRenderFallbackUnavailableMessage,
+  isRenderFallbackEnabled,
+} from "@/server/import/render/render-config";
 import type {
   ExtractedFieldsFound,
   ExtractedListingData,
   ExtractedListingResult,
+  ExtractionQuality,
 } from "@/server/import/types";
 
 export type LalafoExtractionPipelineResult = {
@@ -36,6 +45,37 @@ function buildFieldsFound(data: {
     images: data.images.length,
     category: Boolean(data.categoryText?.trim()),
   };
+}
+
+function computeExtractionQuality(params: {
+  extractionSource: string;
+  fieldsFound?: ExtractedFieldsFound;
+}): ExtractionQuality {
+  if (params.extractionSource === "url-slug-fallback") {
+    return "URL_ONLY";
+  }
+
+  const fields = params.fieldsFound;
+  if (!fields) {
+    return "FAILED";
+  }
+
+  const score = [
+    fields.title,
+    fields.price,
+    fields.description,
+    fields.images > 0,
+    fields.city,
+    fields.category,
+  ].filter(Boolean).length;
+
+  if (score >= 5) {
+    return "FULL";
+  }
+  if (score >= 2) {
+    return "PARTIAL";
+  }
+  return "URL_ONLY";
 }
 
 function dataFromLalafoApi(ad: LalafoApiAd, canonicalUrl: string): ExtractedListingData {
@@ -104,35 +144,119 @@ function mergeExtractedData(
   };
 }
 
+function shouldTryRender(params: {
+  useRender: boolean;
+  allowRender: boolean;
+  extracted: ExtractedListingData | null;
+  isSlugOnly: boolean;
+  apiBlocked: boolean;
+}): boolean {
+  if (params.useRender) {
+    return isRenderFallbackEnabled();
+  }
+  if (!params.allowRender || !isRenderFallbackEnabled()) {
+    return false;
+  }
+  if (params.isSlugOnly || params.apiBlocked) {
+    return true;
+  }
+  if (!params.extracted) {
+    return true;
+  }
+  return !hasMeaningfulLalafoFields(params.extracted);
+}
+
 export async function extractLalafoListingPipeline(params: {
   canonicalUrl: string;
   html?: string | null;
   htmlFinalUrl?: string | null;
   fetchDebug?: ImportExtractionDebug;
+  allowRender?: boolean;
+  useRender?: boolean;
 }): Promise<LalafoExtractionPipelineResult> {
   const sources: string[] = [];
   let failureReason: string | undefined;
+  let renderFailureReason: string | undefined;
   let apiResult: ExtractedListingData | null = null;
   let htmlResult: ExtractedListingData | null = null;
+  let renderAttempted = false;
 
-  const apiFetch = await fetchLalafoAdFromPageUrl(params.canonicalUrl);
-  if (apiFetch.ok) {
-    sources.push("lalafo-api");
-    apiResult = dataFromLalafoApi(apiFetch.data, params.canonicalUrl);
-  } else {
-    failureReason = `Lalafo API: ${apiFetch.reason}`;
+  if (params.useRender) {
+    renderAttempted = true;
+    const renderResult = await extractLalafoViaRender(params.canonicalUrl);
+    if (!renderResult.ok) {
+      throw new Error(renderResult.reason);
+    }
+
+    sources.push("browser-render");
+    let extractedRender = renderResult.extracted;
+    const mappedCategory = mapExternalCategory({
+      categoryText: extractedRender.categoryText,
+      subcategoryText: extractedRender.subcategoryText,
+      title: extractedRender.title,
+      description: extractedRender.description,
+      breadcrumbSlugs: extractedRender.breadcrumbSlugs,
+    });
+
+    if (mappedCategory.normalizedCategory) {
+      extractedRender = {
+        ...extractedRender,
+        categoryText: mappedCategory.normalizedCategory,
+        subcategoryText: mappedCategory.normalizedSubcategory,
+        fieldsFound: buildFieldsFound({
+          title: extractedRender.title,
+          description: extractedRender.description,
+          rawPrice: extractedRender.rawPrice,
+          city: extractedRender.city,
+          images: extractedRender.images,
+          categoryText: mappedCategory.normalizedCategory,
+        }),
+      };
+    }
+
+    const extractionSource = "browser-render";
+    const extractionQuality = computeExtractionQuality({
+      extractionSource,
+      fieldsFound: extractedRender.fieldsFound,
+    });
+
+    return {
+      extracted: {
+        ...extractedRender,
+        partial: !hasMeaningfulLalafoFields(extractedRender),
+      },
+      debug: {
+        ...params.fetchDebug,
+        ...renderResult.debug,
+        requestedUrl: params.canonicalUrl,
+        extractionSource,
+        extractionSources: sources,
+        extractionQuality,
+        partial: !hasMeaningfulLalafoFields(extractedRender),
+      },
+    };
   }
 
-  if (params.html) {
-    const htmlExtracted: ExtractedListingResult = extractLalafoListing(
-      params.html,
-      params.htmlFinalUrl ?? params.canonicalUrl,
-    );
-    if (htmlExtracted.ok) {
-      sources.push(htmlExtracted.data.partial ? "html-partial" : "html");
-      htmlResult = htmlExtracted.data;
-    } else if (!failureReason) {
-      failureReason = htmlExtracted.error;
+  if (!params.useRender) {
+    const apiFetch = await fetchLalafoAdFromPageUrl(params.canonicalUrl);
+    if (apiFetch.ok) {
+      sources.push("lalafo-api");
+      apiResult = dataFromLalafoApi(apiFetch.data, params.canonicalUrl);
+    } else {
+      failureReason = `Lalafo API: ${apiFetch.reason}`;
+    }
+
+    if (params.html) {
+      const htmlExtracted: ExtractedListingResult = extractLalafoListing(
+        params.html,
+        params.htmlFinalUrl ?? params.canonicalUrl,
+      );
+      if (htmlExtracted.ok) {
+        sources.push(htmlExtracted.data.partial ? "html-partial" : "html");
+        htmlResult = htmlExtracted.data;
+      } else if (!failureReason) {
+        failureReason = htmlExtracted.error;
+      }
     }
   }
 
@@ -145,7 +269,42 @@ export async function extractLalafoListingPipeline(params: {
     extracted = apiResult;
   } else if (htmlResult) {
     extracted = htmlResult;
-  } else {
+  }
+
+  const apiBlocked = Boolean(failureReason?.includes("403"));
+  const isSlugOnlyBeforeRender = !extracted;
+
+  if (
+    shouldTryRender({
+      useRender: params.useRender ?? false,
+      allowRender: params.allowRender ?? false,
+      extracted,
+      isSlugOnly: isSlugOnlyBeforeRender,
+      apiBlocked,
+    })
+  ) {
+    renderAttempted = true;
+    const renderResult = await extractLalafoViaRender(params.canonicalUrl);
+    if (renderResult.ok) {
+      sources.push("browser-render");
+      extracted = extracted
+        ? mergeExtractedData(extracted, renderResult.extracted)
+        : renderResult.extracted;
+      failureReason = undefined;
+    } else {
+      renderFailureReason = renderResult.reason;
+      if (!failureReason) {
+        failureReason = renderResult.reason;
+      }
+    }
+  }
+
+  const isSlugOnly =
+    !extracted ||
+    (!hasMeaningfulLalafoFields(extracted) &&
+      sources.every((source) => source !== "browser-render" && source !== "lalafo-api"));
+
+  if (!extracted || isSlugOnly) {
     const slugFallback = buildLalafoPartialDataFromUrl(params.canonicalUrl);
     if (slugFallback) {
       sources.push("url-slug-fallback");
@@ -168,7 +327,9 @@ export async function extractLalafoListingPipeline(params: {
           categoryText: mappedCategory.normalizedCategory,
         }),
       };
-      failureReason = failureReason ?? "Использован fallback из URL slug";
+      if (!failureReason) {
+        failureReason = "Использован fallback из URL slug";
+      }
     }
   }
 
@@ -200,9 +361,9 @@ export async function extractLalafoListingPipeline(params: {
     };
   }
 
-  const isSlugOnly = sources.length === 1 && sources[0] === "url-slug-fallback";
+  const slugOnly = sources.includes("url-slug-fallback") && !sources.includes("browser-render") && !sources.includes("lalafo-api");
   const isPartial =
-    isSlugOnly ||
+    slugOnly ||
     Boolean(
       extracted.partial ||
         !extracted.fieldsFound?.price ||
@@ -215,15 +376,33 @@ export async function extractLalafoListingPipeline(params: {
     partial: isPartial,
   };
 
-  const extractionSource = sources.includes("lalafo-api")
-    ? "lalafo-api"
-    : sources.includes("url-slug-fallback")
-      ? "url-slug-fallback"
-      : sources.includes("html-partial")
-        ? "html"
-        : sources.length > 0
-          ? "open-graph"
-          : "failed";
+  const extractionSource = sources.includes("browser-render")
+    ? "browser-render"
+    : sources.includes("lalafo-api")
+      ? "lalafo-api"
+      : sources.includes("url-slug-fallback")
+        ? "url-slug-fallback"
+        : sources.includes("html-partial")
+          ? "html"
+          : sources.length > 0
+            ? "open-graph"
+            : "failed";
+
+  const extractionQuality = computeExtractionQuality({
+    extractionSource,
+    fieldsFound: extracted.fieldsFound,
+  });
+
+  let combinedFailureReason: string | undefined;
+  if (slugOnly) {
+    if (renderFailureReason) {
+      combinedFailureReason = renderFailureReason;
+    } else if (apiBlocked && !isRenderFallbackEnabled()) {
+      combinedFailureReason = getRenderFallbackUnavailableMessage();
+    } else if (failureReason) {
+      combinedFailureReason = failureReason;
+    }
+  }
 
   return {
     extracted,
@@ -236,14 +415,21 @@ export async function extractLalafoListingPipeline(params: {
       extractionSources: sources,
       fieldsFound: extracted.fieldsFound,
       partial: extracted.partial,
-      failureReason: isSlugOnly ? failureReason : undefined,
-      responseSize:
-        params.fetchDebug?.responseSize ?? (apiFetch.ok ? apiFetch.responseSize : undefined),
-      statusCode:
-        params.fetchDebug?.statusCode ?? (apiFetch.ok ? apiFetch.statusCode : apiFetch.statusCode),
-      contentType: params.fetchDebug?.contentType,
-      redirectCount: params.fetchDebug?.redirectCount,
-      renderFallbackAvailable: process.env.IMPORT_RENDER_FALLBACK_ENABLED === "true",
+      extractionQuality,
+      failureReason: combinedFailureReason,
+      renderFallbackAvailable: isRenderFallbackEnabled(),
+      renderFallbackAttempted: renderAttempted,
     },
   };
+}
+
+export function isAutoExtractedFromDebug(debug: ImportExtractionDebug): boolean {
+  if (debug.extractionSource === "url-slug-fallback") {
+    return false;
+  }
+  if (debug.extractionQuality === "URL_ONLY") {
+    return false;
+  }
+  const fields = debug.fieldsFound;
+  return Boolean(fields?.price || (fields?.images ?? 0) > 0 || fields?.description);
 }

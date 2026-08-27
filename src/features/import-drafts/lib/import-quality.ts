@@ -21,7 +21,22 @@ export type ImportQualityInfo = {
   label: string;
   fields: ImportQualityFieldStatus;
   missingMessages: string[];
+  sourceHint: string | null;
 };
+
+function detectSourceHint(notes: string | null | undefined): string | null {
+  const text = notes?.toLowerCase() ?? "";
+  if (text.includes("browser render") || text.includes("со страницы")) {
+    return "Данные получены со страницы";
+  }
+  if (text.includes("только из url") || text.includes("url slug")) {
+    return "Данные получены только из ссылки";
+  }
+  if (text.includes("lalafo api")) {
+    return "Данные получены через Lalafo API";
+  }
+  return null;
+}
 
 export function getImportQuality(draft: ImportDraftRow): ImportQualityInfo {
   const fields: ImportQualityFieldStatus = {
@@ -34,6 +49,8 @@ export function getImportQuality(draft: ImportDraftRow): ImportQualityInfo {
   };
 
   const missingMessages: string[] = [];
+  const sourceHint = detectSourceHint(draft.notes);
+
   if (!fields.images) {
     missingMessages.push("Фото не найдены. Источник не отдал изображения.");
   }
@@ -48,24 +65,32 @@ export function getImportQuality(draft: ImportDraftRow): ImportQualityInfo {
   }
 
   if (draft.status === "DUPLICATE") {
-    return { level: "duplicate", label: "Дубль", fields, missingMessages };
+    return { level: "duplicate", label: "Дубль", fields, missingMessages, sourceHint };
   }
 
   const notes = draft.notes?.toLowerCase() ?? "";
   const isUrlOnly =
-    notes.includes("из url") ||
+    notes.includes("только из url") ||
     notes.includes("url slug") ||
+    notes.includes("только из ссылки") ||
     (fields.title && !fields.price && !fields.images && !fields.description);
 
   const filledCount = Object.values(fields).filter(Boolean).length;
 
   if (isUrlOnly) {
-    return { level: "url-only", label: "Только из ссылки", fields, missingMessages };
+    missingMessages.unshift(
+      "Данные получены только из ссылки. Цена, описание и фото не извлечены.",
+    );
+    return { level: "url-only", label: "Только из ссылки", fields, missingMessages, sourceHint };
   }
 
   if (filledCount >= 5) {
-    return { level: "full", label: "Полный импорт", fields, missingMessages };
+    return { level: "full", label: "Полный импорт", fields, missingMessages, sourceHint };
   }
 
-  return { level: "partial", label: "Частичный импорт", fields, missingMessages };
+  return { level: "partial", label: "Частичный импорт", fields, missingMessages, sourceHint };
+}
+
+export function isLalafoUrlOnlyDraft(draft: ImportDraftRow): boolean {
+  return getImportQuality(draft).level === "url-only" && draft.sourcePlatform === "LALAFO";
 }

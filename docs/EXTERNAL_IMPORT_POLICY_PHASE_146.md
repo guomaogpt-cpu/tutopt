@@ -37,6 +37,9 @@
 11. **Lalafo real extraction — API fallback**  
     Phase 152: public Lalafo API by ad id; slug transliteration; duplicate UX; re-extract.
 
+12. **Lalafo browser render — optional Playwright**  
+    Phase 153: `IMPORT_RENDER_FALLBACK_ENABLED=true`; single import only; no bulk browser.
+
 ## Запрещено в Phase 146
 
 - Массовый парсинг Lalafo и других площадок
