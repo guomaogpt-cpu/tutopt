@@ -9,6 +9,10 @@ import { Input } from "@/components/ui/input";
 type ApiErrorBody = {
   error?: {
     message?: string;
+    details?: {
+      importErrorCode?: string;
+      nextAction?: string;
+    };
   };
 };
 
@@ -17,11 +21,13 @@ export function ImportByUrlForm() {
   const [url, setUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [nextAction, setNextAction] = useState<string | null>(null);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
+    setNextAction(null);
 
     try {
       const response = await fetch("/api/admin/import/by-url", {
@@ -34,15 +40,26 @@ export function ImportByUrlForm() {
         data?: {
           draft?: { id: string; warnings?: string[] };
           duplicate?: boolean;
+          partial?: boolean;
+          debug?: Record<string, unknown>;
         };
       };
 
       if (!response.ok) {
-        throw new Error(body.error?.message ?? "Не удалось получить данные объявления");
+        const message = body.error?.message ?? "Не удалось получить данные объявления";
+        setErrorMessage(message);
+        setNextAction(body.error?.details?.nextAction ?? null);
+        return;
       }
 
       const draftId = body.data?.draft?.id;
       if (draftId) {
+        if (body.data?.partial) {
+          sessionStorage.setItem(
+            `import-draft-notice-${draftId}`,
+            "Черновик создан частично. Проверьте данные вручную.",
+          );
+        }
         router.push(`/admin/import/${draftId}`);
         router.refresh();
       }
@@ -81,9 +98,10 @@ export function ImportByUrlForm() {
       </div>
 
       {errorMessage ? (
-        <p className="mt-4 text-sm text-[#DC2626]" role="alert">
-          {errorMessage}
-        </p>
+        <div className="mt-4 space-y-1" role="alert">
+          <p className="text-sm text-[#DC2626]">{errorMessage}</p>
+          {nextAction ? <p className="text-sm text-[#64748B]">{nextAction}</p> : null}
+        </div>
       ) : null}
 
       <div className="mt-5">

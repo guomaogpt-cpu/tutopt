@@ -16,6 +16,8 @@ Phase 147 добавляет **Import by URL Agent MVP**: один URL → ав�
 
 Phase 149 добавляет **Bulk Import Queue**: список URL → batch → очередь → drafts (см. `docs/BULK_IMPORT_QUEUE_PHASE_149.md`).
 
+Phase 151 улучшает fetch и ошибки Import by URL (см. `docs/IMPORT_URL_FETCH_FIX_PHASE_151.md`).
+
 ## 3. Import by URL flow
 
 1. Admin открывает `/admin/import`

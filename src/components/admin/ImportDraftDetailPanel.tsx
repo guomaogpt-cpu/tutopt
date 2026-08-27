@@ -55,6 +55,7 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
   const images = draft.normalizedImages.length > 0 ? draft.normalizedImages : draft.rawImages;
   const isPublished = draft.status === "PUBLISHED";
   const isAutoExtracted = Boolean(draft.sourceUrl && draft.sourcePlatform !== "MANUAL");
+  const isPartialExtract = Boolean(draft.notes?.toLowerCase().includes("частично"));
   const hasValidCategorySlug = categories.some(
     (option) => option.slug === subcategorySlug || option.slug === categorySlug,
   );
@@ -199,8 +200,9 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
 
       {isAutoExtracted ? (
         <div className="rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] px-4 py-3 text-sm text-[#1D4ED8]">
-          Данные получены автоматически по ссылке ({draft.sourcePlatform}). Проверьте поля перед
-          публикацией.
+          {isPartialExtract
+            ? "Черновик создан частично. Проверьте и дополните данные перед публикацией."
+            : `Данные получены автоматически по ссылке (${draft.sourcePlatform}). Проверьте поля перед публикацией.`}
         </div>
       ) : null}
 

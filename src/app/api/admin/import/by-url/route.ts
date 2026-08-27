@@ -13,6 +13,12 @@ export async function POST(request: Request) {
       staff,
     });
 
-    return jsonData(result, result.duplicate ? 200 : 201);
+    return jsonData(
+      {
+        ...result,
+        debug: result.debug,
+      },
+      result.duplicate ? 200 : 201,
+    );
   });
 }

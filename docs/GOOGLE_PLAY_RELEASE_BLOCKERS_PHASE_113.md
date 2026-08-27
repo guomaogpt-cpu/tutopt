@@ -116,6 +116,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 | 146 ✅ | Import drafts system (admin manual import) |
 | 147-import ✅ | Import by URL agent MVP (Lalafo/OG extractors) |
 | 149 ✅ | Bulk import queue (batch URLs → drafts) |
+| 151 ✅ | Import URL fetch fix (Lalafo errors + partial draft) |
 | 147 ✅ | Header dropdown & scroll lock fix |
 | 148 ✅ | Profile/settings panel below header |
 | **Next** | Upload fresh AAB → internal testers → feedback |
@@ -143,6 +144,7 @@ See `docs/GOOGLE_PLAY_APP_ACCESS_NOTES_PHASE_134.md`
 - `docs/IMPORT_DRAFTS_SYSTEM_PHASE_146.md`
 - `docs/IMPORT_BY_URL_AGENT_PHASE_147.md`
 - `docs/BULK_IMPORT_QUEUE_PHASE_149.md`
+- `docs/IMPORT_URL_FETCH_FIX_PHASE_151.md`
 - `docs/PROFILE_PANEL_BELOW_HEADER_FIX_PHASE_148.md`
 - `docs/ANDROID_RELEASE_CANDIDATE_PHASE_132.md`
 - `docs/ANDROID_RELEASE_NOTES_PHASE_132.md`

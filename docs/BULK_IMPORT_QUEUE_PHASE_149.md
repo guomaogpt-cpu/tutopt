@@ -50,6 +50,7 @@ Migration: `20260826140000_import_bulk_queue`
 
 - Max **100** URLs per batch
 - Max **8** URLs per process API call (configurable 1–10)
+- Reuses `importListingDraftFromUrl` with improved error codes (Phase 151)
 - Timeout per URL ~12 sec (existing safe fetch)
 - No image download, no headless browser
 

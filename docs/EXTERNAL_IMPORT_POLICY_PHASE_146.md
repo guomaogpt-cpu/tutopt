@@ -26,10 +26,13 @@
    Login bot и автоматический scraping Instagram — запрещены. Phase 147: limited OG-only fetch без login.
 
 8. **Import by URL — single listing only**  
-   Phase 147 разрешает fetch одной страницы по URL staff-ом с SSRF protection. Запрещены crawler, bulk queue, CAPTCHA bypass.
+   Phase 147 разрешает fetch одной страницы по URL staff-ом с SSRF protection.
 
 9. **Bulk import queue — staff-initiated URL list only**  
-   Phase 149 разрешает batch до 100 URL, обработка chunks без background crawler. Запрещены category crawler, auto-publish, CAPTCHA bypass.
+   Phase 149: batch до 100 URL, chunked processing.
+
+10. **Import fetch errors — explicit codes only**  
+    Phase 151: no generic fetch errors; partial Lalafo draft from URL when blocked.
 
 ## Запрещено в Phase 146
 
@@ -62,5 +65,6 @@ Staff, создающий import draft, несёт ответственност�
 - `docs/IMPORT_DRAFTS_SYSTEM_PHASE_146.md`
 - `docs/IMPORT_BY_URL_AGENT_PHASE_147.md`
 - `docs/BULK_IMPORT_QUEUE_PHASE_149.md`
+- `docs/IMPORT_URL_FETCH_FIX_PHASE_151.md`
 - `docs/USER_GENERATED_CONTENT_SAFETY_PHASE_125.md`
 - `docs/TRUST_SAFETY_REPORTS_PHASE_125.md`

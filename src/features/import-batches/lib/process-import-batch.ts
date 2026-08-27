@@ -5,22 +5,14 @@ import { serializeImportBatchDetail } from "@/features/import-batches/lib/import
 import { recalculateImportBatchCounts } from "@/features/import-batches/lib/recalculate-batch-counts";
 import { PROCESS_BATCH_SIZE } from "@/features/import-batches/types/import-batch";
 import type { ImportSourcePlatform } from "@/features/import-drafts/types/import-draft";
-import { importListingDraftFromUrl } from "@/server/import/import-by-url-service";
+import { importListingDraftFromUrl, getImportErrorDetails } from "@/server/import/import-by-url-service";
 import { ValidationError } from "@/shared/lib/errors";
 import { NotFoundError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
 
 function mapImportError(error: unknown): string {
   if (error instanceof ValidationError) {
-    return error.message;
-  }
-  if (error instanceof Error && error.message) {
-    if (error.message.includes("timeout") || error.message.includes("Timeout")) {
-      return "Таймаут";
-    }
-    if (error.message.includes("fetch") || error.message.includes("ENOTFOUND")) {
-      return "Не удалось открыть ссылку";
-    }
+    return getImportErrorDetails(error).message;
   }
   return "Не удалось обработать ссылку";
 }

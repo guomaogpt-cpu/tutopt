@@ -14,15 +14,152 @@ import type { ImportSourcePlatform } from "@/features/import-drafts/types/import
 import { mapExternalCategory, parsePriceText } from "@/server/import/category-mapper";
 import { detectImportPlatform } from "@/server/import/detect-platform";
 import { extractListingFromHtml } from "@/server/import/extractors";
+import { buildLalafoPartialDataFromUrl } from "@/server/import/extractors/lalafo";
+import {
+  getImportErrorMessage,
+  throwImportError,
+  type ImportFetchDebugInfo,
+} from "@/server/import/import-error-codes";
 import { safeFetchImportPage, validateImportUrl } from "@/server/import/safe-fetch-url";
+import type { ExtractedListingData } from "@/server/import/types";
 import { ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
+
+type ImportDraftFromUrlResult = {
+  draft: ReturnType<typeof serializeImportDraft>;
+  autoExtracted: boolean;
+  duplicate?: boolean;
+  partial?: boolean;
+  debug?: ImportFetchDebugInfo;
+};
+
+async function createDraftFromExtractedData(params: {
+  extracted: ExtractedListingData;
+  staff: PublicUser;
+  notes: string;
+  fetchDebug?: ImportFetchDebugInfo;
+}): Promise<ImportDraftFromUrlResult> {
+  const mappedCategory = mapExternalCategory({
+    categoryText: params.extracted.categoryText,
+    subcategoryText: params.extracted.subcategoryText,
+    title: params.extracted.title,
+    description: params.extracted.description,
+    breadcrumbSlugs: params.extracted.breadcrumbSlugs,
+  });
+
+  const priceParsed = parsePriceText(params.extracted.rawPrice);
+
+  const normalized = normalizeImportDraftFields({
+    sourceUrl: params.extracted.sourceUrl,
+    title: params.extracted.title,
+    description: params.extracted.description,
+    price: priceParsed.normalizedPrice ?? params.extracted.rawPrice,
+    currency: params.extracted.currency ?? priceParsed.normalizedCurrency,
+    city: params.extracted.city,
+    category: mappedCategory.normalizedCategory,
+    subcategory: mappedCategory.normalizedSubcategory,
+    imageUrlsText: params.extracted.images.join("\n"),
+  });
+
+  const hasValidCategory = await validateImportCategorySlugs({
+    normalizedCategory: normalized.normalizedCategory,
+    normalizedSubcategory: normalized.normalizedSubcategory,
+  });
+
+  const duplicateCheck = await checkImportDraftDuplicates({
+    sourceUrl: params.extracted.sourceUrl,
+    sourceExternalId: params.extracted.sourceExternalId,
+    title: normalized.normalizedTitle ?? params.extracted.title,
+    price: priceParsed.rawPrice,
+    city: normalized.normalizedCity ?? params.extracted.city,
+  });
+
+  let status: ImportDraftStatus = ImportDraftStatus.PENDING_REVIEW;
+  if (duplicateCheck.isDefiniteDuplicate) {
+    status = ImportDraftStatus.DUPLICATE;
+  } else if (
+    hasValidCategory &&
+    isImportDraftReadyForReview({
+      normalizedTitle: normalized.normalizedTitle,
+      normalizedCategory: normalized.normalizedCategory,
+      normalizedSubcategory: normalized.normalizedSubcategory,
+      normalizedCity: normalized.normalizedCity,
+      rawCity: params.extracted.city,
+    })
+  ) {
+    status = ImportDraftStatus.READY;
+  }
+
+  const draft = await prisma.importedListingDraft.create({
+    data: buildImportDraftCreateData({
+      input: {
+        sourcePlatform: params.extracted.sourcePlatform,
+        sourceUrl: params.extracted.sourceUrl,
+        sourceExternalId: params.extracted.sourceExternalId,
+        title: params.extracted.title,
+        description: params.extracted.description,
+        price: params.extracted.rawPrice,
+        currency: params.extracted.currency,
+        city: params.extracted.city,
+        category: mappedCategory.normalizedCategory,
+        subcategory: mappedCategory.normalizedSubcategory,
+        rawContact: params.extracted.rawContact,
+        notes: params.notes,
+      },
+      normalized: {
+        ...normalized,
+        normalizedPrice: priceParsed.normalizedPrice
+          ? new Prisma.Decimal(priceParsed.normalizedPrice)
+          : normalized.normalizedPrice,
+        normalizedCurrency: priceParsed.normalizedCurrency ?? normalized.normalizedCurrency,
+      },
+      status,
+      createdById: params.staff.id,
+      duplicateOfListingId: duplicateCheck.duplicateListingId,
+    }),
+  });
+
+  const warnings = [...duplicateCheck.warnings];
+  if (params.extracted.partial) {
+    warnings.push("Черновик создан частично. Проверьте данные вручную.");
+  }
+  if (!hasValidCategory) {
+    warnings.push("Укажите категорию перед публикацией.");
+  }
+
+  return {
+    draft: serializeImportDraft(draft, warnings),
+    autoExtracted: true,
+    partial: params.extracted.partial ?? false,
+    debug: {
+      ...params.fetchDebug,
+      extractor: params.extracted.sourcePlatform,
+      fieldsFound: params.extracted.fieldsFound,
+      partial: params.extracted.partial,
+    },
+  };
+}
+
+function isFetchRecoverableForLalafo(error: unknown): boolean {
+  if (!(error instanceof ValidationError)) {
+    return false;
+  }
+
+  const details = error.details as { importErrorCode?: string } | undefined;
+  const code = details?.importErrorCode;
+  return (
+    code === "HTTP_STATUS_BLOCKED" ||
+    code === "FETCH_FAILED" ||
+    code === "FETCH_TIMEOUT" ||
+    code === "DNS_LOOKUP_FAILED"
+  );
+}
 
 export async function importListingDraftFromUrl(params: {
   url: string;
   sourcePlatform?: ImportSourcePlatform | null;
   staff: PublicUser;
-}) {
+}): Promise<ImportDraftFromUrlResult> {
   const parsedUrl = await validateImportUrl(params.url);
   const platform = detectImportPlatform(parsedUrl, params.sourcePlatform ?? null);
   const canonicalUrl = parsedUrl.toString();
@@ -40,104 +177,80 @@ export async function importListingDraftFromUrl(params: {
     };
   }
 
-  const { finalUrl, html } = await safeFetchImportPage(canonicalUrl);
+  let fetchResult: Awaited<ReturnType<typeof safeFetchImportPage>> | null = null;
+
+  try {
+    fetchResult = await safeFetchImportPage(canonicalUrl);
+  } catch (error) {
+    if (platform === "LALAFO" && isFetchRecoverableForLalafo(error)) {
+      const partialData = buildLalafoPartialDataFromUrl(canonicalUrl);
+      if (partialData) {
+        return createDraftFromExtractedData({
+          extracted: partialData,
+          staff: params.staff,
+          notes:
+            "Данные извлечены частично из URL. Страница не открылась — проверьте и дополните вручную.",
+        });
+      }
+    }
+    throw error;
+  }
+
   const extracted = extractListingFromHtml({
     platform,
-    html,
-    finalUrl,
+    html: fetchResult.html,
+    finalUrl: fetchResult.finalUrl,
   });
 
   if (!extracted.ok) {
-    throw new ValidationError(extracted.error);
+    if (platform === "LALAFO") {
+      const partialData = buildLalafoPartialDataFromUrl(fetchResult.finalUrl);
+      if (partialData) {
+        return createDraftFromExtractedData({
+          extracted: partialData,
+          staff: params.staff,
+          notes: "Данные извлечены частично. Проверьте вручную.",
+          fetchDebug: fetchResult.debug,
+        });
+      }
+    }
+
+    throwImportError("EXTRACTION_FAILED", {
+      message: extracted.error,
+      debug: {
+        ...fetchResult.debug,
+        extractor: platform,
+      },
+    });
   }
 
-  const mappedCategory = mapExternalCategory({
-    categoryText: extracted.data.categoryText,
-    subcategoryText: extracted.data.subcategoryText,
-    title: extracted.data.title,
-    description: extracted.data.description,
-    breadcrumbSlugs: extracted.data.breadcrumbSlugs,
+  return createDraftFromExtractedData({
+    extracted: extracted.data,
+    staff: params.staff,
+    notes: extracted.data.partial
+      ? "Данные извлечены частично. Проверьте вручную."
+      : "Данные получены автоматически по ссылке.",
+    fetchDebug: fetchResult.debug,
   });
+}
 
-  const priceParsed = parsePriceText(extracted.data.rawPrice);
-
-  const normalized = normalizeImportDraftFields({
-    sourceUrl: extracted.data.sourceUrl,
-    title: extracted.data.title,
-    description: extracted.data.description,
-    price: priceParsed.normalizedPrice ?? extracted.data.rawPrice,
-    currency: extracted.data.currency ?? priceParsed.normalizedCurrency,
-    city: extracted.data.city,
-    category: mappedCategory.normalizedCategory,
-    subcategory: mappedCategory.normalizedSubcategory,
-    imageUrlsText: extracted.data.images.join("\n"),
-  });
-
-  const hasValidCategory = await validateImportCategorySlugs({
-    normalizedCategory: normalized.normalizedCategory,
-    normalizedSubcategory: normalized.normalizedSubcategory,
-  });
-
-  const duplicateCheck = await checkImportDraftDuplicates({
-    sourceUrl: extracted.data.sourceUrl,
-    sourceExternalId: extracted.data.sourceExternalId,
-    title: normalized.normalizedTitle ?? extracted.data.title,
-    price: priceParsed.rawPrice,
-    city: normalized.normalizedCity ?? extracted.data.city,
-  });
-
-  let status: ImportDraftStatus = ImportDraftStatus.PENDING_REVIEW;
-  if (duplicateCheck.isDefiniteDuplicate) {
-    status = ImportDraftStatus.DUPLICATE;
-  } else if (
-    hasValidCategory &&
-    isImportDraftReadyForReview({
-      normalizedTitle: normalized.normalizedTitle,
-      normalizedCategory: normalized.normalizedCategory,
-      normalizedSubcategory: normalized.normalizedSubcategory,
-      normalizedCity: normalized.normalizedCity,
-      rawCity: extracted.data.city,
-    })
-  ) {
-    status = ImportDraftStatus.READY;
-  }
-
-  const draft = await prisma.importedListingDraft.create({
-    data: buildImportDraftCreateData({
-      input: {
-        sourcePlatform: extracted.data.sourcePlatform,
-        sourceUrl: extracted.data.sourceUrl,
-        sourceExternalId: extracted.data.sourceExternalId,
-        title: extracted.data.title,
-        description: extracted.data.description,
-        price: extracted.data.rawPrice,
-        currency: extracted.data.currency,
-        city: extracted.data.city,
-        category: mappedCategory.normalizedCategory,
-        subcategory: mappedCategory.normalizedSubcategory,
-        rawContact: extracted.data.rawContact,
-        notes: "Данные получены автоматически по ссылке.",
-      },
-      normalized: {
-        ...normalized,
-        normalizedPrice: priceParsed.normalizedPrice
-          ? new Prisma.Decimal(priceParsed.normalizedPrice)
-          : normalized.normalizedPrice,
-        normalizedCurrency: priceParsed.normalizedCurrency ?? normalized.normalizedCurrency,
-      },
-      status,
-      createdById: params.staff.id,
-      duplicateOfListingId: duplicateCheck.duplicateListingId,
-    }),
-  });
-
-  const warnings = [...duplicateCheck.warnings];
-  if (!hasValidCategory) {
-    warnings.push("Укажите категорию перед публикацией.");
+export function getImportErrorDetails(error: unknown): {
+  message: string;
+  importErrorCode?: string;
+  nextAction?: string;
+} {
+  if (error instanceof ValidationError) {
+    const details = error.details as
+      | { importErrorCode?: string; nextAction?: string }
+      | undefined;
+    return {
+      message: error.message,
+      importErrorCode: details?.importErrorCode,
+      nextAction: details?.nextAction,
+    };
   }
 
   return {
-    draft: serializeImportDraft(draft, warnings),
-    autoExtracted: true,
+    message: getImportErrorMessage("FETCH_FAILED"),
   };
 }

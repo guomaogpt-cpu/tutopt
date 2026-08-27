@@ -91,6 +91,56 @@ export function stripHtmlTags(value: string): string {
   return decodeHtmlEntities(value.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
 }
 
+export function extractNextDataObject(html: string): Record<string, unknown> | null {
+  const match = html.match(/<script[^>]+id=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i);
+  if (!match?.[1]) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(match[1]) as unknown;
+    if (parsed && typeof parsed === "object") {
+      return parsed as Record<string, unknown>;
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+export function extractEmbeddedJsonState(html: string): Record<string, unknown> | null {
+  const patterns = [
+    /window\.__INITIAL_STATE__\s*=\s*({[\s\S]*?});?\s*<\/script>/i,
+    /window\.__PRELOADED_STATE__\s*=\s*({[\s\S]*?});?\s*<\/script>/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = html.match(pattern);
+    if (!match?.[1]) {
+      continue;
+    }
+    try {
+      const parsed = JSON.parse(match[1]) as unknown;
+      if (parsed && typeof parsed === "object") {
+        return parsed as Record<string, unknown>;
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return null;
+}
+
+export function extractTwitterMeta(html: string, property: string): string | null {
+  return extractMetaContent(html, `twitter:${property}`);
+}
+
+export function extractDescriptionMeta(html: string): string | null {
+  return extractMetaContent(html, "description");
+}
+
 export function extractFirstMatch(html: string, pattern: RegExp): string | null {
   const match = html.match(pattern);
   return match?.[1]?.trim() ?? null;
