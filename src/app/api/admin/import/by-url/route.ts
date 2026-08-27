@@ -11,6 +11,7 @@ export async function POST(request: Request) {
       url: input.url,
       sourcePlatform: input.sourcePlatform,
       staff,
+      forceNew: input.forceNew,
     });
 
     return jsonData(

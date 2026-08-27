@@ -16,6 +16,7 @@ import {
   extractLalafoBreadcrumbSlugs,
   extractLalafoExternalId,
   extractPhoneContacts,
+  mapExternalCategory,
   parseLalafoTitleParts,
   parsePriceText,
 } from "@/server/import/category-mapper";
@@ -132,12 +133,14 @@ function extractFromEmbeddedState(html: string): {
   };
 }
 
-function buildFieldsFound(data: Pick<ExtractedListingData, "title" | "description" | "rawPrice" | "images">) {
+function buildFieldsFound(data: Pick<ExtractedListingData, "title" | "description" | "rawPrice" | "city" | "images" | "categoryText">) {
   return {
     title: Boolean(data.title?.trim()),
     description: Boolean(data.description?.trim()),
     images: data.images.length,
     price: Boolean(data.rawPrice?.trim()),
+    city: Boolean(data.city?.trim()),
+    category: Boolean(data.categoryText?.trim()),
   };
 }
 
@@ -245,7 +248,14 @@ export function extractLalafoListing(html: string, finalUrl: string): ExtractedL
     images,
     rawContact: extractPhoneContacts(html),
     partial,
-    fieldsFound: buildFieldsFound({ title, description, rawPrice: priceParsed.rawPrice, images }),
+    fieldsFound: buildFieldsFound({
+      title,
+      description,
+      rawPrice: priceParsed.rawPrice,
+      city,
+      images,
+      categoryText,
+    }),
   };
 
   return { ok: true, data };
@@ -258,6 +268,11 @@ export function buildLalafoPartialDataFromUrl(finalUrl: string): ExtractedListin
   }
 
   const title = hints.titleFromSlug;
+  const mappedCategory = mapExternalCategory({
+    title,
+    description: null,
+  });
+
   const data: ExtractedListingData = {
     sourcePlatform: "LALAFO",
     sourceUrl: finalUrl,
@@ -267,17 +282,19 @@ export function buildLalafoPartialDataFromUrl(finalUrl: string): ExtractedListin
     rawPrice: null,
     currency: "KGS",
     city: hints.city,
-    categoryText: null,
-    subcategoryText: null,
+    categoryText: mappedCategory.normalizedCategory,
+    subcategoryText: mappedCategory.normalizedSubcategory,
     images: [],
     rawContact: null,
     partial: true,
-    fieldsFound: {
-      title: Boolean(title?.trim()),
-      description: false,
-      images: 0,
-      price: false,
-    },
+    fieldsFound: buildFieldsFound({
+      title,
+      description: null,
+      rawPrice: null,
+      city: hints.city,
+      images: [],
+      categoryText: mappedCategory.normalizedCategory,
+    }),
   };
 
   return data;

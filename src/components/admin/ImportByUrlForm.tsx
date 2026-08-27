@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Link2 } from "lucide-react";
@@ -16,24 +17,33 @@ type ApiErrorBody = {
   };
 };
 
+type DuplicateState = {
+  existingDraftId: string;
+  existingListingId: string | null;
+  url: string;
+};
+
 export function ImportByUrlForm() {
   const router = useRouter();
   const [url, setUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [nextAction, setNextAction] = useState<string | null>(null);
+  const [duplicateState, setDuplicateState] = useState<DuplicateState | null>(null);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function submitImport(forceNew = false) {
     setIsSubmitting(true);
     setErrorMessage(null);
     setNextAction(null);
+    if (!forceNew) {
+      setDuplicateState(null);
+    }
 
     try {
       const response = await fetch("/api/admin/import/by-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url, forceNew }),
       });
 
       const body = (await response.json()) as ApiErrorBody & {
@@ -41,25 +51,32 @@ export function ImportByUrlForm() {
           draft?: { id: string; warnings?: string[] };
           duplicate?: boolean;
           partial?: boolean;
+          existingDraftId?: string;
+          existingListingId?: string | null;
           debug?: Record<string, unknown>;
         };
       };
 
       if (!response.ok) {
-        const message = body.error?.message ?? "Не удалось получить данные объявления";
-        setErrorMessage(message);
+        setErrorMessage(body.error?.message ?? "Не удалось получить данные объявления");
         setNextAction(body.error?.details?.nextAction ?? null);
         return;
       }
 
+      if (body.data?.duplicate && !forceNew) {
+        const existingDraftId = body.data.existingDraftId ?? body.data.draft?.id;
+        if (existingDraftId) {
+          setDuplicateState({
+            existingDraftId,
+            existingListingId: body.data.existingListingId ?? null,
+            url,
+          });
+          return;
+        }
+      }
+
       const draftId = body.data?.draft?.id;
       if (draftId) {
-        if (body.data?.partial) {
-          sessionStorage.setItem(
-            `import-draft-notice-${draftId}`,
-            "Черновик создан частично. Проверьте данные вручную.",
-          );
-        }
         router.push(`/admin/import/${draftId}`);
         router.refresh();
       }
@@ -70,6 +87,11 @@ export function ImportByUrlForm() {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await submitImport(false);
   }
 
   return (
@@ -96,6 +118,32 @@ export function ImportByUrlForm() {
           placeholder="https://lalafo.kg/..."
         />
       </div>
+
+      {duplicateState ? (
+        <div className="mt-4 space-y-3 rounded-xl border border-[#FDE68A] bg-[#FFFBEB] p-4" role="alert">
+          <p className="text-sm font-medium text-[#92400E]">Эта ссылка уже импортировалась.</p>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild size="sm" variant="outline">
+              <Link href={`/admin/import/${duplicateState.existingDraftId}`}>
+                Открыть существующий черновик
+              </Link>
+            </Button>
+            {duplicateState.existingListingId ? (
+              <Button asChild size="sm" variant="outline">
+                <Link href={`/listings/${duplicateState.existingListingId}`}>Открыть объявление</Link>
+              </Button>
+            ) : null}
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={isSubmitting}
+              onClick={() => submitImport(true)}
+            >
+              Импортировать заново
+            </Button>
+          </div>
+        </div>
+      ) : null}
 
       {errorMessage ? (
         <div className="mt-4 space-y-1" role="alert">

@@ -15,6 +15,7 @@ export const IMPORT_ERROR_CODES = [
   "EXTRACTION_FAILED",
   "UNSUPPORTED_SOURCE",
   "DUPLICATE_SOURCE",
+  "RENDER_FALLBACK_UNAVAILABLE",
 ] as const;
 
 export type ImportErrorCode = (typeof IMPORT_ERROR_CODES)[number];
@@ -26,18 +27,31 @@ export type ImportErrorDetails = {
 };
 
 export type ImportFetchDebugInfo = {
+  requestedUrl?: string;
   finalUrl?: string;
   statusCode?: number;
   contentType?: string;
+  responseSize?: number;
+  redirectCount?: number;
   extractor?: string;
+  extractorUsed?: string;
+  extractionSource?: string;
+  extractionSources?: string[];
+  failureReason?: string;
   fieldsFound?: {
     title: boolean;
     description: boolean;
     images: number;
     price: boolean;
+    city?: boolean;
+    category?: boolean;
   };
   partial?: boolean;
+  renderFallbackAttempted?: boolean;
+  renderFallbackAvailable?: boolean;
 };
+
+export type ImportExtractionDebug = ImportFetchDebugInfo;
 
 const ERROR_MESSAGES: Record<ImportErrorCode, string> = {
   INVALID_URL: "Некорректная ссылка.",
@@ -53,6 +67,7 @@ const ERROR_MESSAGES: Record<ImportErrorCode, string> = {
   EXTRACTION_FAILED: "Ссылку открыли, но данные объявления не найдены.",
   UNSUPPORTED_SOURCE: "Источник не поддерживается.",
   DUPLICATE_SOURCE: "Такой источник уже импортировался.",
+  RENDER_FALLBACK_UNAVAILABLE: "Рендер страницы недоступен на сервере.",
 };
 
 const ERROR_NEXT_ACTIONS: Partial<Record<ImportErrorCode, string>> = {

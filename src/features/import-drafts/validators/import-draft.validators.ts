@@ -44,6 +44,7 @@ export type MarkDuplicateImportDraftInput = z.infer<typeof markDuplicateImportDr
 export const importByUrlSchema = z.object({
   url: z.string().trim().url("Укажите корректную ссылку"),
   sourcePlatform: z.enum(IMPORT_SOURCE_PLATFORMS).optional().nullable(),
+  forceNew: z.boolean().optional(),
 });
 
 export type ImportByUrlInput = z.infer<typeof importByUrlSchema>;

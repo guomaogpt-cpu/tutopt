@@ -90,9 +90,9 @@ API `details`: `{ importErrorCode, nextAction, debug }`
 
 ## 11. Known limitations
 
-- Lalafo может блокировать datacenter IP → partial draft из URL
+- Lalafo HTML может блокироваться datacenter IP → Phase 152: Lalafo public API fallback
 - Instagram limited OG без изменений
-- No browser automation / CAPTCHA bypass
+- No browser automation / CAPTCHA bypass (render fallback reserved, not enabled)
 
 ## Файлы
 
@@ -108,3 +108,7 @@ API `details`: `{ importErrorCode, nextAction, debug }`
 ## Migration
 
 Нет.
+
+## Phase 152 follow-up
+
+См. `docs/LALAFO_REAL_EXTRACTOR_FALLBACK_PHASE_152.md` — Lalafo public API, transliteration, duplicate UX, re-extract.

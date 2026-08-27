@@ -18,6 +18,8 @@ Phase 149 добавляет **Bulk Import Queue**: список URL → batch �
 
 Phase 151 улучшает fetch и ошибки Import by URL (см. `docs/IMPORT_URL_FETCH_FIX_PHASE_151.md`).
 
+Phase 152 добавляет **Lalafo real extraction** через public API + улучшенный slug fallback (см. `docs/LALAFO_REAL_EXTRACTOR_FALLBACK_PHASE_152.md`).
+
 ## 3. Import by URL flow
 
 1. Admin открывает `/admin/import`

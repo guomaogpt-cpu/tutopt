@@ -1,3 +1,54 @@
+const TRANSLIT_MAP: Record<string, string> = {
+  avtomaticeskij: "автоматический",
+  avtomaticheskij: "автоматический",
+  avtomaticheskiy: "автоматический",
+  avtomatic: "автомат",
+  avto: "авто",
+  avtomat: "автомат",
+  stanok: "станок",
+  masina: "машина",
+  mashina: "машина",
+  dlia: "для",
+  dla: "для",
+  fasovki: "фасовки",
+  fasovke: "фасовке",
+  fasovshchik: "фасовщик",
+  fasovschik: "фасовщик",
+  poroshkov: "порошков",
+  poroshka: "порошка",
+  granul: "гранул",
+  proizvodstva: "производства",
+  proizvodstvo: "производство",
+  oborudovanie: "оборудование",
+  oborudovanija: "оборудования",
+  upakovki: "упаковки",
+  upakovochnyj: "упаковочный",
+  upakovochnaya: "упаковочная",
+  stroitelnyh: "строительных",
+  stroitelnyj: "строительный",
+  gvozdej: "гвоздей",
+  gvozdi: "гвозди",
+  elektro: "электро",
+  promyshlennyj: "промышленный",
+  promyshlennogo: "промышленного",
+  liniya: "линия",
+  linii: "линии",
+  apparat: "аппарат",
+  ustanovka: "установка",
+  agregat: "агрегат",
+  komplekt: "комплект",
+  novyj: "новый",
+  bu: "бу",
+  poluavtomat: "полуавтомат",
+  poluavtomaticheskij: "полуавтоматический",
+  i: "и",
+  na: "на",
+  v: "в",
+  s: "с",
+  po: "по",
+  iz: "из",
+};
+
 const LALAFO_CITY_NAMES: Record<string, string> = {
   bishkek: "Бишкек",
   osh: "Ош",
@@ -11,11 +62,24 @@ const LALAFO_CITY_NAMES: Record<string, string> = {
   tokmok: "Токмок",
 };
 
-function capitalizeWord(word: string): string {
-  if (!word) {
-    return word;
+function capitalizeFirst(value: string): string {
+  if (!value) {
+    return value;
   }
-  return word.charAt(0).toUpperCase() + word.slice(1);
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function transliterateWord(word: string): string {
+  const lower = word.toLowerCase();
+  if (TRANSLIT_MAP[lower]) {
+    return TRANSLIT_MAP[lower];
+  }
+
+  if (/^\d+$/.test(lower)) {
+    return lower;
+  }
+
+  return lower;
 }
 
 export function titleFromLalafoSlug(slug: string): string {
@@ -28,11 +92,9 @@ export function titleFromLalafoSlug(slug: string): string {
     return "";
   }
 
-  return cleaned
-    .split("-")
-    .filter(Boolean)
-    .map(capitalizeWord)
-    .join(" ");
+  const words = cleaned.split("-").filter(Boolean).map(transliterateWord);
+  const title = words.join(" ").replace(/\s+/g, " ").trim();
+  return capitalizeFirst(title);
 }
 
 export function parseLalafoUrlHints(url: string): {
@@ -50,7 +112,7 @@ export function parseLalafoUrlHints(url: string): {
 
     const citySegment = parts[0]?.toLowerCase();
     if (citySegment && LALAFO_CITY_NAMES[citySegment]) {
-      city = LALAFO_CITY_NAMES[citySegment] ?? capitalizeWord(citySegment);
+      city = LALAFO_CITY_NAMES[citySegment] ?? capitalizeFirst(citySegment);
     }
 
     const adsIndex = parts.indexOf("ads");

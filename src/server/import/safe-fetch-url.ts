@@ -173,8 +173,9 @@ export type SafeFetchImportPageResult = {
 export async function safeFetchImportPage(startUrl: string): Promise<SafeFetchImportPageResult> {
   let currentUrl = await validateImportUrl(startUrl);
   let lastStatusCode: number | undefined;
+  let redirectCount = 0;
 
-  for (let redirectCount = 0; redirectCount <= MAX_REDIRECTS; redirectCount += 1) {
+  for (let attempt = 0; attempt <= MAX_REDIRECTS; attempt += 1) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
@@ -213,6 +214,7 @@ export async function safeFetchImportPage(startUrl: string): Promise<SafeFetchIm
             technicalReason: `unsafe redirect to ${nextUrl.toString()}`,
           });
         }
+        redirectCount += 1;
         continue;
       }
 
@@ -269,9 +271,12 @@ export async function safeFetchImportPage(startUrl: string): Promise<SafeFetchIm
         finalUrl: currentUrl.toString(),
         html,
         debug: {
+          requestedUrl: startUrl,
           finalUrl: currentUrl.toString(),
           statusCode: response.status,
           contentType,
+          responseSize: buffer.byteLength,
+          redirectCount,
         },
       };
     } catch (error) {

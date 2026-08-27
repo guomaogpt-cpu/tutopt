@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ImportCategoryOption } from "@/features/import-drafts/lib/get-import-category-options";
+import { getImportQuality } from "@/features/import-drafts/lib/import-quality";
 import type { ImportDraftRow } from "@/features/import-drafts/types/import-draft";
 import { IMPORT_SOURCE_PLATFORMS } from "@/features/import-drafts/types/import-draft";
 
@@ -54,11 +55,37 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
 
   const images = draft.normalizedImages.length > 0 ? draft.normalizedImages : draft.rawImages;
   const isPublished = draft.status === "PUBLISHED";
+  const isDuplicate = draft.status === "DUPLICATE";
   const isAutoExtracted = Boolean(draft.sourceUrl && draft.sourcePlatform !== "MANUAL");
   const isPartialExtract = Boolean(draft.notes?.toLowerCase().includes("частично"));
+  const importQuality = getImportQuality(draft);
   const hasValidCategorySlug = categories.some(
     (option) => option.slug === subcategorySlug || option.slug === categorySlug,
   );
+
+  async function handleReextract() {
+    setIsSubmitting(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch(`/api/admin/import-drafts/${draft.id}/reextract`, {
+        method: "POST",
+      });
+      const body = (await response.json()) as ApiErrorBody;
+
+      if (!response.ok) {
+        throw new Error(body.error?.message ?? "Не удалось повторить извлечение");
+      }
+
+      setSuccessMessage("Данные обновлены из источника (только пустые поля).");
+      router.refresh();
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Не удалось повторить извлечение");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   async function runAction(action: "ready" | "reject" | "duplicate" | "publish") {
     setIsSubmitting(true);
@@ -166,6 +193,11 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
 
         {!isPublished ? (
           <div className="flex flex-wrap gap-2">
+            {draft.sourceUrl ? (
+              <Button variant="outline" disabled={isSubmitting} onClick={handleReextract}>
+                Повторить извлечение
+              </Button>
+            ) : null}
             <Button
               variant="outline"
               disabled={isSubmitting}
@@ -187,9 +219,11 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
             >
               Пометить дублем
             </Button>
-            <Button disabled={isSubmitting} onClick={() => runAction("publish")}>
-              Опубликовать как объявление
-            </Button>
+            {!isDuplicate ? (
+              <Button disabled={isSubmitting} onClick={() => runAction("publish")}>
+                Опубликовать как объявление
+              </Button>
+            ) : null}
           </div>
         ) : draft.publishedListingId ? (
           <Button asChild>
@@ -203,6 +237,33 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
           {isPartialExtract
             ? "Черновик создан частично. Проверьте и дополните данные перед публикацией."
             : `Данные получены автоматически по ссылке (${draft.sourcePlatform}). Проверьте поля перед публикацией.`}
+        </div>
+      ) : null}
+
+      <div className="rounded-xl border border-[rgba(148,163,184,0.18)] bg-white px-4 py-4 dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="mb-3 text-sm font-semibold text-[#0F172A] dark:text-slate-100">
+          Качество импорта: {importQuality.label}
+        </h2>
+        <div className="grid gap-2 sm:grid-cols-3">
+          <QualityField label="Название" found={importQuality.fields.title} />
+          <QualityField label="Цена" found={importQuality.fields.price} />
+          <QualityField label="Фото" found={importQuality.fields.images} />
+          <QualityField label="Описание" found={importQuality.fields.description} />
+          <QualityField label="Город" found={importQuality.fields.city} />
+          <QualityField label="Категория" found={importQuality.fields.category} />
+        </div>
+        {importQuality.missingMessages.length > 0 ? (
+          <ul className="mt-3 space-y-1 text-sm text-[#64748B]">
+            {importQuality.missingMessages.map((message) => (
+              <li key={message}>{message}</li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+
+      {isDuplicate ? (
+        <div className="rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-sm text-[#991B1B]">
+          Этот черновик помечен как дубль. Публикация недоступна, пока статус не изменён.
         </div>
       ) : null}
 
@@ -413,6 +474,24 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
           <FieldBlock label="Заметки модератора" value={draft.notes} />
         </section>
       )}
+    </div>
+  );
+}
+
+function QualityField({ label, found }: { label: string; found: boolean }) {
+  return (
+    <div className="flex items-center gap-2 text-sm">
+      <span
+        className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold ${
+          found
+            ? "bg-[#DCFCE7] text-[#166534]"
+            : "bg-[#FEE2E2] text-[#991B1B]"
+        }`}
+        aria-hidden
+      >
+        {found ? "✓" : "✗"}
+      </span>
+      <span className="text-[#334155] dark:text-slate-300">{label}</span>
     </div>
   );
 }

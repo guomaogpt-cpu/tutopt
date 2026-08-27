@@ -5,6 +5,8 @@ export type ExtractedFieldsFound = {
   description: boolean;
   images: number;
   price: boolean;
+  city: boolean;
+  category: boolean;
 };
 
 export type ExtractedListingData = {

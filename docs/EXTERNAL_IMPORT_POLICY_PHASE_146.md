@@ -34,6 +34,9 @@
 10. **Import fetch errors — explicit codes only**  
     Phase 151: no generic fetch errors; partial Lalafo draft from URL when blocked.
 
+11. **Lalafo real extraction — API fallback**  
+    Phase 152: public Lalafo API by ad id; slug transliteration; duplicate UX; re-extract.
+
 ## Запрещено в Phase 146
 
 - Массовый парсинг Lalafo и других площадок
