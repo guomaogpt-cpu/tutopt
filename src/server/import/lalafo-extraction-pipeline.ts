@@ -9,13 +9,11 @@ import { parseLalafoUrlHints } from "@/server/import/lalafo-url-hints";
 import { mapExternalCategory, parsePriceText } from "@/server/import/category-mapper";
 import type { ImportExtractionDebug } from "@/server/import/import-error-codes";
 import { uniqueUrls } from "@/server/import/parse-html-meta";
+import { hasMeaningfulLalafoFields } from "@/server/import/render/render-field-utils";
 import {
-  extractLalafoViaRender,
-  hasMeaningfulLalafoFields,
-} from "@/server/import/render/lalafo-render-extractor";
-import {
+  canAttemptRenderFallback,
   getRenderFallbackUnavailableMessage,
-  isRenderFallbackEnabled,
+  getRenderFallbackUnavailableReason,
 } from "@/server/import/render/render-config";
 import type {
   ExtractedFieldsFound,
@@ -152,9 +150,9 @@ function shouldTryRender(params: {
   apiBlocked: boolean;
 }): boolean {
   if (params.useRender) {
-    return isRenderFallbackEnabled();
+    return canAttemptRenderFallback();
   }
-  if (!params.allowRender || !isRenderFallbackEnabled()) {
+  if (!params.allowRender || !canAttemptRenderFallback()) {
     return false;
   }
   if (params.isSlugOnly || params.apiBlocked) {
@@ -183,6 +181,9 @@ export async function extractLalafoListingPipeline(params: {
 
   if (params.useRender) {
     renderAttempted = true;
+    const { extractLalafoViaRender } = await import(
+      "@/server/import/render/lalafo-render-extractor"
+    );
     const renderResult = await extractLalafoViaRender(params.canonicalUrl);
     if (!renderResult.ok) {
       throw new Error(renderResult.reason);
@@ -284,6 +285,9 @@ export async function extractLalafoListingPipeline(params: {
     })
   ) {
     renderAttempted = true;
+    const { extractLalafoViaRender } = await import(
+      "@/server/import/render/lalafo-render-extractor"
+    );
     const renderResult = await extractLalafoViaRender(params.canonicalUrl);
     if (renderResult.ok) {
       sources.push("browser-render");
@@ -397,8 +401,9 @@ export async function extractLalafoListingPipeline(params: {
   if (slugOnly) {
     if (renderFailureReason) {
       combinedFailureReason = renderFailureReason;
-    } else if (apiBlocked && !isRenderFallbackEnabled()) {
-      combinedFailureReason = getRenderFallbackUnavailableMessage();
+    } else if (apiBlocked && !canAttemptRenderFallback()) {
+      combinedFailureReason =
+        getRenderFallbackUnavailableReason() ?? getRenderFallbackUnavailableMessage();
     } else if (failureReason) {
       combinedFailureReason = failureReason;
     }
@@ -417,7 +422,7 @@ export async function extractLalafoListingPipeline(params: {
       partial: extracted.partial,
       extractionQuality,
       failureReason: combinedFailureReason,
-      renderFallbackAvailable: isRenderFallbackEnabled(),
+      renderFallbackAvailable: canAttemptRenderFallback(),
       renderFallbackAttempted: renderAttempted,
     },
   };

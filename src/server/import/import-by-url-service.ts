@@ -19,7 +19,14 @@ import {
   throwImportError,
   type ImportExtractionDebug,
 } from "@/server/import/import-error-codes";
-import { extractLalafoListingPipeline, isAutoExtractedFromDebug } from "@/server/import/lalafo-extraction-pipeline";
+import {
+  extractLalafoListingPipeline,
+  isAutoExtractedFromDebug,
+} from "@/server/import/lalafo-extraction-pipeline";
+import {
+  getRenderFallbackUnavailableReason,
+  isNodeVersionSupportedForRender,
+} from "@/server/import/render/render-config";
 import { safeFetchImportPage, validateImportUrl } from "@/server/import/safe-fetch-url";
 import type { ExtractedListingData } from "@/server/import/types";
 import { ValidationError } from "@/shared/lib/errors";
@@ -301,6 +308,17 @@ export async function reextractImportDraft(params: {
     draft.source_platform as ImportSourcePlatform,
   );
 
+  if (params.mode === "render") {
+    const unavailableReason = getRenderFallbackUnavailableReason();
+    if (unavailableReason) {
+      throw new ValidationError(unavailableReason, {
+        importErrorCode: !isNodeVersionSupportedForRender()
+          ? "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
+          : "RENDER_FALLBACK_UNAVAILABLE",
+      });
+    }
+  }
+
   let extracted: ExtractedListingData;
   let debug: ImportExtractionDebug;
 
@@ -315,12 +333,15 @@ export async function reextractImportDraft(params: {
     debug = result.debug;
   } catch (error) {
     if (params.mode === "render") {
-      throw new ValidationError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Браузерный режим импорта не включён на сервере.",
-        { importErrorCode: "RENDER_FALLBACK_UNAVAILABLE" },
-      );
+          : "Браузерный режим импорта недоступен на сервере.";
+      throw new ValidationError(message, {
+        importErrorCode: !isNodeVersionSupportedForRender()
+          ? "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
+          : "RENDER_FALLBACK_UNAVAILABLE",
+      });
     }
     throw error;
   }

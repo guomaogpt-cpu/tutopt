@@ -106,11 +106,14 @@ UI: кнопка «Повторить с браузерным режимом» �
 
 ## 13. Railway deployment notes
 
-1. Set `IMPORT_RENDER_FALLBACK_ENABLED=true` in Railway variables (build + runtime)
-2. Redeploy — postinstall installs Chromium when env is set
-3. Memory: Chromium needs ~300–500MB RAM per import
-4. If chromium install fails → graceful `RENDER_FALLBACK_UNAVAILABLE`
-5. Build succeeds without env (render disabled)
+1. Set `NODE_VERSION=20.19.0` (or use `nixpacks.toml` / `engines.node`)
+2. Set `IMPORT_RENDER_FALLBACK_ENABLED=true` only after Node 20 deploy is stable
+3. Redeploy — postinstall installs Chromium when env is set on Node 20+
+4. Memory: Chromium needs ~300–500MB RAM per import
+5. If chromium install fails → graceful `RENDER_FALLBACK_UNAVAILABLE`
+6. Build succeeds without env (render disabled)
+
+See also: `docs/RAILWAY_NODE20_PLAYWRIGHT_PHASE_154.md`
 
 ## 14. Limitations
 

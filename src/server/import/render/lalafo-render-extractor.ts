@@ -9,9 +9,12 @@ import {
   uniqueUrls,
 } from "@/server/import/parse-html-meta";
 import { scanEmbeddedListingJson } from "@/server/import/render/embedded-json-scanner";
+import { hasMeaningfulLalafoFields } from "@/server/import/render/render-field-utils";
 import {
   IMPORT_RENDER_NAVIGATION_TIMEOUT_MS,
-  isRenderFallbackEnabled,
+  canAttemptRenderFallback,
+  getRenderFallbackUnavailableReason,
+  isNodeVersionSupportedForRender,
 } from "@/server/import/render/render-config";
 import { validateImportUrl } from "@/server/import/safe-fetch-url";
 import type { ExtractedListingData, ExtractedListingResult } from "@/server/import/types";
@@ -21,7 +24,12 @@ export type LalafoRenderExtractResult =
   | { ok: true; extracted: ExtractedListingData; debug: ImportExtractionDebug }
   | {
       ok: false;
-      code: "RENDER_FALLBACK_UNAVAILABLE" | "RENDER_TIMEOUT" | "RENDER_FAILED" | "EXTRACTION_FAILED";
+      code:
+        | "RENDER_FALLBACK_UNAVAILABLE"
+        | "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
+        | "RENDER_TIMEOUT"
+        | "RENDER_FAILED"
+        | "EXTRACTION_FAILED";
       reason: string;
       debug?: ImportExtractionDebug;
     };
@@ -239,11 +247,27 @@ async function fetchLalafoPageViaBrowser(url: string): Promise<
   | { ok: true; html: string; finalUrl: string; dom: DomSnapshot }
   | {
       ok: false;
-      code: "RENDER_FALLBACK_UNAVAILABLE" | "RENDER_TIMEOUT" | "RENDER_FAILED";
+      code:
+        | "RENDER_FALLBACK_UNAVAILABLE"
+        | "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
+        | "RENDER_TIMEOUT"
+        | "RENDER_FAILED";
       reason: string;
     }
 > {
-  let browser: Awaited<ReturnType<Awaited<typeof import("playwright-core")>["chromium"]["launch"]>> | null = null;
+  if (!isNodeVersionSupportedForRender()) {
+    return {
+      ok: false,
+      code: "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION",
+      reason:
+        getRenderFallbackUnavailableReason() ??
+        "Browser render requires Node.js 20 or higher.",
+    };
+  }
+
+  let browser: Awaited<
+    ReturnType<Awaited<typeof import("playwright-core")>["chromium"]["launch"]>
+  > | null = null;
 
   try {
     const playwright = await import("playwright-core");
@@ -298,26 +322,28 @@ async function fetchLalafoPageViaBrowser(url: string): Promise<
 }
 
 function hasMeaningfulFields(data: ExtractedListingData): boolean {
-  const fields = data.fieldsFound;
-  return Boolean(
-    fields?.price || (fields?.images ?? 0) > 0 || fields?.description,
-  );
+  return hasMeaningfulLalafoFields(data);
 }
 
 export async function extractLalafoViaRender(canonicalUrl: string): Promise<LalafoRenderExtractResult> {
   await validateImportUrl(canonicalUrl);
 
-  if (!isRenderFallbackEnabled()) {
+  const unavailableReason = getRenderFallbackUnavailableReason();
+  if (unavailableReason) {
+    const isNodeIssue = !isNodeVersionSupportedForRender();
     return {
       ok: false,
-      code: "RENDER_FALLBACK_UNAVAILABLE",
-      reason: "Браузерный режим импорта не включён на сервере.",
+      code: isNodeIssue
+        ? "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
+        : "RENDER_FALLBACK_UNAVAILABLE",
+      reason: unavailableReason,
       debug: {
         requestedUrl: canonicalUrl,
         extractorUsed: "LALAFO",
         extractionSource: "failed",
-        renderFallbackAvailable: false,
+        renderFallbackAvailable: canAttemptRenderFallback(),
         renderFallbackAttempted: false,
+        failureReason: unavailableReason,
       },
     };
   }
@@ -408,5 +434,3 @@ export async function extractLalafoViaRender(canonicalUrl: string): Promise<Lala
     },
   };
 }
-
-export { hasMeaningfulFields as hasMeaningfulLalafoFields };

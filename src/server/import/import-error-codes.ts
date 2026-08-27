@@ -16,6 +16,7 @@ export const IMPORT_ERROR_CODES = [
   "UNSUPPORTED_SOURCE",
   "DUPLICATE_SOURCE",
   "RENDER_FALLBACK_UNAVAILABLE",
+  "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION",
 ] as const;
 
 export type ImportErrorCode = (typeof IMPORT_ERROR_CODES)[number];
@@ -69,6 +70,8 @@ const ERROR_MESSAGES: Record<ImportErrorCode, string> = {
   UNSUPPORTED_SOURCE: "Источник не поддерживается.",
   DUPLICATE_SOURCE: "Такой источник уже импортировался.",
   RENDER_FALLBACK_UNAVAILABLE: "Рендер страницы недоступен на сервере.",
+  RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION:
+    "Browser render недоступен: требуется Node.js 20 или выше.",
 };
 
 const ERROR_NEXT_ACTIONS: Partial<Record<ImportErrorCode, string>> = {
