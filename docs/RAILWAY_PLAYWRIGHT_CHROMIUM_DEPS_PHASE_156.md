@@ -36,7 +36,7 @@ NODE_VERSION=20.19.0
 
 - libglib2.0-0, libnss3, libnspr4, libatk*, libcups2, libdrm2, libgbm1
 - libx11-6, libxcb1, libxcomposite1, libxdamage1, libxfixes3, libxrandr2
-- libxkbcommon0, libasound2, libpango-1.0-0, libcairo2, libgtk-3-0
+- libxkbcommon0, libasound2t64, libpango-1.0-0, libcairo2, libgtk-3-0
 - fonts-liberation, ca-certificates
 
 ## 6. Nixpacks/Railway config
@@ -52,6 +52,10 @@ aptPkgs = [ ... ]
 ```
 
 Redeploy required после изменения aptPkgs.
+
+## Ubuntu noble / Railway package note
+
+На Ubuntu noble (24.04, Railway default) пакет `libasound2` недоступен как install candidate. Использовать `libasound2t64`. См. `docs/RAILWAY_BUILD_FIX_LIBASOUND_PHASE_157.md`.
 
 ## 7. Render fallback env variables
 
