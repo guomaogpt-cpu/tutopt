@@ -30,6 +30,39 @@ import type { ExtractedListingData } from "@/server/import/types";
 import { ExternalImportError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
 
+function buildImportNotes(
+  debug: ImportExtractionDebug,
+  extracted: ExtractedListingData,
+): string {
+  const source = debug.extractionSource;
+
+  if (source === "network-json") {
+    return "Данные получены из network API (browser). extractionSource: network-json";
+  }
+  if (source === "embedded-json") {
+    return "Данные получены из embedded JSON. extractionSource: embedded-json";
+  }
+  if (source === "dom") {
+    return "Данные получены из DOM страницы (browser render). extractionSource: dom";
+  }
+  if (source === "open-graph") {
+    return "Данные получены из OpenGraph/meta. extractionSource: open-graph";
+  }
+  if (source === "url-slug-fallback" || debug.extractionQuality === "URL_ONLY") {
+    return "Данные получены только из URL. Название восстановлено из ссылки. extractionSource: url-slug-fallback";
+  }
+  if (source === "lalafo-api") {
+    return "Данные получены через Lalafo API. extractionSource: lalafo-api";
+  }
+  if (source === "browser-render") {
+    return "Данные получены со страницы (browser render). extractionSource: dom";
+  }
+  if (extracted.partial) {
+    return "Данные извлечены частично. Проверьте вручную.";
+  }
+  return "Данные получены автоматически по ссылке.";
+}
+
 export type ImportDraftFromUrlResult = {
   draft: ReturnType<typeof serializeImportDraft>;
   autoExtracted: boolean;
@@ -257,18 +290,7 @@ export async function importListingDraftFromUrl(params: {
     allowRender: params.allowRender ?? true,
   });
 
-  const notes =
-    debug.extractionSource === "browser-render"
-      ? "Данные получены со страницы (browser render)."
-      : debug.extractionQuality === "URL_ONLY"
-        ? "Данные получены только из URL. Цена, описание и фото не извлечены."
-        : extracted.partial
-          ? debug.extractionSource === "url-slug-fallback"
-            ? "Данные извлечены частично из URL. Проверьте и дополните вручную."
-            : "Данные извлечены частично. Проверьте вручную."
-          : debug.extractionSource === "lalafo-api"
-            ? "Данные получены через Lalafo API."
-            : "Данные получены автоматически по ссылке.";
+  const notes = buildImportNotes(debug, extracted);
 
   return createDraftFromExtractedData({
     extracted,
@@ -371,8 +393,8 @@ export async function reextractImportDraft(params: {
 
   const reextractNote =
     params.mode === "render"
-      ? "Повторное извлечение выполнено (browser render)."
-      : "Повторное извлечение выполнено.";
+      ? `${buildImportNotes(debug, extracted)} Повторное извлечение (browser render).`
+      : `${buildImportNotes(debug, extracted)} Повторное извлечение.`;
 
   const updated = await prisma.importedListingDraft.update({
     where: { id: draft.id },

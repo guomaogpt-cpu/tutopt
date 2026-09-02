@@ -33,3 +33,15 @@ Import by URL / reextract debug includes:
 ## Phase 156
 
 System deps fix — см. `docs/RAILWAY_PLAYWRIGHT_CHROMIUM_DEPS_PHASE_156.md`.
+
+## Phase 158 — Network extraction diagnostics
+
+Import debug теперь включает:
+
+- `documentTitle`, `pageUrl`, `bodyTextSample`
+- `h1Texts`, `imageCountTotal`, `candidateImageCount`
+- `jsonResponseCount`, `jsonResponsesWithTargetId`
+- `blockedPageDetected`, `captchaDetected`
+- `extractionSource`: `network-json` | `embedded-json` | `dom` | `open-graph` | `url-slug-fallback`
+
+См. `docs/LALAFO_NETWORK_EXTRACTION_PHASE_158.md`.

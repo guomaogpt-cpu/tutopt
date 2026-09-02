@@ -134,3 +134,15 @@ See also: `docs/RAILWAY_PLAYWRIGHT_CHROMIUM_DEPS_PHASE_156.md` — Linux system 
 ## Migration
 
 Нет.
+
+## Phase 158 — Network extraction
+
+См. `docs/LALAFO_NETWORK_EXTRACTION_PHASE_158.md`.
+
+Browser render теперь:
+
+- перехватывает network JSON (XHR/API)
+- ждёт загрузку API после domcontentloaded
+- отклоняет invalid title (`lalafo.kg`)
+- возвращает расширенную диагностику (`jsonResponseCount`, `blockedPageDetected`)
+- использует source priority: network-json → embedded-json → dom → open-graph → url-slug-fallback

@@ -116,3 +116,9 @@ If deps missing:
 ## Migration
 
 Нет.
+
+## Phase 158 — Lalafo network extraction
+
+После починки Chromium deps (Phase 156–157), browser render извлекает данные из network JSON responses.
+
+См. `docs/LALAFO_NETWORK_EXTRACTION_PHASE_158.md`.

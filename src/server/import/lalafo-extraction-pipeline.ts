@@ -46,7 +46,10 @@ function computeExtractionQuality(params: {
   extractionSource: string;
   fieldsFound?: ExtractedFieldsFound;
 }): ExtractionQuality {
-  if (params.extractionSource === "url-slug-fallback") {
+  if (
+    params.extractionSource === "url-slug-fallback" ||
+    params.extractionSource === "url only"
+  ) {
     return "URL_ONLY";
   }
 
@@ -217,11 +220,13 @@ export async function extractLalafoListingPipeline(params: {
       };
     }
 
-    const extractionSource = "browser-render";
-    const extractionQuality = computeExtractionQuality({
-      extractionSource,
-      fieldsFound: extractedRender.fieldsFound,
-    });
+    const extractionSource = renderResult.debug.extractionSource ?? "browser-render";
+    const extractionQuality =
+      renderResult.debug.extractionQuality ??
+      computeExtractionQuality({
+        extractionSource,
+        fieldsFound: extractedRender.fieldsFound,
+      });
 
     return {
       extracted: {

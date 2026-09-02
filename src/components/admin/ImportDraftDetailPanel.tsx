@@ -276,6 +276,30 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
             <span className="ml-2 text-xs font-normal text-[#64748B]">({importQuality.sourceHint})</span>
           ) : null}
         </h2>
+        {importQuality.extractionSourceLabel ? (
+          <p className="mb-3 text-sm text-[#64748B]">
+            Источник извлечения:{" "}
+            <span className="font-medium text-[#0F172A] dark:text-slate-100">
+              {importQuality.extractionSourceLabel}
+            </span>
+          </p>
+        ) : null}
+        {importQuality.titleFromSlug ? (
+          <p className="mb-3 text-sm text-[#92400E]">Название восстановлено из ссылки.</p>
+        ) : null}
+        {importQuality.invalidTitleRejected ? (
+          <p className="mb-3 text-sm text-[#92400E]">
+            Невалидное название страницы (lalafo.kg) отброшено.
+          </p>
+        ) : null}
+        <p className="mb-3 text-sm text-[#64748B]">
+          Найдено: фото —{" "}
+          {(draft.normalizedImages.length > 0 ? draft.normalizedImages : draft.rawImages).length}; цена —{" "}
+          {importQuality.fields.price ? "да" : "нет"}; описание —{" "}
+          {importQuality.fields.description ? "да" : "нет"}; город —{" "}
+          {importQuality.fields.city ? "да" : "нет"}; категория —{" "}
+          {importQuality.fields.category ? "да" : "нет"}
+        </p>
         <div className="grid gap-2 sm:grid-cols-3">
           <QualityField label="Название" found={importQuality.fields.title} />
           <QualityField label="Цена" found={importQuality.fields.price} />

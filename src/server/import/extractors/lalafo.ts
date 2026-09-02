@@ -21,6 +21,7 @@ import {
   parsePriceText,
 } from "@/server/import/category-mapper";
 import { parseLalafoUrlHints, titleFromLalafoSlug } from "@/server/import/lalafo-url-hints";
+import { sanitizeListingTitle } from "@/server/import/render/title-validation";
 import type { ExtractedListingData, ExtractedListingResult } from "@/server/import/types";
 
 function extractJsonLdProduct(html: string): {
@@ -214,10 +215,10 @@ export function extractLalafoListing(html: string, finalUrl: string): ExtractedL
     (urlHints.slug ? titleFromLalafoSlug(urlHints.slug) : null);
 
   const title =
-    h1 ??
-    titleParts.title ??
-    jsonLd?.title ??
-    embedded.title ??
+    sanitizeListingTitle(h1) ??
+    sanitizeListingTitle(titleParts.title) ??
+    sanitizeListingTitle(jsonLd?.title) ??
+    sanitizeListingTitle(embedded.title) ??
     slugTitle ??
     null;
 

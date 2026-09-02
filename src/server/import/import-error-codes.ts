@@ -63,6 +63,16 @@ export type ImportFetchDebugInfo = {
   renderFallbackFailureCode?: string;
   missingLibrary?: string | null;
   technicalReason?: string;
+  documentTitle?: string | null;
+  pageUrl?: string | null;
+  bodyTextSample?: string | null;
+  h1Texts?: string[];
+  imageCountTotal?: number;
+  candidateImageCount?: number;
+  jsonResponseCount?: number;
+  jsonResponsesWithTargetId?: number;
+  blockedPageDetected?: boolean;
+  captchaDetected?: boolean;
 };
 
 export type ImportExtractionDebug = ImportFetchDebugInfo;
