@@ -23,14 +23,11 @@ import {
   extractLalafoListingPipeline,
   isAutoExtractedFromDebug,
 } from "@/server/import/lalafo-extraction-pipeline";
-import {
-  getRenderFallbackUnavailableReason,
-  isNodeVersionSupportedForRender,
-} from "@/server/import/render/render-config";
+import { probeRenderBrowser } from "@/server/import/render/render-browser-probe";
+import { throwRenderImportError } from "@/server/import/render/render-import-errors";
 import { safeFetchImportPage, validateImportUrl } from "@/server/import/safe-fetch-url";
 import type { ExtractedListingData } from "@/server/import/types";
-import { ValidationError } from "@/shared/lib/errors";
-import { NotFoundError } from "@/shared/lib/errors";
+import { ExternalImportError, NotFoundError, ValidationError } from "@/shared/lib/errors";
 import { prisma } from "@/shared/lib/prisma";
 
 export type ImportDraftFromUrlResult = {
@@ -309,12 +306,12 @@ export async function reextractImportDraft(params: {
   );
 
   if (params.mode === "render") {
-    const unavailableReason = getRenderFallbackUnavailableReason();
-    if (unavailableReason) {
-      throw new ValidationError(unavailableReason, {
-        importErrorCode: !isNodeVersionSupportedForRender()
-          ? "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
-          : "RENDER_FALLBACK_UNAVAILABLE",
+    const probe = await probeRenderBrowser({ testLaunch: true, force: true });
+    if (!probe.browserLaunchable) {
+      throw new ExternalImportError("Браузерный импорт недоступен на сервере.", {
+        importErrorCode: probe.renderFallbackFailureCode ?? "RENDER_BROWSER_LAUNCH_FAILED",
+        missingLibrary: probe.missingLibrary,
+        failureMessage: probe.failureMessage,
       });
     }
   }
@@ -333,15 +330,10 @@ export async function reextractImportDraft(params: {
     debug = result.debug;
   } catch (error) {
     if (params.mode === "render") {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Браузерный режим импорта недоступен на сервере.";
-      throw new ValidationError(message, {
-        importErrorCode: !isNodeVersionSupportedForRender()
-          ? "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
-          : "RENDER_FALLBACK_UNAVAILABLE",
-      });
+      if (error instanceof ExternalImportError) {
+        throw error;
+      }
+      throwRenderImportError({ error });
     }
     throw error;
   }

@@ -17,6 +17,10 @@ export const IMPORT_ERROR_CODES = [
   "DUPLICATE_SOURCE",
   "RENDER_FALLBACK_UNAVAILABLE",
   "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION",
+  "RENDER_BROWSER_SYSTEM_DEPS_MISSING",
+  "RENDER_BROWSER_LAUNCH_FAILED",
+  "RENDER_BROWSER_BINARY_MISSING",
+  "RENDER_PLAYWRIGHT_PACKAGE_MISSING",
 ] as const;
 
 export type ImportErrorCode = (typeof IMPORT_ERROR_CODES)[number];
@@ -49,8 +53,16 @@ export type ImportFetchDebugInfo = {
     category?: boolean;
   };
   partial?: boolean;
-  renderFallbackAttempted?: boolean;
+  renderFallbackEnabled?: boolean;
   renderFallbackAvailable?: boolean;
+  renderFallbackAttempted?: boolean;
+  renderFallbackSucceeded?: boolean;
+  playwrightPackageAvailable?: boolean;
+  browserExecutableAvailable?: boolean;
+  browserLaunchable?: boolean;
+  renderFallbackFailureCode?: string;
+  missingLibrary?: string | null;
+  technicalReason?: string;
 };
 
 export type ImportExtractionDebug = ImportFetchDebugInfo;
@@ -72,6 +84,11 @@ const ERROR_MESSAGES: Record<ImportErrorCode, string> = {
   RENDER_FALLBACK_UNAVAILABLE: "Рендер страницы недоступен на сервере.",
   RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION:
     "Browser render недоступен: требуется Node.js 20 или выше.",
+  RENDER_BROWSER_SYSTEM_DEPS_MISSING:
+    "Browser render недоступен: не хватает Linux-библиотек Chromium.",
+  RENDER_BROWSER_LAUNCH_FAILED: "Browser render недоступен на сервере.",
+  RENDER_BROWSER_BINARY_MISSING: "Chromium binary не найден на сервере.",
+  RENDER_PLAYWRIGHT_PACKAGE_MISSING: "Playwright package недоступен на сервере.",
 };
 
 const ERROR_NEXT_ACTIONS: Partial<Record<ImportErrorCode, string>> = {

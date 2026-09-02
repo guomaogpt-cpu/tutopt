@@ -16,6 +16,11 @@ if (process.env.IMPORT_RENDER_FALLBACK_ENABLED !== "true") {
   process.exit(0);
 }
 
+if (process.env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD === "true") {
+  console.log("[playwright] Skipping chromium install (PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true)");
+  process.exit(0);
+}
+
 try {
   execSync("npx playwright-core install chromium", { stdio: "inherit" });
 } catch (error) {

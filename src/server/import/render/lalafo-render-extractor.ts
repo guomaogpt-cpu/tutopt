@@ -10,11 +10,16 @@ import {
 } from "@/server/import/parse-html-meta";
 import { scanEmbeddedListingJson } from "@/server/import/render/embedded-json-scanner";
 import { hasMeaningfulLalafoFields } from "@/server/import/render/render-field-utils";
+import { invalidateRenderBrowserProbeCache } from "@/server/import/render/render-browser-probe";
+import {
+  classifyRenderFailure,
+  type RenderFallbackFailureCode,
+} from "@/server/import/render/render-failure";
 import {
   IMPORT_RENDER_NAVIGATION_TIMEOUT_MS,
-  canAttemptRenderFallback,
   getRenderFallbackUnavailableReason,
   isNodeVersionSupportedForRender,
+  isRenderFallbackEnabled,
 } from "@/server/import/render/render-config";
 import { validateImportUrl } from "@/server/import/safe-fetch-url";
 import type { ExtractedListingData, ExtractedListingResult } from "@/server/import/types";
@@ -24,15 +29,39 @@ export type LalafoRenderExtractResult =
   | { ok: true; extracted: ExtractedListingData; debug: ImportExtractionDebug }
   | {
       ok: false;
-      code:
-        | "RENDER_FALLBACK_UNAVAILABLE"
-        | "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
-        | "RENDER_TIMEOUT"
-        | "RENDER_FAILED"
-        | "EXTRACTION_FAILED";
+      code: RenderFallbackFailureCode;
       reason: string;
       debug?: ImportExtractionDebug;
     };
+
+function buildRenderDebug(params: {
+  canonicalUrl: string;
+  failure?: ReturnType<typeof classifyRenderFailure>;
+  attempted?: boolean;
+  succeeded?: boolean;
+  browserLaunchable?: boolean;
+  playwrightPackageAvailable?: boolean;
+  browserExecutableAvailable?: boolean;
+  extra?: ImportExtractionDebug;
+}): ImportExtractionDebug {
+  return {
+    requestedUrl: params.canonicalUrl,
+    extractorUsed: "LALAFO",
+    extractionSource: params.succeeded ? "browser-render" : "failed",
+    renderFallbackEnabled: isRenderFallbackEnabled(),
+    renderFallbackAvailable: params.browserLaunchable ?? false,
+    renderFallbackAttempted: params.attempted ?? false,
+    renderFallbackSucceeded: params.succeeded ?? false,
+    playwrightPackageAvailable: params.playwrightPackageAvailable,
+    browserExecutableAvailable: params.browserExecutableAvailable,
+    browserLaunchable: params.browserLaunchable,
+    renderFallbackFailureCode: params.failure?.code,
+    failureReason: params.failure?.userMessage,
+    missingLibrary: params.failure?.missingLibrary,
+    technicalReason: params.failure?.technicalReason,
+    ...params.extra,
+  };
+}
 
 type DomSnapshot = {
   title: string | null;
@@ -56,19 +85,6 @@ function filterProductImages(urls: string[]): string[] {
       }
       return !IMAGE_BLOCKLIST.test(url);
     }),
-  );
-}
-
-function isBrowserUnavailableError(error: unknown): boolean {
-  if (!(error instanceof Error)) {
-    return false;
-  }
-  const message = error.message.toLowerCase();
-  return (
-    message.includes("executable doesn't exist") ||
-    message.includes("failed to launch") ||
-    message.includes("cannot find module 'playwright-core'") ||
-    message.includes("cannot find module \"playwright-core\"")
   );
 }
 
@@ -247,22 +263,16 @@ async function fetchLalafoPageViaBrowser(url: string): Promise<
   | { ok: true; html: string; finalUrl: string; dom: DomSnapshot }
   | {
       ok: false;
-      code:
-        | "RENDER_FALLBACK_UNAVAILABLE"
-        | "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
-        | "RENDER_TIMEOUT"
-        | "RENDER_FAILED";
+      code: RenderFallbackFailureCode;
       reason: string;
+      failure: ReturnType<typeof classifyRenderFailure>;
     }
 > {
   if (!isNodeVersionSupportedForRender()) {
-    return {
-      ok: false,
-      code: "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION",
-      reason:
-        getRenderFallbackUnavailableReason() ??
-        "Browser render requires Node.js 20 or higher.",
-    };
+    const failure = classifyRenderFailure({
+      codeHint: "RENDER_NODE_VERSION_UNSUPPORTED",
+    });
+    return { ok: false, code: failure.code, reason: failure.userMessage, failure };
   }
 
   let browser: Awaited<
@@ -271,10 +281,18 @@ async function fetchLalafoPageViaBrowser(url: string): Promise<
 
   try {
     const playwright = await import("playwright-core");
+    try {
+      playwright.chromium.executablePath();
+    } catch {
+      // binary check — launch will classify failure
+    }
+
     browser = await playwright.chromium.launch({
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
     });
+
+    invalidateRenderBrowserProbeCache();
 
     const context = await browser.newContext({
       userAgent: BROWSER_USER_AGENT,
@@ -299,21 +317,15 @@ async function fetchLalafoPageViaBrowser(url: string): Promise<
 
     return { ok: true, html, finalUrl, dom };
   } catch (error) {
-    if (error instanceof Error && error.name === "TimeoutError") {
-      return { ok: false, code: "RENDER_TIMEOUT", reason: error.message };
-    }
-    if (isBrowserUnavailableError(error)) {
-      return {
-        ok: false,
-        code: "RENDER_FALLBACK_UNAVAILABLE",
-        reason: error instanceof Error ? error.message : "Browser unavailable",
-      };
-    }
-    return {
-      ok: false,
-      code: "RENDER_FAILED",
-      reason: error instanceof Error ? error.message : "Browser render failed",
-    };
+    invalidateRenderBrowserProbeCache();
+    const stage =
+      error instanceof Error && error.name === "TimeoutError"
+        ? "goto"
+        : error instanceof Error && /goto|navigation/i.test(error.message)
+          ? "goto"
+          : "launch";
+    const failure = classifyRenderFailure({ error, stage });
+    return { ok: false, code: failure.code, reason: failure.userMessage, failure };
   } finally {
     if (browser) {
       await browser.close().catch(() => undefined);
@@ -330,21 +342,21 @@ export async function extractLalafoViaRender(canonicalUrl: string): Promise<Lala
 
   const unavailableReason = getRenderFallbackUnavailableReason();
   if (unavailableReason) {
-    const isNodeIssue = !isNodeVersionSupportedForRender();
+    const failure = classifyRenderFailure({
+      codeHint: !isNodeVersionSupportedForRender()
+        ? "RENDER_NODE_VERSION_UNSUPPORTED"
+        : "RENDER_FALLBACK_DISABLED",
+    });
     return {
       ok: false,
-      code: isNodeIssue
-        ? "RENDER_FALLBACK_UNAVAILABLE_NODE_VERSION"
-        : "RENDER_FALLBACK_UNAVAILABLE",
-      reason: unavailableReason,
-      debug: {
-        requestedUrl: canonicalUrl,
-        extractorUsed: "LALAFO",
-        extractionSource: "failed",
-        renderFallbackAvailable: canAttemptRenderFallback(),
-        renderFallbackAttempted: false,
-        failureReason: unavailableReason,
-      },
+      code: failure.code,
+      reason: failure.userMessage,
+      debug: buildRenderDebug({
+        canonicalUrl,
+        failure,
+        attempted: false,
+        browserLaunchable: false,
+      }),
     };
   }
 
@@ -354,14 +366,13 @@ export async function extractLalafoViaRender(canonicalUrl: string): Promise<Lala
       ok: false,
       code: pageFetch.code,
       reason: pageFetch.reason,
-      debug: {
-        requestedUrl: canonicalUrl,
-        extractorUsed: "LALAFO",
-        extractionSource: "failed",
-        failureReason: pageFetch.reason,
-        renderFallbackAvailable: true,
-        renderFallbackAttempted: true,
-      },
+      debug: buildRenderDebug({
+        canonicalUrl,
+        failure: pageFetch.failure,
+        attempted: true,
+        succeeded: false,
+        browserLaunchable: false,
+      }),
     };
   }
 
@@ -393,20 +404,26 @@ export async function extractLalafoViaRender(canonicalUrl: string): Promise<Lala
   extracted = mergeExtracted(extracted, domData);
 
   if (!extracted.title && !extracted.rawPrice && extracted.images.length === 0) {
+    const failure = classifyRenderFailure({
+      codeHint: "EXTRACTION_FAILED",
+      stage: "extract",
+      error: htmlExtracted.ok ? undefined : htmlExtracted.error,
+    });
     return {
       ok: false,
-      code: "EXTRACTION_FAILED",
-      reason: "Browser opened page but listing data not found",
-      debug: {
-        requestedUrl: canonicalUrl,
-        finalUrl: pageFetch.finalUrl,
-        extractorUsed: "LALAFO",
-        extractionSource: "failed",
-        responseSize: pageFetch.html.length,
-        renderFallbackAvailable: true,
-        renderFallbackAttempted: true,
-        failureReason: htmlExtracted.ok ? undefined : htmlExtracted.error,
-      },
+      code: failure.code,
+      reason: failure.userMessage,
+      debug: buildRenderDebug({
+        canonicalUrl,
+        failure,
+        attempted: true,
+        succeeded: false,
+        browserLaunchable: true,
+        extra: {
+          finalUrl: pageFetch.finalUrl,
+          responseSize: pageFetch.html.length,
+        },
+      }),
     };
   }
 
@@ -419,18 +436,19 @@ export async function extractLalafoViaRender(canonicalUrl: string): Promise<Lala
       ...extracted,
       partial: !meaningful,
     },
-    debug: {
-      requestedUrl: canonicalUrl,
-      finalUrl: pageFetch.finalUrl,
-      extractorUsed: "LALAFO",
-      extractionSource: "browser-render",
-      extractionSources: ["browser-render", "html", "embedded-json"],
-      fieldsFound: extracted.fieldsFound,
-      responseSize: pageFetch.html.length,
-      partial: !meaningful,
-      renderFallbackAvailable: true,
-      renderFallbackAttempted: true,
-      extractionQuality,
-    },
+    debug: buildRenderDebug({
+      canonicalUrl,
+      attempted: true,
+      succeeded: true,
+      browserLaunchable: true,
+      extra: {
+        finalUrl: pageFetch.finalUrl,
+        extractionSources: ["browser-render", "html", "embedded-json"],
+        fieldsFound: extracted.fieldsFound,
+        responseSize: pageFetch.html.length,
+        partial: !meaningful,
+        extractionQuality,
+      },
+    }),
   };
 }

@@ -10,11 +10,8 @@ import { mapExternalCategory, parsePriceText } from "@/server/import/category-ma
 import type { ImportExtractionDebug } from "@/server/import/import-error-codes";
 import { uniqueUrls } from "@/server/import/parse-html-meta";
 import { hasMeaningfulLalafoFields } from "@/server/import/render/render-field-utils";
-import {
-  canAttemptRenderFallback,
-  getRenderFallbackUnavailableMessage,
-  getRenderFallbackUnavailableReason,
-} from "@/server/import/render/render-config";
+import { throwRenderImportError } from "@/server/import/render/render-import-errors";
+import { getRenderFallbackUnavailableMessage, isRenderFallbackEnabled } from "@/server/import/render/render-config";
 import type {
   ExtractedFieldsFound,
   ExtractedListingData,
@@ -150,9 +147,9 @@ function shouldTryRender(params: {
   apiBlocked: boolean;
 }): boolean {
   if (params.useRender) {
-    return canAttemptRenderFallback();
+    return isRenderFallbackEnabled();
   }
-  if (!params.allowRender || !canAttemptRenderFallback()) {
+  if (!params.allowRender || !isRenderFallbackEnabled()) {
     return false;
   }
   if (params.isSlugOnly || params.apiBlocked) {
@@ -178,6 +175,7 @@ export async function extractLalafoListingPipeline(params: {
   let apiResult: ExtractedListingData | null = null;
   let htmlResult: ExtractedListingData | null = null;
   let renderAttempted = false;
+  let lastRenderDebug: ImportExtractionDebug | undefined;
 
   if (params.useRender) {
     renderAttempted = true;
@@ -186,7 +184,11 @@ export async function extractLalafoListingPipeline(params: {
     );
     const renderResult = await extractLalafoViaRender(params.canonicalUrl);
     if (!renderResult.ok) {
-      throw new Error(renderResult.reason);
+      throwRenderImportError({
+        code: renderResult.code,
+        reason: renderResult.reason,
+        debug: renderResult.debug,
+      });
     }
 
     sources.push("browser-render");
@@ -295,13 +297,34 @@ export async function extractLalafoListingPipeline(params: {
         ? mergeExtractedData(extracted, renderResult.extracted)
         : renderResult.extracted;
       failureReason = undefined;
+      lastRenderDebug = renderResult.debug;
     } else {
-      renderFailureReason = renderResult.reason;
+      renderFailureReason =
+        renderResult.debug?.failureReason ?? renderResult.reason;
+      lastRenderDebug = renderResult.debug;
       if (!failureReason) {
-        failureReason = renderResult.reason;
+        failureReason = renderFailureReason;
       }
     }
   }
+
+  const renderSucceeded = sources.includes("browser-render");
+  const renderDebug: ImportExtractionDebug = renderAttempted
+    ? {
+        ...lastRenderDebug,
+        renderFallbackEnabled: isRenderFallbackEnabled(),
+        renderFallbackAttempted: true,
+        renderFallbackSucceeded: renderSucceeded,
+        renderFallbackAvailable: renderSucceeded,
+        browserLaunchable: renderSucceeded,
+      }
+    : {
+        renderFallbackEnabled: isRenderFallbackEnabled(),
+        renderFallbackAttempted: false,
+        renderFallbackSucceeded: false,
+        renderFallbackAvailable: false,
+        browserLaunchable: false,
+      };
 
   const isSlugOnly =
     !extracted ||
@@ -401,9 +424,8 @@ export async function extractLalafoListingPipeline(params: {
   if (slugOnly) {
     if (renderFailureReason) {
       combinedFailureReason = renderFailureReason;
-    } else if (apiBlocked && !canAttemptRenderFallback()) {
-      combinedFailureReason =
-        getRenderFallbackUnavailableReason() ?? getRenderFallbackUnavailableMessage();
+    } else if (apiBlocked && !isRenderFallbackEnabled()) {
+      combinedFailureReason = getRenderFallbackUnavailableMessage();
     } else if (failureReason) {
       combinedFailureReason = failureReason;
     }
@@ -422,8 +444,7 @@ export async function extractLalafoListingPipeline(params: {
       partial: extracted.partial,
       extractionQuality,
       failureReason: combinedFailureReason,
-      renderFallbackAvailable: canAttemptRenderFallback(),
-      renderFallbackAttempted: renderAttempted,
+      ...renderDebug,
     },
   };
 }

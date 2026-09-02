@@ -114,6 +114,8 @@ UI: кнопка «Повторить с браузерным режимом» �
 6. Build succeeds without env (render disabled)
 
 See also: `docs/RAILWAY_NODE20_PLAYWRIGHT_PHASE_154.md`
+See also: `docs/PRODUCTION_RENDER_FALLBACK_DIAGNOSTICS_PHASE_155.md`
+See also: `docs/RAILWAY_PLAYWRIGHT_CHROMIUM_DEPS_PHASE_156.md` — Linux system deps for Chromium
 
 ## 14. Limitations
 

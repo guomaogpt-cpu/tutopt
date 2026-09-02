@@ -5,7 +5,8 @@ export type ErrorCode =
   | "FORBIDDEN"
   | "CONFLICT"
   | "RATE_LIMITED"
-  | "INTERNAL_ERROR";
+  | "INTERNAL_ERROR"
+  | "EXTERNAL_IMPORT_ERROR";
 
 export type ErrorResponse = {
   error: {
@@ -73,6 +74,13 @@ export class RateLimitError extends AppError {
   constructor(message = "Слишком много запросов. Попробуйте позже.") {
     super(message, "RATE_LIMITED", 429);
     this.name = "RateLimitError";
+  }
+}
+
+export class ExternalImportError extends AppError {
+  constructor(message: string, details?: unknown) {
+    super(message, "EXTERNAL_IMPORT_ERROR", 502, details);
+    this.name = "ExternalImportError";
   }
 }
 
