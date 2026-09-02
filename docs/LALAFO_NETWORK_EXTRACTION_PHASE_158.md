@@ -115,3 +115,9 @@ Lalafo отдаёт SPA app shell. Данные объявления загру�
 - `lalafo-network-extractor.ts` — network collector + Lalafo parser
 - `page-diagnostics.ts` — blocked/captcha detection
 - `title-validation.ts` — invalid title filter
+
+## 15. Phase 159 — Browser-side manual import
+
+Server render может видеть protection page. Решение: ручной импорт из браузера staff-а.
+
+См. `docs/BROWSER_SIDE_IMPORT_PHASE_159.md`.

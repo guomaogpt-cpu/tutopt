@@ -24,6 +24,10 @@ import {
   type RenderFallbackFailureCode,
 } from "@/server/import/render/render-failure";
 import {
+  SOURCE_PROTECTION_PAGE_CODE,
+  SOURCE_PROTECTION_PAGE_MESSAGE,
+} from "@/server/import/render/render-import-errors";
+import {
   IMPORT_RENDER_NAVIGATION_TIMEOUT_MS,
   getRenderFallbackUnavailableReason,
   isNodeVersionSupportedForRender,
@@ -43,7 +47,7 @@ export type LalafoRenderExtractResult =
   | { ok: true; extracted: ExtractedListingData; debug: ImportExtractionDebug }
   | {
       ok: false;
-      code: RenderFallbackFailureCode;
+      code: RenderFallbackFailureCode | typeof SOURCE_PROTECTION_PAGE_CODE;
       reason: string;
       debug?: ImportExtractionDebug;
     };
@@ -76,9 +80,6 @@ const BROWSER_USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 VseTutImportBot/1.0";
 
 const IMAGE_BLOCKLIST = /logo|avatar|icon|sprite|placeholder|favicon|emoji|banner-ad|\.svg(\?|$)/i;
-
-const BLOCKED_PAGE_MESSAGE =
-  "Lalafo открыл страницу проверки/защиты, данные объявления недоступны.";
 
 const EMPTY_PAGE_MESSAGE =
   "Страница открылась, но данные объявления не найдены. Возможно, Lalafo отдаёт защитную или пустую страницу.";
@@ -729,24 +730,22 @@ export async function extractLalafoViaRender(canonicalUrl: string): Promise<Lala
   };
 
   if (diagnostics.blockedPageDetected || diagnostics.captchaDetected) {
-    const failure = classifyRenderFailure({
-      codeHint: "EXTRACTION_FAILED",
-      stage: "extract",
-    });
     return {
       ok: false,
-      code: failure.code,
-      reason: BLOCKED_PAGE_MESSAGE,
+      code: SOURCE_PROTECTION_PAGE_CODE,
+      reason: SOURCE_PROTECTION_PAGE_MESSAGE,
       debug: buildRenderDebug({
         canonicalUrl,
-        failure,
         attempted: true,
         succeeded: false,
         browserLaunchable: true,
         extra: {
           ...debugBase,
-          failureReason: BLOCKED_PAGE_MESSAGE,
-          extractionQuality: "FAILED",
+          failureReason: SOURCE_PROTECTION_PAGE_CODE,
+          extractionQuality: "BLOCKED",
+          renderFallbackAttempted: true,
+          renderFallbackSucceeded: false,
+          renderFallbackAvailable: true,
         },
       }),
     };

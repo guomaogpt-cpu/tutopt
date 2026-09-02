@@ -48,3 +48,28 @@ export const importByUrlSchema = z.object({
 });
 
 export type ImportByUrlInput = z.infer<typeof importByUrlSchema>;
+
+const browserPageExtractedSchema = z
+  .object({
+    title: z.string().trim().optional(),
+    price: z.string().trim().optional(),
+    currency: z.string().trim().optional(),
+    description: z.string().trim().optional(),
+    city: z.string().trim().optional(),
+    images: z.array(z.string().url()).max(20).optional(),
+  })
+  .strict();
+
+export const browserPageImportSchema = z
+  .object({
+    sourceUrl: z.string().trim().url("Укажите корректную ссылку"),
+    sourcePlatform: z.enum(["LALAFO", "WEBSITE", "OTHER"]),
+    pageTitle: z.string().trim().max(500).optional(),
+    bodyText: z.string().max(204_800).optional(),
+    html: z.string().max(2_097_152).optional(),
+    images: z.array(z.string().url()).max(20).optional(),
+    extracted: browserPageExtractedSchema.optional(),
+  })
+  .strict();
+
+export type BrowserPageImportInput = z.infer<typeof browserPageImportSchema>;

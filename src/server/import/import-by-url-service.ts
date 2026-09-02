@@ -11,6 +11,10 @@ import {
 } from "@/features/import-drafts/lib/normalize-import-draft";
 import { validateImportCategorySlugs } from "@/features/import-drafts/lib/resolve-import-category";
 import type { ImportSourcePlatform } from "@/features/import-drafts/types/import-draft";
+import {
+  extractListingFromBrowserPage,
+  validateBrowserPagePayload,
+} from "@/server/import/browser-page-import";
 import { mapExternalCategory, parsePriceText } from "@/server/import/category-mapper";
 import { detectImportPlatform } from "@/server/import/detect-platform";
 import { extractListingFromHtml } from "@/server/import/extractors";
@@ -36,6 +40,9 @@ function buildImportNotes(
 ): string {
   const source = debug.extractionSource;
 
+  if (source === "browser-page") {
+    return "Данные импортированы из открытой страницы браузера. extractionSource: browser-page";
+  }
   if (source === "network-json") {
     return "Данные получены из network API (browser). extractionSource: network-json";
   }
@@ -66,7 +73,7 @@ function buildImportNotes(
 export type ImportDraftFromUrlResult = {
   draft: ReturnType<typeof serializeImportDraft>;
   autoExtracted: boolean;
-  extractionQuality?: "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED";
+  extractionQuality?: "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED" | "BLOCKED";
   duplicate?: boolean;
   partial?: boolean;
   existingDraftId?: string;
@@ -170,6 +177,10 @@ async function createDraftFromExtractedData(params: {
 
   if (params.debug?.extractionQuality === "URL_ONLY") {
     warnings.push("Данные получены только из ссылки. Цена, описание и фото не извлечены.");
+  } else if (params.debug?.extractionQuality === "BLOCKED") {
+    warnings.push(
+      "Lalafo не отдал данные серверному импорту. Используйте импорт из открытой страницы.",
+    );
   } else if (params.extracted.partial) {
     warnings.push("Черновик создан частично. Проверьте данные вручную.");
   }
@@ -300,6 +311,35 @@ export async function importListingDraftFromUrl(params: {
   });
 }
 
+export async function importListingDraftFromBrowserPage(params: {
+  payload: unknown;
+  staff: PublicUser;
+}): Promise<ImportDraftFromUrlResult> {
+  const validated = validateBrowserPagePayload(params.payload);
+  await validateImportUrl(validated.sourceUrl);
+
+  const extracted = await extractListingFromBrowserPage(validated);
+  const notes =
+    "Данные импортированы из открытой страницы браузера. extractionSource: browser-page";
+
+  return createDraftFromExtractedData({
+    extracted: {
+      ...extracted,
+      partial: extracted.partial ?? false,
+    },
+    staff: params.staff,
+    notes,
+    debug: {
+      requestedUrl: validated.sourceUrl,
+      extractorUsed: validated.sourcePlatform,
+      extractionSource: "browser-page",
+      extractionQuality: extracted.partial ? "PARTIAL" : "FULL",
+      fieldsFound: extracted.fieldsFound,
+      partial: extracted.partial,
+    },
+  });
+}
+
 export async function reextractImportDraft(params: {
   draftId: string;
   staff: PublicUser;
@@ -308,7 +348,7 @@ export async function reextractImportDraft(params: {
   draft: ReturnType<typeof serializeImportDraft>;
   debug?: ImportExtractionDebug;
   autoExtracted?: boolean;
-  extractionQuality?: "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED";
+  extractionQuality?: "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED" | "BLOCKED";
 }> {
   const draft = await prisma.importedListingDraft.findUnique({
     where: { id: params.draftId },
@@ -431,7 +471,12 @@ export async function reextractImportDraft(params: {
 
   const autoExtracted = isAutoExtractedFromDebug(debug);
   const warnings =
-    debug.extractionQuality === "URL_ONLY"
+    debug.extractionQuality === "BLOCKED"
+      ? [
+          "Lalafo не отдал данные серверному импорту. Используйте импорт из открытой страницы.",
+          debug.failureReason,
+        ].filter((value): value is string => Boolean(value))
+      : debug.extractionQuality === "URL_ONLY"
       ? ["Данные получены только из ссылки.", debug.failureReason].filter(
           (value): value is string => Boolean(value),
         )

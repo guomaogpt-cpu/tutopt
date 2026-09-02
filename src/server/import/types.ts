@@ -9,7 +9,7 @@ export type ExtractedFieldsFound = {
   category: boolean;
 };
 
-export type ExtractionQuality = "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED";
+export type ExtractionQuality = "FULL" | "PARTIAL" | "URL_ONLY" | "FAILED" | "BLOCKED";
 
 export type ExtractedListingData = {
   sourcePlatform: ImportSourcePlatform;

@@ -40,6 +40,9 @@
 12. **Lalafo browser render — optional Playwright**  
     Phase 153: `IMPORT_RENDER_FALLBACK_ENABLED=true`; single import only; no bulk browser.
 
+13. **Lalafo browser-side manual import — staff browser**  
+    Phase 159: bookmarklet + JSON paste when server-side blocked; no CAPTCHA bypass; draft only.
+
 ## Запрещено в Phase 146
 
 - Массовый парсинг Lalafo и других площадок
@@ -52,6 +55,7 @@
 
 - Ручной ввод данных staff-ом
 - Import by URL (Phase 147): один URL, SSRF-safe fetch, draft only
+- Browser-side manual import (Phase 159): staff opens listing in own browser, bookmarklet JSON paste
 - Bulk import queue (Phase 149): до 100 URL за batch, chunked processing, draft only
 - Хранение external image URLs (client-side preview only)
 - Duplicate check MVP

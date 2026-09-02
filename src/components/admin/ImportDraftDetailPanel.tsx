@@ -30,6 +30,11 @@ type ImportDraftDetailPanelProps = {
 type ApiErrorBody = {
   error?: {
     message?: string;
+    code?: string;
+    details?: {
+      importErrorCode?: string;
+      nextAction?: string;
+    };
   };
 };
 
@@ -82,7 +87,16 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
       };
 
       if (!response.ok) {
-        throw new Error(body.error?.message ?? "Не удалось повторить извлечение");
+        const isSourceBlocked =
+          response.status === 409 ||
+          body.error?.code === "SOURCE_BLOCKED" ||
+          body.error?.details?.importErrorCode === "SOURCE_PROTECTION_PAGE";
+        throw new Error(
+          isSourceBlocked
+            ? (body.error?.message ??
+                "Lalafo не отдал данные серверному импорту. Используйте ручной импорт из браузера.")
+            : (body.error?.message ?? "Не удалось повторить извлечение"),
+        );
       }
 
       const warning = body.data?.draft?.warnings?.[0];
@@ -211,13 +225,20 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
                   Повторить извлечение
                 </Button>
                 {draft.sourcePlatform === "LALAFO" && (isLalafoUrlOnly || isPartialExtract) ? (
-                  <Button
-                    variant="outline"
-                    disabled={isSubmitting}
-                    onClick={() => handleReextract("render")}
-                  >
-                    Повторить с браузерным режимом
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      disabled={isSubmitting}
+                      onClick={() => handleReextract("render")}
+                    >
+                      Повторить с браузерным режимом
+                    </Button>
+                    <Button asChild variant="outline">
+                      <Link href="/admin/import?mode=browser-page#browser-page-import">
+                        Импорт из открытой страницы
+                      </Link>
+                    </Button>
+                  </>
                 ) : null}
               </>
             ) : null}
@@ -257,9 +278,18 @@ export function ImportDraftDetailPanel({ draft, categories }: ImportDraftDetailP
 
       {isPartialExtract && !isAutoExtracted ? (
         <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] px-4 py-3 text-sm text-[#92400E]">
-          {importQuality.level === "url-only"
-            ? "Данные получены только из ссылки. Цена, описание и фото не извлечены. Используйте браузерный режим или заполните вручную."
-            : "Черновик создан частично. Проверьте и дополните данные перед публикацией."}
+          {importQuality.extractionSourceLabel === "Браузер (ручной импорт)"
+            ? "Данные импортированы из открытой страницы браузера. Проверьте поля перед публикацией."
+            : importQuality.level === "url-only"
+              ? "Данные получены только из ссылки. Цена, описание и фото не извлечены. Используйте импорт из открытой страницы."
+              : "Черновик создан частично. Проверьте и дополните данные перед публикацией."}
+          {importQuality.level === "url-only" && draft.sourcePlatform === "LALAFO" ? (
+            <p className="mt-2">
+              <Link href="/admin/import?mode=browser-page#browser-page-import" className="font-medium underline">
+                Импорт из открытой страницы Lalafo
+              </Link>
+            </p>
+          ) : null}
         </div>
       ) : isAutoExtracted ? (
         <div className="rounded-xl border border-[#BFDBFE] bg-[#EFF6FF] px-4 py-3 text-sm text-[#1D4ED8]">

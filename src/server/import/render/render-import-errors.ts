@@ -1,10 +1,30 @@
 import type { ImportExtractionDebug } from "@/server/import/import-error-codes";
-import { ExternalImportError } from "@/shared/lib/errors";
+import { ExternalImportError, SourceBlockedError } from "@/shared/lib/errors";
 import {
   classifyRenderFailure,
   mapLegacyRenderCode,
   type RenderFallbackFailureCode,
 } from "@/server/import/render/render-failure";
+
+export const SOURCE_PROTECTION_PAGE_CODE = "SOURCE_PROTECTION_PAGE";
+
+export const SOURCE_PROTECTION_PAGE_MESSAGE =
+  "Lalafo не отдал данные серверному импорту. Используйте ручной импорт из браузера.";
+
+export const SOURCE_PROTECTION_NEXT_ACTION =
+  "Откройте объявление в своём браузере и используйте «Импорт из открытой страницы» на /admin/import.";
+
+export function isSourceProtectionFailure(params: {
+  code?: string;
+  debug?: ImportExtractionDebug;
+  reason?: string;
+}): boolean {
+  return (
+    params.code === SOURCE_PROTECTION_PAGE_CODE ||
+    Boolean(params.debug?.blockedPageDetected || params.debug?.captchaDetected) ||
+    params.reason?.includes("страницу проверки/защиты") === true
+  );
+}
 
 export function throwRenderImportError(params: {
   code?: RenderFallbackFailureCode | string;
@@ -12,6 +32,21 @@ export function throwRenderImportError(params: {
   reason?: string;
   debug?: ImportExtractionDebug;
 }): never {
+  if (isSourceProtectionFailure(params)) {
+    throw new SourceBlockedError(SOURCE_PROTECTION_PAGE_MESSAGE, {
+      importErrorCode: SOURCE_PROTECTION_PAGE_CODE,
+      nextAction: SOURCE_PROTECTION_NEXT_ACTION,
+      debug: {
+        ...params.debug,
+        failureReason: SOURCE_PROTECTION_PAGE_CODE,
+        renderFallbackAttempted: true,
+        renderFallbackSucceeded: false,
+        browserLaunchable: params.debug?.browserLaunchable ?? true,
+        blockedPageDetected: params.debug?.blockedPageDetected ?? true,
+      },
+    });
+  }
+
   const failure = params.error
     ? classifyRenderFailure({ error: params.error })
     : params.reason

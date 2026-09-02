@@ -146,3 +146,9 @@ Browser render теперь:
 - отклоняет invalid title (`lalafo.kg`)
 - возвращает расширенную диагностику (`jsonResponseCount`, `blockedPageDetected`)
 - использует source priority: network-json → embedded-json → dom → open-graph → url-slug-fallback
+
+## Phase 159 — Browser-side manual import
+
+Если server render видит protection page (`SOURCE_PROTECTION_PAGE`), staff использует bookmarklet + JSON paste на `/admin/import`.
+
+См. `docs/BROWSER_SIDE_IMPORT_PHASE_159.md`.

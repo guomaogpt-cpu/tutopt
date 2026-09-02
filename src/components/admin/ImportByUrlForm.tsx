@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 type ApiErrorBody = {
   error?: {
     message?: string;
+    code?: string;
     details?: {
       importErrorCode?: string;
       nextAction?: string;
@@ -58,8 +59,17 @@ export function ImportByUrlForm() {
       };
 
       if (!response.ok) {
+        const isSourceBlocked =
+          response.status === 409 ||
+          body.error?.code === "SOURCE_BLOCKED" ||
+          body.error?.details?.importErrorCode === "SOURCE_PROTECTION_PAGE";
         setErrorMessage(body.error?.message ?? "Не удалось получить данные объявления");
-        setNextAction(body.error?.details?.nextAction ?? null);
+        setNextAction(
+          isSourceBlocked
+            ? (body.error?.details?.nextAction ??
+                "Откройте объявление в браузере и используйте «Импорт из открытой страницы» ниже.")
+            : (body.error?.details?.nextAction ?? null),
+        );
         return;
       }
 
@@ -151,9 +161,16 @@ export function ImportByUrlForm() {
       ) : null}
 
       {errorMessage ? (
-        <div className="mt-4 space-y-1" role="alert">
+        <div className="mt-4 space-y-2" role="alert">
           <p className="text-sm text-[#DC2626]">{errorMessage}</p>
           {nextAction ? <p className="text-sm text-[#64748B]">{nextAction}</p> : null}
+          {nextAction?.includes("открытой страницы") ? (
+            <p className="text-sm">
+              <a href="#browser-page-import" className="font-medium text-[#2563EB] underline">
+                Перейти к импорту из открытой страницы
+              </a>
+            </p>
+          ) : null}
         </div>
       ) : null}
 

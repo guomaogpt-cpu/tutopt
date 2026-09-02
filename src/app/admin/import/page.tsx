@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { Download } from "lucide-react";
+import { BrowserPageImportForm } from "@/components/admin/BrowserPageImportForm";
 import { BulkImportForm } from "@/components/admin/BulkImportForm";
 import { ImportBatchesList } from "@/components/admin/ImportBatchesList";
 import { ImportByUrlForm } from "@/components/admin/ImportByUrlForm";
@@ -79,6 +81,9 @@ export default async function AdminImportPage({ searchParams }: AdminImportPageP
       </PageHeader>
 
       <ImportByUrlForm />
+      <Suspense fallback={null}>
+        <BrowserPageImportForm />
+      </Suspense>
       <BulkImportForm />
       <ImportBatchesList batches={batches.map(serializeImportBatch)} />
       <ImportDraftCreateForm categories={categories} />

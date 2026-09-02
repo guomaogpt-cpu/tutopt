@@ -6,7 +6,8 @@ export type ErrorCode =
   | "CONFLICT"
   | "RATE_LIMITED"
   | "INTERNAL_ERROR"
-  | "EXTERNAL_IMPORT_ERROR";
+  | "EXTERNAL_IMPORT_ERROR"
+  | "SOURCE_BLOCKED";
 
 export type ErrorResponse = {
   error: {
@@ -81,6 +82,13 @@ export class ExternalImportError extends AppError {
   constructor(message: string, details?: unknown) {
     super(message, "EXTERNAL_IMPORT_ERROR", 502, details);
     this.name = "ExternalImportError";
+  }
+}
+
+export class SourceBlockedError extends AppError {
+  constructor(message: string, details?: unknown) {
+    super(message, "SOURCE_BLOCKED", 409, details);
+    this.name = "SourceBlockedError";
   }
 }
 

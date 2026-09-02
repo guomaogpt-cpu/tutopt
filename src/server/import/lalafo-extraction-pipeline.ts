@@ -1,5 +1,9 @@
 import { extractLalafoListing, buildLalafoPartialDataFromUrl } from "@/server/import/extractors/lalafo";
 import {
+  isSourceProtectionFailure,
+  SOURCE_PROTECTION_PAGE_CODE,
+} from "@/server/import/render/render-import-errors";
+import {
   fetchLalafoAdFromPageUrl,
   lalafoApiImagesToUrls,
   lalafoApiPriceText,
@@ -187,6 +191,62 @@ export async function extractLalafoListingPipeline(params: {
     );
     const renderResult = await extractLalafoViaRender(params.canonicalUrl);
     if (!renderResult.ok) {
+      if (isSourceProtectionFailure({ code: renderResult.code, debug: renderResult.debug, reason: renderResult.reason })) {
+        const slugFallback = buildLalafoPartialDataFromUrl(params.canonicalUrl);
+        if (!slugFallback) {
+          throwRenderImportError({
+            code: SOURCE_PROTECTION_PAGE_CODE,
+            reason: renderResult.reason,
+            debug: renderResult.debug,
+          });
+        }
+
+        sources.push("url-slug-fallback");
+        let extractedBlocked = slugFallback;
+        const mappedCategory = mapExternalCategory({
+          title: extractedBlocked.title,
+          description: extractedBlocked.description,
+        });
+
+        if (mappedCategory.normalizedCategory) {
+          extractedBlocked = {
+            ...extractedBlocked,
+            categoryText: mappedCategory.normalizedCategory,
+            subcategoryText: mappedCategory.normalizedSubcategory,
+            fieldsFound: buildFieldsFound({
+              title: extractedBlocked.title,
+              description: extractedBlocked.description,
+              rawPrice: extractedBlocked.rawPrice,
+              city: extractedBlocked.city,
+              images: extractedBlocked.images,
+              categoryText: mappedCategory.normalizedCategory,
+            }),
+          };
+        }
+
+        return {
+          extracted: { ...extractedBlocked, partial: true },
+          debug: {
+            requestedUrl: params.canonicalUrl,
+            extractorUsed: "LALAFO",
+            extractionSource: "url-slug-fallback",
+            extractionSources: ["browser-render", "url-slug-fallback"],
+            extractionQuality: "BLOCKED",
+            failureReason: SOURCE_PROTECTION_PAGE_CODE,
+            fieldsFound: extractedBlocked.fieldsFound,
+            partial: true,
+            renderFallbackEnabled: isRenderFallbackEnabled(),
+            renderFallbackAttempted: true,
+            renderFallbackSucceeded: false,
+            renderFallbackAvailable: true,
+            browserLaunchable: true,
+            blockedPageDetected: renderResult.debug?.blockedPageDetected ?? true,
+            captchaDetected: renderResult.debug?.captchaDetected ?? false,
+            ...renderResult.debug,
+          },
+        };
+      }
+
       throwRenderImportError({
         code: renderResult.code,
         reason: renderResult.reason,
@@ -458,7 +518,7 @@ export function isAutoExtractedFromDebug(debug: ImportExtractionDebug): boolean 
   if (debug.extractionSource === "url-slug-fallback") {
     return false;
   }
-  if (debug.extractionQuality === "URL_ONLY") {
+  if (debug.extractionQuality === "URL_ONLY" || debug.extractionQuality === "BLOCKED") {
     return false;
   }
   const fields = debug.fieldsFound;

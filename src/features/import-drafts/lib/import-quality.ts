@@ -37,6 +37,9 @@ function isInvalidDisplayTitle(title: string | null | undefined): boolean {
 
 function detectExtractionSourceLabel(notes: string | null | undefined): string | null {
   const text = notes?.toLowerCase() ?? "";
+  if (text.includes("browser-page") || text.includes("открытой страницы браузера")) {
+    return "browser-page";
+  }
   if (text.includes("network json") || text.includes("network-json") || text.includes("network api")) {
     return "network-json";
   }
@@ -65,6 +68,8 @@ function detectExtractionSourceLabel(notes: string | null | undefined): string |
 
 function formatExtractionSourceLabel(source: string | null): string | null {
   switch (source) {
+    case "browser-page":
+      return "Браузер (ручной импорт)";
     case "network-json":
       return "Network JSON (XHR/API)";
     case "embedded-json":
@@ -84,6 +89,9 @@ function formatExtractionSourceLabel(source: string | null): string | null {
 
 function detectSourceHint(notes: string | null | undefined): string | null {
   const source = detectExtractionSourceLabel(notes);
+  if (source === "browser-page") {
+    return "Данные импортированы из открытой страницы браузера";
+  }
   if (source === "network-json") {
     return "Данные получены из network API (browser)";
   }
